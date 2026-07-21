@@ -1,481 +1,810 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Sistema Comercial Casabe Real — Plataforma de gestión comercial e inteligencia de negocios" />
+  <title>Sistema Comercial Casabe Real</title>
 
-    <title>
-        Sistema Comercial Casabe Real
-    </title>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-    <!-- Tipografía -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Icons (Lucide via CDN) -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 
-    <!-- Estilos del Sistema -->
-    <link rel="stylesheet" href="css/theme.css">
-    <link rel="stylesheet" href="css/style.css">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
+  <!-- Design System -->
+  <link rel="stylesheet" href="css/theme.css" />
+
+  <!-- Módulos CSS (se irán agregando) -->
+  <!-- <link rel="stylesheet" href="css/dashboard.css" /> -->
 </head>
-
-
 <body>
 
-<div class="app-container">
+<!-- ============================================================
+     APP SHELL
+     ============================================================ -->
+<div class="app-shell">
+
+  <!-- ==========================================================
+       SIDEBAR
+       ========================================================== -->
+  <aside class="sidebar" id="sidebar" role="navigation" aria-label="Menú principal">
+
+    <!-- Brand -->
+    <div class="sidebar__brand">
+      <img
+        src="assets/logo-casabe.png"
+        alt="Casabe Real"
+        class="sidebar__logo"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+      />
+      <!-- Fallback logo si no existe el archivo -->
+      <div style="display:none; width:36px; height:36px; background:var(--color-primary); border-radius:8px; align-items:center; justify-content:center; flex-shrink:0;">
+        <span style="color:#fff; font-weight:700; font-size:14px;">CR</span>
+      </div>
+      <span class="sidebar__brand-name">Sistema Comercial<br/>Casabe Real</span>
+    </div>
+
+    <!-- Nav -->
+    <nav class="sidebar__nav">
+
+      <span class="sidebar__section-label">Principal</span>
+
+      <div class="nav-item active" data-module="dashboard" role="button" tabindex="0" aria-current="page">
+        <i data-lucide="layout-dashboard" class="nav-item__icon"></i>
+        Dashboard
+      </div>
+
+      <div class="nav-item" data-module="ventas" role="button" tabindex="0">
+        <i data-lucide="shopping-cart" class="nav-item__icon"></i>
+        Ventas
+        <span class="nav-item__badge" id="badge-ventas" style="display:none;">0</span>
+      </div>
+
+      <div class="nav-item" data-module="clientes" role="button" tabindex="0">
+        <i data-lucide="users" class="nav-item__icon"></i>
+        Clientes
+      </div>
+
+      <div class="nav-item" data-module="vendedores" role="button" tabindex="0">
+        <i data-lucide="user-check" class="nav-item__icon"></i>
+        Vendedores
+      </div>
+
+      <div class="nav-item" data-module="metas" role="button" tabindex="0">
+        <i data-lucide="target" class="nav-item__icon"></i>
+        Metas
+      </div>
+
+      <span class="sidebar__section-label" style="margin-top:8px;">Comercial</span>
+
+      <div class="nav-item" data-module="embudo" role="button" tabindex="0">
+        <i data-lucide="filter" class="nav-item__icon"></i>
+        Embudo Comercial
+      </div>
+
+      <div class="nav-item" data-module="reportes" role="button" tabindex="0">
+        <i data-lucide="bar-chart-2" class="nav-item__icon"></i>
+        Reportes
+      </div>
+
+      <span class="sidebar__section-label" style="margin-top:8px;">Inteligencia</span>
+
+      <div class="nav-item" data-module="inteligencia" role="button" tabindex="0">
+        <i data-lucide="brain-circuit" class="nav-item__icon"></i>
+        Int. Comercial
+        <span class="nav-item__badge" id="badge-alertas" style="display:none;">0</span>
+      </div>
+
+      <span class="sidebar__section-label" style="margin-top:8px;">Sistema</span>
+
+      <div class="nav-item" data-module="administracion" role="button" tabindex="0">
+        <i data-lucide="settings" class="nav-item__icon"></i>
+        Administración
+      </div>
+
+    </nav>
+
+    <!-- Footer del sidebar -->
+    <div class="sidebar__footer">
+      <div class="sync-indicator" id="sync-indicator">
+        <div class="sync-indicator__dot" id="sync-dot"></div>
+        <span id="sync-label">Sincronizado</span>
+      </div>
+    </div>
+
+  </aside>
 
 
-    <!-- ==========================
-         SIDEBAR
-    =========================== -->
+  <!-- ==========================================================
+       HEADER
+       ========================================================== -->
+  <header class="header" role="banner">
 
-    <aside class="sidebar">
+    <!-- Botón menú mobile -->
+    <button
+      class="btn btn-ghost btn-icon"
+      id="sidebar-toggle"
+      aria-label="Abrir menú"
+      style="display:none;"
+    >
+      <i data-lucide="menu"></i>
+    </button>
 
-        <div class="brand">
+    <!-- Búsqueda global -->
+    <div class="header__search">
+      <div class="search-input-wrap">
+        <i data-lucide="search" class="search-input-wrap__icon" style="width:16px;height:16px;"></i>
+        <input
+          type="search"
+          class="form-input"
+          placeholder="Buscar clientes, pedidos, vendedores…"
+          id="global-search"
+          aria-label="Búsqueda global"
+          autocomplete="off"
+        />
+      </div>
+    </div>
 
-            <img src="assets/logos/logo-casabe-real.png"
-                 alt="Casabe Real">
+    <!-- Derecha -->
+    <div class="header__right">
 
-            <h2>
-                Sistema Comercial
-            </h2>
+      <!-- Fecha -->
+      <span class="header__date" id="header-date"></span>
+
+      <!-- Notificaciones -->
+      <button class="header__icon-btn" id="btn-notificaciones" aria-label="Notificaciones">
+        <i data-lucide="bell" style="width:18px;height:18px;"></i>
+        <span class="header__notif-badge" id="notif-badge" style="display:none;"></span>
+      </button>
+
+      <!-- Importar datos -->
+      <button class="header__icon-btn" id="btn-importar" aria-label="Importar datos desde Jotform" title="Importar datos">
+        <i data-lucide="refresh-cw" style="width:18px;height:18px;"></i>
+      </button>
+
+      <!-- Separador -->
+      <div class="divider--v" style="height:28px; background:var(--color-border);"></div>
+
+      <!-- Usuario -->
+      <div class="header__user dropdown" id="user-menu-wrap">
+        <div class="flex items-center gap-2" id="user-menu-trigger" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false">
+          <div class="header__avatar" id="user-avatar">CC</div>
+          <div class="header__user-info" style="display:none;" id="user-info-text">
+            <div class="header__user-name" id="user-name-label">Carlos Cova</div>
+            <div class="header__user-role" id="user-role-label">Administrador</div>
+          </div>
+          <i data-lucide="chevron-down" style="width:14px;height:14px;color:var(--color-text-secondary);"></i>
+        </div>
+
+        <!-- Dropdown usuario -->
+        <div class="dropdown__menu" id="user-dropdown" role="menu">
+          <div class="dropdown__item" role="menuitem">
+            <i data-lucide="user" style="width:15px;height:15px;"></i>
+            Mi perfil
+          </div>
+          <div class="dropdown__item" role="menuitem">
+            <i data-lucide="settings" style="width:15px;height:15px;"></i>
+            Configuración
+          </div>
+          <div class="dropdown__divider"></div>
+          <div class="dropdown__item dropdown__item--danger" role="menuitem" id="btn-logout">
+            <i data-lucide="log-out" style="width:15px;height:15px;"></i>
+            Cerrar sesión
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+
+  <!-- ==========================================================
+       BREADCRUMB
+       ========================================================== -->
+  <nav class="breadcrumb-bar" id="breadcrumb-bar" aria-label="Ruta de navegación">
+    <span class="breadcrumb__item breadcrumb__item--active" id="breadcrumb-root">Inicio</span>
+  </nav>
+
+
+  <!-- ==========================================================
+       CONTENIDO PRINCIPAL
+       ========================================================== -->
+  <main class="main-content" id="main-content" role="main">
+
+    <!-- Los módulos se renderizan aquí dinámicamente -->
+    <div id="module-container">
+
+      <!-- ======================================================
+           PANTALLA DE BIENVENIDA (se muestra al iniciar)
+           ====================================================== -->
+      <div id="view-bienvenida">
+
+        <div class="page-header">
+          <p class="page-subtitle" id="greeting-time">Buenos días</p>
+          <h1 class="page-title" id="greeting-name">Bienvenido al Sistema Comercial</h1>
+        </div>
+
+        <!-- Resumen ejecutivo de bienvenida -->
+        <div class="card mb-5" id="welcome-summary-card">
+          <div class="card__body">
+            <div class="flex items-center gap-3 mb-4">
+              <div style="width:40px;height:40px;background:var(--color-primary-light);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;">
+                <i data-lucide="brain-circuit" style="width:20px;height:20px;color:var(--color-primary);"></i>
+              </div>
+              <div>
+                <div class="font-semibold" style="font-size:var(--font-size-base);">Resumen del día</div>
+                <div class="text-secondary text-sm">Generado automáticamente</div>
+              </div>
+            </div>
+            <p class="text-body" id="welcome-summary-text" style="color:var(--color-text-secondary); line-height:var(--line-height-relaxed);">
+              Cargando resumen…
+            </p>
+          </div>
+        </div>
+
+        <!-- KPIs de bienvenida -->
+        <div class="grid grid-4 mb-5" id="welcome-kpis">
+          <div class="kpi-card kpi-card--primary">
+            <div class="kpi-card__header">
+              <span class="kpi-card__label">Pedidos hoy</span>
+              <div class="kpi-card__icon"><i data-lucide="shopping-cart" style="width:18px;height:18px;"></i></div>
+            </div>
+            <div class="kpi-card__value" id="kpi-pedidos-hoy">—</div>
+            <div class="kpi-card__footer">
+              <span class="kpi-card__period">Registrados en Jotform</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-card__header">
+              <span class="kpi-card__label">Ventas del mes</span>
+              <div class="kpi-card__icon"><i data-lucide="trending-up" style="width:18px;height:18px;"></i></div>
+            </div>
+            <div class="kpi-card__value" id="kpi-ventas-mes">—</div>
+            <div class="kpi-card__footer">
+              <span class="kpi-card__period">Acumulado</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-card__header">
+              <span class="kpi-card__label">Clientes activos</span>
+              <div class="kpi-card__icon"><i data-lucide="users" style="width:18px;height:18px;"></i></div>
+            </div>
+            <div class="kpi-card__value" id="kpi-clientes">—</div>
+            <div class="kpi-card__footer">
+              <span class="kpi-card__period">Este mes</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-card__header">
+              <span class="kpi-card__label">Cumplimiento</span>
+              <div class="kpi-card__icon"><i data-lucide="target" style="width:18px;height:18px;"></i></div>
+            </div>
+            <div class="kpi-card__value" id="kpi-cumplimiento">—</div>
+            <div class="kpi-card__footer">
+              <span class="kpi-card__period">Meta mensual</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="flex justify-center">
+          <button class="btn btn-primary btn-lg" id="btn-entrar-dashboard">
+            <i data-lucide="layout-dashboard" style="width:18px;height:18px;"></i>
+            Entrar al Dashboard
+          </button>
+        </div>
+
+      </div><!-- /view-bienvenida -->
+
+
+      <!-- ======================================================
+           DASHBOARD (oculto hasta que el usuario entre)
+           ====================================================== -->
+      <div id="view-dashboard" style="display:none;">
+
+        <div class="page-header flex items-center justify-between">
+          <div>
+            <h1 class="page-title">Dashboard Ejecutivo</h1>
+            <p class="page-subtitle" id="dashboard-subtitle">Indicadores comerciales en tiempo real</p>
+          </div>
+          <div class="flex gap-3">
+            <button class="btn btn-secondary" id="btn-exportar-dashboard">
+              <i data-lucide="download" style="width:15px;height:15px;"></i>
+              Exportar
+            </button>
+            <button class="btn btn-primary" id="btn-sync-dashboard">
+              <i data-lucide="refresh-cw" style="width:15px;height:15px;"></i>
+              Sincronizar
+            </button>
+          </div>
+        </div>
+
+        <!-- Fila 1: 6 KPIs -->
+        <div class="grid grid-6 mb-5" id="dashboard-kpis">
+          <!-- Se renderizan desde js/dashboard.js -->
+          <div class="kpi-card"><div class="skeleton skeleton--title w-full"></div><div class="skeleton skeleton--kpi w-full"></div></div>
+          <div class="kpi-card"><div class="skeleton skeleton--title w-full"></div><div class="skeleton skeleton--kpi w-full"></div></div>
+          <div class="kpi-card"><div class="skeleton skeleton--title w-full"></div><div class="skeleton skeleton--kpi w-full"></div></div>
+          <div class="kpi-card"><div class="skeleton skeleton--title w-full"></div><div class="skeleton skeleton--kpi w-full"></div></div>
+          <div class="kpi-card"><div class="skeleton skeleton--title w-full"></div><div class="skeleton skeleton--kpi w-full"></div></div>
+          <div class="kpi-card"><div class="skeleton skeleton--title w-full"></div><div class="skeleton skeleton--kpi w-full"></div></div>
+        </div>
+
+        <!-- Fila 2: Gráficos principales -->
+        <div class="grid grid-2 mb-5">
+
+          <div class="chart-container">
+            <div class="chart-container__header">
+              <span class="chart-container__title">Evolución de Ventas</span>
+              <div class="chart-container__filters">
+                <select class="form-select" id="filter-evolucion" style="width:auto;font-size:var(--font-size-xs);padding:4px 28px 4px 10px;">
+                  <option value="semana">Esta semana</option>
+                  <option value="mes" selected>Este mes</option>
+                  <option value="año">Este año</option>
+                </select>
+              </div>
+            </div>
+            <div class="chart-container__body">
+              <canvas id="chart-evolucion"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-container">
+            <div class="chart-container__header">
+              <span class="chart-container__title">Ventas por Vendedor</span>
+              <div class="chart-container__filters">
+                <select class="form-select" id="filter-vendedores-chart" style="width:auto;font-size:var(--font-size-xs);padding:4px 28px 4px 10px;">
+                  <option value="mes" selected>Este mes</option>
+                  <option value="año">Este año</option>
+                </select>
+              </div>
+            </div>
+            <div class="chart-container__body">
+              <canvas id="chart-vendedores"></canvas>
+            </div>
+          </div>
 
         </div>
 
+        <!-- Fila 3: Rankings -->
+        <div class="grid grid-2 mb-5">
 
-        <nav class="menu">
-
-            <a href="#" class="active">
-                Dashboard
-            </a>
-
-            <a href="#">
-                Ventas
-            </a>
-
-            <a href="#">
-                Clientes
-            </a>
-
-            <a href="#">
-                Vendedores
-            </a>
-
-            <a href="#">
-                Metas
-            </a>
-
-            <a href="#">
-                Embudo Comercial
-            </a>
-
-            <a href="#">
-                Reportes
-            </a>
-
-            <a href="#">
-                Inteligencia Comercial
-            </a>
-
-            <a href="#">
-                Administración
-            </a>
-
-        </nav>
-
-
-    </aside>
-
-
-
-    <!-- ==========================
-         CONTENIDO PRINCIPAL
-    =========================== -->
-
-
-    <main class="main-content">
-
-
-        <!-- HEADER -->
-
-        <header class="topbar">
-
-
-            <div class="search-box">
-
-                <input 
-                type="text"
-                placeholder="Buscar..."
-                >
-
+          <div class="card">
+            <div class="card__header">
+              <span class="card__title">Ranking de Clientes</span>
+              <span class="text-xs text-secondary">Este mes</span>
             </div>
-
-
-            <div class="user-area">
-
-                <span>
-                    21 Julio 2026
-                </span>
-
-
-                <span>
-                    Carlos Cova
-                </span>
-
-
+            <div class="card__body p-4" id="ranking-clientes">
+              <div class="skeleton skeleton--text w-full"></div>
+              <div class="skeleton skeleton--text w-full"></div>
+              <div class="skeleton skeleton--text w-full"></div>
             </div>
+          </div>
 
-
-        </header>
-
-
-
-        <!-- BREADCRUMB -->
-
-        <div class="breadcrumb">
-
-            Inicio / Dashboard
+          <div class="card">
+            <div class="card__header">
+              <span class="card__title">Ranking de Vendedores</span>
+              <span class="text-xs text-secondary">Este mes</span>
+            </div>
+            <div class="card__body p-4" id="ranking-vendedores">
+              <div class="skeleton skeleton--text w-full"></div>
+              <div class="skeleton skeleton--text w-full"></div>
+              <div class="skeleton skeleton--text w-full"></div>
+            </div>
+          </div>
 
         </div>
 
+        <!-- Fila 4: Embudo + Pronóstico -->
+        <div class="grid grid-2 mb-5">
 
-
-        <!-- DASHBOARD -->
-
-        <section class="dashboard">
-
-
-            <h1>
-                Dashboard Ejecutivo
-            </h1>
-
-
-            <!-- KPIs -->
-
-            <div class="kpi-grid">
-
-
-                <div class="kpi-card">
-
-                    <span>
-                        Ventas Hoy
-                    </span>
-
-                    <strong>
-                        $0
-                    </strong>
-
-                </div>
-
-
-                <div class="kpi-card">
-
-                    <span>
-                        Ventas Semana
-                    </span>
-
-                    <strong>
-                        $0
-                    </strong>
-
-                </div>
-
-
-
-                <div class="kpi-card">
-
-                    <span>
-                        Ventas Mes
-                    </span>
-
-                    <strong>
-                        $0
-                    </strong>
-
-                </div>
-
-
-
-                <div class="kpi-card">
-
-                    <span>
-                        Cajas Vendidas
-                    </span>
-
-                    <strong>
-                        0
-                    </strong>
-
-                </div>
-
-
-
-                <div class="kpi-card">
-
-                    <span>
-                        Clientes Activos
-                    </span>
-
-                    <strong>
-                        0
-                    </strong>
-
-                </div>
-
-
-
-                <div class="kpi-card">
-
-                    <span>
-                        Cumplimiento Meta
-                    </span>
-
-                    <strong>
-                        0%
-                    </strong>
-
-                </div>
-
-
+          <div class="card">
+            <div class="card__header">
+              <span class="card__title">Embudo Comercial</span>
             </div>
-
-
-
-            <!-- GRAFICOS -->
-
-
-            <div class="chart-grid">
-
-
-                <div class="panel">
-
-                    <h3>
-                        Evolución de Ventas
-                    </h3>
-
-
-                    <div class="chart-placeholder">
-
-                        Gráfico de ventas
-
-                    </div>
-
-                </div>
-
-
-
-                <div class="panel">
-
-
-                    <h3>
-                        Ventas por Vendedor
-                    </h3>
-
-
-                    <div class="chart-placeholder">
-
-                        Gráfico vendedores
-
-                    </div>
-
-
-                </div>
-
-
-
+            <div class="card__body" id="embudo-mini">
+              <div class="skeleton skeleton--chart"></div>
             </div>
+          </div>
 
-
-
-
-            <!-- RANKINGS -->
-
-
-            <div class="chart-grid">
-
-
-                <div class="panel">
-
-
-                    <h3>
-                        Ranking Clientes
-                    </h3>
-
-
-                    <div class="table-placeholder">
-
-                        Tabla clientes
-
-                    </div>
-
-
-                </div>
-
-
-
-
-                <div class="panel">
-
-
-                    <h3>
-                        Ranking Vendedores
-                    </h3>
-
-
-                    <div class="table-placeholder">
-
-                        Tabla vendedores
-
-                    </div>
-
-
-                </div>
-
-
+          <div class="card">
+            <div class="card__header">
+              <span class="card__title">Pronóstico del Mes</span>
             </div>
-
-
-
-
-            <!-- EMBUDO Y PRONOSTICO -->
-
-
-            <div class="chart-grid">
-
-
-                <div class="panel">
-
-
-                    <h3>
-                        Embudo Comercial
-                    </h3>
-
-
-                    <div class="chart-placeholder">
-
-                        Pipeline Comercial
-
-                    </div>
-
-
-                </div>
-
-
-
-                <div class="panel">
-
-
-                    <h3>
-                        Pronóstico de Ventas
-                    </h3>
-
-
-                    <div class="chart-placeholder">
-
-                        IA Forecast
-
-                    </div>
-
-
-                </div>
-
-
-
+            <div class="card__body" id="pronostico-mini">
+              <div class="skeleton skeleton--chart"></div>
             </div>
+          </div>
+
+        </div>
+
+        <!-- Fila 5: Centro de Inteligencia Comercial -->
+        <div class="ai-panel" id="ai-panel-dashboard">
+          <div class="ai-panel__header">
+            <div class="ai-panel__icon">
+              <i data-lucide="brain-circuit" style="width:20px;height:20px;color:#fff;"></i>
+            </div>
+            <div>
+              <div class="ai-panel__title">Centro de Inteligencia Comercial</div>
+              <div class="ai-panel__subtitle">Análisis automático basado en tus datos</div>
+            </div>
+          </div>
+
+          <div class="ai-panel__sections">
+            <div class="ai-section">
+              <div class="ai-section__label">Resumen Ejecutivo</div>
+              <div class="ai-section__content" id="ai-resumen">Cargando análisis…</div>
+            </div>
+            <div class="ai-section">
+              <div class="ai-section__label">Alertas</div>
+              <div class="ai-section__content" id="ai-alertas">Verificando alertas…</div>
+            </div>
+            <div class="ai-section">
+              <div class="ai-section__label">Recomendaciones</div>
+              <div class="ai-section__content" id="ai-recomendaciones">Analizando oportunidades…</div>
+            </div>
+            <div class="ai-section">
+              <div class="ai-section__label">Pronóstico</div>
+              <div class="ai-section__content" id="ai-pronostico">Calculando proyecciones…</div>
+            </div>
+          </div>
+
+          <!-- Chat IA -->
+          <div class="ai-panel__chat">
+            <input
+              type="text"
+              class="form-input w-full"
+              id="ai-chat-input"
+              placeholder="Ej: ¿Cómo cerraré el mes? ¿Qué clientes debo visitar?"
+              autocomplete="off"
+            />
+            <button class="btn btn-primary" id="ai-chat-send">
+              <i data-lucide="send" style="width:16px;height:16px;"></i>
+              Consultar
+            </button>
+          </div>
+        </div>
+
+      </div><!-- /view-dashboard -->
 
 
+      <!-- ======================================================
+           VISTAS DE MÓDULOS (placeholders — se cargan dinámicamente)
+           ====================================================== -->
+      <div id="view-ventas"        style="display:none;"></div>
+      <div id="view-clientes"      style="display:none;"></div>
+      <div id="view-vendedores"    style="display:none;"></div>
+      <div id="view-metas"         style="display:none;"></div>
+      <div id="view-embudo"        style="display:none;"></div>
+      <div id="view-reportes"      style="display:none;"></div>
+      <div id="view-inteligencia"  style="display:none;"></div>
+      <div id="view-administracion" style="display:none;"></div>
+
+    </div><!-- /module-container -->
+
+  </main><!-- /main-content -->
+
+</div><!-- /app-shell -->
 
 
-
-            <!-- INTELIGENCIA COMERCIAL -->
-
-
-            <section class="ai-panel">
-
-
-                <h2>
-                    Centro de Inteligencia Comercial
-                </h2>
+<!-- ==========================================================
+     OVERLAY (sidebar mobile)
+     ========================================================== -->
+<div
+  id="sidebar-overlay"
+  style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:150;"
+  aria-hidden="true"
+></div>
 
 
-                <div class="ai-content">
+<!-- ==========================================================
+     TOAST CONTAINER
+     ========================================================== -->
+<div class="toast-container" id="toast-container" aria-live="polite"></div>
 
 
-                    <div>
-
-                        <h4>
-                            Resumen Ejecutivo
-                        </h4>
-
-                        <p>
-                            El sistema generará automáticamente
-                            análisis comerciales.
-                        </p>
-
-                    </div>
-
-
-
-                    <div>
-
-                        <h4>
-                            Alertas
-                        </h4>
-
-                        <p>
-                            No existen alertas actualmente.
-                        </p>
-
-                    </div>
-
-
-
-                    <div>
-
-                        <h4>
-                            Recomendaciones
-                        </h4>
-
-                        <p>
-                            Pendiente de análisis IA.
-                        </p>
-
-                    </div>
-
-
-
-                </div>
-
-
-            </section>
-
-
-
-
-        </section>
-
-
-
-        <!-- FOOTER -->
-
-
-        <footer>
-
-            Sistema Comercial Casabe Real © 2026
-
-        </footer>
-
-
-
-    </main>
-
-
-
+<!-- ==========================================================
+     MODAL GENÉRICO
+     ========================================================== -->
+<div class="modal-backdrop" id="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal" id="modal">
+    <div class="modal__header">
+      <span class="modal__title" id="modal-title">Título</span>
+      <button class="btn btn-ghost btn-icon" id="modal-close" aria-label="Cerrar">
+        <i data-lucide="x" style="width:18px;height:18px;"></i>
+      </button>
+    </div>
+    <div class="modal__body" id="modal-body"></div>
+    <div class="modal__footer" id="modal-footer"></div>
+  </div>
 </div>
 
 
+<!-- ==========================================================
+     SCRIPTS
+     ========================================================== -->
 
+<!-- Utilidades base -->
+<script src="js/utils.js"></script>
+
+<!-- Motor de datos -->
+<script src="js/motor.js"></script>
+
+<!-- Importador Jotform -->
+<script src="js/importador.js"></script>
+
+<!-- Módulos -->
+<script src="modules/dashboard.js"></script>
+<script src="modules/ventas.js"></script>
+<script src="modules/clientes.js"></script>
+<script src="modules/vendedores.js"></script>
+<script src="modules/metas.js"></script>
+<script src="modules/embudo.js"></script>
+<script src="modules/reportes.js"></script>
+<script src="modules/inteligencia.js"></script>
+<script src="modules/administracion.js"></script>
+
+<!-- App principal -->
 <script src="js/app.js"></script>
 
-</body>
+<script>
+/* ============================================================
+   BOOTSTRAP — Se ejecuta cuando el DOM está listo.
+   La lógica completa vive en js/app.js.
+   Este bloque sólo inicializa lo que no depende de datos.
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
 
+  /* --- Lucide icons --- */
+  lucide.createIcons();
+
+  /* --- Fecha en el header --- */
+  const headerDate = document.getElementById('header-date');
+  if (headerDate) {
+    const ahora = new Date();
+    headerDate.textContent = ahora.toLocaleDateString('es-VE', {
+      weekday: 'short', day: 'numeric', month: 'short', year: 'numeric'
+    });
+  }
+
+  /* --- Saludo de bienvenida --- */
+  const hora = new Date().getHours();
+  const saludo = hora < 12 ? 'Buenos días' : hora < 19 ? 'Buenas tardes' : 'Buenas noches';
+  const greetingTime = document.getElementById('greeting-time');
+  if (greetingTime) greetingTime.textContent = saludo;
+
+  /* --- Sidebar mobile toggle --- */
+  const sidebarToggle  = document.getElementById('sidebar-toggle');
+  const sidebar        = document.getElementById('sidebar');
+  const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+  function openSidebar() {
+    sidebar.classList.add('is-open');
+    sidebarOverlay.style.display = 'block';
+    sidebarToggle.setAttribute('aria-label', 'Cerrar menú');
+  }
+  function closeSidebar() {
+    sidebar.classList.remove('is-open');
+    sidebarOverlay.style.display = 'none';
+    sidebarToggle.setAttribute('aria-label', 'Abrir menú');
+  }
+
+  if (sidebarToggle) sidebarToggle.addEventListener('click', openSidebar);
+  if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeSidebar);
+
+  /* Mostrar botón hamburguesa sólo en mobile */
+  function checkMobile() {
+    const isMobile = window.innerWidth < 768;
+    if (sidebarToggle) sidebarToggle.style.display = isMobile ? 'flex' : 'none';
+    if (isMobile) closeSidebar();
+  }
+  checkMobile();
+  window.addEventListener('resize', checkMobile);
+
+  /* --- Dropdown usuario --- */
+  const userTrigger  = document.getElementById('user-menu-trigger');
+  const userDropdown = document.getElementById('user-dropdown');
+  const userWrap     = document.getElementById('user-menu-wrap');
+
+  if (userTrigger && userDropdown) {
+    userTrigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = userWrap.classList.toggle('is-open');
+      userTrigger.setAttribute('aria-expanded', isOpen);
+    });
+    document.addEventListener('click', () => {
+      userWrap.classList.remove('is-open');
+      userTrigger.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  /* --- Modal genérico --- */
+  const modalBackdrop = document.getElementById('modal-backdrop');
+  const modalClose    = document.getElementById('modal-close');
+
+  function closeModal() {
+    modalBackdrop.classList.remove('is-open');
+  }
+  if (modalClose)    modalClose.addEventListener('click', closeModal);
+  if (modalBackdrop) modalBackdrop.addEventListener('click', (e) => {
+    if (e.target === modalBackdrop) closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  /* Exponer helper global para módulos */
+  window.SCCR = window.SCCR || {};
+  window.SCCR.openModal = function({ title, body, footer = '' }) {
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('modal-body').innerHTML    = body;
+    document.getElementById('modal-footer').innerHTML  = footer;
+    modalBackdrop.classList.add('is-open');
+    lucide.createIcons();
+  };
+  window.SCCR.closeModal = closeModal;
+
+  /* --- Toast helper global --- */
+  window.SCCR.toast = function(message, type = 'success', duration = 3500) {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast toast--${type}`;
+    const icons = { success: 'check-circle', error: 'alert-circle', warning: 'alert-triangle' };
+    toast.innerHTML = `<i data-lucide="${icons[type] || 'info'}" style="width:16px;height:16px;flex-shrink:0;"></i>${message}`;
+    container.appendChild(toast);
+    lucide.createIcons({ nodes: [toast] });
+    setTimeout(() => {
+      toast.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(10px)';
+      setTimeout(() => toast.remove(), 300);
+    }, duration);
+  };
+
+  /* --- Sync indicator helper --- */
+  window.SCCR.setSyncStatus = function(status) {
+    const dot   = document.getElementById('sync-dot');
+    const label = document.getElementById('sync-label');
+    if (!dot || !label) return;
+    dot.className = 'sync-indicator__dot';
+    if (status === 'syncing') {
+      dot.classList.add('sync-indicator__dot--syncing');
+      label.textContent = 'Sincronizando…';
+    } else if (status === 'error') {
+      dot.classList.add('sync-indicator__dot--error');
+      label.textContent = 'Sin conexión';
+    } else {
+      label.textContent = 'Sincronizado';
+    }
+  };
+
+  /* --- Navegación entre módulos --- */
+  const views = [
+    'bienvenida','dashboard','ventas','clientes',
+    'vendedores','metas','embudo','reportes',
+    'inteligencia','administracion'
+  ];
+
+  const breadcrumbLabels = {
+    bienvenida:     'Inicio',
+    dashboard:      'Dashboard',
+    ventas:         'Ventas',
+    clientes:       'Clientes',
+    vendedores:     'Vendedores',
+    metas:          'Metas',
+    embudo:         'Embudo Comercial',
+    reportes:       'Reportes',
+    inteligencia:   'Inteligencia Comercial',
+    administracion: 'Administración',
+  };
+
+  function showView(name) {
+    /* Ocultar todas las vistas */
+    views.forEach(v => {
+      const el = document.getElementById(`view-${v}`);
+      if (el) el.style.display = 'none';
+    });
+
+    /* Mostrar la vista solicitada */
+    const target = document.getElementById(`view-${name}`);
+    if (target) target.style.display = 'block';
+
+    /* Actualizar nav activo */
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.classList.remove('active');
+      item.removeAttribute('aria-current');
+    });
+    const activeNav = document.querySelector(`.nav-item[data-module="${name}"]`);
+    if (activeNav) {
+      activeNav.classList.add('active');
+      activeNav.setAttribute('aria-current', 'page');
+    }
+
+    /* Actualizar breadcrumb */
+    const breadcrumb = document.getElementById('breadcrumb-root');
+    if (breadcrumb) {
+      if (name === 'bienvenida' || name === 'dashboard') {
+        breadcrumb.textContent = breadcrumbLabels[name] || name;
+        breadcrumb.className = 'breadcrumb__item breadcrumb__item--active';
+        /* Limpiar crumbs secundarios */
+        const bar = document.getElementById('breadcrumb-bar');
+        while (bar.children.length > 1) bar.removeChild(bar.lastChild);
+      } else {
+        breadcrumb.textContent = 'Dashboard';
+        breadcrumb.className = 'breadcrumb__item';
+        /* Agregar separador + módulo */
+        const bar = document.getElementById('breadcrumb-bar');
+        while (bar.children.length > 1) bar.removeChild(bar.lastChild);
+        const sep = document.createElement('span');
+        sep.className = 'breadcrumb__separator';
+        sep.textContent = '/';
+        const current = document.createElement('span');
+        current.className = 'breadcrumb__item breadcrumb__item--active';
+        current.textContent = breadcrumbLabels[name] || name;
+        bar.appendChild(sep);
+        bar.appendChild(current);
+      }
+    }
+
+    /* Cerrar sidebar en mobile */
+    if (window.innerWidth < 768) closeSidebar();
+
+    /* Disparar evento para que los módulos sepan que son activos */
+    document.dispatchEvent(new CustomEvent('sccr:view-changed', { detail: { view: name } }));
+  }
+
+  /* Exponer navegación globalmente */
+  window.SCCR.navigate = showView;
+
+  /* Escuchar clics en el nav */
+  document.querySelectorAll('.nav-item[data-module]').forEach(item => {
+    item.addEventListener('click', () => showView(item.dataset.module));
+    item.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        showView(item.dataset.module);
+      }
+    });
+  });
+
+  /* Botón "Entrar al Dashboard" de la bienvenida */
+  const btnEntrar = document.getElementById('btn-entrar-dashboard');
+  if (btnEntrar) btnEntrar.addEventListener('click', () => showView('dashboard'));
+
+  /* Botón sync header */
+  const btnSyncDash = document.getElementById('btn-sync-dashboard');
+  if (btnSyncDash) btnSyncDash.addEventListener('click', () => {
+    window.SCCR.setSyncStatus('syncing');
+    /* El importador se encargará de actualizar el estado */
+    if (window.SCCR.importar) window.SCCR.importar();
+  });
+
+  /* Botón importar header */
+  const btnImportar = document.getElementById('btn-importar');
+  if (btnImportar) btnImportar.addEventListener('click', () => {
+    if (window.SCCR.importar) window.SCCR.importar();
+    else window.SCCR.toast('Importador no disponible aún', 'warning');
+  });
+
+  /* --- Vista inicial --- */
+  showView('bienvenida');
+
+  /* --- Inicializar la app (js/app.js lo completa) --- */
+  if (typeof SCCRApp !== 'undefined' && SCCRApp.init) {
+    SCCRApp.init();
+  }
+
+});
+</script>
+
+</body>
 </html>
