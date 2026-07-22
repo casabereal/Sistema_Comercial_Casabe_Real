@@ -1,1 +1,10 @@
-
+{
+  "jotform_api_key": "221097b32327fd62b1205b7739b39f93",
+  "form_recurrentes": "222905670810655",
+  "form_nuevos": "261445908854063",
+  "moneda": "USD",
+  "meta_mensual_usd": 0,
+  "dias_inactividad": 14,
+  "nombre_empresa": "Casabe Real",
+  "version": "1.0.0"
+}
