@@ -349,7 +349,7 @@
                 <select class="form-select" id="filter-evolucion" style="width:auto;font-size:var(--font-size-xs);padding:4px 28px 4px 10px;">
                   <option value="semana">Esta semana</option>
                   <option value="mes" selected>Este mes</option>
-                  <option value="año">Este año</option>
+                  <option value="ano">Este año</option>
                 </select>
               </div>
             </div>
@@ -364,7 +364,7 @@
               <div class="chart-container__filters">
                 <select class="form-select" id="filter-vendedores-chart" style="width:auto;font-size:var(--font-size-xs);padding:4px 28px 4px 10px;">
                   <option value="mes" selected>Este mes</option>
-                  <option value="año">Este año</option>
+                  <option value="ano">Este año</option>
                 </select>
               </div>
             </div>
@@ -795,13 +795,13 @@ document.addEventListener('DOMContentLoaded', () => {
     else window.SCCR.toast('Importador no disponible aún', 'warning');
   });
 
-  /* --- Vista inicial --- */
-  showView('bienvenida');
-
-  /* --- Inicializar la app (js/app.js lo completa) --- */
+  /* --- Inicializar la app PRIMERO para registrar listeners --- */
   if (typeof SCCRApp !== 'undefined' && SCCRApp.init) {
     SCCRApp.init();
   }
+
+  /* --- Vista inicial (DESPUÉS de registrar listeners) --- */
+  showView('bienvenida');
 
 });
 </script>
