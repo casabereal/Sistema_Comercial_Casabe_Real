@@ -187,7 +187,7 @@ body{font-family:"Inter",sans-serif;background:var(--fondo);color:var(--negro);m
     <!-- Tabs -->
     <div class="auth-tabs">
       <button class="auth-tab on" id="tab-login" onclick="switchTab('login')">Iniciar Sesi&oacute;n</button>
-      <button class="auth-tab" id="tab-reg" onclick="switchTab('registro')">Crear Cuenta</button>
+      <button class="auth-tab" id="tab-reg" onclick="switchTab('reg')">Crear Cuenta</button>
     </div>
 
     <!-- FORMULARIO LOGIN -->
@@ -207,12 +207,12 @@ body{font-family:"Inter",sans-serif;background:var(--fondo);color:var(--negro);m
       </button>
       <div class="auth-footer">
         &iquest;No tienes cuenta?
-        <a href="#" onclick="switchTab('registro');return false;" style="color:var(--rojo);font-weight:600;text-decoration:none">Reg&iacute;strate</a>
+        <a href="#" onclick="switchTab('reg');return false;" style="color:var(--rojo);font-weight:600;text-decoration:none">Reg&iacute;strate</a>
       </div>
     </div>
 
     <!-- FORMULARIO REGISTRO -->
-    <div class="auth-form" id="form-registro">
+    <div class="auth-form" id="form-reg">
       <div class="f">
         <label>Nombre Completo <span class="req">*</span></label>
         <input type="text" id="r-nombre" placeholder="Ej: Carlos Cova" autocomplete="name">
@@ -424,7 +424,7 @@ body{font-family:"Inter",sans-serif;background:var(--fondo);color:var(--negro);m
 
 <script>
 // ═══ CONFIG ═══════════════════════════════════
-const API = 'TU_APPS_SCRIPT_URL_AQUI'; // reemplazar al conectar Apps Script
+const API = 'https://script.google.com/macros/s/AKfycbysSUeGA965zGGIF1Zpcbji1SNmkM_kKNoXmFwud6P7kHv0cTlKNJopVF3T93QKhqPs9A/exec';
 
 const CAT = [
   {id:'pas', n:'Casabe Real tipo Pasapalo',   d:'Caja de 90 paquetes', p:220},
@@ -459,7 +459,7 @@ function clearSession(){
 
 // ═══ AUTH ══════════════════════════════════════
 function switchTab(tab){
-  ['login','registro'].forEach(t=>{
+  ['login','reg'].forEach(t=>{
     document.getElementById('tab-'+t).classList.toggle('on', t===tab);
     document.getElementById('form-'+t).classList.toggle('on', t===tab);
   });
@@ -486,7 +486,7 @@ async function doLogin(){
 
     if(API !== 'TU_APPS_SCRIPT_URL_AQUI'){
       // Llamada real al Apps Script
-      const r = await fetch(`${API}?action=login&user=${encodeURIComponent(user)}&pass=${encodeURIComponent(pass)}`);
+      const r = await fetch(`${API}?action=login&user=${encodeURIComponent(user)}&pass=${encodeURIComponent(pass)}`, {redirect:'follow'});
       const d = await r.json();
       if(d.ok) found = d.data;
     } else {
@@ -535,7 +535,7 @@ async function doRegistro(){
 
   try{
     if(API !== 'TU_APPS_SCRIPT_URL_AQUI'){
-      const r = await fetch(API, {method:'POST', body: JSON.stringify({action:'registro', nombre, user, pass})});
+      const r = await fetch(API, {method:'POST', body: JSON.stringify({action:'registro', nombre, user, pass}), redirect:'follow'});
       const d = await r.json();
       if(!d.ok){errEl.textContent = d.msg||'Error al registrar.';errEl.classList.add('show');}
       else { mostrarPendiente(); }
@@ -576,6 +576,8 @@ function doLogout(){
   document.getElementById('scr-auth').style.display='flex';
   document.getElementById('l-user').value='';
   document.getElementById('l-pass').value='';
+  document.getElementById('pending-box').style.display='none';
+  document.getElementById('btn-reg').style.display='';
   switchTab('login');
 }
 
@@ -750,7 +752,7 @@ async function genPedido(){
   try{
     let num;
     if(API !== 'TU_APPS_SCRIPT_URL_AQUI'){
-      const r = await fetch(API, {method:'POST', body:JSON.stringify(payload)});
+      const r = await fetch(API, {method:'POST', body:JSON.stringify(payload), redirect:'follow'});
       const d = await r.json();
       num = d.numeroPedido;
     } else {
