@@ -169,6 +169,30 @@ body{font-family:"Inter",sans-serif;background:var(--fondo);color:var(--negro);m
   .hd{padding:12px 14px}
   .hd img{width:38px;height:38px}
 }
+
+/* ── PANEL ADMIN ── */
+.btn-admin{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:6px 9px;cursor:pointer;color:rgba(255,255,255,.85);font-size:15px;line-height:1;transition:background .2s}
+.btn-admin:hover{background:rgba(255,255,255,.25)}
+.admin-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;padding:20px 14px;overflow-y:auto}
+.admin-overlay.show{display:flex;align-items:flex-start;justify-content:center}
+.admin-panel{background:#fff;border-radius:var(--r);max-width:500px;width:100%;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.admin-ph{background:var(--rojo);padding:16px 18px;display:flex;align-items:center;justify-content:space-between}
+.admin-ph h2{color:#fff;font-size:16px;font-weight:700}
+.btn-admin-close{background:rgba(255,255,255,.2);border:none;border-radius:6px;color:#fff;font-size:18px;cursor:pointer;width:30px;height:30px;display:flex;align-items:center;justify-content:center;line-height:1}
+.admin-pb{padding:16px}
+.admin-section-title{font-size:11.5px;font-weight:700;color:var(--gris);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px}
+.vendor-row{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--fondo);border-radius:var(--r-sm);margin-bottom:7px;gap:10px}
+.vendor-info{flex:1;min-width:0}
+.vendor-name{font-size:13px;font-weight:600;color:var(--negro);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vendor-user{font-size:11px;color:var(--gris);margin-top:1px}
+.vendor-badge{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:12px;white-space:nowrap;flex-shrink:0}
+.vendor-badge.pendiente{background:#FEF3C7;color:#D97706}
+.vendor-badge.activo{background:var(--verde-xs);color:var(--verde)}
+.btn-aprobar{background:var(--verde);border:none;border-radius:6px;color:#fff;font-size:12px;font-weight:700;font-family:"Inter",sans-serif;padding:6px 12px;cursor:pointer;transition:background .2s;flex-shrink:0;white-space:nowrap}
+.btn-aprobar:hover{background:#047857}
+.admin-empty{text-align:center;padding:20px;color:var(--gris);font-size:13px}
+.admin-loading{text-align:center;padding:20px;color:var(--gris);font-size:13px}
+
 </style>
 </head>
 <body>
@@ -264,6 +288,7 @@ body{font-family:"Inter",sans-serif;background:var(--fondo);color:var(--negro);m
     </div>
     <div class="hd-vend">
       <div class="hd-vend-name" id="hd-nombre">Vendedor</div>
+      <button class="btn-admin" id="btn-admin-gear" onclick="abrirAdmin()" title="Administraci&oacute;n" style="display:none">&#9881;&#65039;</button>
       <button class="btn-logout" onclick="doLogout()" title="Cerrar sesi&oacute;n">&#10006;</button>
     </div>
   </header>
@@ -420,6 +445,28 @@ body{font-family:"Inter",sans-serif;background:var(--fondo);color:var(--negro);m
   </div><!-- /main -->
 </div><!-- /scr-app -->
 
+<!-- ═══════════════════════════════════════
+     PANEL DE ADMINISTRACIÓN
+═══════════════════════════════════════ -->
+<div class="admin-overlay" id="admin-overlay" onclick="cerrarAdminOverlay(event)">
+  <div class="admin-panel">
+    <div class="admin-ph">
+      <h2>&#9881;&#65039; Administraci&oacute;n</h2>
+      <button class="btn-admin-close" onclick="cerrarAdmin()">&#10005;</button>
+    </div>
+    <div class="admin-pb">
+      <div class="admin-section-title">Vendedores pendientes de aprobaci&oacute;n</div>
+      <div id="admin-vendor-list">
+        <div class="admin-loading">Cargando...</div>
+      </div>
+      <div class="admin-section-title" style="margin-top:16px">Todos los vendedores</div>
+      <div id="admin-all-vendors">
+        <div class="admin-loading">Cargando...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -561,13 +608,7 @@ function mostrarPendiente(){
   document.getElementById('btn-reg').style.display='none';
 }
 
-function showApp(){
-  document.getElementById('scr-auth').style.display='none';
-  document.getElementById('scr-app').style.display='flex';
-  document.getElementById('hd-nombre').textContent = SESSION.nombre;
-  resetPedido();
-  setStep(1);
-}
+// showApp definida abajo en el bloque admin
 
 function doLogout(){
   if(!confirm('¿Cerrar sesión?')) return;
@@ -834,6 +875,112 @@ window.addEventListener('DOMContentLoaded', ()=>{
   document.getElementById('l-pass').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
   document.getElementById('l-user').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
 });
+
+// ═══ ADMINISTRACIÓN ══════════════════════════════
+function showApp(){
+  document.getElementById('scr-auth').style.display='none';
+  document.getElementById('scr-app').style.display='flex';
+  document.getElementById('hd-nombre').textContent=SESSION.nombre;
+  // Mostrar botón admin solo si es admin
+  const btnAdmin = document.getElementById('btn-admin-gear');
+  if(btnAdmin) btnAdmin.style.display = SESSION.rol === 'admin' ? '' : 'none';
+  resetPedido();setStep(1);
+}
+
+async function abrirAdmin(){
+  document.getElementById('admin-overlay').classList.add('show');
+  await cargarVendedores();
+}
+
+function cerrarAdmin(){
+  document.getElementById('admin-overlay').classList.remove('show');
+}
+
+function cerrarAdminOverlay(e){
+  if(e.target === document.getElementById('admin-overlay')) cerrarAdmin();
+}
+
+async function cargarVendedores(){
+  const listPend = document.getElementById('admin-vendor-list');
+  const listAll  = document.getElementById('admin-all-vendors');
+  listPend.innerHTML = '<div class="admin-loading">Cargando...</div>';
+  listAll.innerHTML  = '<div class="admin-loading">Cargando...</div>';
+
+  try{
+    let vendedores = [];
+    if(API !== 'TU_APPS_SCRIPT_URL_AQUI'){
+      const r = await fetch(API + '?action=vendedores', {redirect:'follow'});
+      const d = await r.json();
+      if(d.ok) vendedores = d.data;
+    } else {
+      // Modo demo
+      vendedores = DEMO_USERS.map(u => ({...u, pass_hash: '***'}));
+    }
+
+    const pendientes = vendedores.filter(v => v.estado === 'pendiente');
+    const todos      = vendedores.filter(v => v.rol !== 'admin');
+
+    // Lista pendientes
+    if(pendientes.length === 0){
+      listPend.innerHTML = '<div class="admin-empty">No hay vendedores pendientes ✅</div>';
+    } else {
+      listPend.innerHTML = pendientes.map(v => `
+        <div class="vendor-row" id="vrow-${v.user}">
+          <div class="vendor-info">
+            <div class="vendor-name">${v.nombre}</div>
+            <div class="vendor-user">@${v.user}</div>
+          </div>
+          <span class="vendor-badge pendiente">Pendiente</span>
+          <button class="btn-aprobar" onclick="aprobarVendedor('${v.user}')">Aprobar</button>
+        </div>`).join('');
+    }
+
+    // Lista todos
+    if(todos.length === 0){
+      listAll.innerHTML = '<div class="admin-empty">No hay vendedores registrados</div>';
+    } else {
+      listAll.innerHTML = todos.map(v => `
+        <div class="vendor-row">
+          <div class="vendor-info">
+            <div class="vendor-name">${v.nombre}</div>
+            <div class="vendor-user">@${v.user}</div>
+          </div>
+          <span class="vendor-badge ${v.estado}">${v.estado === 'activo' ? 'Activo' : 'Pendiente'}</span>
+        </div>`).join('');
+    }
+
+  } catch(e){
+    listPend.innerHTML = '<div class="admin-empty">Error al cargar vendedores</div>';
+    listAll.innerHTML  = '';
+  }
+}
+
+async function aprobarVendedor(user){
+  try{
+    if(API !== 'TU_APPS_SCRIPT_URL_AQUI'){
+      const r = await fetch(API, {
+        method:'POST',
+        body: JSON.stringify({action:'aprobarVendedor', user}),
+        redirect:'follow'
+      });
+      const d = await r.json();
+      if(!d.ok){ toast('❌ Error al aprobar'); return; }
+    }
+    // Actualizar UI
+    const row = document.getElementById('vrow-' + user);
+    if(row){
+      row.querySelector('.vendor-badge').className = 'vendor-badge activo';
+      row.querySelector('.vendor-badge').textContent = 'Activo';
+      row.querySelector('.btn-aprobar').remove();
+    }
+    toast('✅ Vendedor aprobado correctamente');
+    // Recargar lista completa
+    await cargarVendedores();
+  } catch(e){
+    toast('❌ Error de conexión');
+  }
+}
+
 </script>
 </body>
 </html>
