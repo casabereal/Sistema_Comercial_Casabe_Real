@@ -4,11 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SCCR - Portal de Vendedor | Casabe Real</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  
   <style>
     /* ==========================================================================
-       VARIABLES CROMÁTICAS Y DESIGN SYSTEM SCCR v2.5.0
+       SYSTEM DESIGN & VARIABLES CROMÁTICAS - SCCR v2.5.0
        ========================================================================== */
     :root {
       --rojo-casabe: #D71920;
@@ -21,10 +22,13 @@
       --verde-exito: #059669;
       --amarillo-alerta: #D97706;
       --azul-info: #2563EB;
+      --morado-accent: #7C3AED;
       --borde-suave: #E5E7EB;
-      --sombra-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      --sombra-card: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
       --sombra-elevada: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      --transicion: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
     }
 
     * {
@@ -37,206 +41,182 @@
     body {
       background-color: var(--fondo-pantalla);
       color: var(--gris-texto);
+      line-height: 1.5;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      overflow-x: hidden;
     }
 
     /* ==========================================================================
-       HEADER SUPERIOR (70px)
+       HEADER & BARRA SUPERIOR
        ========================================================================== */
-    .app-header {
-      height: 70px;
-      background-color: var(--blanco);
-      border-bottom: 1px solid var(--borde-suave);
+    header {
+      background-color: var(--negro-titulos);
+      color: var(--blanco);
+      padding: 0.8rem 1.5rem;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      padding: 0 1.5rem;
-      position: fixed;
+      align-items: center;
+      border-bottom: 4px solid var(--rojo-casabe);
+      box-shadow: var(--sombra-card);
+      position: sticky;
       top: 0;
-      left: 0;
-      right: 0;
       z-index: 100;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
 
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 1.2rem;
-    }
-
-    .mobile-toggle {
-      display: none;
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      color: var(--negro-titulos);
-      cursor: pointer;
-    }
-
-    .brand-logo {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      font-weight: 700;
-      font-size: 1.25rem;
-      color: var(--rojo-casabe);
-      text-decoration: none;
-    }
-
-    .brand-logo i {
-      font-size: 1.6rem;
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-    }
-
-    .user-profile {
+    .brand-container {
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      padding: 0.4rem 0.8rem;
-      background-color: var(--fondo-pantalla);
-      border-radius: 50px;
     }
 
-    .avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background-color: var(--rojo-casabe);
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      background: var(--rojo-casabe);
       color: var(--blanco);
+      border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
       justify-content: center;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+
+    .brand-text h1 {
+      font-size: 1.1rem;
       font-weight: 700;
-      font-size: 0.9rem;
+      color: var(--blanco);
+      letter-spacing: 0.5px;
+    }
+
+    .brand-text span {
+      font-size: 0.75rem;
+      color: var(--gris-claro);
+      display: block;
+    }
+
+    .user-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      background: var(--rojo-casabe);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--blanco);
+      font-weight: 700;
+      font-size: 0.85rem;
     }
 
     .user-info {
-      display: flex;
-      flex-direction: column;
+      text-align: right;
     }
 
     .user-name {
       font-size: 0.85rem;
       font-weight: 600;
-      color: var(--negro-titulos);
+      color: var(--blanco);
     }
 
     .user-role {
       font-size: 0.7rem;
-      color: var(--gris-claro);
-      font-weight: 500;
+      color: #9CA3AF;
     }
 
     .btn-logout {
-      background: none;
+      background: transparent;
       border: none;
       color: var(--gris-claro);
-      font-size: 1.2rem;
       cursor: pointer;
-      transition: var(--transicion);
-      padding: 0.4rem;
-      border-radius: 8px;
+      font-size: 1.1rem;
+      transition: color 0.2s;
+      margin-left: 0.5rem;
     }
 
     .btn-logout:hover {
       color: var(--rojo-casabe);
-      background-color: rgba(215, 25, 32, 0.08);
     }
 
     /* ==========================================================================
-       LAYOUT PRINCIPAL & SIDEBAR (260px)
+       NAVEGACIÓN POR PESTAÑAS (ORDEN SOLICITADO)
        ========================================================================== */
-    .app-container {
+    .nav-tabs-wrapper {
+      background: var(--blanco);
+      border-bottom: 1px solid var(--borde-suave);
+      padding: 0 1.5rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      overflow-x: auto;
+    }
+
+    .nav-tabs {
       display: flex;
-      margin-top: 70px;
-      min-height: calc(100vh - 70px);
-    }
-
-    .sidebar {
-      width: 260px;
-      background-color: var(--blanco);
-      border-right: 1px solid var(--borde-suave);
-      padding: 1.5rem 1rem;
-      position: fixed;
-      top: 70px;
-      bottom: 0;
-      left: 0;
-      overflow-y: auto;
-      transition: var(--transicion);
-      z-index: 90;
-    }
-
-    .nav-section-title {
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      font-weight: 700;
-      color: var(--gris-claro);
-      letter-spacing: 0.05em;
-      margin: 1.2rem 0 0.6rem 0.8rem;
-    }
-
-    .nav-menu {
+      gap: 0.5rem;
+      max-width: 1400px;
+      margin: 0 auto;
       list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.35rem;
     }
 
-    .nav-item a {
+    .nav-tab-btn {
+      padding: 0.9rem 1.1rem;
+      border: none;
+      background: transparent;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--gris-texto);
+      cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 0.85rem;
-      padding: 0.75rem 1rem;
-      color: var(--gris-texto);
-      text-decoration: none;
-      font-size: 0.88rem;
-      font-weight: 500;
-      border-radius: 10px;
-      transition: var(--transicion);
+      gap: 0.5rem;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s ease;
+      white-space: nowrap;
     }
 
-    .nav-item a i {
-      font-size: 1.15rem;
-      color: var(--gris-claro);
-      transition: var(--transicion);
+    .nav-tab-btn i {
+      font-size: 1.05rem;
     }
 
-    .nav-item a:hover {
-      background-color: var(--fondo-pantalla);
-      color: var(--negro-titulos);
-    }
-
-    .nav-item a:hover i {
+    .nav-tab-btn:hover {
       color: var(--rojo-casabe);
+      background: #FEF2F2;
     }
 
-    .nav-item.active a {
-      background-color: rgba(215, 25, 32, 0.08);
+    .nav-tab-btn.active {
       color: var(--rojo-casabe);
-      font-weight: 600;
+      border-bottom-color: var(--rojo-casabe);
+      background: #FEF2F2;
     }
 
-    .nav-item.active a i {
-      color: var(--rojo-casabe);
+    .nav-tab-btn.highlight {
+      color: var(--morado-accent);
+    }
+
+    .nav-tab-btn.highlight.active {
+      color: var(--morado-accent);
+      border-bottom-color: var(--morado-accent);
+      background: #F5F3FF;
     }
 
     /* ==========================================================================
-       ÁREA DE CONTENIDO DINÁMICO
+       CONTENEDOR PRINCIPAL & CONTENIDO
        ========================================================================== */
-    .main-content {
-      margin-left: 260px;
+    main {
       flex: 1;
-      padding: 2rem;
       max-width: 1400px;
+      width: 100%;
+      margin: 1.5rem auto;
+      padding: 0 1.5rem;
     }
 
     .tab-content {
@@ -249,367 +229,279 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
+      from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ENCABEZADOS DE SECCIÓN */
-    .page-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1.8rem;
-    }
-
-    .page-title h1 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--negro-titulos);
-    }
-
-    .page-title p {
-      font-size: 0.85rem;
-      color: var(--gris-texto);
-      margin-top: 0.2rem;
-    }
-
     /* ==========================================================================
-       FILA 1: TARJETAS DE CONTROL KPI (DASHBOARD)
+       COMPONENTES REUTILIZABLES (TARJETAS, TABLAS, FORMULARIOS)
        ========================================================================== */
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.2rem;
-      margin-bottom: 2rem;
-    }
-
-    .kpi-card {
-      background-color: var(--blanco);
-      border-radius: 12px;
+    .card {
+      background: var(--blanco);
+      border-radius: var(--radius-md);
       padding: 1.25rem;
       box-shadow: var(--sombra-card);
       border: 1px solid var(--borde-suave);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: var(--transicion);
+      margin-bottom: 1.25rem;
     }
 
-    .kpi-card:hover {
-      box-shadow: var(--sombra-elevada);
-      transform: translateY(-2px);
-    }
-
-    .kpi-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 0.75rem;
-    }
-
-    .kpi-title {
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--gris-texto);
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-    }
-
-    .kpi-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-    }
-
-    .icon-red { background-color: rgba(215, 25, 32, 0.1); color: var(--rojo-casabe); }
-    .icon-green { background-color: rgba(5, 150, 105, 0.1); color: var(--verde-exito); }
-    .icon-blue { background-color: rgba(37, 99, 235, 0.1); color: var(--azul-info); }
-    .icon-yellow { background-color: rgba(217, 119, 6, 0.1); color: var(--amarillo-alerta); }
-
-    .kpi-value {
-      font-size: 1.45rem;
+    .card-title {
+      font-size: 1rem;
       font-weight: 700;
       color: var(--negro-titulos);
-      margin-bottom: 0.4rem;
-    }
-
-    .kpi-subtext {
-      font-size: 0.75rem;
-      color: var(--gris-claro);
+      margin-bottom: 1rem;
       display: flex;
       align-items: center;
-      gap: 0.3rem;
+      justify-content: space-between;
+      gap: 0.5rem;
     }
 
-    .badge-up { color: var(--verde-exito); font-weight: 600; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
 
-    /* ==========================================================================
-       SECCIÓN META COMERCIAL
-       ========================================================================== */
-    .meta-card {
-      background-color: var(--blanco);
-      border-radius: 12px;
-      padding: 1.8rem;
-      box-shadow: var(--sombra-card);
+    @media (max-width: 992px) {
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    }
+
+    /* KPI Cards */
+    .kpi-card {
+      background: var(--blanco);
+      border-radius: var(--radius-md);
+      padding: 1.2rem;
       border: 1px solid var(--borde-suave);
-      margin-bottom: 2rem;
-    }
-
-    .progress-bar-container {
-      width: 100%;
-      height: 14px;
-      background-color: var(--fondo-pantalla);
-      border-radius: 20px;
+      box-shadow: var(--sombra-card);
+      position: relative;
       overflow: hidden;
-      margin: 1rem 0;
     }
 
-    .progress-bar-fill {
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
       height: 100%;
-      background: linear-gradient(90deg, var(--rojo-casabe), #F87171);
-      border-radius: 20px;
-      width: 0%;
-      transition: width 1s ease-in-out;
+      background: var(--rojo-casabe);
     }
 
-    .meta-details {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.85rem;
-      color: var(--gris-texto);
-      font-weight: 500;
-    }
+    .kpi-card.verde::before { background: var(--verde-exito); }
+    .kpi-card.azul::before { background: var(--azul-info); }
+    .kpi-card.morado::before { background: var(--morado-accent); }
+    .kpi-card.amarillo::before { background: var(--amarillo-alerta); }
 
-    /* ==========================================================================
-       EMBUDO COMERCIAL DE 5 ETAPAS (KANBAN)
-       ========================================================================== */
-    .funnel-container {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 1rem;
-      overflow-x: auto;
-      padding-bottom: 1rem;
-    }
-
-    .funnel-column {
-      background-color: var(--blanco);
-      border-radius: 12px;
-      border: 1px solid var(--borde-suave);
-      padding: 1rem;
-      min-width: 220px;
-      display: flex;
-      flex-direction: column;
-      box-shadow: var(--sombra-card);
-    }
-
-    .funnel-col-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-bottom: 0.8rem;
-      margin-bottom: 0.8rem;
-      border-bottom: 2px solid var(--fondo-pantalla);
-    }
-
-    .funnel-col-header h4 {
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: var(--negro-titulos);
+    .kpi-label {
+      font-size: 0.75rem;
+      font-weight: 600;
       text-transform: uppercase;
-    }
-
-    .funnel-badge {
-      background-color: var(--fondo-pantalla);
-      color: var(--gris-texto);
-      font-size: 0.72rem;
-      font-weight: 600;
-      padding: 0.2rem 0.5rem;
-      border-radius: 20px;
-    }
-
-    .funnel-cards {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      min-height: 250px;
-    }
-
-    .opportunity-card {
-      background-color: var(--fondo-pantalla);
-      border-radius: 8px;
-      padding: 0.85rem;
-      border-left: 4px solid var(--rojo-casabe);
-      cursor: pointer;
-      transition: var(--transicion);
-    }
-
-    .opportunity-card:hover {
-      background-color: var(--blanco);
-      box-shadow: var(--sombra-elevada);
-      transform: translateY(-2px);
-    }
-
-    .op-client {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--negro-titulos);
+      color: var(--gris-claro);
       margin-bottom: 0.3rem;
     }
 
-    .op-amount {
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--verde-exito);
+    .kpi-value {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--negro-titulos);
     }
 
-    .op-date {
-      font-size: 0.7rem;
-      color: var(--gris-claro);
-      margin-top: 0.4rem;
+    .kpi-sub {
+      font-size: 0.75rem;
+      color: var(--gris-texto);
+      margin-top: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
     }
 
-    /* ==========================================================================
-       TABLAS Y FORMULARIOS (REPORTE DE GESTIÓN Y CLIENTES)
-       ========================================================================== */
+    /* Tablas Estilizadas */
     .table-container {
-      background-color: var(--blanco);
-      border-radius: 12px;
-      box-shadow: var(--sombra-card);
+      overflow-x: auto;
+      border-radius: var(--radius-sm);
       border: 1px solid var(--borde-suave);
-      overflow: hidden;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       text-align: left;
+      font-size: 0.85rem;
     }
 
     th {
-      background-color: #FAFAFA;
-      padding: 0.9rem 1.2rem;
-      font-size: 0.78rem;
+      background: #F9FAFB;
+      color: var(--negro-titulos);
       font-weight: 700;
-      color: var(--gris-texto);
-      text-transform: uppercase;
-      border-bottom: 1px solid var(--borde-suave);
+      padding: 0.75rem 1rem;
+      border-bottom: 2px solid var(--borde-suave);
+      white-space: nowrap;
     }
 
     td {
-      padding: 1rem 1.2rem;
-      font-size: 0.85rem;
-      color: var(--negro-titulos);
+      padding: 0.75rem 1rem;
       border-bottom: 1px solid var(--borde-suave);
+      color: var(--gris-texto);
     }
 
-    tr:last-child td {
-      border-bottom: none;
+    tr:hover {
+      background: #F9FAFB;
     }
 
-    tr:hover td {
-      background-color: #F9FAFB;
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
     }
 
+    .badge-exito { background: #D1FAE5; color: #065F46; }
+    .badge-alerta { background: #FEF3C7; color: #92400E; }
+    .badge-critico { background: #FEE2E2; color: #991B1B; }
+    .badge-info { background: #DBEAFE; color: #1E40AF; }
+
+    /* Barra de Progreso */
+    .progress-bar-bg {
+      width: 100%;
+      height: 10px;
+      background: #E5E7EB;
+      border-radius: 5px;
+      overflow: hidden;
+      margin: 0.5rem 0;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--rojo-casabe);
+      border-radius: 5px;
+      transition: width 0.4s ease;
+    }
+
+    /* Botones y Formularios */
     .btn {
       padding: 0.6rem 1.2rem;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
+      border-radius: var(--radius-sm);
       border: none;
+      font-weight: 600;
+      font-size: 0.85rem;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      transition: var(--transicion);
-      text-decoration: none;
+      gap: 0.4rem;
+      transition: background 0.2s;
     }
 
     .btn-primary {
-      background-color: var(--rojo-casabe);
+      background: var(--rojo-casabe);
       color: var(--blanco);
     }
 
     .btn-primary:hover {
-      background-color: var(--rojo-hover);
+      background: var(--rojo-hover);
     }
 
     .btn-secondary {
-      background-color: var(--fondo-pantalla);
-      color: var(--gris-texto);
+      background: #E5E7EB;
+      color: var(--negro-titulos);
     }
 
     .btn-secondary:hover {
-      background-color: #E5E7EB;
+      background: #D1D5DB;
     }
 
-    .badge-status {
-      padding: 0.25rem 0.6rem;
-      border-radius: 20px;
-      font-size: 0.72rem;
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.8rem;
       font-weight: 600;
-      display: inline-block;
+      color: var(--negro-titulos);
+      margin-bottom: 0.3rem;
     }
 
-    .badge-active { background-color: rgba(5, 150, 105, 0.12); color: var(--verde-exito); }
-    .badge-risk { background-color: rgba(217, 119, 6, 0.12); color: var(--amarillo-alerta); }
-    .badge-inactive { background-color: rgba(215, 25, 32, 0.12); color: var(--rojo-casabe); }
+    .form-control {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border: 1px solid var(--borde-suave);
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--rojo-casabe);
+    }
 
     /* ==========================================================================
-       IFRAME / CONTENEDOR MODULAR (PROPUESTAS / PEDIDOS)
+       ESTILOS ESPECÍFICOS PARA PESTAÑA "+ MÉTRICAS" (MÉTRICAS AVANZADAS)
        ========================================================================== */
-    .module-frame {
-      width: 100%;
-      height: calc(100vh - 180px);
-      border: 1px solid var(--borde-suave);
-      border-radius: 12px;
-      background-color: var(--blanco);
+    .distribution-bar {
+      display: flex;
+      height: 24px;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      margin: 1rem 0;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
     }
 
-    /* RESPONSIVIDAD MOBIL */
-    @media (max-width: 992px) {
-      .sidebar {
-        transform: translateX(-100%);
-      }
-      .sidebar.open {
-        transform: translateX(0);
-      }
-      .main-content {
-        margin-left: 0;
-        padding: 1.2rem;
-      }
-      .mobile-toggle {
-        display: block;
-      }
-      .funnel-container {
-        grid-template-columns: repeat(5, minmax(220px, 1fr));
-      }
+    .dist-segment {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--blanco);
+      font-size: 0.7rem;
+      font-weight: 700;
+      transition: width 0.5s ease;
+    }
+
+    .seg-tradicional { background: #D71920; }
+    .seg-gourmet { background: #2563EB; }
+    .seg-mini { background: #059669; }
+    .seg-sazonado { background: #D97706; }
+    .seg-especial { background: #7C3AED; }
+
+    .legend-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
     }
   </style>
 </head>
 <body>
 
-  <header class="app-header">
-    <div class="header-left">
-      <button class="mobile-toggle" id="mobileToggle" onclick="toggleSidebar()">
-        <i class="ri-menu-line"></i>
-      </button>
-      <a href="#" class="brand-logo">
-        <i class="ri-store-2-fill"></i>
-        <span>CASABE REAL</span>
-      </a>
+  <header>
+    <div class="brand-container">
+      <div class="brand-logo">CR</div>
+      <div class="brand-text">
+        <h1>Casabe Real</h1>
+        <span>SCCR v2.5.0 • Portal Vendedor</span>
+      </div>
     </div>
 
-    <div class="header-right">
-      <div class="user-profile">
-        <div class="avatar" id="userAvatar">V</div>
-        <div class="user-info">
-          <span class="user-name" id="userName">Vendedor Asignado</span>
-          <span class="user-role" id="userRole">Vendedor / Asesor Commercial</span>
-        </div>
+    <div class="user-badge">
+      <div class="user-avatar" id="userAvatar">CM</div>
+      <div class="user-info">
+        <div class="user-name" id="userName">Carlos Mendoza</div>
+        <div class="user-role" id="userRole">Vendedor • Zona Centro</div>
       </div>
       <button class="btn-logout" title="Cerrar Sesión" onclick="cerrarSesion()">
         <i class="ri-logout-box-r-line"></i>
@@ -617,526 +509,622 @@
     </div>
   </header>
 
-  <div class="app-container">
-    
-    <aside class="sidebar" id="sidebar">
-      <div class="nav-section-title">Principal</div>
-      <ul class="nav-menu">
-        <li class="nav-item active" data-tab="dashboard">
-          <a href="#dashboard" onclick="switchTab('dashboard')">
-            <i class="ri-dashboard-line"></i> Dashboard
-          </a>
-        </li>
-        <li class="nav-item" data-tab="meta">
-          <a href="#meta" onclick="switchTab('meta')">
-            <i class="ri-target-line"></i> Meta del Mes
-          </a>
-        </li>
-      </ul>
+  <div class="nav-tabs-wrapper">
+    <ul class="nav-tabs">
+      <li>
+        <button class="nav-tab-btn active" onclick="switchTab('clientes', this)">
+          <i class="ri-user-star-line"></i> Clientes
+        </button>
+      </li>
+      <li>
+        <button class="nav-tab-btn" onclick="switchTab('meta', this)">
+          <i class="ri-focus-3-line"></i> Meta
+        </button>
+      </li>
+      <li>
+        <button class="nav-tab-btn" onclick="switchTab('propuesta', this)">
+          <i class="ri-file-text-line"></i> Propuesta
+        </button>
+      </li>
+      <li>
+        <button class="nav-tab-btn" onclick="switchTab('pedidos', this)">
+          <i class="ri-shopping-cart-2-line"></i> Pedidos
+        </button>
+      </li>
+      <li>
+        <button class="nav-tab-btn" onclick="switchTab('gestion', this)">
+          <i class="ri-task-line"></i> Reporte de gestión
+        </button>
+      </li>
+      <li>
+        <button class="nav-tab-btn" onclick="switchTab('embudo', this)">
+          <i class="ri-filter-3-line"></i> Embudo
+        </button>
+      </li>
+      <li>
+        <button class="nav-tab-btn" onclick="switchTab('dashboard', this)">
+          <i class="ri-dashboard-3-line"></i> Dashboard
+        </button>
+      </li>
+      <li>
+        <button class="nav-tab-btn highlight" onclick="switchTab('metricas', this)">
+          <i class="ri-bar-chart-grouped-line"></i> + Métricas
+        </button>
+      </li>
+    </ul>
+  </div>
 
-      <div class="nav-section-title">Operación Comercial</div>
-      <ul class="nav-menu">
-        <li class="nav-item" data-tab="propuestas">
-          <a href="#propuestas" onclick="switchTab('propuestas')">
-            <i class="ri-file-text-line"></i> Propuestas (Cotizador)
-          </a>
-        </li>
-        <li class="nav-item" data-tab="pedidos">
-          <a href="#pedidos" onclick="switchTab('pedidos')">
-            <i class="ri-shopping-cart-line"></i> Toma de Pedidos
-          </a>
-        </li>
-        <li class="nav-item" data-tab="gestion">
-          <a href="#gestion" onclick="switchTab('gestion')">
-            <i class="ri-calendar-todo-line"></i> Reporte de Gestión
-          </a>
-        </li>
-      </ul>
+  <main>
 
-      <div class="nav-section-title">Pipeline & Cartera</div>
-      <ul class="nav-menu">
-        <li class="nav-item" data-tab="embudo">
-          <a href="#embudo" onclick="switchTab('embudo')">
-            <i class="ri-filter-3-line"></i> Embudo Comercial
-          </a>
-        </li>
-        <li class="nav-item" data-tab="clientes">
-          <a href="#clientes" onclick="switchTab('clientes')">
-            <i class="ri-user-shared-line"></i> Cartera de Clientes
-          </a>
-        </li>
-      </ul>
-    </aside>
-
-    <main class="main-content">
-
-      <section id="tab-dashboard" class="tab-content active">
-        <div class="page-header">
-          <div class="page-title">
-            <h1>Dashboard Comercial</h1>
-            <p>Resumen de rendimiento personal e indicadores clave hoy.</p>
-          </div>
-          <button class="btn btn-primary" onclick="switchTab('pedidos')">
-            <i class="ri-add-line"></i> Nuevo Pedido
+    <section id="tab-clientes" class="tab-content active">
+      <div class="card">
+        <div class="card-title">
+          <span><i class="ri-user-search-line"></i> Cartera de Clientes Asignados</span>
+          <button class="btn btn-primary" onclick="alert('Módulo de registro de nuevos prospectos')">
+            <i class="ri-add-line"></i> Nuevo Cliente
           </button>
         </div>
 
-        <div class="kpi-grid">
-          <div class="kpi-card">
-            <div class="kpi-header">
-              <span class="kpi-title">Ventas Hoy</span>
-              <div class="kpi-icon icon-red"><i class="ri-money-dollar-circle-line"></i></div>
-            </div>
-            <div class="kpi-value" id="kpiVentasHoy">$0.00</div>
-            <div class="kpi-subtext"><span class="badge-up">↑ 12%</span> vs ayer</div>
-          </div>
-
-          <div class="kpi-card">
-            <div class="kpi-header">
-              <span class="kpi-title">Ventas Semana</span>
-              <div class="kpi-icon icon-blue"><i class="ri-calendar-event-line"></i></div>
-            </div>
-            <div class="kpi-value" id="kpiVentasSemana">$0.00</div>
-            <div class="kpi-subtext">Semana en curso</div>
-          </div>
-
-          <div class="kpi-card">
-            <div class="kpi-header">
-              <span class="kpi-title">Ventas Mes</span>
-              <div class="kpi-icon icon-green"><i class="ri-funds-box-line"></i></div>
-            </div>
-            <div class="kpi-value" id="kpiVentasMes">$0.00</div>
-            <div class="kpi-subtext">Acumulado mensual</div>
-          </div>
-
-          <div class="kpi-card">
-            <div class="kpi-header">
-              <span class="kpi-title">Cajas Vendidas</span>
-              <div class="kpi-icon icon-yellow"><i class="ri-box-3-line"></i></div>
-            </div>
-            <div class="kpi-value" id="kpiCajasMes">0 cjs</div>
-            <div class="kpi-subtext">Total unidades mes</div>
-          </div>
-
-          <div class="kpi-card">
-            <div class="kpi-header">
-              <span class="kpi-title">Clientes Activos</span>
-              <div class="kpi-icon icon-blue"><i class="ri-team-line"></i></div>
-            </div>
-            <div class="kpi-value" id="kpiClientesActivos">0</div>
-            <div class="kpi-subtext">De tu cartera total</div>
-          </div>
-
-          <div class="kpi-card">
-            <div class="kpi-header">
-              <span class="kpi-title">% Cumplimiento Meta</span>
-              <div class="kpi-icon icon-green"><i class="ri-percent-line"></i></div>
-            </div>
-            <div class="kpi-value" id="kpiCumplimientoMeta">0%</div>
-            <div class="kpi-subtext" id="kpiGapText">GAP: $0.00</div>
-          </div>
-        </div>
-      </section>
-
-      <section id="tab-meta" class="tab-content">
-        <div class="page-header">
-          <div class="page-title">
-            <h1>Progreso de Meta Mensual</h1>
-            <p>Monitoreo detallado del cumplimiento de objetivos en dólares y cajas.</p>
-          </div>
-        </div>
-
-        <div class="meta-card">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="font-size: 1.1rem; color: var(--negro-titulos);">Avance de Ventas en USD</h3>
-            <span style="font-weight: 700; color: var(--rojo-casabe);" id="metaPorcentajeUSD">0%</span>
-          </div>
-          <div class="progress-bar-container">
-            <div class="progress-bar-fill" id="progressBarFillUSD"></div>
-          </div>
-          <div class="meta-details">
-            <span>Logrado: <strong id="metaLogradoUSD">$0.00</strong></span>
-            <span>Meta Objetivo: <strong id="metaObjetivoUSD">$0.00</strong></span>
-          </div>
-        </div>
-
-        <div class="meta-card">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="font-size: 1.1rem; color: var(--negro-titulos);">Avance en Cajas</h3>
-            <span style="font-weight: 700; color: var(--verde-exito);" id="metaPorcentajeCajas">0%</span>
-          </div>
-          <div class="progress-bar-container">
-            <div class="progress-bar-fill" id="progressBarFillCajas" style="background: linear-gradient(90deg, var(--verde-exito), #34D399);"></div>
-          </div>
-          <div class="meta-details">
-            <span>Logrado: <strong id="metaLogradoCajas">0 cjs</strong></span>
-            <span>Meta Objetivo: <strong id="metaObjetivoCajas">0 cjs</strong></span>
-          </div>
-        </div>
-      </section>
-
-      <section id="tab-propuestas" class="tab-content">
-        <div class="page-header">
-          <div class="page-title">
-            <h1>Simulador & Propuestas Comerciales</h1>
-            <p>Genera propuestas y calcula márgenes interactivos para clientes.</p>
-          </div>
-        </div>
-        <iframe src="propuesta.html" class="module-frame" title="Simulador de Propuestas"></iframe>
-      </section>
-
-      <section id="tab-pedidos" class="tab-content">
-        <div class="page-header">
-          <div class="page-title">
-            <h1>Captura de Pedidos</h1>
-            <p>Registra ventas directas para tus clientes asignados.</p>
-          </div>
-        </div>
-        <iframe src="pedidos.html" class="module-frame" title="Modulo de Pedidos"></iframe>
-      </section>
-
-      <section id="tab-gestion" class="tab-content">
-        <div class="page-header">
-          <div class="page-title">
-            <h1>Reporte de Gestión Comercial</h1>
-            <p>Bitácora de interacciones, seguimiento de contactos y reprogramación.</p>
-          </div>
+        <div style="display:flex; gap:1rem; margin-bottom:1rem; flex-wrap:wrap;">
+          <input type="text" id="inputBuscarCliente" class="form-control" style="flex:1; min-width:220px;" placeholder="Buscar cliente por nombre o RIF..." onkeyup="filtrarClientes()">
+          <select id="selectFiltroABC" class="form-control" style="width:160px;" onchange="filtrarClientes()">
+            <option value="">Clasificación ABC</option>
+            <option value="A">Clase A</option>
+            <option value="B">Clase B</option>
+            <option value="C">Clase C</option>
+          </select>
         </div>
 
         <div class="table-container">
           <table>
             <thead>
               <tr>
+                <th>Código</th>
+                <th>Cliente / Razón Social</th>
+                <th>Clasificación</th>
+                <th>Frecuencia</th>
+                <th>Última Compra</th>
+                <th>Estado Salud</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tablaClientesBody">
+              </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-meta" class="tab-content">
+      <div class="grid-4" style="margin-bottom:1.25rem;">
+        <div class="kpi-card">
+          <div class="kpi-label">Meta Facturación ($)</div>
+          <div class="kpi-value" id="metaMonto">$12,000</div>
+          <div class="kpi-sub">Objetivo Mensual</div>
+        </div>
+        <div class="kpi-card verde">
+          <div class="kpi-label">Facturado Real ($)</div>
+          <div class="kpi-value" id="realMonto">$8,850</div>
+          <div class="kpi-sub" style="color:var(--verde-exito); font-weight:700;">73.8% de avance</div>
+        </div>
+        <div class="kpi-card azul">
+          <div class="kpi-label">Meta Cajas</div>
+          <div class="kpi-value" id="metaCajas">800 Cajas</div>
+          <div class="kpi-sub">Empaques logísticos</div>
+        </div>
+        <div class="kpi-card amarillo">
+          <div class="kpi-label">Brecha / GAP ($)</div>
+          <div class="kpi-value" id="gapMonto">$3,150</div>
+          <div class="kpi-sub" style="color:var(--amarillo-alerta);">Faltante a meta</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ri-flag-2-line"></i> Progreso del Objetivo Mensual</div>
+        
+        <label class="form-label">Cumplimiento en Facturación ($)</label>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width: 73.8%;"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:600; margin-bottom:1.5rem;">
+          <span>$8,850 Facturados</span>
+          <span>$12,000 Meta</span>
+        </div>
+
+        <label class="form-label">Cumplimiento en Volumen (Cajas)</label>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width: 71.2%; background:var(--azul-info);"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:600;">
+          <span>570 Cajas Entregadas</span>
+          <span>800 Cajas Meta</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-propuesta" class="tab-content">
+      <div class="card">
+        <div class="card-title">
+          <span><i class="ri-calculator-line"></i> Cotizador & Simulador Rápido de Propuesta Comercial</span>
+          <a href="propuesta.html" target="_blank" class="btn btn-secondary" style="text-decoration:none;">
+            <i class="ri-external-link-line"></i> Abrir propuesta.html Completa
+          </a>
+        </div>
+
+        <div class="grid-2">
+          <div>
+            <div class="form-group">
+              <label class="form-label">Seleccionar Cliente</label>
+              <select class="form-control" id="simCliente">
+                <option value="">-- Seleccionar de Cartera --</option>
+                <option value="Supermercados El Rey">Supermercados El Rey</option>
+                <option value="Bodegón Plaza Altamira">Bodegón Plaza Altamira</option>
+                <option value="Distribuidora Central">Distribuidora Central</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Línea de Producto Principal</label>
+              <select class="form-control" id="simProducto" onchange="calcularSimulador()">
+                <option value="15">Casabe Tradicional 200g ($15.00 / caja)</option>
+                <option value="22">Casabe Gourmet Ajo & Fina Hierba ($22.00 / caja)</option>
+                <option value="18">Casabe Mini Snacking ($18.00 / caja)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Cantidad de Cajas</label>
+              <input type="number" id="simCantidad" class="form-control" value="20" min="1" oninput="calcularSimulador()">
+            </div>
+          </div>
+
+          <div style="background:#F9FAFB; padding:1.25rem; border-radius:var(--radius-sm); border:1px solid var(--borde-suave);">
+            <h4 style="font-size:0.9rem; font-weight:700; margin-bottom:0.75rem;">Resumen Económico para el Cliente</h4>
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem; font-size:0.85rem;">
+              <span>Monto Total Inversión:</span>
+              <strong id="simMontoTotal">$300.00</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem; font-size:0.85rem;">
+              <span>Margen Estimado del Cliente:</span>
+              <strong style="color:var(--verde-exito);" id="simMargen">30% ($90.00)</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:1rem; font-size:0.85rem;">
+              <span>Retorno Estimado (PVP):</span>
+              <strong id="simRetorno">$390.00</strong>
+            </div>
+            <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="enviarWhatsAppPropuesta()">
+              <i class="ri-whatsapp-line"></i> Compartir Propuesta por WhatsApp
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-pedidos" class="tab-content">
+      <div class="card">
+        <div class="card-title">
+          <span><i class="ri-add-box-line"></i> Registro Rápido de Pedido</span>
+          <a href="pedidos.html" target="_blank" class="btn btn-secondary" style="text-decoration:none;">
+            <i class="ri-external-link-line"></i> Módulo Completo pedidos.html
+          </a>
+        </div>
+
+        <form id="formPedidoRapido" onsubmit="guardarPedido(event)">
+          <div class="grid-3">
+            <div class="form-group">
+              <label class="form-label">Cliente</label>
+              <select class="form-control" required id="pedCliente">
+                <option value="">Seleccione Cliente</option>
+                <option value="Supermercados El Rey">Supermercados El Rey</option>
+                <option value="Bodegón Plaza Altamira">Bodegón Plaza Altamira</option>
+                <option value="Comercializadora La Andina">Comercializadora La Andina</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Cajas Totales</label>
+              <input type="number" class="form-control" required min="1" id="pedCajas" placeholder="Ej. 50">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Monto Total Facturado ($)</label>
+              <input type="number" class="form-control" required step="0.01" id="pedMonto" placeholder="Ej. 750.00">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">
+            <i class="ri-save-line"></i> Procesar y Persistir Pedido
+          </button>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ri-history-line"></i> Histórico de Pedidos Recientes</div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>ID Pedido</th>
+                <th>Fecha</th>
                 <th>Cliente</th>
-                <th>Etapa Actual</th>
-                <th>Interacciones</th>
-                <th>Último Contacto</th>
-                <th>Próxima Acción</th>
-                <th>Acción</th>
+                <th>Cajas</th>
+                <th>Monto ($)</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="tablaPedidosBody">
+              <tr>
+                <td><strong>#PED-1082</strong></td>
+                <td>05/08/2026</td>
+                <td>Supermercados El Rey</td>
+                <td>40 Cajas</td>
+                <td>$600.00</td>
+                <td><span class="badge badge-exito">Aprobado</span></td>
+              </tr>
+              <tr>
+                <td><strong>#PED-1079</strong></td>
+                <td>03/08/2026</td>
+                <td>Bodegón Plaza Altamira</td>
+                <td>15 Cajas</td>
+                <td>$330.00</td>
+                <td><span class="badge badge-info">En Proceso</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-gestion" class="tab-content">
+      <div class="card">
+        <div class="card-title"><i class="ri-edit-box-line"></i> Registrar Bitácora de Gestión Comercial</div>
+        <form id="formGestion" onsubmit="registrarGestion(event)">
+          <div class="grid-3">
+            <div class="form-group">
+              <label class="form-label">Cliente / Prospecto</label>
+              <input type="text" class="form-control" id="gestCliente" required placeholder="Nombre del cliente o negocio">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tipo de Actividad</label>
+              <select class="form-control" id="gestTipo">
+                <option value="Llamada Telefónica">Llamada Telefónica</option>
+                <option value="Visita Presencial">Visita Presencial</option>
+                <option value="Envío de Cotización">Envío de Cotización</option>
+                <option value="Cobranza / Seguimiento">Cobranza / Seguimiento</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Resultado / Estado</label>
+              <select class="form-control" id="gestResultado">
+                <option value="Acuerdo de Pedido">Acuerdo de Pedido</option>
+                <option value="En Negociación">En Negociación</option>
+                <option value="No Venta">No Venta / Rechazado</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Observaciones / Compromisos</label>
+            <textarea class="form-control" id="gestObs" rows="2" placeholder="Detalles de la conversación, fecha de recontacto..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary"><i class="ri-check-line"></i> Guardar Gestión</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ri-file-list-3-line"></i> Histórico de Gestiones Realizadas</div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Fecha / Hora</th>
+                <th>Cliente</th>
+                <th>Actividad</th>
+                <th>Resultado</th>
+                <th>Observaciones</th>
               </tr>
             </thead>
             <tbody id="tablaGestionBody">
               <tr>
-                <td colspan="6" style="text-align: center; color: var(--gris-claro);">Cargando registros de gestión...</td>
+                <td>06/08/2026 10:15 AM</td>
+                <td>Distribuidora Central</td>
+                <td>Visita Presencial</td>
+                <td><span class="badge badge-exito">Acuerdo de Pedido</span></td>
+                <td>Revisión de inventarios. Solicitarán 60 cajas la próxima semana.</td>
               </tr>
             </tbody>
           </table>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section id="tab-embudo" class="tab-content">
-        <div class="page-header">
-          <div class="page-title">
-            <h1>Embudo Comercial de 5 Etapas</h1>
-            <p>Pipeline visual del flujo continuo de oportunidades activas.</p>
+    <section id="tab-embudo" class="tab-content">
+      <div class="card">
+        <div class="card-title"><i class="ri-filter-3-line"></i> Embudo Comercial de 5 Etapas (Cartera Vendedor)</div>
+        <p style="font-size:0.8rem; margin-bottom:1.25rem;">Monitoreo de conversión desde la prospección inicial hasta la fidelización recurrente.</p>
+
+        <div class="grid-5" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:1rem;">
+          <div style="background:#F3F4F6; padding:1rem; border-radius:var(--radius-sm); border-top:4px solid var(--gris-claro);">
+            <div style="font-size:0.75rem; font-weight:700; color:var(--gris-texto);">1. PROSPECCIÓN</div>
+            <div style="font-size:1.4rem; font-weight:800; margin:0.3rem 0;">12</div>
+            <div style="font-size:0.7rem;">Oportunidades ($2,400)</div>
+          </div>
+
+          <div style="background:#EFF6FF; padding:1rem; border-radius:var(--radius-sm); border-top:4px solid var(--azul-info);">
+            <div style="font-size:0.75rem; font-weight:700; color:var(--azul-info);">2. CONTACTO</div>
+            <div style="font-size:1.4rem; font-weight:800; margin:0.3rem 0;">8</div>
+            <div style="font-size:0.7rem;">En diálogo ($1,800)</div>
+          </div>
+
+          <div style="background:#F5F3FF; padding:1rem; border-radius:var(--radius-sm); border-top:4px solid var(--morado-accent);">
+            <div style="font-size:0.75rem; font-weight:700; color:var(--morado-accent);">3. PRESENTACIÓN</div>
+            <div style="font-size:1.4rem; font-weight:800; margin:0.3rem 0;">5</div>
+            <div style="font-size:0.7rem;">Propuestas enviadas ($1,250)</div>
+          </div>
+
+          <div style="background:#FEF3C7; padding:1rem; border-radius:var(--radius-sm); border-top:4px solid var(--amarillo-alerta);">
+            <div style="font-size:0.75rem; font-weight:700; color:var(--amarillo-alerta);">4. ACTIVACIÓN</div>
+            <div style="font-size:1.4rem; font-weight:800; margin:0.3rem 0;">18</div>
+            <div style="font-size:0.7rem;">1 a 4 pedidos ($4,100)</div>
+          </div>
+
+          <div style="background:#D1FAE5; padding:1rem; border-radius:var(--radius-sm); border-top:4px solid var(--verde-exito);">
+            <div style="font-size:0.75rem; font-weight:700; color:var(--verde-exito);">5. FIDELIZACIÓN</div>
+            <div style="font-size:1.4rem; font-weight:800; margin:0.3rem 0;">24</div>
+            <div style="font-size:0.7rem;">5+ pedidos recurrentes ($9,500)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-dashboard" class="tab-content">
+      <div class="grid-4" style="margin-bottom:1.25rem;">
+        <div class="kpi-card">
+          <div class="kpi-label">Venta Hoy</div>
+          <div class="kpi-value">$450.00</div>
+          <div class="kpi-sub">2 pedidos cargados</div>
+        </div>
+        <div class="kpi-card verde">
+          <div class="kpi-label">Venta Semana</div>
+          <div class="kpi-value">$2,100.00</div>
+          <div class="kpi-sub">140 Cajas entregadas</div>
+        </div>
+        <div class="kpi-card azul">
+          <div class="kpi-label">Ticket Promedio</div>
+          <div class="kpi-value">$215.00</div>
+          <div class="kpi-sub">Por pedido emitido</div>
+        </div>
+        <div class="kpi-card morado">
+          <div class="kpi-label">Efectividad Visitas</div>
+          <div class="kpi-value">78%</div>
+          <div class="kpi-sub">Cierre sobre contactos</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="ri-lightbulb-line"></i> Centro de Alerta Comercial</div>
+        <div style="display:flex; flex-direction:column; gap:0.6rem;">
+          <div style="background:#FEF3C7; padding:0.8rem 1rem; border-radius:var(--radius-sm); font-size:0.85rem; border-left:4px solid var(--amarillo-alerta);">
+            <strong>Alerta de Recencia:</strong> 3 Clientes Tipo A (ej. Bodegón Plaza Altamira) no registran pedidos desde hace más de 18 días.
+          </div>
+          <div style="background:#EFF6FF; padding:0.8rem 1rem; border-radius:var(--radius-sm); font-size:0.85rem; border-left:4px solid var(--azul-info);">
+            <strong>Oportunidad de Diversificación:</strong> La línea <em>Casabe Gourmet Sazonado</em> solo representa el 5% de tu venta.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-metricas" class="tab-content">
+      <div class="card">
+        <div class="card-title">
+          <span><i class="ri-pie-chart-2-line"></i> Analítica de Mezcla de Portafolio por Línea de Producto</span>
+          <span style="font-size:0.75rem; background:#F3F4F6; padding:0.3rem 0.6rem; border-radius:12px;">Participación Mensual %</span>
+        </div>
+        
+        <p style="font-size:0.8rem; color:var(--gris-texto);">
+          Distribución acumulada de unidades y facturación por la familia de productos Casabe Real en la cartera asignada:
+        </p>
+
+        <div class="distribution-bar">
+          <div class="dist-segment seg-tradicional" style="width: 45%;" title="Tradicional: 45%">45%</div>
+          <div class="dist-segment seg-gourmet" style="width: 25%;" title="Gourmet: 25%">25%</div>
+          <div class="dist-segment seg-mini" style="width: 15%;" title="Mini Snacking: 15%">15%</div>
+          <div class="dist-segment seg-sazonado" style="width: 10%;" title="Sazonado: 10%">10%</div>
+          <div class="dist-segment seg-especial" style="width: 5%;" title="Especiales: 5%">5%</div>
+        </div>
+
+        <div class="legend-grid">
+          <div class="legend-item">
+            <div class="legend-color seg-tradicional"></div>
+            <span>Tradicional (45%)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color seg-gourmet"></div>
+            <span>Gourmet (25%)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color seg-mini"></div>
+            <span>Mini Snacking (15%)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color seg-sazonado"></div>
+            <span>Sazonado (10%)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color seg-especial"></div>
+            <span>Especiales (5%)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title"><i class="ri-pulse-line"></i> Concentración de Cartera (Pareto 80/20)</div>
+          <div style="font-size:0.85rem; margin-bottom:1rem;">
+            El <strong style="color:var(--rojo-casabe);">20% de tus clientes</strong> genera el <strong style="color:var(--negro-titulos);">78% de tu facturación total</strong>.
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" style="width: 78%; background:var(--rojo-casabe);"></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-top:0.3rem;">
+            <span>Top 5 Clientes ($6,903)</span>
+            <span>Resto de Cartera ($1,947)</span>
           </div>
         </div>
 
-        <div class="funnel-container">
-          <div class="funnel-column">
-            <div class="funnel-col-header">
-              <h4>1. Prospección</h4>
-              <span class="funnel-badge" id="badgeEtapa1">0</span>
-            </div>
-            <div class="funnel-cards" id="cardsEtapa1"></div>
+        <div class="card">
+          <div class="card-title"><i class="ri-repeat-line"></i> Índice de Diversificación & Venta Cruzada</div>
+          <div style="font-size:0.85rem; margin-bottom:0.8rem;">
+            Indicador de clientes con compra recurrente de más de 2 categorías simultáneas:
           </div>
-
-          <div class="funnel-column">
-            <div class="funnel-col-header">
-              <h4>2. Contacto</h4>
-              <span class="funnel-badge" id="badgeEtapa2">0</span>
-            </div>
-            <div class="funnel-cards" id="cardsEtapa2"></div>
+          <div style="font-size:1.8rem; font-weight:800; color:var(--morado-accent);">
+            62.5% <span style="font-size:0.8rem; font-weight:500; color:var(--gris-texto);">(15 de 24 clientes activos)</span>
           </div>
-
-          <div class="funnel-column">
-            <div class="funnel-col-header">
-              <h4>3. Presentación</h4>
-              <span class="funnel-badge" id="badgeEtapa3">0</span>
-            </div>
-            <div class="funnel-cards" id="cardsEtapa3"></div>
-          </div>
-
-          <div class="funnel-column">
-            <div class="funnel-col-header">
-              <h4>4. Activación</h4>
-              <span class="funnel-badge" id="badgeEtapa4">0</span>
-            </div>
-            <div class="funnel-cards" id="cardsEtapa4"></div>
-          </div>
-
-          <div class="funnel-column">
-            <div class="funnel-col-header">
-              <h4>5. Fidelización</h4>
-              <span class="funnel-badge" id="badgeEtapa5">0</span>
-            </div>
-            <div class="funnel-cards" id="cardsEtapa5"></div>
-          </div>
+          <p style="font-size:0.75rem; color:var(--verde-exito); margin-top:0.4rem;">
+            <i class="ri-arrow-up-line"></i> +8.2% de incremento con respecto al mes anterior.
+          </p>
         </div>
-      </section>
+      </div>
 
-      <section id="tab-clientes" class="tab-content">
-        <div class="page-header">
-          <div class="page-title">
-            <h1>Cartera de Clientes Asignada</h1>
-            <p>Directorio exclusivo de cuentas comerciales activas y su estatus.</p>
-          </div>
-        </div>
-
+      <div class="card">
+        <div class="card-title"><i class="ri-table-line"></i> Matriz Desglosada por Línea de Producto</div>
         <div class="table-container">
           <table>
             <thead>
               <tr>
-                <th>Nombre Comercial</th>
-                <th>Clasificación ABC</th>
-                <th>Frecuencia (Días)</th>
-                <th>Última Compra</th>
-                <th>Estado Salud</th>
+                <th>Línea de Producto</th>
+                <th>Cajas Vendidas</th>
+                <th>Monto Facturado ($)</th>
+                <th>% Participación</th>
+                <th>Margen Promedio %</th>
+                <th>Estado Comercial</th>
               </tr>
             </thead>
-            <tbody id="tablaClientesBody">
+            <tbody>
               <tr>
-                <td colspan="5" style="text-align: center; color: var(--gris-claro);">Cargando directorio de cartera...</td>
+                <td><strong>Casabe Tradicional 200g / 400g</strong></td>
+                <td>256 Cajas</td>
+                <td>$3,982.50</td>
+                <td>45.0%</td>
+                <td>28.5%</td>
+                <td><span class="badge badge-exito">Líder Consolidado</span></td>
+              </tr>
+              <tr>
+                <td><strong>Casabe Gourmet Ajo & Fina Hierba</strong></td>
+                <td>142 Cajas</td>
+                <td>$2,212.50</td>
+                <td>25.0%</td>
+                <td>34.0%</td>
+                <td><span class="badge badge-exito">Alto Margen</span></td>
+              </tr>
+              <tr>
+                <td><strong>Casabe Mini Snacking</strong></td>
+                <td>85 Cajas</td>
+                <td>$1,327.50</td>
+                <td>15.0%</td>
+                <td>32.0%</td>
+                <td><span class="badge badge-info">En Crecimiento</span></td>
+              </tr>
+              <tr>
+                <td><strong>Casabe Sazonado BBQ / Queso</strong></td>
+                <td>57 Cajas</td>
+                <td>$885.00</td>
+                <td>10.0%</td>
+                <td>30.0%</td>
+                <td><span class="badge badge-alerta">Oportunidad Push</span></td>
+              </tr>
+              <tr>
+                <td><strong>Ediciones Especiales & Otros</strong></td>
+                <td>30 Cajas</td>
+                <td>$442.50</td>
+                <td>5.0%</td>
+                <td>35.0%</td>
+                <td><span class="badge badge-info">Nicho</span></td>
               </tr>
             </tbody>
           </table>
         </div>
-      </section>
+      </div>
+    </section>
 
-    </main>
-  </div>
+  </main>
 
   <script>
-    // Configuración Base de API Backend Google Apps Script
-    const SCCR_CONFIG = {
-      apiUrl: 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE', // Reemplazar con URL de producción de Code.gs
-      version: 'v2.5.0'
-    };
+    // Datos Simulados de Cartera de Clientes
+    const clientesBase = [
+      { id: 'CLI-001', nombre: 'Supermercados El Rey', abc: 'A', frecuencia: 7, ultimaCompra: '02/08/2026', salud: 'Saludable' },
+      { id: 'CLI-002', nombre: 'Bodegón Plaza Altamira', abc: 'A', frecuencia: 10, ultimaCompra: '18/07/2026', salud: 'Alerta' },
+      { id: 'CLI-003', nombre: 'Distribuidora Central', abc: 'B', frecuencia: 15, ultimaCompra: '28/07/2026', salud: 'Saludable' },
+      { id: 'CLI-004', nombre: 'Comercializadora La Andina', abc: 'C', frecuencia: 30, ultimaCompra: '10/06/2026', salud: 'Crítico' }
+    ];
 
-    // Estado global de la vista
-    let usuarioSesion = null;
+    // Control de Sesión al Cargar
+    document.addEventListener('DOMContentLoaded', () => {
+      inicializarSesion();
+      renderizarClientes(clientesBase);
+      calcularSimulador();
+    });
 
-    // 1. Inicialización al cargar el DOM
-    document.onreadystatechange = function () {
-      if (document.readyState === "interactive") {
-        validarSesionUsuario();
-        cargarDatosSimuladosOBackend();
-      }
-    };
-
-    // 2. Validación de Sesión (sessionStorage 'sccr')
-    function validarSesionUsuario() {
-      const sccrRaw = sessionStorage.getItem('sccr');
-      if (sccrRaw) {
-        try {
-          usuarioSesion = JSON.parse(sccrRaw);
-        } catch(e) {
-          console.error("Error al parsear sesión", e);
+    function inicializarSesion() {
+      try {
+        const sessionData = sessionStorage.getItem('sccr');
+        if (sessionData) {
+          const user = JSON.parse(sessionData);
+          document.getElementById('userName').textContent = user.nombre || 'Carlos Mendoza';
+          document.getElementById('userRole').textContent = `${user.rol || 'Vendedor'} • ${user.zona || 'Zona Centro'}`;
+          
+          const iniciales = (user.nombre || 'Carlos Mendoza')
+            .split(' ')
+            .map(n => n[0])
+            .join('')
+            .substring(0, 2)
+            .toUpperCase();
+          document.getElementById('userAvatar').textContent = iniciales;
         }
+      } catch (e) {
+        console.log('Modo Demostración Activo');
       }
-
-      // Si no existe sesión o es testing directo, se genera un perfil Vendedor Demo
-      if (!usuarioSesion || !usuarioSesion.vendedorId) {
-        usuarioSesion = {
-          vendedorId: 'VEND-001',
-          nombre: 'Carlos Mendoza',
-          rol: 'vendedor',
-          email: 'carlos.mendoza@casabereal.com',
-          metaUSD: 15000,
-          metaCajas: 350
-        };
-        sessionStorage.setItem('sccr', JSON.stringify(usuarioSesion));
-      }
-
-      // Inyectar datos en la UI del Header
-      document.getElementById('userName').textContent = usuarioSesion.nombre;
-      document.getElementById('userRole').textContent = `Vendedor | ${usuarioSesion.vendedorId}`;
-      document.getElementById('userAvatar').textContent = usuarioSesion.nombre.charAt(0).toUpperCase();
     }
 
-    // 3. Sistema de Control de Pestañas (Single Page Tabs)
-    function switchTab(tabId) {
-      // Remover clase active de todos los items de la sidebar
-      const navItems = document.querySelectorAll('.nav-item');
-      navItems.forEach(item => {
-        item.classList.remove('active');
-        if (item.getAttribute('data-tab') === tabId) {
-          item.classList.add('active');
-        }
-      });
+    function cerrarSesion() {
+      if (confirm('¿Desea cerrar la sesión del Sistema Commercial Casabe Real?')) {
+        sessionStorage.removeItem('sccr');
+        window.location.href = 'login.html';
+      }
+    }
 
-      // Ocultar todas las secciones
-      const tabContents = document.querySelectorAll('.tab-content');
-      tabContents.forEach(content => content.classList.remove('active'));
+    // Navegación por Pestañas
+    function switchTab(tabId, btnElement) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-tab-btn').forEach(btn => btn.classList.remove('active'));
 
-      // Mostrar la pestaña seleccionada
       const targetTab = document.getElementById(`tab-${tabId}`);
       if (targetTab) {
         targetTab.classList.add('active');
-      }
-
-      // Cerrar sidebar en dispositivos móviles al seleccionar una pestaña
-      const sidebar = document.getElementById('sidebar');
-      if (sidebar.classList.contains('open')) {
-        sidebar.classList.remove('open');
+        btnElement.classList.add('active');
       }
     }
 
-    // Toggle menú responsivo en móviles
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      sidebar.classList.toggle('open');
-    }
-
-    // 4. Cerrar Sesión
-    function cerrarSesion() {
-      sessionStorage.removeItem('sccr');
-      window.location.href = 'login.html';
-    }
-
-    // 5. Carga e Inyección de Datos (KPIs, Metas, Embudo y Clientes)
-    function cargarDatosSimuladosOBackend() {
-      // Mock de Datos Alineados al Documento Maestro v2.5.0
-      const mockData = {
-        kpis: {
-          ventasHoy: 1250.00,
-          ventasSemana: 4320.00,
-          ventasMes: 11250.00,
-          cajasMes: 260,
-          clientesActivos: 18,
-          metaUSD: usuarioSesion.metaUSD || 15000,
-          metaCajas: usuarioSesion.metaCajas || 350
-        },
-        embudo: [
-          { id: 'OP-101', cliente: 'Supermercado Central', monto: 1800, etapa: 1, fecha: '2026-08-01' },
-          { id: 'OP-102', cliente: 'Bodegón Gourmet', monto: 950, etapa: 2, fecha: '2026-08-03' },
-          { id: 'OP-103', cliente: 'Distribuidora del Este', monto: 3400, etapa: 3, fecha: '2026-08-04' },
-          { id: 'OP-104', cliente: 'Abasto Express', monto: 620, etapa: 4, fecha: '2026-08-05' },
-          { id: 'OP-105', cliente: 'Comercial La Estrella', monto: 2100, etapa: 5, fecha: '2026-08-06' }
-        ],
-        clientes: [
-          { nombre: 'Distribuidora del Este', abc: 'A', frecuencia: 7, ultimaCompra: '2026-08-04', salud: 'Activo' },
-          { nombre: 'Supermercado Central', abc: 'A', frecuencia: 10, ultimaCompra: '2026-08-01', salud: 'Activo' },
-          { nombre: 'Bodegón Gourmet', abc: 'B', frecuencia: 15, ultimaCompra: '2026-07-20', salud: 'En Riesgo' },
-          { nombre: 'Abasto Express', abc: 'C', frecuencia: 30, ultimaCompra: '2026-06-15', salud: 'Inactivo' }
-        ]
-      };
-
-      renderizarKPIs(mockData.kpis);
-      renderizarMeta(mockData.kpis);
-      renderizarEmbudo(mockData.embudo);
-      renderizarClientes(mockData.clientes);
-      renderizarTablaGestion(mockData.embudo);
-    }
-
-    // Renderizado de las 6 Tarjetas KPI del Dashboard
-    function renderizarKPIs(kpis) {
-      document.getElementById('kpiVentasHoy').textContent = `$${kpis.ventasHoy.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
-      document.getElementById('kpiVentasSemana').textContent = `$${kpis.ventasSemana.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
-      document.getElementById('kpiVentasMes').textContent = `$${kpis.ventasMes.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
-      document.getElementById('kpiCajasMes').textContent = `${kpis.cajasMes} cjs`;
-      document.getElementById('kpiClientesActivos').textContent = kpis.clientesActivos;
-
-      const pct = Math.round((kpis.ventasMes / kpis.metaUSD) * 100);
-      const gap = kpis.metaUSD - kpis.ventasMes;
-
-      document.getElementById('kpiCumplimientoMeta').textContent = `${pct}%`;
-      document.getElementById('kpiGapText').textContent = `GAP: $${gap > 0 ? gap.toLocaleString('en-US', {minimumFractionDigits: 2}) : 0}`;
-    }
-
-    // Renderizado del Módulo de Meta
-    function renderizarMeta(kpis) {
-      const pctUSD = Math.min(100, Math.round((kpis.ventasMes / kpis.metaUSD) * 100));
-      const pctCajas = Math.min(100, Math.round((kpis.cajasMes / kpis.metaCajas) * 100));
-
-      document.getElementById('metaPorcentajeUSD').textContent = `${pctUSD}%`;
-      document.getElementById('progressBarFillUSD').style.width = `${pctUSD}%`;
-      document.getElementById('metaLogradoUSD').textContent = `$${kpis.ventasMes.toLocaleString('en-US')}`;
-      document.getElementById('metaObjetivoUSD').textContent = `$${kpis.metaUSD.toLocaleString('en-US')}`;
-
-      document.getElementById('metaPorcentajeCajas').textContent = `${pctCajas}%`;
-      document.getElementById('progressBarFillCajas').style.width = `${pctCajas}%`;
-      document.getElementById('metaLogradoCajas').textContent = `${kpis.cajasMes} cjs`;
-      document.getElementById('metaObjetivoCajas').textContent = `${kpis.metaCajas} cjs`;
-    }
-
-    // Renderizado del Embudo Comercial (5 Etapas)
-    function renderizarEmbudo(oportunidades) {
-      // Limpiar columnas
-      for(let i = 1; i <= 5; i++) {
-        document.getElementById(`cardsEtapa${i}`).innerHTML = '';
-        document.getElementById(`badgeEtapa${i}`).textContent = '0';
-      }
-
-      const conteos = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
-
-      oportunidades.forEach(op => {
-        conteos[op.etapa]++;
-        const container = document.getElementById(`cardsEtapa${op.etapa}`);
-        if (container) {
-          const card = document.createElement('div');
-          card.className = 'opportunity-card';
-          card.innerHTML = `
-            <div class="op-client">${op.cliente}</div>
-            <div class="op-amount">$${op.monto.toLocaleString('en-US')}</div>
-            <div class="op-date"><i class="ri-time-line"></i> ${op.fecha}</div>
-          `;
-          container.appendChild(card);
-        }
-      });
-
-      for(let i = 1; i <= 5; i++) {
-        document.getElementById(`badgeEtapa${i}`).textContent = conteos[i];
-      }
-    }
-
-    // Renderizado del Directorio de Clientes
-    function renderizarClientes(clientes) {
+    // Renderizado y Filtro de Clientes
+    function renderizarClientes(data) {
       const tbody = document.getElementById('tablaClientesBody');
       tbody.innerHTML = '';
 
-      clientes.forEach(c => {
-        const tr = document.createElement('tr');
-        
-        let badgeClass = 'badge-active';
-        if (c.salud === 'En Riesgo') badgeClass = 'badge-risk';
-        if (c.salud === 'Inactivo') badgeClass = 'badge-inactive';
+      if (data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--gris-claro);">No se encontraron clientes registrados.</td></tr>`;
+        return;
+      }
 
+      data.forEach(c => {
+        let badgeClass = 'badge-exito';
+        if (c.salud === 'Alerta') badgeClass = 'badge-alerta';
+        if (c.salud === 'Crítico') badgeClass = 'badge-critico';
+
+        const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td><strong>${c.nombre}</strong></td>
+          <td><strong>${c.id}</strong></td>
+          <td>${c.nombre}</td>
           <td><span style="font-weight:700; color:var(--rojo-casabe);">${c.abc}</span></td>
           <td>Cada ${c.frecuencia} días</td>
           <td>${c.ultimaCompra}</td>
-          <td><span class="badge-status ${badgeClass}">${c.salud}</span></td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    // Renderizado de la Tabla de Reporte de Gestión
-    function renderizarTablaGestion(oportunidades) {
-      const tbody = document.getElementById('tablaGestionBody');
-      tbody.innerHTML = '';
-
-      const nombresEtapas = {
-        1: 'Prospección',
-        2: 'Contacto',
-        3: 'Presentación',
-        4: 'Activación',
-        5: 'Fidelización'
-      };
-
-      oportunidades.forEach(op => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><strong>${op.cliente}</strong></td>
-          <td>${nombresEtapas[op.etapa] || 'Etapa ' + op.etapa}</td>
-          <td><i class="ri-phone-line"></i> 3 contactos</td>
-          <td>${op.fecha}</td>
-          <td>Visita comercial programada</td>
+          <td><span class="badge ${badgeClass}">${c.salud}</span></td>
           <td>
-            <button class="btn btn-secondary" style="padding:0.3rem 0.6rem; font-size:0.75rem;" onclick="actualizarGestion('${op.id}')">
-              <i class="ri-edit-line"></i> Gestionar
+            <button class="btn btn-secondary" style="padding:0.25rem 0.5rem; font-size:0.75rem;" onclick="alert('Generar pedido para ${c.nombre}')">
+              <i class="ri-add-line"></i> Pedido
             </button>
           </td>
         `;
@@ -1144,8 +1132,88 @@
       });
     }
 
-    function actualizarGestion(id) {
-      alert(`Acción de gestión para la oportunidad ${id}. Permite cambiar etapa o agendar el próximo seguimiento.`);
+    function filtrarClientes() {
+      const texto = document.getElementById('inputBuscarCliente').value.toLowerCase();
+      const abc = document.getElementById('selectFiltroABC').value;
+
+      const filtrados = clientesBase.filter(c => {
+        const coincideTexto = c.nombre.toLowerCase().includes(texto) || c.id.toLowerCase().includes(texto);
+        const coincideABC = abc === '' || c.abc === abc;
+        return coincideTexto && coincideABC;
+      });
+
+      renderizarClientes(filtrados);
+    }
+
+    // Calculadora del Simulador de Propuesta
+    function calcularSimulador() {
+      const precioCaja = parseFloat(document.getElementById('simProducto').value) || 0;
+      const cajas = parseInt(document.getElementById('simCantidad').value) || 0;
+
+      const total = precioCaja * cajas;
+      const margen = total * 0.30;
+      const retorno = total + margen;
+
+      document.getElementById('simMontoTotal').textContent = `$${total.toFixed(2)}`;
+      document.getElementById('simMargen').textContent = `30% ($${margen.toFixed(2)})`;
+      document.getElementById('simRetorno').textContent = `$${retorno.toFixed(2)}`;
+    }
+
+    function enviarWhatsAppPropuesta() {
+      const cliente = document.getElementById('simCliente').value || 'Cliente';
+      const total = document.getElementById('simMontoTotal').textContent;
+      const mensaje = encodeURIComponent(`Hola ${cliente}, adjunto la propuesta comercial de Casabe Real con un total de inversión de ${total}. ¿Podemos agendar para revisarla?`);
+      window.open(`https://wa.me/?text=${mensaje}`, '_blank');
+    }
+
+    // Guardar Pedido
+    function guardarPedido(e) {
+      e.preventDefault();
+      const cliente = document.getElementById('pedCliente').value;
+      const cajas = document.getElementById('pedCajas').value;
+      const monto = parseFloat(document.getElementById('pedMonto').value).toFixed(2);
+
+      const tbody = document.getElementById('tablaPedidosBody');
+      const tr = document.createElement('tr');
+      const randomId = `#PED-${Math.floor(1000 + Math.random() * 9000)}`;
+
+      tr.innerHTML = `
+        <td><strong>${randomId}</strong></td>
+        <td>Hoy</td>
+        <td>${cliente}</td>
+        <td>${cajas} Cajas</td>
+        <td>$${monto}</td>
+        <td><span class="badge badge-info">En Proceso</span></td>
+      `;
+
+      tbody.insertBefore(tr, tbody.firstChild);
+      alert('¡Pedido registrado y sincronizado exitosamente!');
+      document.getElementById('formPedidoRapido').reset();
+    }
+
+    // Registrar Gestión
+    function registrarGestion(e) {
+      e.preventDefault();
+      const cliente = document.getElementById('gestCliente').value;
+      const tipo = document.getElementById('gestTipo').value;
+      const res = document.getElementById('gestResultado').value;
+      const obs = document.getElementById('gestObs').value;
+
+      const tbody = document.getElementById('tablaGestionBody');
+      const tr = document.createElement('tr');
+      const ahora = new Date().toLocaleString();
+
+      tr.innerHTML = `
+        <td>${ahora}</td>
+        <td>${cliente}</td>
+        <td>${tipo}</td>
+        <td><span class="badge badge-exito">${res}</span></td>
+        <td>${obs || 'Sin observaciones'}</td>
+      `;
+
+      tbody.insertBefore(tr, tbody.firstChild);
+      alert('Gestión guardada en la bitácora comercial.');
+      document.getElementById('formGestion').reset();
     }
   </script>
 </body>
