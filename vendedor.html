@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SCCR - Portal de Vendedor | Casabe Real</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <style>
+    /* ==========================================================================
+       VARIABLES CROMÁTICAS Y DESIGN SYSTEM SCCR v2.5.0
+       ========================================================================== */
+    :root {
+      --rojo-casabe: #D71920;
+      --rojo-hover: #B51218;
+      --negro-titulos: #111827;
+      --gris-texto: #4B5563;
+      --gris-claro: #9CA3AF;
+      --fondo-pantalla: #F3F4F6;
+      --blanco: #FFFFFF;
+      --verde-exito: #059669;
+      --amarillo-alerta: #D97706;
+      --azul-info: #2563EB;
+      --borde-suave: #E5E7EB;
+      --sombra-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      --sombra-elevada: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --transicion: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    body {
+      background-color: var(--fondo-pantalla);
+      color: var(--gris-texto);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* ==========================================================================
+       HEADER SUPERIOR (70px)
+       ========================================================================== */
+    .app-header {
+      height: 70px;
+      background-color: var(--blanco);
+      border-bottom: 1px solid var(--borde-suave);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--negro-titulos);
+      cursor: pointer;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--rojo-casabe);
+      text-decoration: none;
+    }
+
+    .brand-logo i {
+      font-size: 1.6rem;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.4rem 0.8rem;
+      background-color: var(--fondo-pantalla);
+      border-radius: 50px;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--rojo-casabe);
+      color: var(--blanco);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .user-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--negro-titulos);
+    }
+
+    .user-role {
+      font-size: 0.7rem;
+      color: var(--gris-claro);
+      font-weight: 500;
+    }
+
+    .btn-logout {
+      background: none;
+      border: none;
+      color: var(--gris-claro);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: var(--transicion);
+      padding: 0.4rem;
+      border-radius: 8px;
+    }
+
+    .btn-logout:hover {
+      color: var(--rojo-casabe);
+      background-color: rgba(215, 25, 32, 0.08);
+    }
+
+    /* ==========================================================================
+       LAYOUT PRINCIPAL & SIDEBAR (260px)
+       ========================================================================== */
+    .app-container {
+      display: flex;
+      margin-top: 70px;
+      min-height: calc(100vh - 70px);
+    }
+
+    .sidebar {
+      width: 260px;
+      background-color: var(--blanco);
+      border-right: 1px solid var(--borde-suave);
+      padding: 1.5rem 1rem;
+      position: fixed;
+      top: 70px;
+      bottom: 0;
+      left: 0;
+      overflow-y: auto;
+      transition: var(--transicion);
+      z-index: 90;
+    }
+
+    .nav-section-title {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--gris-claro);
+      letter-spacing: 0.05em;
+      margin: 1.2rem 0 0.6rem 0.8rem;
+    }
+
+    .nav-menu {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.75rem 1rem;
+      color: var(--gris-texto);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      border-radius: 10px;
+      transition: var(--transicion);
+    }
+
+    .nav-item a i {
+      font-size: 1.15rem;
+      color: var(--gris-claro);
+      transition: var(--transicion);
+    }
+
+    .nav-item a:hover {
+      background-color: var(--fondo-pantalla);
+      color: var(--negro-titulos);
+    }
+
+    .nav-item a:hover i {
+      color: var(--rojo-casabe);
+    }
+
+    .nav-item.active a {
+      background-color: rgba(215, 25, 32, 0.08);
+      color: var(--rojo-casabe);
+      font-weight: 600;
+    }
+
+    .nav-item.active a i {
+      color: var(--rojo-casabe);
+    }
+
+    /* ==========================================================================
+       ÁREA DE CONTENIDO DINÁMICO
+       ========================================================================== */
+    .main-content {
+      margin-left: 260px;
+      flex: 1;
+      padding: 2rem;
+      max-width: 1400px;
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ENCABEZADOS DE SECCIÓN */
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.8rem;
+    }
+
+    .page-title h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--negro-titulos);
+    }
+
+    .page-title p {
+      font-size: 0.85rem;
+      color: var(--gris-texto);
+      margin-top: 0.2rem;
+    }
+
+    /* ==========================================================================
+       FILA 1: TARJETAS DE CONTROL KPI (DASHBOARD)
+       ========================================================================== */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    .kpi-card {
+      background-color: var(--blanco);
+      border-radius: 12px;
+      padding: 1.25rem;
+      box-shadow: var(--sombra-card);
+      border: 1px solid var(--borde-suave);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: var(--transicion);
+    }
+
+    .kpi-card:hover {
+      box-shadow: var(--sombra-elevada);
+      transform: translateY(-2px);
+    }
+
+    .kpi-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+
+    .kpi-title {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--gris-texto);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .kpi-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .icon-red { background-color: rgba(215, 25, 32, 0.1); color: var(--rojo-casabe); }
+    .icon-green { background-color: rgba(5, 150, 105, 0.1); color: var(--verde-exito); }
+    .icon-blue { background-color: rgba(37, 99, 235, 0.1); color: var(--azul-info); }
+    .icon-yellow { background-color: rgba(217, 119, 6, 0.1); color: var(--amarillo-alerta); }
+
+    .kpi-value {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--negro-titulos);
+      margin-bottom: 0.4rem;
+    }
+
+    .kpi-subtext {
+      font-size: 0.75rem;
+      color: var(--gris-claro);
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .badge-up { color: var(--verde-exito); font-weight: 600; }
+
+    /* ==========================================================================
+       SECCIÓN META COMERCIAL
+       ========================================================================== */
+    .meta-card {
+      background-color: var(--blanco);
+      border-radius: 12px;
+      padding: 1.8rem;
+      box-shadow: var(--sombra-card);
+      border: 1px solid var(--borde-suave);
+      margin-bottom: 2rem;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 14px;
+      background-color: var(--fondo-pantalla);
+      border-radius: 20px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--rojo-casabe), #F87171);
+      border-radius: 20px;
+      width: 0%;
+      transition: width 1s ease-in-out;
+    }
+
+    .meta-details {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--gris-texto);
+      font-weight: 500;
+    }
+
+    /* ==========================================================================
+       EMBUDO COMERCIAL DE 5 ETAPAS (KANBAN)
+       ========================================================================== */
+    .funnel-container {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+      overflow-x: auto;
+      padding-bottom: 1rem;
+    }
+
+    .funnel-column {
+      background-color: var(--blanco);
+      border-radius: 12px;
+      border: 1px solid var(--borde-suave);
+      padding: 1rem;
+      min-width: 220px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--sombra-card);
+    }
+
+    .funnel-col-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 0.8rem;
+      margin-bottom: 0.8rem;
+      border-bottom: 2px solid var(--fondo-pantalla);
+    }
+
+    .funnel-col-header h4 {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--negro-titulos);
+      text-transform: uppercase;
+    }
+
+    .funnel-badge {
+      background-color: var(--fondo-pantalla);
+      color: var(--gris-texto);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.2rem 0.5rem;
+      border-radius: 20px;
+    }
+
+    .funnel-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      min-height: 250px;
+    }
+
+    .opportunity-card {
+      background-color: var(--fondo-pantalla);
+      border-radius: 8px;
+      padding: 0.85rem;
+      border-left: 4px solid var(--rojo-casabe);
+      cursor: pointer;
+      transition: var(--transicion);
+    }
+
+    .opportunity-card:hover {
+      background-color: var(--blanco);
+      box-shadow: var(--sombra-elevada);
+      transform: translateY(-2px);
+    }
+
+    .op-client {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--negro-titulos);
+      margin-bottom: 0.3rem;
+    }
+
+    .op-amount {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--verde-exito);
+    }
+
+    .op-date {
+      font-size: 0.7rem;
+      color: var(--gris-claro);
+      margin-top: 0.4rem;
+    }
+
+    /* ==========================================================================
+       TABLAS Y FORMULARIOS (REPORTE DE GESTIÓN Y CLIENTES)
+       ========================================================================== */
+    .table-container {
+      background-color: var(--blanco);
+      border-radius: 12px;
+      box-shadow: var(--sombra-card);
+      border: 1px solid var(--borde-suave);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      background-color: #FAFAFA;
+      padding: 0.9rem 1.2rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--gris-texto);
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--borde-suave);
+    }
+
+    td {
+      padding: 1rem 1.2rem;
+      font-size: 0.85rem;
+      color: var(--negro-titulos);
+      border-bottom: 1px solid var(--borde-suave);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background-color: #F9FAFB;
+    }
+
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transicion);
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background-color: var(--rojo-casabe);
+      color: var(--blanco);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--rojo-hover);
+    }
+
+    .btn-secondary {
+      background-color: var(--fondo-pantalla);
+      color: var(--gris-texto);
+    }
+
+    .btn-secondary:hover {
+      background-color: #E5E7EB;
+    }
+
+    .badge-status {
+      padding: 0.25rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .badge-active { background-color: rgba(5, 150, 105, 0.12); color: var(--verde-exito); }
+    .badge-risk { background-color: rgba(217, 119, 6, 0.12); color: var(--amarillo-alerta); }
+    .badge-inactive { background-color: rgba(215, 25, 32, 0.12); color: var(--rojo-casabe); }
+
+    /* ==========================================================================
+       IFRAME / CONTENEDOR MODULAR (PROPUESTAS / PEDIDOS)
+       ========================================================================== */
+    .module-frame {
+      width: 100%;
+      height: calc(100vh - 180px);
+      border: 1px solid var(--borde-suave);
+      border-radius: 12px;
+      background-color: var(--blanco);
+    }
+
+    /* RESPONSIVIDAD MOBIL */
+    @media (max-width: 992px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .main-content {
+        margin-left: 0;
+        padding: 1.2rem;
+      }
+      .mobile-toggle {
+        display: block;
+      }
+      .funnel-container {
+        grid-template-columns: repeat(5, minmax(220px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="header-left">
+      <button class="mobile-toggle" id="mobileToggle" onclick="toggleSidebar()">
+        <i class="ri-menu-line"></i>
+      </button>
+      <a href="#" class="brand-logo">
+        <i class="ri-store-2-fill"></i>
+        <span>CASABE REAL</span>
+      </a>
+    </div>
+
+    <div class="header-right">
+      <div class="user-profile">
+        <div class="avatar" id="userAvatar">V</div>
+        <div class="user-info">
+          <span class="user-name" id="userName">Vendedor Asignado</span>
+          <span class="user-role" id="userRole">Vendedor / Asesor Commercial</span>
+        </div>
+      </div>
+      <button class="btn-logout" title="Cerrar Sesión" onclick="cerrarSesion()">
+        <i class="ri-logout-box-r-line"></i>
+      </button>
+    </div>
+  </header>
+
+  <div class="app-container">
+    
+    <aside class="sidebar" id="sidebar">
+      <div class="nav-section-title">Principal</div>
+      <ul class="nav-menu">
+        <li class="nav-item active" data-tab="dashboard">
+          <a href="#dashboard" onclick="switchTab('dashboard')">
+            <i class="ri-dashboard-line"></i> Dashboard
+          </a>
+        </li>
+        <li class="nav-item" data-tab="meta">
+          <a href="#meta" onclick="switchTab('meta')">
+            <i class="ri-target-line"></i> Meta del Mes
+          </a>
+        </li>
+      </ul>
+
+      <div class="nav-section-title">Operación Comercial</div>
+      <ul class="nav-menu">
+        <li class="nav-item" data-tab="propuestas">
+          <a href="#propuestas" onclick="switchTab('propuestas')">
+            <i class="ri-file-text-line"></i> Propuestas (Cotizador)
+          </a>
+        </li>
+        <li class="nav-item" data-tab="pedidos">
+          <a href="#pedidos" onclick="switchTab('pedidos')">
+            <i class="ri-shopping-cart-line"></i> Toma de Pedidos
+          </a>
+        </li>
+        <li class="nav-item" data-tab="gestion">
+          <a href="#gestion" onclick="switchTab('gestion')">
+            <i class="ri-calendar-todo-line"></i> Reporte de Gestión
+          </a>
+        </li>
+      </ul>
+
+      <div class="nav-section-title">Pipeline & Cartera</div>
+      <ul class="nav-menu">
+        <li class="nav-item" data-tab="embudo">
+          <a href="#embudo" onclick="switchTab('embudo')">
+            <i class="ri-filter-3-line"></i> Embudo Comercial
+          </a>
+        </li>
+        <li class="nav-item" data-tab="clientes">
+          <a href="#clientes" onclick="switchTab('clientes')">
+            <i class="ri-user-shared-line"></i> Cartera de Clientes
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+
+      <section id="tab-dashboard" class="tab-content active">
+        <div class="page-header">
+          <div class="page-title">
+            <h1>Dashboard Comercial</h1>
+            <p>Resumen de rendimiento personal e indicadores clave hoy.</p>
+          </div>
+          <button class="btn btn-primary" onclick="switchTab('pedidos')">
+            <i class="ri-add-line"></i> Nuevo Pedido
+          </button>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">Ventas Hoy</span>
+              <div class="kpi-icon icon-red"><i class="ri-money-dollar-circle-line"></i></div>
+            </div>
+            <div class="kpi-value" id="kpiVentasHoy">$0.00</div>
+            <div class="kpi-subtext"><span class="badge-up">↑ 12%</span> vs ayer</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">Ventas Semana</span>
+              <div class="kpi-icon icon-blue"><i class="ri-calendar-event-line"></i></div>
+            </div>
+            <div class="kpi-value" id="kpiVentasSemana">$0.00</div>
+            <div class="kpi-subtext">Semana en curso</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">Ventas Mes</span>
+              <div class="kpi-icon icon-green"><i class="ri-funds-box-line"></i></div>
+            </div>
+            <div class="kpi-value" id="kpiVentasMes">$0.00</div>
+            <div class="kpi-subtext">Acumulado mensual</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">Cajas Vendidas</span>
+              <div class="kpi-icon icon-yellow"><i class="ri-box-3-line"></i></div>
+            </div>
+            <div class="kpi-value" id="kpiCajasMes">0 cjs</div>
+            <div class="kpi-subtext">Total unidades mes</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">Clientes Activos</span>
+              <div class="kpi-icon icon-blue"><i class="ri-team-line"></i></div>
+            </div>
+            <div class="kpi-value" id="kpiClientesActivos">0</div>
+            <div class="kpi-subtext">De tu cartera total</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title">% Cumplimiento Meta</span>
+              <div class="kpi-icon icon-green"><i class="ri-percent-line"></i></div>
+            </div>
+            <div class="kpi-value" id="kpiCumplimientoMeta">0%</div>
+            <div class="kpi-subtext" id="kpiGapText">GAP: $0.00</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-meta" class="tab-content">
+        <div class="page-header">
+          <div class="page-title">
+            <h1>Progreso de Meta Mensual</h1>
+            <p>Monitoreo detallado del cumplimiento de objetivos en dólares y cajas.</p>
+          </div>
+        </div>
+
+        <div class="meta-card">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="font-size: 1.1rem; color: var(--negro-titulos);">Avance de Ventas en USD</h3>
+            <span style="font-weight: 700; color: var(--rojo-casabe);" id="metaPorcentajeUSD">0%</span>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progressBarFillUSD"></div>
+          </div>
+          <div class="meta-details">
+            <span>Logrado: <strong id="metaLogradoUSD">$0.00</strong></span>
+            <span>Meta Objetivo: <strong id="metaObjetivoUSD">$0.00</strong></span>
+          </div>
+        </div>
+
+        <div class="meta-card">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="font-size: 1.1rem; color: var(--negro-titulos);">Avance en Cajas</h3>
+            <span style="font-weight: 700; color: var(--verde-exito);" id="metaPorcentajeCajas">0%</span>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progressBarFillCajas" style="background: linear-gradient(90deg, var(--verde-exito), #34D399);"></div>
+          </div>
+          <div class="meta-details">
+            <span>Logrado: <strong id="metaLogradoCajas">0 cjs</strong></span>
+            <span>Meta Objetivo: <strong id="metaObjetivoCajas">0 cjs</strong></span>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-propuestas" class="tab-content">
+        <div class="page-header">
+          <div class="page-title">
+            <h1>Simulador & Propuestas Comerciales</h1>
+            <p>Genera propuestas y calcula márgenes interactivos para clientes.</p>
+          </div>
+        </div>
+        <iframe src="propuesta.html" class="module-frame" title="Simulador de Propuestas"></iframe>
+      </section>
+
+      <section id="tab-pedidos" class="tab-content">
+        <div class="page-header">
+          <div class="page-title">
+            <h1>Captura de Pedidos</h1>
+            <p>Registra ventas directas para tus clientes asignados.</p>
+          </div>
+        </div>
+        <iframe src="pedidos.html" class="module-frame" title="Modulo de Pedidos"></iframe>
+      </section>
+
+      <section id="tab-gestion" class="tab-content">
+        <div class="page-header">
+          <div class="page-title">
+            <h1>Reporte de Gestión Comercial</h1>
+            <p>Bitácora de interacciones, seguimiento de contactos y reprogramación.</p>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Etapa Actual</th>
+                <th>Interacciones</th>
+                <th>Último Contacto</th>
+                <th>Próxima Acción</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody id="tablaGestionBody">
+              <tr>
+                <td colspan="6" style="text-align: center; color: var(--gris-claro);">Cargando registros de gestión...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="tab-embudo" class="tab-content">
+        <div class="page-header">
+          <div class="page-title">
+            <h1>Embudo Comercial de 5 Etapas</h1>
+            <p>Pipeline visual del flujo continuo de oportunidades activas.</p>
+          </div>
+        </div>
+
+        <div class="funnel-container">
+          <div class="funnel-column">
+            <div class="funnel-col-header">
+              <h4>1. Prospección</h4>
+              <span class="funnel-badge" id="badgeEtapa1">0</span>
+            </div>
+            <div class="funnel-cards" id="cardsEtapa1"></div>
+          </div>
+
+          <div class="funnel-column">
+            <div class="funnel-col-header">
+              <h4>2. Contacto</h4>
+              <span class="funnel-badge" id="badgeEtapa2">0</span>
+            </div>
+            <div class="funnel-cards" id="cardsEtapa2"></div>
+          </div>
+
+          <div class="funnel-column">
+            <div class="funnel-col-header">
+              <h4>3. Presentación</h4>
+              <span class="funnel-badge" id="badgeEtapa3">0</span>
+            </div>
+            <div class="funnel-cards" id="cardsEtapa3"></div>
+          </div>
+
+          <div class="funnel-column">
+            <div class="funnel-col-header">
+              <h4>4. Activación</h4>
+              <span class="funnel-badge" id="badgeEtapa4">0</span>
+            </div>
+            <div class="funnel-cards" id="cardsEtapa4"></div>
+          </div>
+
+          <div class="funnel-column">
+            <div class="funnel-col-header">
+              <h4>5. Fidelización</h4>
+              <span class="funnel-badge" id="badgeEtapa5">0</span>
+            </div>
+            <div class="funnel-cards" id="cardsEtapa5"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-clientes" class="tab-content">
+        <div class="page-header">
+          <div class="page-title">
+            <h1>Cartera de Clientes Asignada</h1>
+            <p>Directorio exclusivo de cuentas comerciales activas y su estatus.</p>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Nombre Comercial</th>
+                <th>Clasificación ABC</th>
+                <th>Frecuencia (Días)</th>
+                <th>Última Compra</th>
+                <th>Estado Salud</th>
+              </tr>
+            </thead>
+            <tbody id="tablaClientesBody">
+              <tr>
+                <td colspan="5" style="text-align: center; color: var(--gris-claro);">Cargando directorio de cartera...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    // Configuración Base de API Backend Google Apps Script
+    const SCCR_CONFIG = {
+      apiUrl: 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE', // Reemplazar con URL de producción de Code.gs
+      version: 'v2.5.0'
+    };
+
+    // Estado global de la vista
+    let usuarioSesion = null;
+
+    // 1. Inicialización al cargar el DOM
+    document.onreadystatechange = function () {
+      if (document.readyState === "interactive") {
+        validarSesionUsuario();
+        cargarDatosSimuladosOBackend();
+      }
+    };
+
+    // 2. Validación de Sesión (sessionStorage 'sccr')
+    function validarSesionUsuario() {
+      const sccrRaw = sessionStorage.getItem('sccr');
+      if (sccrRaw) {
+        try {
+          usuarioSesion = JSON.parse(sccrRaw);
+        } catch(e) {
+          console.error("Error al parsear sesión", e);
+        }
+      }
+
+      // Si no existe sesión o es testing directo, se genera un perfil Vendedor Demo
+      if (!usuarioSesion || !usuarioSesion.vendedorId) {
+        usuarioSesion = {
+          vendedorId: 'VEND-001',
+          nombre: 'Carlos Mendoza',
+          rol: 'vendedor',
+          email: 'carlos.mendoza@casabereal.com',
+          metaUSD: 15000,
+          metaCajas: 350
+        };
+        sessionStorage.setItem('sccr', JSON.stringify(usuarioSesion));
+      }
+
+      // Inyectar datos en la UI del Header
+      document.getElementById('userName').textContent = usuarioSesion.nombre;
+      document.getElementById('userRole').textContent = `Vendedor | ${usuarioSesion.vendedorId}`;
+      document.getElementById('userAvatar').textContent = usuarioSesion.nombre.charAt(0).toUpperCase();
+    }
+
+    // 3. Sistema de Control de Pestañas (Single Page Tabs)
+    function switchTab(tabId) {
+      // Remover clase active de todos los items de la sidebar
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(item => {
+        item.classList.remove('active');
+        if (item.getAttribute('data-tab') === tabId) {
+          item.classList.add('active');
+        }
+      });
+
+      // Ocultar todas las secciones
+      const tabContents = document.querySelectorAll('.tab-content');
+      tabContents.forEach(content => content.classList.remove('active'));
+
+      // Mostrar la pestaña seleccionada
+      const targetTab = document.getElementById(`tab-${tabId}`);
+      if (targetTab) {
+        targetTab.classList.add('active');
+      }
+
+      // Cerrar sidebar en dispositivos móviles al seleccionar una pestaña
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+      }
+    }
+
+    // Toggle menú responsivo en móviles
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('open');
+    }
+
+    // 4. Cerrar Sesión
+    function cerrarSesion() {
+      sessionStorage.removeItem('sccr');
+      window.location.href = 'login.html';
+    }
+
+    // 5. Carga e Inyección de Datos (KPIs, Metas, Embudo y Clientes)
+    function cargarDatosSimuladosOBackend() {
+      // Mock de Datos Alineados al Documento Maestro v2.5.0
+      const mockData = {
+        kpis: {
+          ventasHoy: 1250.00,
+          ventasSemana: 4320.00,
+          ventasMes: 11250.00,
+          cajasMes: 260,
+          clientesActivos: 18,
+          metaUSD: usuarioSesion.metaUSD || 15000,
+          metaCajas: usuarioSesion.metaCajas || 350
+        },
+        embudo: [
+          { id: 'OP-101', cliente: 'Supermercado Central', monto: 1800, etapa: 1, fecha: '2026-08-01' },
+          { id: 'OP-102', cliente: 'Bodegón Gourmet', monto: 950, etapa: 2, fecha: '2026-08-03' },
+          { id: 'OP-103', cliente: 'Distribuidora del Este', monto: 3400, etapa: 3, fecha: '2026-08-04' },
+          { id: 'OP-104', cliente: 'Abasto Express', monto: 620, etapa: 4, fecha: '2026-08-05' },
+          { id: 'OP-105', cliente: 'Comercial La Estrella', monto: 2100, etapa: 5, fecha: '2026-08-06' }
+        ],
+        clientes: [
+          { nombre: 'Distribuidora del Este', abc: 'A', frecuencia: 7, ultimaCompra: '2026-08-04', salud: 'Activo' },
+          { nombre: 'Supermercado Central', abc: 'A', frecuencia: 10, ultimaCompra: '2026-08-01', salud: 'Activo' },
+          { nombre: 'Bodegón Gourmet', abc: 'B', frecuencia: 15, ultimaCompra: '2026-07-20', salud: 'En Riesgo' },
+          { nombre: 'Abasto Express', abc: 'C', frecuencia: 30, ultimaCompra: '2026-06-15', salud: 'Inactivo' }
+        ]
+      };
+
+      renderizarKPIs(mockData.kpis);
+      renderizarMeta(mockData.kpis);
+      renderizarEmbudo(mockData.embudo);
+      renderizarClientes(mockData.clientes);
+      renderizarTablaGestion(mockData.embudo);
+    }
+
+    // Renderizado de las 6 Tarjetas KPI del Dashboard
+    function renderizarKPIs(kpis) {
+      document.getElementById('kpiVentasHoy').textContent = `$${kpis.ventasHoy.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+      document.getElementById('kpiVentasSemana').textContent = `$${kpis.ventasSemana.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+      document.getElementById('kpiVentasMes').textContent = `$${kpis.ventasMes.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+      document.getElementById('kpiCajasMes').textContent = `${kpis.cajasMes} cjs`;
+      document.getElementById('kpiClientesActivos').textContent = kpis.clientesActivos;
+
+      const pct = Math.round((kpis.ventasMes / kpis.metaUSD) * 100);
+      const gap = kpis.metaUSD - kpis.ventasMes;
+
+      document.getElementById('kpiCumplimientoMeta').textContent = `${pct}%`;
+      document.getElementById('kpiGapText').textContent = `GAP: $${gap > 0 ? gap.toLocaleString('en-US', {minimumFractionDigits: 2}) : 0}`;
+    }
+
+    // Renderizado del Módulo de Meta
+    function renderizarMeta(kpis) {
+      const pctUSD = Math.min(100, Math.round((kpis.ventasMes / kpis.metaUSD) * 100));
+      const pctCajas = Math.min(100, Math.round((kpis.cajasMes / kpis.metaCajas) * 100));
+
+      document.getElementById('metaPorcentajeUSD').textContent = `${pctUSD}%`;
+      document.getElementById('progressBarFillUSD').style.width = `${pctUSD}%`;
+      document.getElementById('metaLogradoUSD').textContent = `$${kpis.ventasMes.toLocaleString('en-US')}`;
+      document.getElementById('metaObjetivoUSD').textContent = `$${kpis.metaUSD.toLocaleString('en-US')}`;
+
+      document.getElementById('metaPorcentajeCajas').textContent = `${pctCajas}%`;
+      document.getElementById('progressBarFillCajas').style.width = `${pctCajas}%`;
+      document.getElementById('metaLogradoCajas').textContent = `${kpis.cajasMes} cjs`;
+      document.getElementById('metaObjetivoCajas').textContent = `${kpis.metaCajas} cjs`;
+    }
+
+    // Renderizado del Embudo Comercial (5 Etapas)
+    function renderizarEmbudo(oportunidades) {
+      // Limpiar columnas
+      for(let i = 1; i <= 5; i++) {
+        document.getElementById(`cardsEtapa${i}`).innerHTML = '';
+        document.getElementById(`badgeEtapa${i}`).textContent = '0';
+      }
+
+      const conteos = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+
+      oportunidades.forEach(op => {
+        conteos[op.etapa]++;
+        const container = document.getElementById(`cardsEtapa${op.etapa}`);
+        if (container) {
+          const card = document.createElement('div');
+          card.className = 'opportunity-card';
+          card.innerHTML = `
+            <div class="op-client">${op.cliente}</div>
+            <div class="op-amount">$${op.monto.toLocaleString('en-US')}</div>
+            <div class="op-date"><i class="ri-time-line"></i> ${op.fecha}</div>
+          `;
+          container.appendChild(card);
+        }
+      });
+
+      for(let i = 1; i <= 5; i++) {
+        document.getElementById(`badgeEtapa${i}`).textContent = conteos[i];
+      }
+    }
+
+    // Renderizado del Directorio de Clientes
+    function renderizarClientes(clientes) {
+      const tbody = document.getElementById('tablaClientesBody');
+      tbody.innerHTML = '';
+
+      clientes.forEach(c => {
+        const tr = document.createElement('tr');
+        
+        let badgeClass = 'badge-active';
+        if (c.salud === 'En Riesgo') badgeClass = 'badge-risk';
+        if (c.salud === 'Inactivo') badgeClass = 'badge-inactive';
+
+        tr.innerHTML = `
+          <td><strong>${c.nombre}</strong></td>
+          <td><span style="font-weight:700; color:var(--rojo-casabe);">${c.abc}</span></td>
+          <td>Cada ${c.frecuencia} días</td>
+          <td>${c.ultimaCompra}</td>
+          <td><span class="badge-status ${badgeClass}">${c.salud}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Renderizado de la Tabla de Reporte de Gestión
+    function renderizarTablaGestion(oportunidades) {
+      const tbody = document.getElementById('tablaGestionBody');
+      tbody.innerHTML = '';
+
+      const nombresEtapas = {
+        1: 'Prospección',
+        2: 'Contacto',
+        3: 'Presentación',
+        4: 'Activación',
+        5: 'Fidelización'
+      };
+
+      oportunidades.forEach(op => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${op.cliente}</strong></td>
+          <td>${nombresEtapas[op.etapa] || 'Etapa ' + op.etapa}</td>
+          <td><i class="ri-phone-line"></i> 3 contactos</td>
+          <td>${op.fecha}</td>
+          <td>Visita comercial programada</td>
+          <td>
+            <button class="btn btn-secondary" style="padding:0.3rem 0.6rem; font-size:0.75rem;" onclick="actualizarGestion('${op.id}')">
+              <i class="ri-edit-line"></i> Gestionar
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function actualizarGestion(id) {
+      alert(`Acción de gestión para la oportunidad ${id}. Permite cambiar etapa o agendar el próximo seguimiento.`);
+    }
+  </script>
+</body>
+</html>
