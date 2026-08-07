@@ -1,1220 +1,958 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SCCR - Portal de Vendedor | Casabe Real</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-  
-  <style>
-    /* ==========================================================================
-       SYSTEM DESIGN & VARIABLES CROMÁTICAS - SCCR v2.5.0
-       ========================================================================== */
-    :root {
-      --rojo-casabe: #D71920;
-      --rojo-hover: #B51218;
-      --negro-titulos: #111827;
-      --gris-texto: #4B5563;
-      --gris-claro: #9CA3AF;
-      --fondo-pantalla: #F3F4F6;
-      --blanco: #FFFFFF;
-      --verde-exito: #059669;
-      --amarillo-alerta: #D97706;
-      --azul-info: #2563EB;
-      --morado-accent: #7C3AED;
-      --borde-suave: #E5E7EB;
-      --sombra-card: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
-      --sombra-elevada: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 16px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCCR v2.5.0 - Portal del Vendedor / Asesor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Montserrat', sans-serif;
-    }
+    <style>
+        /* ==========================================================================
+           1. DESIGN SYSTEM & VARIABLES (SCCR v2.5.0 Master Specifications)
+           ========================================================================== */
+        :root {
+            --primary-red: #D71920;      /* Primario (Rojo Casabe) */
+            --bg-general: #F5F7FA;       /* Fondo General */
+            --card-bg: #FFFFFF;          /* Tarjetas / Header */
+            --text-primary: #2D3436;     /* Texto Principal */
+            --text-secondary: #7F8C8D;   /* Texto Secundario */
+            --status-success: #2ECC71;   /* Éxito / Alerta Verde (≥90%) */
+            --status-warning: #F39C12;   /* Advertencia / Amarillo (75%-89%) */
+            --status-critical: #E74C3C;  /* Alerta Crítica / Rojo (<75%) */
+            --border-color: #E2E8F0;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --font-title: 'Montserrat', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
 
-    body {
-      background-color: var(--fondo-pantalla);
-      color: var(--gris-texto);
-      line-height: 1.5;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    /* ==========================================================================
-       HEADER & BARRA SUPERIOR
-       ========================================================================== */
-    header {
-      background-color: var(--negro-titulos);
-      color: var(--blanco);
-      padding: 0.8rem 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 4px solid var(--rojo-casabe);
-      box-shadow: var(--sombra-card);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-general);
+            color: var(--text-primary);
+            line-height: 1.5;
+            font-size: 14px;
+        }
 
-    .brand-container {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
+        /* ==========================================================================
+           2. HEADER & NAVEGACIÓN PRINCIPAL
+           ========================================================================== */
+        header.app-header {
+            background-color: var(--card-bg);
+            border-bottom: 2px solid var(--primary-red);
+            padding: 0.75rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-sm);
+        }
 
-    .brand-logo {
-      width: 38px;
-      height: 38px;
-      background: var(--rojo-casabe);
-      color: var(--blanco);
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 1.2rem;
-    }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
 
-    .brand-text h1 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--blanco);
-      letter-spacing: 0.5px;
-    }
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-    .brand-text span {
-      font-size: 0.75rem;
-      color: var(--gris-claro);
-      display: block;
-    }
+        .brand-container img {
+            height: 42px;
+            width: auto;
+            object-fit: contain;
+        }
 
-    .user-badge {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      background: rgba(255, 255, 255, 0.08);
-      padding: 0.4rem 0.8rem;
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-    }
+        .brand-title h1 {
+            font-family: var(--font-title);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-red);
+            line-height: 1.1;
+        }
 
-    .user-avatar {
-      width: 32px;
-      height: 32px;
-      background: var(--rojo-casabe);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--blanco);
-      font-weight: 700;
-      font-size: 0.85rem;
-    }
+        .brand-title span {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
 
-    .user-info {
-      text-align: right;
-    }
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #F8FAFC;
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+        }
 
-    .user-name {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--blanco);
-    }
+        .user-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background-color: var(--primary-red);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
 
-    .user-role {
-      font-size: 0.7rem;
-      color: #9CA3AF;
-    }
+        .user-info {
+            line-height: 1.2;
+        }
 
-    .btn-logout {
-      background: transparent;
-      border: none;
-      color: var(--gris-claro);
-      cursor: pointer;
-      font-size: 1.1rem;
-      transition: color 0.2s;
-      margin-left: 0.5rem;
-    }
+        .user-name {
+            font-weight: 600;
+            font-size: 13px;
+        }
 
-    .btn-logout:hover {
-      color: var(--rojo-casabe);
-    }
+        .user-role {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
 
-    /* ==========================================================================
-       NAVEGACIÓN POR PESTAÑAS (ORDEN SOLICITADO)
-       ========================================================================== */
-    .nav-tabs-wrapper {
-      background: var(--blanco);
-      border-bottom: 1px solid var(--borde-suave);
-      padding: 0 1.5rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-      overflow-x: auto;
-    }
+        /* Navegación del Vendedor */
+        nav.main-nav {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-top: 4px;
+            border-top: 1px solid #EDF2F7;
+        }
 
-    .nav-tabs {
-      display: flex;
-      gap: 0.5rem;
-      max-width: 1400px;
-      margin: 0 auto;
-      list-style: none;
-    }
+        .nav-link {
+            padding: 8px 14px;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 13px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
 
-    .nav-tab-btn {
-      padding: 0.9rem 1.1rem;
-      border: none;
-      background: transparent;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--gris-texto);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      border-bottom: 3px solid transparent;
-      transition: all 0.2s ease;
-      white-space: nowrap;
-    }
+        .nav-link:hover {
+            background-color: #FFF5F5;
+            color: var(--primary-red);
+        }
 
-    .nav-tab-btn i {
-      font-size: 1.05rem;
-    }
+        .nav-link.active {
+            background-color: var(--primary-red);
+            color: white;
+        }
 
-    .nav-tab-btn:hover {
-      color: var(--rojo-casabe);
-      background: #FEF2F2;
-    }
+        /* ==========================================================================
+           3. METRICS QUICK BAR (SECCIÓN SUPERIOR DE CONTROL)
+           ========================================================================== */
+        .metrics-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            padding: 1rem 1.5rem 0.5rem;
+        }
 
-    .nav-tab-btn.active {
-      color: var(--rojo-casabe);
-      border-bottom-color: var(--rojo-casabe);
-      background: #FEF2F2;
-    }
+        .metric-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
 
-    .nav-tab-btn.highlight {
-      color: var(--morado-accent);
-    }
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 600;
+        }
 
-    .nav-tab-btn.highlight.active {
-      color: var(--morado-accent);
-      border-bottom-color: var(--morado-accent);
-      background: #F5F3FF;
-    }
+        .metric-value {
+            font-family: var(--font-title);
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 4px 0;
+        }
 
-    /* ==========================================================================
-       CONTENEDOR PRINCIPAL & CONTENIDO
-       ========================================================================== */
-    main {
-      flex: 1;
-      max-width: 1400px;
-      width: 100%;
-      margin: 1.5rem auto;
-      padding: 0 1.5rem;
-    }
+        .progress-dual {
+            margin-top: 6px;
+        }
 
-    .tab-content {
-      display: none;
-      animation: fadeIn 0.3s ease-in-out;
-    }
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            margin-bottom: 2px;
+        }
 
-    .tab-content.active {
-      display: block;
-    }
+        .progress-bar-bg {
+            height: 6px;
+            background-color: #E2E8F0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 4px;
+        }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
 
-    /* ==========================================================================
-       COMPONENTES REUTILIZABLES (TARJETAS, TABLAS, FORMULARIOS)
-       ========================================================================== */
-    .card {
-      background: var(--blanco);
-      border-radius: var(--radius-md);
-      padding: 1.25rem;
-      box-shadow: var(--sombra-card);
-      border: 1px solid var(--borde-suave);
-      margin-bottom: 1.25rem;
-    }
+        .traffic-light-dots {
+            display: flex;
+            gap: 8px;
+            margin-top: 6px;
+        }
 
-    .card-title {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--negro-titulos);
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.5rem;
-    }
+        .dot-badge {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
 
-    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
-    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
-    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+        .dot-badge.green { background: #E8F8F0; color: #1E824C; }
+        .dot-badge.yellow { background: #FEF9E7; color: #D68910; }
+        .dot-badge.red { background: #FDEDEC; color: #CB4335; }
 
-    @media (max-width: 992px) {
-      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
-    }
+        /* ==========================================================================
+           4. CONTENEDOR PRINCIPAL Y PANELES DÍNAMICOS
+           ========================================================================== */
+        main.main-container {
+            padding: 1rem 1.5rem;
+        }
 
-    /* KPI Cards */
-    .kpi-card {
-      background: var(--blanco);
-      border-radius: var(--radius-md);
-      padding: 1.2rem;
-      border: 1px solid var(--borde-suave);
-      box-shadow: var(--sombra-card);
-      position: relative;
-      overflow: hidden;
-    }
+        .view-panel {
+            display: none;
+        }
 
-    .kpi-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 4px;
-      height: 100%;
-      background: var(--rojo-casabe);
-    }
+        .view-panel.active {
+            display: block;
+        }
 
-    .kpi-card.verde::before { background: var(--verde-exito); }
-    .kpi-card.azul::before { background: var(--azul-info); }
-    .kpi-card.morado::before { background: var(--morado-accent); }
-    .kpi-card.amarillo::before { background: var(--amarillo-alerta); }
+        /* BREADCRUMB */
+        .breadcrumb {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
 
-    .kpi-label {
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      color: var(--gris-claro);
-      margin-bottom: 0.3rem;
-    }
+        .breadcrumb span {
+            color: var(--primary-red);
+            font-weight: 600;
+        }
 
-    .kpi-value {
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: var(--negro-titulos);
-    }
+        /* GRID Y CONTENEDORES */
+        .grid-12 {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 16px;
+        }
 
-    .kpi-sub {
-      font-size: 0.75rem;
-      color: var(--gris-texto);
-      margin-top: 0.3rem;
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-    }
+        .col-12 { grid-column: span 12; }
+        .col-8  { grid-column: span 8; }
+        .col-6  { grid-column: span 6; }
+        .col-4  { grid-column: span 4; }
 
-    /* Tablas Estilizadas */
-    .table-container {
-      overflow-x: auto;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--borde-suave);
-    }
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            margin-bottom: 16px;
+        }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 0.85rem;
-    }
+        .card-title {
+            font-family: var(--font-title);
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    th {
-      background: #F9FAFB;
-      color: var(--negro-titulos);
-      font-weight: 700;
-      padding: 0.75rem 1rem;
-      border-bottom: 2px solid var(--borde-suave);
-      white-space: nowrap;
-    }
+        /* TABLAS Y LISTAS */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
 
-    td {
-      padding: 0.75rem 1rem;
-      border-bottom: 1px solid var(--borde-suave);
-      color: var(--gris-texto);
-    }
+        table.data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+        }
 
-    tr:hover {
-      background: #F9FAFB;
-    }
+        table.data-table th {
+            background-color: #F8FAFC;
+            color: var(--text-secondary);
+            padding: 10px 12px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+            white-space: nowrap;
+        }
 
-    /* Badges */
-    .badge {
-      display: inline-block;
-      padding: 0.2rem 0.6rem;
-      border-radius: 12px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
+        table.data-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
 
-    .badge-exito { background: #D1FAE5; color: #065F46; }
-    .badge-alerta { background: #FEF3C7; color: #92400E; }
-    .badge-critico { background: #FEE2E2; color: #991B1B; }
-    .badge-info { background: #DBEAFE; color: #1E40AF; }
+        table.data-table tr:hover {
+            background-color: #FAFAFA;
+        }
 
-    /* Barra de Progreso */
-    .progress-bar-bg {
-      width: 100%;
-      height: 10px;
-      background: #E5E7EB;
-      border-radius: 5px;
-      overflow: hidden;
-      margin: 0.5rem 0;
-    }
+        /* FORMULARIOS (REPORTE DE GESTIÓN & PEDIDOS) */
+        .form-group {
+            margin-bottom: 14px;
+        }
 
-    .progress-bar-fill {
-      height: 100%;
-      background: var(--rojo-casabe);
-      border-radius: 5px;
-      transition: width 0.4s ease;
-    }
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
 
-    /* Botones y Formularios */
-    .btn {
-      padding: 0.6rem 1.2rem;
-      border-radius: var(--radius-sm);
-      border: none;
-      font-weight: 600;
-      font-size: 0.85rem;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      transition: background 0.2s;
-    }
+        .form-control {
+            width: 100%;
+            padding: 9px 12px;
+            font-family: var(--font-body);
+            font-size: 13px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            outline: none;
+            transition: border 0.2s;
+        }
 
-    .btn-primary {
-      background: var(--rojo-casabe);
-      color: var(--blanco);
-    }
+        .form-control:focus {
+            border-color: var(--primary-red);
+        }
 
-    .btn-primary:hover {
-      background: var(--rojo-hover);
-    }
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
 
-    .btn-secondary {
-      background: #E5E7EB;
-      color: var(--negro-titulos);
-    }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            background: #F8FAFC;
+            padding: 6px 10px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
 
-    .btn-secondary:hover {
-      background: #D1D5DB;
-    }
+        /* BOTONES */
+        .btn {
+            padding: 9px 16px;
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
 
-    .form-group {
-      margin-bottom: 1rem;
-    }
+        .btn-primary {
+            background-color: var(--primary-red);
+            color: white;
+        }
 
-    .form-label {
-      display: block;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--negro-titulos);
-      margin-bottom: 0.3rem;
-    }
+        .btn-primary:hover {
+            background-color: #B51218;
+        }
 
-    .form-control {
-      width: 100%;
-      padding: 0.6rem 0.8rem;
-      border: 1px solid var(--borde-suave);
-      border-radius: var(--radius-sm);
-      font-size: 0.85rem;
-    }
+        .btn-secondary {
+            background-color: #E2E8F0;
+            color: var(--text-primary);
+        }
 
-    .form-control:focus {
-      outline: none;
-      border-color: var(--rojo-casabe);
-    }
+        /* PIPELINE EMBUDO 5 ETAPAS */
+        .funnel-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
 
-    /* ==========================================================================
-       ESTILOS ESPECÍFICOS PARA PESTAÑA "+ MÉTRICAS" (MÉTRICAS AVANZADAS)
-       ========================================================================== */
-    .distribution-bar {
-      display: flex;
-      height: 24px;
-      border-radius: var(--radius-sm);
-      overflow: hidden;
-      margin: 1rem 0;
-      box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-    }
+        .funnel-stage {
+            background: #F8FAFC;
+            border-radius: var(--radius-sm);
+            padding: 10px;
+            border-top: 3px solid var(--border-color);
+        }
 
-    .dist-segment {
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--blanco);
-      font-size: 0.7rem;
-      font-weight: 700;
-      transition: width 0.5s ease;
-    }
+        .funnel-stage.e1 { border-top-color: #3498DB; }
+        .funnel-stage.e2 { border-top-color: #9B59B6; }
+        .funnel-stage.e3 { border-top-color: #F39C12; }
+        .funnel-stage.e4 { border-top-color: #E67E22; }
+        .funnel-stage.e5 { border-top-color: #2ECC71; }
 
-    .seg-tradicional { background: #D71920; }
-    .seg-gourmet { background: #2563EB; }
-    .seg-mini { background: #059669; }
-    .seg-sazonado { background: #D97706; }
-    .seg-especial { background: #7C3AED; }
+        .funnel-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
 
-    .legend-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 0.75rem;
-      margin-top: 1rem;
-    }
+        .funnel-card {
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 6px;
+            font-size: 12px;
+            box-shadow: var(--shadow-sm);
+        }
 
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.78rem;
-      font-weight: 600;
-    }
-
-    .legend-color {
-      width: 12px;
-      height: 12px;
-      border-radius: 3px;
-    }
-  </style>
+        /* ADAPTABILIDAD MOBILE */
+        @media (max-width: 992px) {
+            .col-8, .col-6, .col-4 { grid-column: span 12; }
+            .funnel-container { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
 
-  <header>
-    <div class="brand-container">
-      <div class="brand-logo">CR</div>
-      <div class="brand-text">
-        <h1>Casabe Real</h1>
-        <span>SCCR v2.5.0 • Portal Vendedor</span>
-      </div>
-    </div>
+    <header class="app-header">
+        <div class="header-top">
+            <div class="brand-container">
+                <img src="assets/logo-casabe-real.png" alt="Casabe Real Logo" onerror="this.src='https://via.placeholder.com/140x40?text=Casabe+Real'">
+                <div class="brand-title">
+                    <h1>SCCR v2.5.0</h1>
+                    <span>Sistema Comercial Casabe Real</span>
+                </div>
+            </div>
 
-    <div class="user-badge">
-      <div class="user-avatar" id="userAvatar">CM</div>
-      <div class="user-info">
-        <div class="user-name" id="userName">Carlos Mendoza</div>
-        <div class="user-role" id="userRole">Vendedor • Zona Centro</div>
-      </div>
-      <button class="btn-logout" title="Cerrar Sesión" onclick="cerrarSesion()">
-        <i class="ri-logout-box-r-line"></i>
-      </button>
-    </div>
-  </header>
-
-  <div class="nav-tabs-wrapper">
-    <ul class="nav-tabs">
-      <li>
-        <button class="nav-tab-btn active" onclick="switchTab('clientes', this)">
-          <i class="ri-user-star-line"></i> Clientes
-        </button>
-      </li>
-      <li>
-        <button class="nav-tab-btn" onclick="switchTab('meta', this)">
-          <i class="ri-focus-3-line"></i> Meta
-        </button>
-      </li>
-      <li>
-        <button class="nav-tab-btn" onclick="switchTab('propuesta', this)">
-          <i class="ri-file-text-line"></i> Propuesta
-        </button>
-      </li>
-      <li>
-        <button class="nav-tab-btn" onclick="switchTab('pedidos', this)">
-          <i class="ri-shopping-cart-2-line"></i> Pedidos
-        </button>
-      </li>
-      <li>
-        <button class="nav-tab-btn" onclick="switchTab('gestion', this)">
-          <i class="ri-task-line"></i> Reporte de gestión
-        </button>
-      </li>
-      <li>
-        <button class="nav-tab-btn" onclick="switchTab('embudo', this)">
-          <i class="ri-filter-3-line"></i> Embudo
-        </button>
-      </li>
-      <li>
-        <button class="nav-tab-btn" onclick="switchTab('dashboard', this)">
-          <i class="ri-dashboard-3-line"></i> Dashboard
-        </button>
-      </li>
-      <li>
-        <button class="nav-tab-btn highlight" onclick="switchTab('metricas', this)">
-          <i class="ri-bar-chart-grouped-line"></i> + Métricas
-        </button>
-      </li>
-    </ul>
-  </div>
-
-  <main>
-
-    <section id="tab-clientes" class="tab-content active">
-      <div class="card">
-        <div class="card-title">
-          <span><i class="ri-user-search-line"></i> Cartera de Clientes Asignados</span>
-          <button class="btn btn-primary" onclick="alert('Módulo de registro de nuevos prospectos')">
-            <i class="ri-add-line"></i> Nuevo Cliente
-          </button>
+            <div class="user-profile">
+                <div class="user-avatar">JP</div>
+                <div class="user-info">
+                    <div class="user-name">Juan Pérez</div>
+                    <div class="user-role">Asesor Comercial - Gran Caracas</div>
+                </div>
+            </div>
         </div>
 
-        <div style="display:flex; gap:1rem; margin-bottom:1rem; flex-wrap:wrap;">
-          <input type="text" id="inputBuscarCliente" class="form-control" style="flex:1; min-width:220px;" placeholder="Buscar cliente por nombre o RIF..." onkeyup="filtrarClientes()">
-          <select id="selectFiltroABC" class="form-control" style="width:160px;" onchange="filtrarClientes()">
-            <option value="">Clasificación ABC</option>
-            <option value="A">Clase A</option>
-            <option value="B">Clase B</option>
-            <option value="C">Clase C</option>
-          </select>
+        <nav class="main-nav">
+            <a href="#" class="nav-link active" onclick="switchTab('dashboard', this)"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            <a href="#" class="nav-link" onclick="switchTab('clientes', this)"><i class="fa-solid fa-users"></i> Clientes</a>
+            <a href="#" class="nav-link" onclick="switchTab('metas', this)"><i class="fa-solid fa-bullseye"></i> Meta</a>
+            <a href="#" class="nav-link" onclick="switchTab('reporte', this)"><i class="fa-solid fa-clipboard-list"></i> Reporte de Gestión</a>
+            <a href="#" class="nav-link" onclick="switchTab('embudo', this)"><i class="fa-solid fa-filter"></i> Embudo</a>
+            <a href="#" class="nav-link" onclick="switchTab('propuestas', this)"><i class="fa-solid fa-file-signature"></i> Propuestas</a>
+            <a href="#" class="nav-link" onclick="switchTab('pedidos', this)"><i class="fa-solid fa-cart-shopping"></i> Pedidos</a>
+        </nav>
+    </header>
+
+    <section class="metrics-bar">
+        <div class="metric-card">
+            <div class="metric-header">
+                <span>META VENDEDOR (MES)</span>
+                <i class="fa-solid fa-chart-pie" style="color: var(--primary-red);"></i>
+            </div>
+            <div class="metric-value">$4,250 / 850 Cjs</div>
+            <div class="progress-dual">
+                <div class="progress-label">
+                    <span>Avance ($ USD): 82%</span>
+                    <span>Meta: $5,180</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: 82%; background-color: var(--status-warning);"></div>
+                </div>
+                <div class="progress-label">
+                    <span>Avance (Cajas): 78%</span>
+                    <span>Meta: 1,090 Cjs</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: 78%; background-color: var(--status-warning);"></div>
+                </div>
+            </div>
         </div>
 
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Código</th>
-                <th>Cliente / Razón Social</th>
-                <th>Clasificación</th>
-                <th>Frecuencia</th>
-                <th>Última Compra</th>
-                <th>Estado Salud</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody id="tablaClientesBody">
-              </tbody>
-          </table>
+        <div class="metric-card">
+            <div class="metric-header">
+                <span>PROPUESTAS PENDIENTES</span>
+                <i class="fa-solid fa-clock" style="color: #3498DB;"></i>
+            </div>
+            <div class="metric-value">6 Activas</div>
+            <span style="font-size: 11px; color: var(--text-secondary);">4 en negociación | 2 por vencer</span>
         </div>
-      </div>
+
+        <div class="metric-card">
+            <div class="metric-header">
+                <span>SEMÁFORO RECOMPRA CRM</span>
+                <i class="fa-solid fa-traffic-light"></i>
+            </div>
+            <div class="traffic-light-dots">
+                <div class="dot-badge green"><i class="fa-solid fa-circle"></i> 18 Al día</div>
+                <div class="dot-badge yellow"><i class="fa-solid fa-circle"></i> 5 Límite</div>
+                <div class="dot-badge red"><i class="fa-solid fa-circle"></i> 3 En Riesgo</div>
+            </div>
+            <span style="font-size: 11px; color: var(--text-secondary); margin-top: 8px;">Total Cartera: 26 Cuentas</span>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-header">
+                <span>RUTERO DE HOY</span>
+                <i class="fa-solid fa-route" style="color: var(--status-success);"></i>
+            </div>
+            <div class="metric-value">5 / 8 Visitas</div>
+            <div class="progress-bar-bg" style="margin-top: 6px;">
+                <div class="progress-bar-fill" style="width: 62.5%; background-color: var(--status-success);"></div>
+            </div>
+            <span style="font-size: 11px; color: var(--text-secondary);">3 Contactos efectivos logrados</span>
+        </div>
     </section>
 
-    <section id="tab-meta" class="tab-content">
-      <div class="grid-4" style="margin-bottom:1.25rem;">
-        <div class="kpi-card">
-          <div class="kpi-label">Meta Facturación ($)</div>
-          <div class="kpi-value" id="metaMonto">$12,000</div>
-          <div class="kpi-sub">Objetivo Mensual</div>
-        </div>
-        <div class="kpi-card verde">
-          <div class="kpi-label">Facturado Real ($)</div>
-          <div class="kpi-value" id="realMonto">$8,850</div>
-          <div class="kpi-sub" style="color:var(--verde-exito); font-weight:700;">73.8% de avance</div>
-        </div>
-        <div class="kpi-card azul">
-          <div class="kpi-label">Meta Cajas</div>
-          <div class="kpi-value" id="metaCajas">800 Cajas</div>
-          <div class="kpi-sub">Empaques logísticos</div>
-        </div>
-        <div class="kpi-card amarillo">
-          <div class="kpi-label">Brecha / GAP ($)</div>
-          <div class="kpi-value" id="gapMonto">$3,150</div>
-          <div class="kpi-sub" style="color:var(--amarillo-alerta);">Faltante a meta</div>
-        </div>
-      </div>
+    <main class="main-container">
 
-      <div class="card">
-        <div class="card-title"><i class="ri-flag-2-line"></i> Progreso del Objetivo Mensual</div>
-        
-        <label class="form-label">Cumplimiento en Facturación ($)</label>
-        <div class="progress-bar-bg">
-          <div class="progress-bar-fill" style="width: 73.8%;"></div>
-        </div>
-        <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:600; margin-bottom:1.5rem;">
-          <span>$8,850 Facturados</span>
-          <span>$12,000 Meta</span>
-        </div>
+        <div id="view-dashboard" class="view-panel active">
+            <div class="breadcrumb">Inicio / <span>Dashboard del Asesor</span></div>
+            
+            <div class="grid-12">
+                <div class="col-8">
+                    <div class="card">
+                        <div class="card-title">
+                            <span>Resumen de Ventas y Proyección (Run-Rate)</span>
+                            <span class="dot-badge yellow"><i class="fa-solid fa-triangle-exclamation"></i> Estado: At Risk (78%)</span>
+                        </div>
+                        <div class="grid-12" style="margin-bottom: 15px;">
+                            <div class="col-4" style="background:#F8FAFC; padding:10px; border-radius:6px;">
+                                <small style="color:var(--text-secondary);">Ritmo Diario Requerido</small>
+                                <div style="font-size:18px; font-weight:700; color:var(--primary-red);">$155.00 / día</div>
+                            </div>
+                            <div class="col-4" style="background:#F8FAFC; padding:10px; border-radius:6px;">
+                                <small style="color:var(--text-secondary);">Proyección Cierre ($)</small>
+                                <div style="font-size:18px; font-weight:700;">$4,650.00</div>
+                            </div>
+                            <div class="col-4" style="background:#F8FAFC; padding:10px; border-radius:6px;">
+                                <small style="color:var(--text-secondary);">Brecha (GAP)</small>
+                                <div style="font-size:18px; font-weight:700; color:var(--status-critical);">-$530.00</div>
+                            </div>
+                        </div>
+                        <p style="font-size: 12px; color: var(--text-secondary);">
+                            <i class="fa-solid fa-circle-info"></i> Ajuste sugerido: Impulsar cierre de propuestas en etapa de Presentación para cubrir la brecha antes del cierre de mes.
+                        </p>
+                    </div>
 
-        <label class="form-label">Cumplimiento en Volumen (Cajas)</label>
-        <div class="progress-bar-bg">
-          <div class="progress-bar-fill" style="width: 71.2%; background:var(--azul-info);"></div>
-        </div>
-        <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:600;">
-          <span>570 Cajas Entregadas</span>
-          <span>800 Cajas Meta</span>
-        </div>
-      </div>
-    </section>
+                    <div class="card">
+                        <div class="card-title">Rutero Operativo Asignado para Hoy</div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Cliente / Razón Social</th>
+                                        <th>Canal</th>
+                                        <th>Zona</th>
+                                        <th>Estado Semáforo</th>
+                                        <th>Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Bodegón Gourmet Caracas</strong></td>
+                                        <td>Bodegones</td>
+                                        <td>Caracas Este</td>
+                                        <td><span class="dot-badge green">Al día</span></td>
+                                        <td><button class="btn btn-primary" style="padding:4px 8px; font-size:11px;" onclick="switchTab('reporte')">Reportar</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Restaurante La Estancia</strong></td>
+                                        <td>HORECA</td>
+                                        <td>Caracas Este</td>
+                                        <td><span class="dot-badge yellow">Límite</span></td>
+                                        <td><button class="btn btn-primary" style="padding:4px 8px; font-size:11px;" onclick="switchTab('reporte')">Reportar</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Supermercado Plaza C.A.</strong></td>
+                                        <td>Cadenas</td>
+                                        <td>Caracas Este</td>
+                                        <td><span class="dot-badge red">Riesgo</span></td>
+                                        <td><button class="btn btn-primary" style="padding:4px 8px; font-size:11px;" onclick="switchTab('reporte')">Reportar</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
-    <section id="tab-propuesta" class="tab-content">
-      <div class="card">
-        <div class="card-title">
-          <span><i class="ri-calculator-line"></i> Cotizador & Simulador Rápido de Propuesta Comercial</span>
-          <a href="propuesta.html" target="_blank" class="btn btn-secondary" style="text-decoration:none;">
-            <i class="ri-external-link-line"></i> Abrir propuesta.html Completa
-          </a>
-        </div>
-
-        <div class="grid-2">
-          <div>
-            <div class="form-group">
-              <label class="form-label">Seleccionar Cliente</label>
-              <select class="form-control" id="simCliente">
-                <option value="">-- Seleccionar de Cartera --</option>
-                <option value="Supermercados El Rey">Supermercados El Rey</option>
-                <option value="Bodegón Plaza Altamira">Bodegón Plaza Altamira</option>
-                <option value="Distribuidora Central">Distribuidora Central</option>
-              </select>
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-title">Oportunidades Inmediatas</div>
+                        <div class="funnel-card">
+                            <strong>Hotel Altamira Suites</strong><br>
+                            <small style="color:var(--text-secondary);">Propuesta enviada: $640.00</small><br>
+                            <span class="dot-badge yellow" style="margin-top:4px; display:inline-block;">Esperando Respuesta</span>
+                        </div>
+                        <div class="funnel-card">
+                            <strong>Grupo Gastro CCS</strong><br>
+                            <small style="color:var(--text-secondary);">Muestra entregada - Línea Pasapalo</small><br>
+                            <span class="dot-badge green" style="margin-top:4px; display:inline-block;">Cita Agendada</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-              <label class="form-label">Línea de Producto Principal</label>
-              <select class="form-control" id="simProducto" onchange="calcularSimulador()">
-                <option value="15">Casabe Tradicional 200g ($15.00 / caja)</option>
-                <option value="22">Casabe Gourmet Ajo & Fina Hierba ($22.00 / caja)</option>
-                <option value="18">Casabe Mini Snacking ($18.00 / caja)</option>
-              </select>
+        </div>
+
+        <div id="view-clientes" class="view-panel">
+            <div class="breadcrumb">Inicio / <span>Directorio de Clientes Asignados</span></div>
+            <div class="card">
+                <div class="card-title">
+                    <span>Directorio y Filtros Avanzados</span>
+                    <button class="btn btn-primary" style="font-size:12px;"><i class="fa-solid fa-plus"></i> Nuevo Prospecto</button>
+                </div>
+                <div class="grid-12" style="margin-bottom:15px;">
+                    <div class="col-4">
+                        <input type="text" class="form-control" placeholder="Buscar por Nombre, RIF o Contacto...">
+                    </div>
+                    <div class="col-4">
+                        <select class="form-control">
+                            <option value="">Todas las Zonas</option>
+                            <option>Caracas Este</option>
+                            <option>Caracas Oeste</option>
+                            <option>La Guaira</option>
+                            <option>Altos Mirandinos</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <select class="form-control">
+                            <option value="">Todos los Canales</option>
+                            <option>HORECA</option>
+                            <option>Cadenas</option>
+                            <option>Supermercados</option>
+                            <option>Bodegones</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Razón Social / RIF</th>
+                                <th>Clasificación</th>
+                                <th>Canal / Zona</th>
+                                <th>Semáforo CRM</th>
+                                <th>Días Crédito</th>
+                                <th>Acción 360°</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Inversiones Gourmet 2021 C.A.</strong><br><small style="color:var(--text-secondary);">J-40982341-0</small></td>
+                                <td><span style="font-weight:700; color:var(--primary-red);">Clase A</span></td>
+                                <td>HORECA / Caracas Este</td>
+                                <td><span class="dot-badge green"><i class="fa-solid fa-circle"></i> Al Día</span></td>
+                                <td>15 Días ($1,200 Límite)</td>
+                                <td><button class="btn btn-secondary" style="padding:4px 8px; font-size:11px;"><i class="fa-solid fa-eye"></i> Ficha 360°</button></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Distribuidora Central La Guaira</strong><br><small style="color:var(--text-secondary);">J-31092834-2</small></td>
+                                <td><span style="font-weight:700;">Clase B</span></td>
+                                <td>Bodegones / La Guaira</td>
+                                <td><span class="dot-badge red"><i class="fa-solid fa-circle"></i> En Riesgo</span></td>
+                                <td>Contado</td>
+                                <td><button class="btn btn-secondary" style="padding:4px 8px; font-size:11px;"><i class="fa-solid fa-eye"></i> Ficha 360°</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="form-group">
-              <label class="form-label">Cantidad de Cajas</label>
-              <input type="number" id="simCantidad" class="form-control" value="20" min="1" oninput="calcularSimulador()">
+        </div>
+
+        <div id="view-metas" class="view-panel">
+            <div class="breadcrumb">Inicio / <span>Control de Metas Individuales</span></div>
+            <div class="grid-12">
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-title">Desglose por Línea de Producto ($ USD)</div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Línea</th>
+                                        <th>Meta USD</th>
+                                        <th>Ejecutado</th>
+                                        <th>% Cumplimiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Pasapalo</strong></td>
+                                        <td>$2,500.00</td>
+                                        <td>$2,100.00</td>
+                                        <td><span class="dot-badge green">84%</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Restaurante</strong></td>
+                                        <td>$1,800.00</td>
+                                        <td>$1,400.00</td>
+                                        <td><span class="dot-badge yellow">77%</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Torta</strong></td>
+                                        <td>$880.00</td>
+                                        <td>$750.00</td>
+                                        <td><span class="dot-badge green">85%</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-title">Incentivos y Comisiones</div>
+                        <p style="font-size:13px; margin-bottom:10px;">Estatus actual de hitos alcanzados en el mes:</p>
+                        <div style="background:#F8FAFC; padding:12px; border-radius:6px; margin-bottom:8px; border-left:4px solid var(--status-success);">
+                            <strong>Hito 80% Superado</strong> - Comisión base activada (1.5%).
+                        </div>
+                        <div style="background:#F8FAFC; padding:12px; border-radius:6px; margin-bottom:8px; border-left:4px solid var(--border-color);">
+                            <strong>Hito 100% (Pendiente)</strong> - Bono adicional por aceleración (+0.5%).
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
+        </div>
 
-          <div style="background:#F9FAFB; padding:1.25rem; border-radius:var(--radius-sm); border:1px solid var(--borde-suave);">
-            <h4 style="font-size:0.9rem; font-weight:700; margin-bottom:0.75rem;">Resumen Económico para el Cliente</h4>
-            <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem; font-size:0.85rem;">
-              <span>Monto Total Inversión:</span>
-              <strong id="simMontoTotal">$300.00</strong>
+        <div id="view-reporte" class="view-panel">
+            <div class="breadcrumb">Inicio / <span>Reporte de Gestión Diario de Campo</span></div>
+            <div class="card">
+                <div class="card-title">Formulario de Registro Operativo de Rutero</div>
+                <form id="form-reporte">
+                    <div class="grid-12">
+                        <div class="col-4 form-group">
+                            <label>Tipo de Cliente</label>
+                            <select class="form-control" id="rep-tipo-cliente">
+                                <option value="recurrente">Cliente Recurrente</option>
+                                <option value="prospecto">Prospecto / Oportunidad (Nuevo)</option>
+                            </select>
+                        </div>
+                        <div class="col-8 form-group">
+                            <label>Cliente / Razón Social</label>
+                            <select class="form-control" id="rep-cliente">
+                                <option>Bodegón Gourmet Caracas</option>
+                                <option>Restaurante La Estancia</option>
+                                <option>Supermercado Plaza C.A.</option>
+                            </select>
+                        </div>
+
+                        <div class="col-4 form-group">
+                            <label>Contacto Efectivo</label>
+                            <select class="form-control" id="rep-contacto">
+                                <option value="Si">Sí (Atendido por decisor)</option>
+                                <option value="No">No (Cerrado, ausente, etc.)</option>
+                            </select>
+                        </div>
+
+                        <div class="col-8 form-group">
+                            <label>Datos Capturados del Decisor</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-item"><input type="checkbox"> Nombre Decisor</label>
+                                <label class="checkbox-item"><input type="checkbox"> Teléfono / WhatsApp</label>
+                                <label class="checkbox-item"><input type="checkbox"> Correo Electrónico</label>
+                                <label class="checkbox-item"><input type="checkbox"> Dirección Despacho</label>
+                            </div>
+                        </div>
+
+                        <div class="col-4 form-group">
+                            <label>Gestión de Cita</label>
+                            <select class="form-control">
+                                <option>Cita Hoy (Realizada)</option>
+                                <option>Cita Futura (Fecha Agendada)</option>
+                                <option>Sin Cita (Visita en frío)</option>
+                            </select>
+                        </div>
+
+                        <div class="col-4 form-group">
+                            <label>Resultado Cita</label>
+                            <select class="form-control">
+                                <option>Interesado</option>
+                                <option>Reprogramada</option>
+                                <option>No Interesado</option>
+                                <option>Cierre Inmediato</option>
+                            </select>
+                        </div>
+
+                        <div class="col-4 form-group">
+                            <label>Estatus de Cierre</label>
+                            <select class="form-control" id="rep-cierre" onchange="toggleMotivoNoVenta(this.value)">
+                                <option value="pedido_rec">Pedido Recurrente</option>
+                                <option value="pedido_1era">Pedido 1era Vez</option>
+                                <option value="sin_pedido">Sin Pedido</option>
+                                <option value="rechazado">Rechazado</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 form-group" id="box-motivo-noventa" style="display:none; background:#FDEDEC; padding:12px; border-radius:6px;">
+                            <label style="color:var(--status-critical);">Motivo de No Venta (Obligatorio si no hay pedido)</label>
+                            <select class="form-control">
+                                <option value="">Seleccione Motivo...</option>
+                                <option>Precio</option>
+                                <option>Inventario Propio Alto</option>
+                                <option>Condiciones de Crédito</option>
+                                <option>Competencia</option>
+                                <option>Otro</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 form-group">
+                            <label>Observaciones / Minuta de Acuerdos</label>
+                            <textarea class="form-control" rows="3" placeholder="Escriba los compromisos, objeciones o detalles relevantes para la Bitácora 360°..."></textarea>
+                        </div>
+                    </div>
+
+                    <div style="text-align: right; margin-top: 10px;">
+                        <button type="button" class="btn btn-secondary">Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Guardar Reporte de Gestión</button>
+                    </div>
+                </form>
             </div>
-            <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem; font-size:0.85rem;">
-              <span>Margen Estimado del Cliente:</span>
-              <strong style="color:var(--verde-exito);" id="simMargen">30% ($90.00)</strong>
+        </div>
+
+        <div id="view-embudo" class="view-panel">
+            <div class="breadcrumb">Inicio / <span>Pipeline de Conversión del Embudo</span></div>
+            <div class="card">
+                <div class="card-title">Embudo Comercial de 5 Etapas</div>
+                <div class="funnel-container">
+                    <div class="funnel-stage e1">
+                        <div class="funnel-title">1. Prospección</div>
+                        <div class="funnel-card">
+                            <strong>Hotel Humboldt</strong><br>
+                            <small>Contacto: Chef Marco</small>
+                        </div>
+                    </div>
+                    <div class="funnel-stage e2">
+                        <div class="funnel-title">2. Contacto</div>
+                        <div class="funnel-card">
+                            <strong>Café Las Mercedes</strong><br>
+                            <small>Reunión realizada</small>
+                        </div>
+                    </div>
+                    <div class="funnel-stage e3">
+                        <div class="funnel-title">3. Presentación</div>
+                        <div class="funnel-card">
+                            <strong>Hotel Altamira Suites</strong><br>
+                            <small>Propuesta: $640.00</small>
+                        </div>
+                    </div>
+                    <div class="funnel-stage e4">
+                        <div class="funnel-title">4. Activación</div>
+                        <div class="funnel-card">
+                            <strong>Bodegón Gourmet</strong><br>
+                            <small>2 Pedidos realizados</small>
+                        </div>
+                    </div>
+                    <div class="funnel-stage e5">
+                        <div class="funnel-title">5. Fidelización</div>
+                        <div class="funnel-card">
+                            <strong>Restaurante La Estancia</strong><br>
+                            <small>6+ Pedidos (Recurrente)</small>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div style="display:flex; justify-content:space-between; margin-bottom:1rem; font-size:0.85rem;">
-              <span>Retorno Estimado (PVP):</span>
-              <strong id="simRetorno">$390.00</strong>
+        </div>
+
+        <div id="view-propuestas" class="view-panel">
+            <div class="breadcrumb">Inicio / <span>Gestión de Propuestas Comerciales</span></div>
+            <div class="card">
+                <div class="card-title">
+                    <span>Propuestas Emitidas</span>
+                    <button class="btn btn-primary" style="font-size:12px;"><i class="fa-solid fa-plus"></i> Generar Propuesta</button>
+                </div>
+                <p style="font-size:13px; color:var(--text-secondary);">Muestrario de cotizaciones enviadas a clientes para seguimiento directo.</p>
             </div>
-            <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="enviarWhatsAppPropuesta()">
-              <i class="ri-whatsapp-line"></i> Compartir Propuesta por WhatsApp
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="tab-pedidos" class="tab-content">
-      <div class="card">
-        <div class="card-title">
-          <span><i class="ri-add-box-line"></i> Registro Rápido de Pedido</span>
-          <a href="pedidos.html" target="_blank" class="btn btn-secondary" style="text-decoration:none;">
-            <i class="ri-external-link-line"></i> Módulo Completo pedidos.html
-          </a>
         </div>
 
-        <form id="formPedidoRapido" onsubmit="guardarPedido(event)">
-          <div class="grid-3">
-            <div class="form-group">
-              <label class="form-label">Cliente</label>
-              <select class="form-control" required id="pedCliente">
-                <option value="">Seleccione Cliente</option>
-                <option value="Supermercados El Rey">Supermercados El Rey</option>
-                <option value="Bodegón Plaza Altamira">Bodegón Plaza Altamira</option>
-                <option value="Comercializadora La Andina">Comercializadora La Andina</option>
-              </select>
+        <div id="view-pedidos" class="view-panel">
+            <div class="breadcrumb">Inicio / <span>Captura y Registro de Pedidos</span></div>
+            <div class="card">
+                <div class="card-title">
+                    <span>Captura de Órdenes de Venta</span>
+                    <button class="btn btn-primary" style="font-size:12px;"><i class="fa-solid fa-cart-plus"></i> Crear Nuevo Pedido</button>
+                </div>
+                <p style="font-size:13px; color:var(--text-secondary);">Módulo para la inyección de pedidos aprobados directamente al backend de facturación.</p>
             </div>
-            <div class="form-group">
-              <label class="form-label">Cajas Totales</label>
-              <input type="number" class="form-control" required min="1" id="pedCajas" placeholder="Ej. 50">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Monto Total Facturado ($)</label>
-              <input type="number" class="form-control" required step="0.01" id="pedMonto" placeholder="Ej. 750.00">
-            </div>
-          </div>
-          <button type="submit" class="btn btn-primary">
-            <i class="ri-save-line"></i> Procesar y Persistir Pedido
-          </button>
-        </form>
-      </div>
-
-      <div class="card">
-        <div class="card-title"><i class="ri-history-line"></i> Histórico de Pedidos Recientes</div>
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>ID Pedido</th>
-                <th>Fecha</th>
-                <th>Cliente</th>
-                <th>Cajas</th>
-                <th>Monto ($)</th>
-                <th>Estado</th>
-              </tr>
-            </thead>
-            <tbody id="tablaPedidosBody">
-              <tr>
-                <td><strong>#PED-1082</strong></td>
-                <td>05/08/2026</td>
-                <td>Supermercados El Rey</td>
-                <td>40 Cajas</td>
-                <td>$600.00</td>
-                <td><span class="badge badge-exito">Aprobado</span></td>
-              </tr>
-              <tr>
-                <td><strong>#PED-1079</strong></td>
-                <td>03/08/2026</td>
-                <td>Bodegón Plaza Altamira</td>
-                <td>15 Cajas</td>
-                <td>$330.00</td>
-                <td><span class="badge badge-info">En Proceso</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <section id="tab-gestion" class="tab-content">
-      <div class="card">
-        <div class="card-title"><i class="ri-edit-box-line"></i> Registrar Bitácora de Gestión Comercial</div>
-        <form id="formGestion" onsubmit="registrarGestion(event)">
-          <div class="grid-3">
-            <div class="form-group">
-              <label class="form-label">Cliente / Prospecto</label>
-              <input type="text" class="form-control" id="gestCliente" required placeholder="Nombre del cliente o negocio">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Tipo de Actividad</label>
-              <select class="form-control" id="gestTipo">
-                <option value="Llamada Telefónica">Llamada Telefónica</option>
-                <option value="Visita Presencial">Visita Presencial</option>
-                <option value="Envío de Cotización">Envío de Cotización</option>
-                <option value="Cobranza / Seguimiento">Cobranza / Seguimiento</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Resultado / Estado</label>
-              <select class="form-control" id="gestResultado">
-                <option value="Acuerdo de Pedido">Acuerdo de Pedido</option>
-                <option value="En Negociación">En Negociación</option>
-                <option value="No Venta">No Venta / Rechazado</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Observaciones / Compromisos</label>
-            <textarea class="form-control" id="gestObs" rows="2" placeholder="Detalles de la conversación, fecha de recontacto..."></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary"><i class="ri-check-line"></i> Guardar Gestión</button>
-        </form>
-      </div>
-
-      <div class="card">
-        <div class="card-title"><i class="ri-file-list-3-line"></i> Histórico de Gestiones Realizadas</div>
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Fecha / Hora</th>
-                <th>Cliente</th>
-                <th>Actividad</th>
-                <th>Resultado</th>
-                <th>Observaciones</th>
-              </tr>
-            </thead>
-            <tbody id="tablaGestionBody">
-              <tr>
-                <td>06/08/2026 10:15 AM</td>
-                <td>Distribuidora Central</td>
-                <td>Visita Presencial</td>
-                <td><span class="badge badge-exito">Acuerdo de Pedido</span></td>
-                <td>Revisión de inventarios. Solicitarán 60 cajas la próxima semana.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <section id="tab-embudo" class="tab-content">
-      <div class="card">
-        <div class="card-title"><i class="ri-filter-3-line"></i> Embudo Comercial de 5 Etapas (Cartera Vendedor)</div>
-        <p style="font-size:0.8rem; margin-bottom:1.25rem;">Monitoreo de conversión desde la prospección inicial hasta la fidelización recurrente.</p>
-
-        <div class="grid-5" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:1rem;">
-          <div style="background:#F3F4F6; padding:1rem; border-radius:var(--radius-sm); border-top:4px solid var(--gris-claro);">
-            <div style="font-size:0.75rem; font-weight:700; color:var(--gris-texto);">1. PROSPECCIÓN</div>
-            <div style="font-size:1.4rem; font-weight:800; margin:0.3rem 0;">12</div>
-            <div style="font-size:0.7rem;">Oportunidades ($2,400)</div>
-          </div>
-
-          <div style="background:#EFF6FF; padding:1rem; border-radius:var(--radius-sm); border-top:4px solid var(--azul-info);">
-            <div style="font-size:0.75rem; font-weight:700; color:var(--azul-info);">2. CONTACTO</div>
-            <div style="font-size:1.4rem; font-weight:800; margin:0.3rem 0;">8</div>
-            <div style="font-size:0.7rem;">En diálogo ($1,800)</div>
-          </div>
-
-          <div style="background:#F5F3FF; padding:1rem; border-radius:var(--radius-sm); border-top:4px solid var(--morado-accent);">
-            <div style="font-size:0.75rem; font-weight:700; color:var(--morado-accent);">3. PRESENTACIÓN</div>
-            <div style="font-size:1.4rem; font-weight:800; margin:0.3rem 0;">5</div>
-            <div style="font-size:0.7rem;">Propuestas enviadas ($1,250)</div>
-          </div>
-
-          <div style="background:#FEF3C7; padding:1rem; border-radius:var(--radius-sm); border-top:4px solid var(--amarillo-alerta);">
-            <div style="font-size:0.75rem; font-weight:700; color:var(--amarillo-alerta);">4. ACTIVACIÓN</div>
-            <div style="font-size:1.4rem; font-weight:800; margin:0.3rem 0;">18</div>
-            <div style="font-size:0.7rem;">1 a 4 pedidos ($4,100)</div>
-          </div>
-
-          <div style="background:#D1FAE5; padding:1rem; border-radius:var(--radius-sm); border-top:4px solid var(--verde-exito);">
-            <div style="font-size:0.75rem; font-weight:700; color:var(--verde-exito);">5. FIDELIZACIÓN</div>
-            <div style="font-size:1.4rem; font-weight:800; margin:0.3rem 0;">24</div>
-            <div style="font-size:0.7rem;">5+ pedidos recurrentes ($9,500)</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="tab-dashboard" class="tab-content">
-      <div class="grid-4" style="margin-bottom:1.25rem;">
-        <div class="kpi-card">
-          <div class="kpi-label">Venta Hoy</div>
-          <div class="kpi-value">$450.00</div>
-          <div class="kpi-sub">2 pedidos cargados</div>
-        </div>
-        <div class="kpi-card verde">
-          <div class="kpi-label">Venta Semana</div>
-          <div class="kpi-value">$2,100.00</div>
-          <div class="kpi-sub">140 Cajas entregadas</div>
-        </div>
-        <div class="kpi-card azul">
-          <div class="kpi-label">Ticket Promedio</div>
-          <div class="kpi-value">$215.00</div>
-          <div class="kpi-sub">Por pedido emitido</div>
-        </div>
-        <div class="kpi-card morado">
-          <div class="kpi-label">Efectividad Visitas</div>
-          <div class="kpi-value">78%</div>
-          <div class="kpi-sub">Cierre sobre contactos</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title"><i class="ri-lightbulb-line"></i> Centro de Alerta Comercial</div>
-        <div style="display:flex; flex-direction:column; gap:0.6rem;">
-          <div style="background:#FEF3C7; padding:0.8rem 1rem; border-radius:var(--radius-sm); font-size:0.85rem; border-left:4px solid var(--amarillo-alerta);">
-            <strong>Alerta de Recencia:</strong> 3 Clientes Tipo A (ej. Bodegón Plaza Altamira) no registran pedidos desde hace más de 18 días.
-          </div>
-          <div style="background:#EFF6FF; padding:0.8rem 1rem; border-radius:var(--radius-sm); font-size:0.85rem; border-left:4px solid var(--azul-info);">
-            <strong>Oportunidad de Diversificación:</strong> La línea <em>Casabe Gourmet Sazonado</em> solo representa el 5% de tu venta.
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="tab-metricas" class="tab-content">
-      <div class="card">
-        <div class="card-title">
-          <span><i class="ri-pie-chart-2-line"></i> Analítica de Mezcla de Portafolio por Línea de Producto</span>
-          <span style="font-size:0.75rem; background:#F3F4F6; padding:0.3rem 0.6rem; border-radius:12px;">Participación Mensual %</span>
-        </div>
-        
-        <p style="font-size:0.8rem; color:var(--gris-texto);">
-          Distribución acumulada de unidades y facturación por la familia de productos Casabe Real en la cartera asignada:
-        </p>
-
-        <div class="distribution-bar">
-          <div class="dist-segment seg-tradicional" style="width: 45%;" title="Tradicional: 45%">45%</div>
-          <div class="dist-segment seg-gourmet" style="width: 25%;" title="Gourmet: 25%">25%</div>
-          <div class="dist-segment seg-mini" style="width: 15%;" title="Mini Snacking: 15%">15%</div>
-          <div class="dist-segment seg-sazonado" style="width: 10%;" title="Sazonado: 10%">10%</div>
-          <div class="dist-segment seg-especial" style="width: 5%;" title="Especiales: 5%">5%</div>
         </div>
 
-        <div class="legend-grid">
-          <div class="legend-item">
-            <div class="legend-color seg-tradicional"></div>
-            <span>Tradicional (45%)</span>
-          </div>
-          <div class="legend-item">
-            <div class="legend-color seg-gourmet"></div>
-            <span>Gourmet (25%)</span>
-          </div>
-          <div class="legend-item">
-            <div class="legend-color seg-mini"></div>
-            <span>Mini Snacking (15%)</span>
-          </div>
-          <div class="legend-item">
-            <div class="legend-color seg-sazonado"></div>
-            <span>Sazonado (10%)</span>
-          </div>
-          <div class="legend-item">
-            <div class="legend-color seg-especial"></div>
-            <span>Especiales (5%)</span>
-          </div>
-        </div>
-      </div>
+    </main>
 
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-title"><i class="ri-pulse-line"></i> Concentración de Cartera (Pareto 80/20)</div>
-          <div style="font-size:0.85rem; margin-bottom:1rem;">
-            El <strong style="color:var(--rojo-casabe);">20% de tus clientes</strong> genera el <strong style="color:var(--negro-titulos);">78% de tu facturación total</strong>.
-          </div>
-          <div class="progress-bar-bg">
-            <div class="progress-bar-fill" style="width: 78%; background:var(--rojo-casabe);"></div>
-          </div>
-          <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-top:0.3rem;">
-            <span>Top 5 Clientes ($6,903)</span>
-            <span>Resto de Cartera ($1,947)</span>
-          </div>
-        </div>
+    <script>
+        // Función para alternar pestañas del menú principal
+        function switchTab(tabId, element) {
+            // Ocultar todos los paneles
+            const panels = document.querySelectorAll('.view-panel');
+            panels.forEach(panel => panel.classList.remove('active'));
 
-        <div class="card">
-          <div class="card-title"><i class="ri-repeat-line"></i> Índice de Diversificación & Venta Cruzada</div>
-          <div style="font-size:0.85rem; margin-bottom:0.8rem;">
-            Indicador de clientes con compra recurrente de más de 2 categorías simultáneas:
-          </div>
-          <div style="font-size:1.8rem; font-weight:800; color:var(--morado-accent);">
-            62.5% <span style="font-size:0.8rem; font-weight:500; color:var(--gris-texto);">(15 de 24 clientes activos)</span>
-          </div>
-          <p style="font-size:0.75rem; color:var(--verde-exito); margin-top:0.4rem;">
-            <i class="ri-arrow-up-line"></i> +8.2% de incremento con respecto al mes anterior.
-          </p>
-        </div>
-      </div>
+            // Desmarcar todos los enlaces
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => link.classList.remove('active'));
 
-      <div class="card">
-        <div class="card-title"><i class="ri-table-line"></i> Matriz Desglosada por Línea de Producto</div>
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Línea de Producto</th>
-                <th>Cajas Vendidas</th>
-                <th>Monto Facturado ($)</th>
-                <th>% Participación</th>
-                <th>Margen Promedio %</th>
-                <th>Estado Comercial</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Casabe Tradicional 200g / 400g</strong></td>
-                <td>256 Cajas</td>
-                <td>$3,982.50</td>
-                <td>45.0%</td>
-                <td>28.5%</td>
-                <td><span class="badge badge-exito">Líder Consolidado</span></td>
-              </tr>
-              <tr>
-                <td><strong>Casabe Gourmet Ajo & Fina Hierba</strong></td>
-                <td>142 Cajas</td>
-                <td>$2,212.50</td>
-                <td>25.0%</td>
-                <td>34.0%</td>
-                <td><span class="badge badge-exito">Alto Margen</span></td>
-              </tr>
-              <tr>
-                <td><strong>Casabe Mini Snacking</strong></td>
-                <td>85 Cajas</td>
-                <td>$1,327.50</td>
-                <td>15.0%</td>
-                <td>32.0%</td>
-                <td><span class="badge badge-info">En Crecimiento</span></td>
-              </tr>
-              <tr>
-                <td><strong>Casabe Sazonado BBQ / Queso</strong></td>
-                <td>57 Cajas</td>
-                <td>$885.00</td>
-                <td>10.0%</td>
-                <td>30.0%</td>
-                <td><span class="badge badge-alerta">Oportunidad Push</span></td>
-              </tr>
-              <tr>
-                <td><strong>Ediciones Especiales & Otros</strong></td>
-                <td>30 Cajas</td>
-                <td>$442.50</td>
-                <td>5.0%</td>
-                <td>35.0%</td>
-                <td><span class="badge badge-info">Nicho</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+            // Activar panel seleccionado
+            const selectedPanel = document.getElementById('view-' + tabId);
+            if (selectedPanel) {
+                selectedPanel.classList.add('active');
+            }
 
-  </main>
-
-  <script>
-    // Datos Simulados de Cartera de Clientes
-    const clientesBase = [
-      { id: 'CLI-001', nombre: 'Supermercados El Rey', abc: 'A', frecuencia: 7, ultimaCompra: '02/08/2026', salud: 'Saludable' },
-      { id: 'CLI-002', nombre: 'Bodegón Plaza Altamira', abc: 'A', frecuencia: 10, ultimaCompra: '18/07/2026', salud: 'Alerta' },
-      { id: 'CLI-003', nombre: 'Distribuidora Central', abc: 'B', frecuencia: 15, ultimaCompra: '28/07/2026', salud: 'Saludable' },
-      { id: 'CLI-004', nombre: 'Comercializadora La Andina', abc: 'C', frecuencia: 30, ultimaCompra: '10/06/2026', salud: 'Crítico' }
-    ];
-
-    // Control de Sesión al Cargar
-    document.addEventListener('DOMContentLoaded', () => {
-      inicializarSesion();
-      renderizarClientes(clientesBase);
-      calcularSimulador();
-    });
-
-    function inicializarSesion() {
-      try {
-        const sessionData = sessionStorage.getItem('sccr');
-        if (sessionData) {
-          const user = JSON.parse(sessionData);
-          document.getElementById('userName').textContent = user.nombre || 'Carlos Mendoza';
-          document.getElementById('userRole').textContent = `${user.rol || 'Vendedor'} • ${user.zona || 'Zona Centro'}`;
-          
-          const iniciales = (user.nombre || 'Carlos Mendoza')
-            .split(' ')
-            .map(n => n[0])
-            .join('')
-            .substring(0, 2)
-            .toUpperCase();
-          document.getElementById('userAvatar').textContent = iniciales;
+            // Marcar enlace activo
+            if (element) {
+                element.classList.add('active');
+            }
         }
-      } catch (e) {
-        console.log('Modo Demostración Activo');
-      }
-    }
 
-    function cerrarSesion() {
-      if (confirm('¿Desea cerrar la sesión del Sistema Commercial Casabe Real?')) {
-        sessionStorage.removeItem('sccr');
-        window.location.href = 'login.html';
-      }
-    }
-
-    // Navegación por Pestañas
-    function switchTab(tabId, btnElement) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.nav-tab-btn').forEach(btn => btn.classList.remove('active'));
-
-      const targetTab = document.getElementById(`tab-${tabId}`);
-      if (targetTab) {
-        targetTab.classList.add('active');
-        btnElement.classList.add('active');
-      }
-    }
-
-    // Renderizado y Filtro de Clientes
-    function renderizarClientes(data) {
-      const tbody = document.getElementById('tablaClientesBody');
-      tbody.innerHTML = '';
-
-      if (data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--gris-claro);">No se encontraron clientes registrados.</td></tr>`;
-        return;
-      }
-
-      data.forEach(c => {
-        let badgeClass = 'badge-exito';
-        if (c.salud === 'Alerta') badgeClass = 'badge-alerta';
-        if (c.salud === 'Crítico') badgeClass = 'badge-critico';
-
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><strong>${c.id}</strong></td>
-          <td>${c.nombre}</td>
-          <td><span style="font-weight:700; color:var(--rojo-casabe);">${c.abc}</span></td>
-          <td>Cada ${c.frecuencia} días</td>
-          <td>${c.ultimaCompra}</td>
-          <td><span class="badge ${badgeClass}">${c.salud}</span></td>
-          <td>
-            <button class="btn btn-secondary" style="padding:0.25rem 0.5rem; font-size:0.75rem;" onclick="alert('Generar pedido para ${c.nombre}')">
-              <i class="ri-add-line"></i> Pedido
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function filtrarClientes() {
-      const texto = document.getElementById('inputBuscarCliente').value.toLowerCase();
-      const abc = document.getElementById('selectFiltroABC').value;
-
-      const filtrados = clientesBase.filter(c => {
-        const coincideTexto = c.nombre.toLowerCase().includes(texto) || c.id.toLowerCase().includes(texto);
-        const coincideABC = abc === '' || c.abc === abc;
-        return coincideTexto && coincideABC;
-      });
-
-      renderizarClientes(filtrados);
-    }
-
-    // Calculadora del Simulador de Propuesta
-    function calcularSimulador() {
-      const precioCaja = parseFloat(document.getElementById('simProducto').value) || 0;
-      const cajas = parseInt(document.getElementById('simCantidad').value) || 0;
-
-      const total = precioCaja * cajas;
-      const margen = total * 0.30;
-      const retorno = total + margen;
-
-      document.getElementById('simMontoTotal').textContent = `$${total.toFixed(2)}`;
-      document.getElementById('simMargen').textContent = `30% ($${margen.toFixed(2)})`;
-      document.getElementById('simRetorno').textContent = `$${retorno.toFixed(2)}`;
-    }
-
-    function enviarWhatsAppPropuesta() {
-      const cliente = document.getElementById('simCliente').value || 'Cliente';
-      const total = document.getElementById('simMontoTotal').textContent;
-      const mensaje = encodeURIComponent(`Hola ${cliente}, adjunto la propuesta comercial de Casabe Real con un total de inversión de ${total}. ¿Podemos agendar para revisarla?`);
-      window.open(`https://wa.me/?text=${mensaje}`, '_blank');
-    }
-
-    // Guardar Pedido
-    function guardarPedido(e) {
-      e.preventDefault();
-      const cliente = document.getElementById('pedCliente').value;
-      const cajas = document.getElementById('pedCajas').value;
-      const monto = parseFloat(document.getElementById('pedMonto').value).toFixed(2);
-
-      const tbody = document.getElementById('tablaPedidosBody');
-      const tr = document.createElement('tr');
-      const randomId = `#PED-${Math.floor(1000 + Math.random() * 9000)}`;
-
-      tr.innerHTML = `
-        <td><strong>${randomId}</strong></td>
-        <td>Hoy</td>
-        <td>${cliente}</td>
-        <td>${cajas} Cajas</td>
-        <td>$${monto}</td>
-        <td><span class="badge badge-info">En Proceso</span></td>
-      `;
-
-      tbody.insertBefore(tr, tbody.firstChild);
-      alert('¡Pedido registrado y sincronizado exitosamente!');
-      document.getElementById('formPedidoRapido').reset();
-    }
-
-    // Registrar Gestión
-    function registrarGestion(e) {
-      e.preventDefault();
-      const cliente = document.getElementById('gestCliente').value;
-      const tipo = document.getElementById('gestTipo').value;
-      const res = document.getElementById('gestResultado').value;
-      const obs = document.getElementById('gestObs').value;
-
-      const tbody = document.getElementById('tablaGestionBody');
-      const tr = document.createElement('tr');
-      const ahora = new Date().toLocaleString();
-
-      tr.innerHTML = `
-        <td>${ahora}</td>
-        <td>${cliente}</td>
-        <td>${tipo}</td>
-        <td><span class="badge badge-exito">${res}</span></td>
-        <td>${obs || 'Sin observaciones'}</td>
-      `;
-
-      tbody.insertBefore(tr, tbody.firstChild);
-      alert('Gestión guardada en la bitácora comercial.');
-      document.getElementById('formGestion').reset();
-    }
-  </script>
+        // Mostrar / ocultar campo obligatorio de Motivo No Venta
+        function toggleMotivoNoVenta(val) {
+            const box = document.getElementById('box-motivo-noventa');
+            if (val === 'sin_pedido' || val === 'rechazado') {
+                box.style.display = 'block';
+            } else {
+                box.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>
