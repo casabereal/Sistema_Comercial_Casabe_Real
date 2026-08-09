@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SCCR v2.5.0 | Módulo de Metas y Proyección</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root {
+      --rojo-casabe: #D71920;
+      --rojo-hover: #b81218;
+      --negro-fondo: #0F172A;
+      --gris-bg: #F8FAFC;
+      --gris-card: #FFFFFF;
+      --texto-main: #0F172A;
+      --texto-muted: #64748B;
+      --borde: #E2E8F0;
+      
+      /* Semáforo & Estado */
+      --verde-track: #10B981;
+      --verde-bg: #ECFDF5;
+      --amarillo-risk: #F59E0B;
+      --amarillo-bg: #FEF3C7;
+      --rojo-critical: #EF4444;
+      --rojo-bg: #FEF2F2;
+      --azul-accent: #3B82F6;
+      --azul-bg: #EFF6FF;
+
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+    body { background-color: var(--gris-bg); color: var(--texto-main); display: flex; min-height: 100vh; }
+
+    /* Layout Principal */
+    .sidebar {
+      width: 260px; background-color: var(--negro-fondo); color: #FFF;
+      display: flex; flex-direction: column; padding: 1.5rem 1rem; position: fixed; height: 100vh; z-index: 100;
+    }
+    .sidebar-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 2rem; padding: 0 0.5rem; }
+    .sidebar-brand img { height: 38px; width: auto; }
+    .sidebar-brand span { font-weight: 800; font-size: 1.1rem; letter-spacing: 0.5px; color: #FFF; }
+    
+    .nav-menu { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; flex-grow: 1; }
+    .nav-link {
+      display: flex; align-items: center; gap: 12px; padding: 0.75rem 1rem;
+      color: #94A3B8; text-decoration: none; border-radius: 8px; font-size: 0.9rem; font-weight: 500; transition: all 0.2s;
+    }
+    .nav-link:hover, .nav-link.active { background-color: rgba(255,255,255,0.08); color: #FFF; }
+    .nav-link.active { border-left: 4px solid var(--rojo-casabe); }
+
+    .main-wrapper { margin-left: 260px; flex-grow: 1; padding: 1.5rem 2rem; }
+
+    /* Top Bar Header */
+    .top-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 1.5rem; background: var(--gris-card); padding: 1rem 1.5rem; border-radius: 12px;
+      box-shadow: var(--shadow-sm); border: 1px solid var(--borde);
+    }
+    .header-title h1 { font-size: 1.35rem; font-weight: 700; color: var(--texto-main); }
+    .header-title p { font-size: 0.825rem; color: var(--texto-muted); margin-top: 2px; }
+
+    /* Controles de Dimensión Dual y Acciones */
+    .header-actions { display: flex; align-items: center; gap: 1rem; }
+    
+    .dimension-toggle {
+      display: flex; background: var(--gris-bg); border: 1px solid var(--borde);
+      padding: 3px; border-radius: 8px; font-size: 0.85rem; font-weight: 600;
+    }
+    .toggle-btn {
+      padding: 6px 14px; border: none; background: transparent; border-radius: 6px;
+      cursor: pointer; color: var(--texto-muted); transition: all 0.2s;
+    }
+    .toggle-btn.active { background: var(--rojo-casabe); color: #FFF; box-shadow: var(--shadow-sm); }
+
+    .btn-primary {
+      background: var(--rojo-casabe); color: #FFF; border: none; padding: 0.6rem 1.2rem;
+      border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer; display: flex;
+      align-items: center; gap: 8px; transition: background 0.2s;
+    }
+    .btn-primary:hover { background: var(--rojo-hover); }
+
+    .btn-secondary {
+      background: #FFF; border: 1px solid var(--borde); color: var(--texto-main);
+      padding: 0.6rem 1rem; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .btn-secondary:hover { background: var(--gris-bg); }
+
+    /* Barra de Filtros Multidimensional */
+    .filter-bar {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.75rem; background: var(--gris-card); padding: 1rem; border-radius: 12px;
+      margin-bottom: 1.5rem; border: 1px solid var(--borde); box-shadow: var(--shadow-sm);
+    }
+    .filter-group { display: flex; flex-direction: column; gap: 4px; }
+    .filter-group label { font-size: 0.75rem; font-weight: 600; color: var(--texto-muted); text-transform: uppercase; }
+    .filter-select {
+      padding: 0.5rem 0.75rem; border-radius: 6px; border: 1px solid var(--borde);
+      font-size: 0.85rem; color: var(--texto-main); background-color: #FFF; outline: none;
+    }
+
+    /* KPI Cards - Métricas Predictivas y Run-Rate */
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+    .kpi-card {
+      background: var(--gris-card); border-radius: 12px; padding: 1.25rem; border: 1px solid var(--borde);
+      box-shadow: var(--shadow-sm); position: relative; overflow: hidden;
+    }
+    .kpi-title { font-size: 0.8rem; font-weight: 600; color: var(--texto-muted); text-transform: uppercase; }
+    .kpi-value { font-size: 1.6rem; font-weight: 800; margin: 0.4rem 0; color: var(--texto-main); }
+    .kpi-sub { font-size: 0.8rem; display: flex; align-items: center; gap: 6px; font-weight: 500; }
+    
+    .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.725rem; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
+    .badge-verde { background: var(--verde-bg); color: var(--verde-track); }
+    .badge-amarillo { background: var(--amarillo-bg); color: var(--amarillo-risk); }
+    .badge-rojo { background: var(--rojo-bg); color: var(--rojo-critical); }
+    .badge-blue { background: var(--azul-bg); color: var(--azul-accent); }
+
+    /* Barra de Progreso Dual */
+    .progress-bar-container { background: #E2E8F0; height: 8px; border-radius: 4px; width: 100%; margin-top: 8px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
+
+    /* Layout Gráficos y Tablas */
+    .grid-2col { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+    @media (max-width: 1024px) { .grid-2col { grid-template-columns: 1fr; } }
+
+    .card {
+      background: var(--gris-card); border-radius: 12px; padding: 1.25rem; border: 1px solid var(--borde);
+      box-shadow: var(--shadow-sm);
+    }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .card-title { font-size: 1rem; font-weight: 700; color: var(--texto-main); display: flex; align-items: center; gap: 8px; }
+
+    /* Tabla Multidimensional */
+    .table-responsive { width: 100%; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; }
+    th { background: var(--gris-bg); color: var(--texto-muted); font-weight: 600; padding: 0.75rem 1rem; border-bottom: 1px solid var(--borde); text-transform: uppercase; font-size: 0.725rem; }
+    td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--borde); color: var(--texto-main); font-weight: 500; }
+    tbody tr:hover { background-color: #F1F5F9; }
+
+    /* Pestañas de Vista */
+    .view-tabs { display: flex; gap: 1rem; border-bottom: 2px solid var(--borde); margin-bottom: 1.5rem; }
+    .tab-btn {
+      padding: 0.75rem 1rem; font-weight: 600; font-size: 0.9rem; color: var(--texto-muted);
+      border: none; background: transparent; cursor: pointer; position: relative;
+    }
+    .tab-btn.active { color: var(--rojo-casabe); }
+    .tab-btn.active::after {
+      content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 3px; background: var(--rojo-casabe); border-radius: 3px 3px 0 0;
+    }
+
+    /* Ficha 360 y Bloques Operativos de Cliente */
+    .bloques-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+    @media (max-width: 900px) { .bloques-grid { grid-template-columns: 1fr; } }
+
+    .bloque-box { background: #FFF; border: 1px solid var(--borde); border-radius: 10px; padding: 1.1rem; }
+    .bloque-header { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.8rem; color: var(--negro-fondo); display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--borde); padding-bottom: 0.5rem; }
+
+    .field-pair { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.825rem; }
+    .field-pair span:first-child { color: var(--texto-muted); font-weight: 500; }
+    .field-pair span:last-child { font-weight: 600; color: var(--texto-main); }
+
+    /* Bitácora Timeline */
+    .timeline { list-style: none; margin-top: 0.5rem; }
+    .timeline-item { position: relative; padding-left: 20px; margin-bottom: 10px; border-left: 2px solid var(--borde); }
+    .timeline-item::before {
+      content: ''; position: absolute; left: -5px; top: 2px; width: 8px; height: 8px;
+      border-radius: 50%; background: var(--rojo-casabe);
+    }
+    .timeline-date { font-size: 0.7rem; color: var(--texto-muted); font-weight: 600; }
+    .timeline-text { font-size: 0.8rem; color: var(--texto-main); font-weight: 500; }
+
+    /* Modal Formulario */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.6);
+      display: none; justify-content: center; align-items: center; z-index: 1000;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-card {
+      background: #FFF; width: 100%; max-width: 520px; border-radius: 12px; padding: 1.5rem;
+      box-shadow: var(--shadow-lg); border: 1px solid var(--borde);
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
+    .modal-header h3 { font-size: 1.1rem; font-weight: 700; }
+    .close-modal { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--texto-muted); }
+
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; color: var(--texto-main); }
+    .form-control { width: 100%; padding: 0.6rem; border: 1px solid var(--borde); border-radius: 6px; font-size: 0.85rem; outline: none; }
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <img src="assets/logo-casabe-real.png" alt="Casabe Real Logo" onerror="this.style.display='none'">
+      <span>SCCR v2.5.0</span>
+    </div>
+    <ul class="nav-menu">
+      <li><a href="vendedor.html" class="nav-link"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+      <li><a href="clientes.html" class="nav-link"><i class="fa-solid fa-users"></i> Clientes 360°</a></li>
+      <li><a href="pedidos.html" class="nav-link"><i class="fa-solid fa-cart-shopping"></i> Pedidos</a></li>
+      <li><a href="metas.html" class="nav-link active"><i class="fa-solid fa-bullseye"></i> Módulo de Metas</a></li>
+      <li><a href="propuesta.html" class="nav-link"><i class="fa-solid fa-file-invoice-dollar"></i> Propuestas</a></li>
+    </ul>
+  </aside>
+
+  <main class="main-wrapper">
+    
+    <header class="top-header">
+      <div class="header-title">
+        <h1>Módulo de Metas y Proyección Run-Rate</h1>
+        <p>Motor de planificación cuantitativa, análisis GAP y seguimiento predictivo</p>
+      </div>
+      <div class="header-actions">
+        <div class="dimension-toggle">
+          <button class="toggle-btn active" id="btnUSD" onclick="setDimension('USD')">$ USD</button>
+          <button class="toggle-btn" id="btnCajas" onclick="setDimension('CAJAS')">Cajas</button>
+        </div>
+        <button class="btn-secondary" onclick="triggerImportJSON()"><i class="fa-solid fa-file-import"></i> Importar metas.json</button>
+        <button class="btn-primary" onclick="openModal()"><i class="fa-solid fa-plus"></i> Cargar Cuota</button>
+      </div>
+    </header>
+
+    <section class="filter-bar">
+      <div class="filter-group">
+        <label>Vendedor / Asesor</label>
+        <select class="filter-select" id="filtroVendedor" onchange="actualizarDashboard()">
+          <option value="TODOS">Todos los Vendedores</option>
+          <option value="Vendedor 1">Carlos Mendoza</option>
+          <option value="Vendedor 2">Mariana López</option>
+          <option value="Vendedor 3">Juan Gutiérrez</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Zona Geográfica</label>
+        <select class="filter-select" id="filtroZona" onchange="actualizarDashboard()">
+          <option value="TODAS">Todas las Zonas</option>
+          <option value="Gran Caracas">Gran Caracas</option>
+          <option value="Central">Región Central</option>
+          <option value="Occidente">Occidente</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Canal de Distribución</label>
+        <select class="filter-select" id="filtroCanal" onchange="actualizarDashboard()">
+          <option value="TODOS">Todos los Canales</option>
+          <option value="Retail">Retail / Supermercados</option>
+          <option value="HORECA">HORECA (Restaurantes)</option>
+          <option value="Distribuidores">Distribuidores</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Línea de Producto</label>
+        <select class="filter-select" id="filtroLinea" onchange="actualizarDashboard()">
+          <option value="TODAS">Todas las Líneas</option>
+          <option value="Pasapalo">Pasapalo</option>
+          <option value="Restaurante">Restaurante</option>
+          <option value="Torta">Torta</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-title">Meta vs Venta Acumulada</div>
+        <div class="kpi-value" id="kpiVentaReal">$ 18,450</div>
+        <div class="kpi-sub">
+          <span>Meta: <strong id="kpiMetaTotal">$ 20,000</strong></span>
+          <span class="badge badge-verde" id="kpiCumplimientoPct">92.2%</span>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="barCumplimiento" style="width: 92.2%; background-color: var(--verde-track);"></div>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-title">Proyección Cierre (Run-Rate)</div>
+        <div class="kpi-value" id="kpiRunRate">$ 21,525</div>
+        <div class="kpi-sub">
+          <span>Est. Fin de Ciclo:</span>
+          <span class="badge badge-verde" id="kpiRunRateStatus">ON TRACK (+7.6%)</span>
+        </div>
+        <div style="font-size: 0.725rem; color: var(--texto-muted); margin-top: 6px;">
+          Fórmula: (Venta Real / 18 Días) × 21 Días
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-title">Ritmo Diario Requerido</div>
+        <div class="kpi-value" id="kpiRitmoDiario">$ 516.67 / día</div>
+        <div class="kpi-sub">
+          <span>Días Hábiles Restantes: <strong>3 días</strong></span>
+        </div>
+        <div style="font-size: 0.725rem; color: var(--texto-muted); margin-top: 6px;">
+          Meta Restante GAP: <span id="kpiMetaRestante">$ 1,550</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-title">Semáforo & Hito de Comisión</div>
+        <div class="kpi-value" style="font-size: 1.3rem; color: var(--verde-track);" id="kpiSemaforoText">
+          <i class="fa-solid fa-circle-check"></i> VERDE (≥90%)
+        </div>
+        <div class="kpi-sub">
+          <span>Próximo Hito: <strong>100% (Bono Nivel 2)</strong></span>
+        </div>
+        <div style="margin-top: 8px; display: flex; gap: 4px;">
+          <span class="badge badge-verde">80% Alcanzado</span>
+          <span class="badge badge-blue">Hito 100% Cerca</span>
+          <span class="badge" style="background:#F1F5F9; color:#94A3B8;">120% Súper Hito</span>
+        </div>
+      </div>
+    </section>
+
+    <nav class="view-tabs">
+      <button class="tab-btn active" onclick="switchView('tabRunRate', this)">
+        <i class="fa-solid fa-chart-line"></i> Control de Metas & Run-Rate
+      </button>
+      <button class="tab-btn" onclick="switchView('tabBloques', this)">
+        <i class="fa-solid fa-address-card"></i> Ficha 360° / Bloques Operativos de Cliente
+      </button>
+    </nav>
+
+    <div id="tabRunRate" class="tab-content">
+      <div class="grid-2col">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title"><i class="fa-solid fa-chart-area" style="color:var(--rojo-casabe);"></i> Tendencia de Cierre Run-Rate vs. Meta</span>
+            <span class="badge badge-blue">Actualizado en Tiempo Real</span>
+          </div>
+          <div style="height: 300px; position: relative;">
+            <canvas id="chartRunRate"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title"><i class="fa-solid fa-boxes-stacked" style="color:var(--rojo-casabe);"></i> Cierre por Línea de Producto</span>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Línea</th>
+                  <th>Meta</th>
+                  <th>Real</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody id="tablaLineasBody">
+                <tr>
+                  <td><strong>Pasapalo</strong></td>
+                  <td class="val-meta">$ 8,000</td>
+                  <td class="val-real">$ 7,800</td>
+                  <td><span class="badge badge-verde">97.5%</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Restaurante</strong></td>
+                  <td class="val-meta">$ 7,000</td>
+                  <td class="val-real">$ 6,450</td>
+                  <td><span class="badge badge-verde">92.1%</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Torta</strong></td>
+                  <td class="val-meta">$ 5,000</td>
+                  <td class="val-real">$ 4,200</td>
+                  <td><span class="badge badge-amarillo">84.0%</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title"><i class="fa-solid fa-list-check" style="color:var(--rojo-casabe);"></i> Matriz de Desglose Multidimensional por Asesor Comercial</span>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Vendedor</th>
+                <th>Zona</th>
+                <th>Meta Asignada</th>
+                <th>Venta Acumulada</th>
+                <th>GAP Restante</th>
+                <th>Run-Rate Est.</th>
+                <th>Ritmo Diario</th>
+                <th>Semáforo</th>
+                <th>Comisión Hito</th>
+              </tr>
+            </thead>
+            <tbody id="tablaVendedoresBody">
+              <tr>
+                <td><strong>Carlos Mendoza</strong></td>
+                <td>Gran Caracas</td>
+                <td class="val-meta">$ 8,000</td>
+                <td class="val-real">$ 7,600</td>
+                <td>$ 400</td>
+                <td>$ 8,866</td>
+                <td>$ 133.33 / día</td>
+                <td><span class="badge badge-verde"><i class="fa-solid fa-circle"></i> ON TRACK (95.0%)</span></td>
+                <td><span class="badge badge-blue">Hito 80% Aprobado</span></td>
+              </tr>
+              <tr>
+                <td><strong>Mariana López</strong></td>
+                <td>Región Central</td>
+                <td class="val-meta">$ 6,500</td>
+                <td class="val-real">$ 5,300</td>
+                <td>$ 1,200</td>
+                <td>$ 6,183</td>
+                <td>$ 400.00 / día</td>
+                <td><span class="badge badge-amarillo"><i class="fa-solid fa-triangle-exclamation"></i> AT RISK (81.5%)</span></td>
+                <td><span class="badge badge-blue">Hito 80% Aprobado</span></td>
+              </tr>
+              <tr>
+                <td><strong>Juan Gutiérrez</strong></td>
+                <td>Occidente</td>
+                <td class="val-meta">$ 5,500</td>
+                <td class="val-real">$ 3,800</td>
+                <td>$ 1,700</td>
+                <td>$ 4,433</td>
+                <td>$ 566.67 / día</td>
+                <td><span class="badge badge-rojo"><i class="fa-solid fa-circle-xmark"></i> CRITICAL (69.0%)</span></td>
+                <td><span class="badge" style="background:#F1F5F9; color:#94A3B8;">Sin Hito</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="tabBloques" class="tab-content" style="display: none;">
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+          <div>
+            <label style="font-size:0.75rem; font-weight:700; color:var(--texto-muted); text-transform:uppercase;">Seleccionar Cliente para Ficha Operativa:</label>
+            <select class="filter-select" id="clienteSelectBloque" onchange="cargarBloquesCliente()" style="min-width:280px; margin-top:4px;">
+              <option value="CLI-001">Automercados Plaza - Sucursal Las Mercedes</option>
+              <option value="CLI-002">Grupo Restaurantero El Bodegón</option>
+              <option value="CLI-003">Inversiones Pasapalo Express C.A.</option>
+            </select>
+          </div>
+          <span class="badge badge-verde" style="font-size:0.85rem;"><i class="fa-solid fa-wifi"></i> Sincronizado con Reporte de Gestión</span>
+        </div>
+      </div>
+
+      <div class="bloques-grid">
+        
+        <div class="bloque-box">
+          <div class="bloque-header">
+            <i class="fa-solid fa-id-card" style="color:var(--rojo-casabe);"></i> Bloque 1: Identificación y Crédito
+          </div>
+          <div class="field-pair"><span>Razón Social:</span> <span id="b1Razon">Automercados Plaza C.A.</span></div>
+          <div class="field-pair"><span>RIF:</span> <span id="b1Rif">J-30129485-0</span></div>
+          <div class="field-pair"><span>Clasificación ABC:</span> <span id="b1Abc" class="badge badge-verde">Clase A (Top)</span></div>
+          <div class="field-pair">
+            <span>Contacto Clave:</span> 
+            <span><a href="https://wa.me/584141234567" target="_blank" style="color:#10B981; text-decoration:none; font-weight:700;"><i class="fa-brands fa-whatsapp"></i> Lic. Roberto Silva</a></span>
+          </div>
+          <div class="field-pair"><span>Días / Límite de Crédito:</span> <span id="b1Credito">15 Días / $ 5,000 USD</span></div>
+          <div class="field-pair"><span>Geolocalización:</span> <span id="b1Geo"><i class="fa-solid fa-location-dot" style="color:var(--rojo-casabe);"></i> Las Mercedes, Caracas</span></div>
+        </div>
+
+        <div class="bloque-box">
+          <div class="bloque-header">
+            <i class="fa-solid fa-file-signature" style="color:var(--rojo-casabe);"></i> Bloque 2: Centro de Propuestas
+          </div>
+          <div class="field-pair"><span>Propuesta Activa:</span> <span id="b2PropActiva">PROP-2026-089</span></div>
+          <div class="field-pair"><span>Estatus del Documento:</span> <span class="badge badge-amarillo" id="b2Estatus">En Negociación</span></div>
+          <div class="field-pair"><span>Monto Cotizado:</span> <span id="b2Monto">$ 2,450.00 USD</span></div>
+          <div class="field-pair"><span>Historial de Cotizaciones:</span> <span>3 Propuestas (2 Ganadas)</span></div>
+          <div style="margin-top: 10px;">
+            <button class="btn-secondary" style="width:100%; justify-content:center; padding:0.4rem;" onclick="window.location.href='propuesta.html'">
+              <i class="fa-solid fa-eye"></i> Ver Vista Previa de Propuesta Active
+            </button>
+          </div>
+        </div>
+
+        <div class="bloque-box">
+          <div class="bloque-header">
+            <i class="fa-solid fa-chart-simple" style="color:var(--rojo-casabe);"></i> Bloque 3: Consumo y Reposición
+          </div>
+          <div style="height: 120px; margin-bottom: 0.8rem;">
+            <canvas id="chartConsumo6Meses"></canvas>
+          </div>
+          <div class="field-pair" style="background:var(--gris-bg); padding:6px; border-radius:6px;">
+            <span>Contador Regresivo de Reposición:</span>
+            <span class="badge badge-rojo" id="b3Contador"><i class="fa-solid fa-clock"></i> Recomprar en 3 Días</span>
+          </div>
+        </div>
+
+        <div class="bloque-box">
+          <div class="bloque-header">
+            <i class="fa-solid fa-timeline" style="color:var(--rojo-casabe);"></i> Bloque 4: Bitácora de Interacciones
+          </div>
+          <p style="font-size:0.75rem; color:var(--texto-muted); margin-bottom:6px;">Alimentado por minutas del Módulo de Reporte de Gestión:</p>
+          <ul class="timeline" id="b4Timeline">
+            <li class="timeline-item">
+              <div class="timeline-date">07 de Agosto, 2026 - Asesor: Carlos Mendoza</div>
+              <div class="timeline-text">Visita presencial. Se revisó inventario en anaquel y se entregó muestra de nueva línea Torta.</div>
+            </li>
+            <li class="timeline-item">
+              <div class="timeline-date)28 de Julio, 2026 - Asesor: Carlos Mendoza</div>
+              <div class="timeline-text">Aprobado pedido PED-1082 por 120 Cajas de Pasapalo. Pago recibido a tiempo.</div>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <div class="modal-overlay" id="modalCuota">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-bullseye" style="color:var(--rojo-casabe);"></i> Cargar / Actualizar Cuota Dinámica</h3>
+        <button class="close-modal" onclick="closeModal()">&times;</button>
+      </div>
+      <form id="formCargaCuota" onsubmit="guardarCuota(event)">
+        <div class="form-group">
+          <label>Vendedor / Asesor</label>
+          <select class="form-control" required id="formVendedor">
+            <option value="Carlos Mendoza">Carlos Mendoza</option>
+            <option value="Mariana López">Mariana López</option>
+            <option value="Juan Gutiérrez">Juan Gutiérrez</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Línea de Producto</label>
+          <select class="form-control" required id="formLinea">
+            <option value="Pasapalo">Pasapalo</option>
+            <option value="Restaurante">Restaurante</option>
+            <option value="Torta">Torta</option>
+          </select>
+        </div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem;">
+          <div class="form-group">
+            <label>Cuota ($ USD)</label>
+            <input type="number" class="form-control" placeholder="Ej: 5000" id="formCuotaUsd" required>
+          </div>
+          <div class="form-group">
+            <label>Cuota (Cajas)</label>
+            <input type="number" class="form-control" placeholder="Ej: 400" id="formCuotaCajas" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Período de Aplicación</label>
+          <input type="month" class="form-control" value="2026-08" required>
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:1.5rem;">
+          <button type="button" class="btn-secondary" onclick="closeModal()">Cancelar</button>
+          <button type="submit" class="btn-primary">Guardar Cuota</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Estado Global del Módulo
+    let dimensionActual = 'USD'; // 'USD' o 'CAJAS'
+    let chartRunRateInstance = null;
+    let chartConsumoInstance = null;
+
+    // Datos Base Simulados (Sincronizables vía API Google Apps Script / metas.json)
+    const datosMeta = {
+      USD: {
+        metaTotal: 20000,
+        ventaReal: 18450,
+        diasTranscurridos: 18,
+        diasTotales: 21,
+        vendedores: [
+          { nombre: "Carlos Mendoza", zona: "Gran Caracas", meta: 8000, real: 7600 },
+          { nombre: "Mariana López", zona: "Región Central", meta: 6500, real: 5300 },
+          { nombre: "Juan Gutiérrez", zona: "Occidente", meta: 5500, real: 3800 }
+        ],
+        lineas: [
+          { nombre: "Pasapalo", meta: 8000, real: 7800 },
+          { nombre: "Restaurante", meta: 7000, real: 6450 },
+          { nombre: "Torta", meta: 5000, real: 4200 }
+        ]
+      },
+      CAJAS: {
+        metaTotal: 1600,
+        ventaReal: 1475,
+        diasTranscurridos: 18,
+        diasTotales: 21,
+        vendedores: [
+          { nombre: "Carlos Mendoza", zona: "Gran Caracas", meta: 640, real: 610 },
+          { nombre: "Mariana López", zona: "Región Central", meta: 520, real: 425 },
+          { nombre: "Juan Gutiérrez", zona: "Occidente", meta: 440, real: 304 }
+        ],
+        lineas: [
+          { nombre: "Pasapalo", meta: 650, real: 625 },
+          { nombre: "Restaurante", meta: 550, real: 510 },
+          { nombre: "Torta", meta: 400, real: 340 }
+        ]
+      }
+    };
+
+    // Inicialización al cargar el DOM
+    document.addEventListener('DOMContentLoaded', () => {
+      actualizarDashboard();
+      initChartConsumo();
+    });
+
+    // Cambiar Dimensión (Dual: $ USD / Cajas)
+    function setDimension(dim) {
+      dimensionActual = dim;
+      document.getElementById('btnUSD').classList.toggle('active', dim === 'USD');
+      document.getElementById('btnCajas').classList.toggle('active', dim === 'CAJAS');
+      actualizarDashboard();
+    }
+
+    // Cambiar de Pestaña de Vista
+    function switchView(tabId, btnElement) {
+      document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById(tabId).style.display = 'block';
+      btnElement.classList.add('active');
+
+      if (tabId === 'tabRunRate' && chartRunRateInstance) {
+        chartRunRateInstance.resize();
+      }
+    }
+
+    // Motor de Cálculo Run-Rate, Ritmo Diario y Semáforo (5.2 & 5.3)
+    function actualizarDashboard() {
+      const data = datosMeta[dimensionActual];
+      const prefix = dimensionActual === 'USD' ? '$ ' : '';
+      const suffix = dimensionActual === 'CAJAS' ? ' Cajas' : '';
+
+      // 1. Cálculos Algorítmicos Principales
+      const metaTotal = data.metaTotal;
+      const ventaReal = data.ventaReal;
+      const gapRestante = Math.max(0, metaTotal - ventaReal);
+      const diasHabilesRestantes = data.diasTotales - data.diasTranscurridos;
+
+      // Ritmo Diario Requerido = Meta Restante / Días Hábiles Restantes
+      const ritmoDiario = diasHabilesRestantes > 0 ? (gapRestante / diasHabilesRestantes) : 0;
+
+      // Proyección de Cierre (Run-Rate) = (Venta Real / Días Transcurridos) * Días Totales
+      const runRate = (ventaReal / data.diasTranscurridos) * data.diasTotales;
+
+      // Porcentaje de Cumplimiento
+      const pctCumplimiento = (ventaReal / metaTotal) * 100;
+
+      // Update KPI Cards UI
+      document.getElementById('kpiVentaReal').innerText = `${prefix}${ventaReal.toLocaleString()}${suffix}`;
+      document.getElementById('kpiMetaTotal').innerText = `${prefix}${metaTotal.toLocaleString()}${suffix}`;
+      document.getElementById('kpiCumplimientoPct').innerText = `${pctCumplimiento.toFixed(1)}%`;
+      
+      const bar = document.getElementById('barCumplimiento');
+      bar.style.width = `${Math.min(pctCumplimiento, 100)}%`;
+
+      document.getElementById('kpiRunRate').innerText = `${prefix}${Math.round(runRate).toLocaleString()}${suffix}`;
+      document.getElementById('kpiRitmoDiario').innerText = `${prefix}${ritmoDiario.toFixed(2)}${suffix} / día`;
+      document.getElementById('kpiMetaRestante').innerText = `${prefix}${gapRestante.toLocaleString()}${suffix}`;
+
+      // Semáforo Dinámico Lógica (5.3)
+      const semaforoBox = document.getElementById('kpiSemaforoText');
+      if (pctCumplimiento >= 90) {
+        semaforoBox.className = 'kpi-value badge-verde';
+        semaforoBox.style.color = 'var(--verde-track)';
+        semaforoBox.innerHTML = `<i class="fa-solid fa-circle-check"></i> VERDE (ON TRACK ${pctCumplimiento.toFixed(1)}%)`;
+        bar.style.backgroundColor = 'var(--verde-track)';
+      } else if (pctCumplimiento >= 75) {
+        semaforoBox.className = 'kpi-value badge-amarillo';
+        semaforoBox.style.color = 'var(--amarillo-risk)';
+        semaforoBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> AMARILLO (AT RISK ${pctCumplimiento.toFixed(1)}%)`;
+        bar.style.backgroundColor = 'var(--amarillo-risk)';
+      } else {
+        semaforoBox.className = 'kpi-value badge-rojo';
+        semaforoBox.style.color = 'var(--rojo-critical)';
+        semaforoBox.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ROJO (CRITICAL ${pctCumplimiento.toFixed(1)}%)`;
+        bar.style.backgroundColor = 'var(--rojo-critical)';
+      }
+
+      // Actualizar Tablas Dinámicamente
+      renderTablaVendedores(data, prefix, suffix, diasHabilesRestantes, data.diasTranscurridos, data.diasTotales);
+      renderTablaLineas(data, prefix, suffix);
+
+      // Renderizar Gráfico Run-Rate
+      renderChartRunRate(data, runRate);
+    }
+
+    // Renderizar Tabla Multidimensional por Vendedor
+    function renderTablaVendedores(data, prefix, suffix, diasRestantes, diasTrans, diasTotales) {
+      const tbody = document.getElementById('tablaVendedoresBody');
+      tbody.innerHTML = '';
+
+      data.vendedores.forEach(v => {
+        const pct = (v.real / v.meta) * 100;
+        const gap = Math.max(0, v.meta - v.real);
+        const rr = (v.real / diasTrans) * diasTotales;
+        const ritmo = diasRestantes > 0 ? (gap / diasRestantes) : 0;
+
+        let badgeSemaforo = '';
+        if (pct >= 90) {
+          badgeSemaforo = `<span class="badge badge-verde"><i class="fa-solid fa-circle"></i> ON TRACK (${pct.toFixed(1)}%)</span>`;
+        } else if (pct >= 75) {
+          badgeSemaforo = `<span class="badge badge-amarillo"><i class="fa-solid fa-triangle-exclamation"></i> AT RISK (${pct.toFixed(1)}%)</span>`;
+        } else {
+          badgeSemaforo = `<span class="badge badge-rojo"><i class="fa-solid fa-circle-xmark"></i> CRITICAL (${pct.toFixed(1)}%)</span>`;
+        }
+
+        // Indicador de Hitos de Comisión (80%, 100%, 120%)
+        let badgeHito = `<span class="badge" style="background:#F1F5F9; color:#94A3B8;">Sin Hito</span>`;
+        if (pct >= 120) {
+          badgeHito = `<span class="badge badge-verde"><i class="fa-solid fa-crown"></i> Super Hito 120%</span>`;
+        } else if (pct >= 100) {
+          badgeHito = `<span class="badge badge-verde"><i class="fa-solid fa-award"></i> Hito 100% Completo</span>`;
+        } else if (pct >= 80) {
+          badgeHito = `<span class="badge badge-blue">Hito 80% Aprobado</span>`;
+        }
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${v.nombre}</strong></td>
+          <td>${v.zona}</td>
+          <td>${prefix}${v.meta.toLocaleString()}${suffix}</td>
+          <td style="color:var(--rojo-casabe); font-weight:700;">${prefix}${v.real.toLocaleString()}${suffix}</td>
+          <td>${prefix}${gap.toLocaleString()}${suffix}</td>
+          <td>${prefix}${Math.round(rr).toLocaleString()}${suffix}</td>
+          <td>${prefix}${ritmo.toFixed(2)}${suffix} / d</td>
+          <td>${badgeSemaforo}</td>
+          <td>${badgeHito}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Renderizar Resumen por Línea
+    function renderTablaLineas(data, prefix, suffix) {
+      const tbody = document.getElementById('tablaLineasBody');
+      tbody.innerHTML = '';
+
+      data.lineas.forEach(l => {
+        const pct = (l.real / l.meta) * 100;
+        let badgeClass = pct >= 90 ? 'badge-verde' : (pct >= 75 ? 'badge-amarillo' : 'badge-rojo');
+        
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${l.nombre}</strong></td>
+          <td>${prefix}${l.meta.toLocaleString()}${suffix}</td>
+          <td>${prefix}${l.real.toLocaleString()}${suffix}</td>
+          <td><span class="badge ${badgeClass}">${pct.toFixed(1)}%</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Chart.js: Evolución Run-Rate vs Meta
+    function renderChartRunRate(data, runRateEstimado) {
+      const ctx = document.getElementById('chartRunRate').getContext('2d');
+      if (chartRunRateInstance) chartRunRateInstance.destroy();
+
+      chartRunRateInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Día 3', 'Día 6', 'Día 9', 'Día 12', 'Día 15', 'Día 18 (Hoy)', 'Día 21 (Proyección)'],
+          datasets: [
+            {
+              label: 'Venta Acumulada Real',
+              data: [3100, 6200, 9500, 12800, 15600, data.ventaReal, null],
+              borderColor: '#D71920',
+              backgroundColor: 'rgba(215, 25, 32, 0.1)',
+              fill: true,
+              tension: 0.3,
+              borderWidth: 3
+            },
+            {
+              label: 'Proyección Run-Rate',
+              data: [null, null, null, null, null, data.ventaReal, Math.round(runRateEstimado)],
+              borderColor: '#3B82F6',
+              borderDash: [6, 6],
+              borderWidth: 2,
+              pointStyle: 'circle',
+              pointRadius: 6
+            },
+            {
+              label: 'Línea de Meta Período',
+              data: Array(7).fill(data.metaTotal),
+              borderColor: '#10B981',
+              borderDash: [3, 3],
+              borderWidth: 2,
+              pointRadius: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
+          },
+          scales: {
+            y: { grid: { color: '#F1F5F9' }, ticks: { font: { size: 10 } } },
+            x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+          }
+        }
+      });
+    }
+
+    // Chart.js: Consumo últimos 6 meses (Bloque 3)
+    function initChartConsumo() {
+      const ctx = document.getElementById('chartConsumo6Meses').getContext('2d');
+      chartConsumoInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago'],
+          datasets: [{
+            label: 'Cajas Consumidas',
+            data: [110, 135, 120, 150, 140, 120],
+            backgroundColor: '#0F172A',
+            borderRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { display: false },
+            x: { grid: { display: false }, ticks: { font: { size: 9 } } }
+          }
+        }
+      });
+    }
+
+    // Modal Handlers
+    function openModal() { document.getElementById('modalCuota').classList.add('active'); }
+    function closeModal() { document.getElementById('modalCuota').classList.remove('active'); }
+
+    function guardarCuota(e) {
+      e.preventDefault();
+      const vend = document.getElementById('formVendedor').value;
+      const usd = parseFloat(document.getElementById('formCuotaUsd').value);
+      const cajas = parseFloat(document.getElementById('formCuotaCajas').value);
+
+      alert(`¡Cuota actualizada exitosamente para ${vend}!\nUSD: $${usd} | Cajas: ${cajas}`);
+      closeModal();
+    }
+
+    function triggerImportJSON() {
+      alert("Simulación de Importación Masiva: Archivo metas.json sincronizado correctamente desde Google Sheets.");
+    }
+
+    function cargarBloquesCliente() {
+      const select = document.getElementById('clienteSelectBloque').value;
+      if (select === 'CLI-002') {
+        document.getElementById('b1Razon').innerText = "Grupo Restaurantero El Bodegón C.A.";
+        document.getElementById('b1Rif').innerText = "J-40291823-1";
+        document.getElementById('b1Abc').className = "badge badge-amarillo";
+        document.getElementById('b1Abc').innerText = "Clase B";
+        document.getElementById('b2PropActiva').innerText = "PROP-2026-074";
+        document.getElementById('b3Contador').innerHTML = `<i class="fa-solid fa-clock"></i> Recomprar en 8 Días`;
+      } else {
+        document.getElementById('b1Razon').innerText = "Automercados Plaza C.A.";
+        document.getElementById('b1Rif').innerText = "J-30129485-0";
+        document.getElementById('b1Abc').className = "badge badge-verde";
+        document.getElementById('b1Abc').innerText = "Clase A (Top)";
+        document.getElementById('b2PropActiva').innerText = "PROP-2026-089";
+        document.getElementById('b3Contador').innerHTML = `<i class="fa-solid fa-clock"></i> Recomprar en 3 Días`;
+      }
+    }
+  </script>
+</body>
+</html>
