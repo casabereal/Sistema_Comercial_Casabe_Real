@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCCR - Módulo de Clientes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ==========================================================================
+           1. DESIGN SYSTEM Y VARIABLES OFICIALES SCCR v2.5.0
+           ========================================================================== */
+        :root {
+            --rojo-casabe: #D71920;      /* Identidad y botones primarios */
+            --fondo-app: #F5F7FA;        /* Fondo general */
+            --tarjeta-bg: #FFFFFF;       /* Contenedores */
+            --texto-main: #2D3436;       /* Títulos y KPIs */
+            --texto-sec: #7F8C8D;        /* Etiquetas de ayuda */
+            --exito: #2ECC71;            /* Semáforo al día / Activo */
+            --advertencia: #F39C12;      /* Semáforo límite / Riesgo moderado */
+            --alerta: #E74C3C;           /* Semáforo vencido / Crítico */
+            --border-color: #E2E8F0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--fondo-app);
+            color: var(--texto-main);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ==========================================================================
+           2. LAYOUT Y CABECERA (GRID SYSTEM)
+           ========================================================================== */
+        .sidebar {
+            width: 260px;
+            background-color: var(--tarjeta-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar img.logo {
+            width: 100%;
+            max-width: 180px;
+            margin-bottom: 30px;
+            align-self: center;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .breadcrumb {
+            font-size: 14px;
+            color: var(--texto-sec);
+            margin-top: 5px;
+        }
+
+        /* ==========================================================================
+           3. TARJETAS DE MÉTRICAS (KPI TOP)
+           ========================================================================== */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .kpi-card {
+            background: var(--tarjeta-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+            border: 1px solid var(--border-color);
+        }
+
+        .kpi-title {
+            font-size: 14px;
+            color: var(--texto-sec);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .kpi-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--texto-main);
+        }
+
+        .kpi-trend.positive { color: var(--exito); font-size: 12px; font-weight: 600; }
+        .kpi-trend.negative { color: var(--alerta); font-size: 12px; font-weight: 600; }
+
+        /* ==========================================================================
+           4. DIRECTORIO COMERCIAL Y FILTROS
+           ========================================================================== */
+        .filters-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            background: var(--tarjeta-bg);
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            border: 1px solid var(--border-color);
+            align-items: center;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--rojo-casabe);
+        }
+
+        .filter-select {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            background: #fff;
+            min-width: 150px;
+        }
+
+        /* TABLA DINÁMICA */
+        .table-container {
+            background: var(--tarjeta-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: #F8FAFC;
+            font-size: 14px;
+            color: var(--texto-sec);
+            font-weight: 600;
+        }
+
+        td {
+            font-size: 14px;
+            color: var(--texto-main);
+        }
+
+        tr:hover {
+            background-color: var(--fondo-app);
+            cursor: pointer;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge.A { background-color: #E0F2FE; color: #0284C7; }
+        .badge.B { background-color: #FEF3C7; color: #D97706; }
+        .badge.C { background-color: #F3F4F6; color: #4B5563; }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        .status-dot.verde { background-color: var(--exito); }
+        .status-dot.amarillo { background-color: var(--advertencia); }
+        .status-dot.rojo { background-color: var(--alerta); }
+
+        /* ==========================================================================
+           5. FICHA CLIENTE 360° (DRAWER LATERAL)
+           ========================================================================== */
+        .drawer-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 1000;
+        }
+
+        .drawer {
+            position: fixed;
+            top: 0; right: -600px;
+            width: 550px;
+            height: 100vh;
+            background: var(--tarjeta-bg);
+            box-shadow: -4px 0 15px rgba(0,0,0,0.1);
+            transition: right 0.3s ease;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .drawer.open { right: 0; }
+
+        .drawer-header {
+            padding: 25px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .drawer-header h2 { font-size: 20px; font-weight: 700; }
+        
+        .close-btn {
+            background: none; border: none; font-size: 24px;
+            cursor: pointer; color: var(--texto-sec);
+        }
+
+        .drawer-content {
+            padding: 25px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        /* Bloques 360 */
+        .block-360 {
+            background: var(--fondo-app);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .block-360 h3 {
+            font-size: 16px;
+            color: var(--rojo-casabe);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            font-size: 14px;
+        }
+
+        .info-label { color: var(--texto-sec); display: block; margin-bottom: 4px; font-size: 12px;}
+        .info-value { font-weight: 600; color: var(--texto-main); }
+
+        .drawer-footer {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 10px;
+            background: var(--tarjeta-bg);
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: center;
+            transition: opacity 0.2s;
+        }
+
+        .btn-primary { background: var(--rojo-casabe); color: white; }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-outline { background: white; color: var(--rojo-casabe); border: 1px solid var(--rojo-casabe); }
+        .btn-whatsapp { background: var(--exito); color: white; }
+
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <img src="assets/logo-casabe-real.png" alt="Logo Casabe Real" class="logo">
+        <div style="color: var(--texto-sec); font-size: 14px; margin-top: 20px; line-height: 2.5;">
+            <div>📊 Dashboard</div>
+            <div>🎯 Meta</div>
+            <div style="color: var(--rojo-casabe); font-weight: 700;">👥 Clientes</div>
+            <div>🛒 Pedidos</div>
+            <div>📝 Propuestas</div>
+            <div>📍 Rutero Diario</div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div>
+                <h1>Directorio de Clientes</h1>
+                <div class="breadcrumb">Inicio / Operaciones / Clientes</div>
+            </div>
+            <div style="font-size: 14px; font-weight: 600;">Rol: <span style="color: var(--rojo-casabe);">Vendedor (Vista Filtrada)</span></div>
+        </div>
+
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-title">Total de Clientes (Cartera)</div>
+                <div class="kpi-value" id="kpi-total">142</div>
+                <div class="kpi-trend positive">+3 Nuevos este mes</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">Clientes Activos</div>
+                <div class="kpi-value" id="kpi-activos">118</div>
+                <div class="kpi-trend positive">83% de la cartera</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">En Riesgo de Recompra</div>
+                <div class="kpi-value" id="kpi-riesgo" style="color: var(--alerta);">12</div>
+                <div class="kpi-trend negative">Acción requerida</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">Propuestas Pendientes</div>
+                <div class="kpi-value">5</div>
+                <div class="kpi-trend" style="color: var(--advertencia);">En negociación</div>
+            </div>
+        </div>
+
+        <div class="filters-bar">
+            <input type="text" class="search-input" placeholder="Buscar por Nombre, RIF o Contacto..." id="searchInput">
+            <select class="filter-select" id="filterClasificacion">
+                <option value="ALL">Todas las Clasificaciones</option>
+                <option value="A">Clase A (Alto Volumen)</option>
+                <option value="B">Clase B (Volumen Medio)</option>
+                <option value="C">Clase C (Volumen Bajo)</option>
+            </select>
+            <select class="filter-select" id="filterCanal">
+                <option value="ALL">Todos los Canales</option>
+                <option value="HORECA">HORECA</option>
+                <option value="SUPERMERCADO">Supermercados</option>
+                <option value="MAYORISTA">Mayoristas</option>
+            </select>
+            <button class="btn btn-primary" style="flex: none; padding: 10px 20px;">Filtrar</button>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Razón Social / Comercial</th>
+                        <th>RIF</th>
+                        <th>Canal</th>
+                        <th>Clasificación</th>
+                        <th>Estatus Recompra</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="clientesTableBody">
+                    </tbody>
+            </table>
+        </div>
+    </main>
+
+    <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+    <div class="drawer" id="clientDrawer">
+        <div class="drawer-header">
+            <h2 id="d-nombre">Nombre Comercial</h2>
+            <button class="close-btn" onclick="closeDrawer()">&times;</button>
+        </div>
+        <div class="drawer-content">
+            
+            <div class="block-360">
+                <h3>1. Identificación y Crédito</h3>
+                <div class="info-grid">
+                    <div><span class="info-label">RIF</span><span class="info-value" id="d-rif">J-00000000-0</span></div>
+                    <div><span class="info-label">Contacto Principal</span><span class="info-value" id="d-contacto">Juan Pérez</span></div>
+                    <div><span class="info-label">Teléfono</span><span class="info-value" id="d-telefono">0414-1234567</span></div>
+                    <div><span class="info-label">Condición Pago</span><span class="info-value" id="d-credito">Crédito 15 Días</span></div>
+                    <div><span class="info-label">Límite Aprobado</span><span class="info-value" id="d-limite">$ 1,500.00</span></div>
+                    <div><span class="info-label">Saldo Pendiente</span><span class="info-value" style="color: var(--alerta);">$ 450.00</span></div>
+                </div>
+            </div>
+
+            <div class="block-360">
+                <h3>2. Consumo y Reposición (Embudo)</h3>
+                <div class="info-grid">
+                    <div><span class="info-label">Total Compras Históricas</span><span class="info-value" id="d-compras">24 Pedidos</span></div>
+                    <div><span class="info-label">Etapa Embudo SCCR</span><span class="info-value" id="d-embudo">5. Fidelización</span></div>
+                    <div><span class="info-label">Última Compra</span><span class="info-value" id="d-ultima">15/08/2026</span></div>
+                    <div>
+                        <span class="info-label">Semáforo Recompra</span>
+                        <span class="info-value"><span class="status-dot verde" id="d-semaforo"></span> <span id="d-estado-texto">Al día</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="block-360">
+                <h3>3. Propuestas y Bitácora Activa</h3>
+                <p style="font-size: 13px; color: var(--texto-sec); line-height: 1.5;">
+                    Última gestión: <strong>Visita presencial (Ayer)</strong><br>
+                    Motivo: Presentación nueva línea de pasapalos.<br>
+                    Propuesta #PRP-092 enviada por correo. En espera de aprobación.
+                </p>
+            </div>
+
+        </div>
+        
+        <div class="drawer-footer">
+            <button class="btn btn-primary" onclick="alert('Redirigiendo a Módulo de Pedidos...')">Crear Pedido</button>
+            <button class="btn btn-outline" onclick="alert('Abriendo cotizador...')">Emitir Propuesta</button>
+            <button class="btn btn-whatsapp" onclick="alert('Abriendo WhatsApp Web...')">WhatsApp</button>
+        </div>
+    </div>
+
+    <script>
+        // Mock de datos provenientes de clientes.json / embudo.json
+        const clientesDB = [
+            { id: 1, nombre: "Supermercado El Rey", rif: "J-30495832-1", canal: "SUPERMERCADO", abc: "A", estado: "verde", limite: "$3,000", contacto: "Pedro Gómez", tlf: "0412-5551234", etapa: "5. Fidelización", fecha: "20/08/2026", total_pedidos: 45 },
+            { id: 2, nombre: "Bodegón La Castellana", rif: "J-40592834-9", canal: "HORECA", abc: "B", estado: "amarillo", limite: "$800", contacto: "Luis Silva", tlf: "0424-9994321", etapa: "4. Activación", fecha: "01/08/2026", total_pedidos: 3 },
+            { id: 3, nombre: "Distribuidora Central", rif: "J-29384756-3", canal: "MAYORISTA", abc: "A", estado: "rojo", limite: "$5,000", contacto: "Ana Martínez", tlf: "0414-1112233", etapa: "5. Fidelización", fecha: "10/06/2026", total_pedidos: 120 },
+            { id: 4, nombre: "Restaurante Ávila", rif: "J-50123984-2", canal: "HORECA", abc: "C", estado: "verde", limite: "Contado", contacto: "Carlos Ruiz", tlf: "0412-3334455", etapa: "3. Presentación", fecha: "N/A", total_pedidos: 0 }
+        ];
+
+        // Función para renderizar tabla
+        function renderTable() {
+            const tbody = document.getElementById('clientesTableBody');
+            tbody.innerHTML = "";
+
+            clientesDB.forEach(cliente => {
+                const tr = document.createElement('tr');
+                tr.onclick = () => openDrawer(cliente);
+                
+                // Mapeo texto de estado
+                let estadoTexto = cliente.estado === 'verde' ? 'Al día' : (cliente.estado === 'amarillo' ? 'Límite / Próximo' : 'En Riesgo');
+
+                tr.innerHTML = `
+                    <td style="font-weight: 600;">${cliente.nombre}</td>
+                    <td>${cliente.rif}</td>
+                    <td>${cliente.canal}</td>
+                    <td><span class="badge ${cliente.abc}">Clase ${cliente.abc}</span></td>
+                    <td><span class="status-dot ${cliente.estado}"></span> ${estadoTexto}</td>
+                    <td><button class="btn btn-outline" style="padding: 5px 10px; font-size: 12px;">Ver Ficha</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Funciones del Drawer (Ficha 360°)
+        function openDrawer(cliente) {
+            document.getElementById('drawerOverlay').style.display = 'block';
+            document.getElementById('clientDrawer').classList.add('open');
+            
+            // Poblar datos
+            document.getElementById('d-nombre').innerText = cliente.nombre;
+            document.getElementById('d-rif').innerText = cliente.rif;
+            document.getElementById('d-contacto').innerText = cliente.contacto;
+            document.getElementById('d-telefono').innerText = cliente.tlf;
+            document.getElementById('d-limite').innerText = cliente.limite;
+            document.getElementById('d-compras').innerText = `${cliente.total_pedidos} Pedidos`;
+            document.getElementById('d-embudo').innerText = cliente.etapa;
+            document.getElementById('d-ultima').innerText = cliente.fecha;
+            
+            const dot = document.getElementById('d-semaforo');
+            dot.className = `status-dot ${cliente.estado}`;
+            
+            let estadoTexto = cliente.estado === 'verde' ? 'Al día' : (cliente.estado === 'amarillo' ? 'Límite / Próximo' : 'En Riesgo (Contáctalo)');
+            document.getElementById('d-estado-texto').innerText = estadoTexto;
+        }
+
+        function closeDrawer() {
+            document.getElementById('drawerOverlay').style.display = 'none';
+            document.getElementById('clientDrawer').classList.remove('open');
+        }
+
+        // Inicializar
+        window.onload = () => {
+            renderTable();
+        };
+    </script>
+</body>
+</html>
