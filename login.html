@@ -65,25 +65,6 @@
     position: relative;
   }
 
-  .brand-logo-container {
-    width: 80px;
-    height: 80px;
-    background: #FFFFFF;
-    border-radius: 20px;
-    margin: 0 auto 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-    padding: 8px;
-  }
-
-  .brand-logo-container img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-  }
-
   .card-header h1 {
     font-family: "Montserrat", sans-serif;
     font-size: 22px;
@@ -282,7 +263,7 @@
       <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
     </button>
     <button class="tab-btn" id="tab-btn-registro" onclick="switchTab('registro')">
-      <i class="fas fa-user-plus"></i> Solicitar Acceso
+      <i class="fas fa-user-plus"></i> Registro Nuevo Usuario
     </button>
   </div>
 
@@ -326,14 +307,6 @@
         <div class="input-wrapper">
           <i class="fas fa-id-card input-icon"></i>
           <input type="text" id="reg-nombre" class="form-control" placeholder="Ej: Víctor Pérez" required>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="reg-email">Correo Electrónico</label>
-        <div class="input-wrapper">
-          <i class="fas fa-envelope input-icon"></i>
-          <input type="email" id="reg-email" class="form-control" placeholder="correo@ejemplo.com" required>
         </div>
       </div>
 
@@ -504,7 +477,6 @@
 
     const user = document.getElementById('reg-user').value.trim();
     const nombre = document.getElementById('reg-nombre').value.trim();
-    const email = document.getElementById('reg-email').value.trim();
     const telefono = document.getElementById('reg-telefono').value.trim();
     const rol = document.getElementById('reg-rol').value;
     const pass = document.getElementById('reg-pass').value;
@@ -522,7 +494,6 @@
         action: 'registrar',
         user: user,
         nombre: nombre,
-        email: email,
         telefono: telefono,
         rol: rol,
         pass_hash: passHash
