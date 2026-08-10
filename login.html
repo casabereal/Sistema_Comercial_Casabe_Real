@@ -3,463 +3,314 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Casabe Real &mdash; Acceso al Sistema</title>
+<title>Casabe Real &mdash; Acceso</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  :root {
-    --rojo: #C8181E;
-    --rojo-d: #A01015;
-    --rojo-xs: #FEF2F2;
-    --fondo: #F3F4F6;
-    --borde: #E5E7EB;
-    --gris: #6B7280;
-    --negro: #111827;
-    --verde: #059669;
-    --naranja: #D97706;
-    --naranja-xs: #FFFBEB;
-    --r: 14px;
-    --r-sm: 9px;
-    --sh: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-    --sh-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
-  }
-  body {
-    font-family: "Inter", sans-serif;
-    background: #111827;
-    background-image: radial-gradient(circle at top right, rgba(200, 24, 30, 0.25), transparent 40%),
-                      radial-gradient(circle at bottom left, rgba(200, 24, 30, 0.15), transparent 40%);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    color: var(--negro);
-  }
-  .card {
-    background: #FFFFFF;
-    border-radius: 20px;
-    width: 100%;
-    max-width: 440px;
-    box-shadow: var(--sh-lg);
-    overflow: hidden;
-    position: relative;
-  }
-  .card-header {
-    background: linear-gradient(135deg, var(--rojo), var(--rojo-d));
-    padding: 32px 24px 24px;
-    text-align: center;
-    color: #FFFFFF;
-  }
-  .brand-logo {
-    width: 64px;
-    height: 64px;
-    background: #FFFFFF;
-    border-radius: 16px;
-    margin: 0 auto 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 800;
-    font-size: 26px;
-    color: var(--rojo);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  }
-  .card-header h1 {
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-  }
-  .card-header p {
-    font-size: 13px;
-    opacity: 0.9;
-    margin-top: 4px;
-  }
-  .tabs {
-    display: flex;
-    background: #F9FAFB;
-    border-bottom: 1px solid var(--borde);
-  }
-  .tab-btn {
-    flex: 1;
-    padding: 14px;
-    border: none;
-    background: none;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--gris);
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  .tab-btn.active {
-    color: var(--rojo);
-    background: #FFFFFF;
-    border-bottom: 2px solid var(--rojo);
-  }
-  .card-body {
-    padding: 28px 24px;
-  }
-  .form-group {
-    margin-bottom: 18px;
-  }
-  .form-group label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    color: #374151;
-    margin-bottom: 6px;
-  }
-  .input-wrapper {
-    position: relative;
-  }
-  .form-control {
-    width: 100%;
-    padding: 12px 14px;
-    font-size: 14px;
-    border: 1.5px solid var(--borde);
-    border-radius: var(--r-sm);
-    outline: none;
-    transition: border-color 0.2s ease;
-    background: #FFFFFF;
-  }
-  .form-control:focus {
-    border-color: var(--rojo);
-    box-shadow: 0 0 0 3px rgba(200, 24, 30, 0.1);
-  }
-  .select-control {
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%206B7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-size: 16px;
-  }
-  .btn-submit {
-    width: 100%;
-    padding: 14px;
-    background: var(--rojo);
-    color: #FFFFFF;
-    border: none;
-    border-radius: var(--r-sm);
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background 0.2s ease, transform 0.1s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 8px;
-  }
-  .btn-submit:hover {
-    background: var(--rojo-d);
-  }
-  .btn-submit:active {
-    transform: scale(0.99);
-  }
-  .btn-submit:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-  .alert {
-    padding: 12px 14px;
-    border-radius: var(--r-sm);
-    font-size: 13px;
-    margin-bottom: 18px;
-    display: none;
-    line-height: 1.4;
-  }
-  .alert-error {
-    background: var(--rojo-xs);
-    color: var(--rojo-d);
-    border: 1px solid #FCA5A5;
-  }
-  .alert-success {
-    background: #ECFDF5;
-    color: #065F46;
-    border: 1px solid #6EE7B7;
-  }
-  .alert-warning {
-    background: var(--naranja-xs);
-    color: #92400E;
-    border: 1px solid #FDE68A;
-  }
-  .spinner {
-    width: 18px;
-    height: 18px;
-    border: 2px solid #FFFFFF;
-    border-top-color: transparent;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    display: none;
-  }
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-  .footer-text {
-    text-align: center;
-    font-size: 12px;
-    color: var(--gris);
-    margin-top: 20px;
-  }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --rojo:#C8181E;--rojo-d:#A01015;--rojo-xs:#FEF2F2;
+  --fondo:#F3F4F6;--borde:#E5E7EB;
+  --gris:#6B7280;--negro:#111827;
+  --naranja:#D97706;--naranja-xs:#FFFBEB;
+  --r:14px;--r-sm:9px;
+  --sh:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+  --sh-lg:0 8px 32px rgba(0,0,0,.14);
+}
+body{
+  font-family:"Inter",sans-serif;
+  background:var(--rojo);
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:24px 16px;
+}
+body::before{content:"";position:fixed;top:-40%;left:-20%;width:80vw;height:80vw;
+  background:rgba(255,255,255,.04);border-radius:50%;pointer-events:none}
+body::after{content:"";position:fixed;bottom:-30%;right:-15%;width:60vw;height:60vw;
+  background:rgba(0,0,0,.06);border-radius:50%;pointer-events:none}
+.wrap{width:100%;max-width:400px;position:relative;z-index:1}
+.hero{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:24px}
+.hero img{width:96px;height:96px;object-fit:contain;filter:drop-shadow(0 6px 18px rgba(0,0,0,.35))}
+.hero h1{color:#fff;font-size:28px;font-weight:800;letter-spacing:-.6px;text-align:center}
+.hero p{color:rgba(255,255,255,.68);font-size:13px;text-align:center}
+.card{background:#fff;border-radius:var(--r);box-shadow:var(--sh-lg);overflow:hidden}
+.tabs{display:flex;background:var(--fondo);padding:4px;gap:3px}
+.tab{flex:1;padding:10px 8px;border:none;border-radius:8px;font-size:13px;font-weight:600;
+  font-family:"Inter",sans-serif;cursor:pointer;transition:all .2s;background:transparent;color:var(--gris)}
+.tab.on{background:#fff;color:var(--rojo);box-shadow:var(--sh)}
+.card-body{padding:24px}
+.panel{display:none}
+.panel.on{display:block}
+.f{margin-bottom:15px}
+.f label{display:block;font-size:11.5px;font-weight:600;color:var(--negro);margin-bottom:5px}
+.req{color:var(--rojo)}
+.f input, .f select{width:100%;padding:12px 14px;border:1.5px solid var(--borde);border-radius:var(--r-sm);
+  font-size:14px;font-family:"Inter",sans-serif;color:var(--negro);background:#fff;
+  outline:none;transition:border .2s,box-shadow .2s;-webkit-appearance:none}
+.f input:focus, .f select:focus{border-color:var(--rojo);box-shadow:0 0 0 3px rgba(200,24,30,.12)}
+.f input::placeholder{color:#C8CDD6}
+.hint{font-size:11px;color:var(--gris);margin-top:4px}
+.err{background:var(--rojo-xs);border:1px solid #FECACA;border-radius:var(--r-sm);
+  padding:11px 14px;font-size:13px;color:var(--rojo);font-weight:500;display:none;margin-top:12px}
+.err.show{display:block}
+.pend{background:var(--naranja-xs);border:1px solid #FDE68A;border-radius:var(--r-sm);
+  padding:16px;text-align:center;display:none;margin-top:14px}
+.pend.show{display:block}
+.pend strong{font-size:13.5px;font-weight:700;color:var(--naranja);display:block;margin-bottom:4px}
+.pend span{font-size:12px;color:var(--naranja);opacity:.85}
+.btn{width:100%;padding:14px;border:none;border-radius:var(--r-sm);font-size:15px;font-weight:700;
+  font-family:"Inter",sans-serif;cursor:pointer;color:#fff;background:var(--rojo);
+  transition:background .2s,transform .1s;margin-top:20px;
+  display:flex;align-items:center;justify-content:center;gap:8px}
+.btn:hover{background:var(--rojo-d)}
+.btn:active{transform:scale(.99)}
+.btn:disabled{background:#D1D5DB;cursor:not-allowed;transform:none}
+.card-ft{text-align:center;padding:0 24px 20px;font-size:12px;color:var(--gris)}
+.card-ft a{color:var(--rojo);font-weight:600;text-decoration:none}
+.sp{width:17px;height:17px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;
+  border-radius:50%;animation:spin .7s linear infinite;display:none;flex-shrink:0}
+.sp.show{display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ver{text-align:center;color:rgba(255,255,255,.35);font-size:11px;margin-top:18px;letter-spacing:.3px}
+@media(max-width:360px){.hero img{width:76px;height:76px}.hero h1{font-size:23px}.card-body{padding:18px}}
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<div class="card">
-  <div class="card-header">
-    <div class="brand-logo">CR</div>
+  <div class="hero">
+    <img src="logo.png" alt="Casabe Real Logo">
     <h1>Casabe Real</h1>
-    <p>Sistema Comercial de Gestión (SCCR)</p>
+    <p>Sistema Comercial & Business Intelligence</p>
   </div>
 
-  <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('login')">Iniciar Sesión</button>
-    <button class="tab-btn" onclick="switchTab('registro')">Solicitar Acceso</button>
-  </div>
+  <div class="card">
+    <div class="tabs">
+      <button class="tab on" id="tab-login" onclick="switchTab('login')">Iniciar Sesión</button>
+      <button class="tab" id="tab-registro" onclick="switchTab('registro')">Solicitar Registro</button>
+    </div>
 
-  <div class="card-body">
-    <div id="alert-msg" class="alert"></div>
+    <div class="card-body">
+      
+      <form class="panel on" id="panel-login" onsubmit="handleLogin(event)">
+        <div class="f">
+          <label>Correo Electrónico o Teléfono <span class="req">*</span></label>
+          <input type="text" id="login-usuario" placeholder="ejemplo@casabereal.com" required>
+        </div>
 
-    <form id="form-login" onsubmit="handleLogin(event)">
-      <div class="form-group">
-        <label for="login-user">Usuario o Correo Electrónico</label>
-        <input type="text" id="login-user" class="form-control" placeholder="ej. usuario o correo@ejemplo.com" required>
-      </div>
+        <div class="f">
+          <label>Contraseña / PIN <span class="req">*</span></label>
+          <input type="password" id="login-pass" placeholder="••••••••" required>
+        </div>
 
-      <div class="form-group">
-        <label for="login-pass">Contraseña</label>
-        <input type="password" id="login-pass" class="form-control" placeholder="••••••••" required>
-      </div>
+        <div class="err" id="err-login">Credenciales incorrectas o usuario no encontrado.</div>
 
-      <button type="submit" id="btn-login" class="btn-submit">
-        <span class="spinner" id="sp-login"></span>
-        <span id="txt-login">Ingresar al Sistema</span>
-      </button>
-    </form>
+        <button type="submit" class="btn" id="btn-login">
+          <div class="sp" id="sp-login"></div>
+          <span id="txt-login">Ingresar al Sistema</span>
+        </button>
+      </form>
 
-    <form id="form-registro" style="display:none;" onsubmit="handleRegistro(event)">
-      <div class="form-group">
-        <label for="reg-user">Usuario (ID de Acceso)</label>
-        <input type="text" id="reg-user" class="form-control" placeholder="ej. jperez" required>
-      </div>
+      <form class="panel" id="panel-registro" onsubmit="handleRegistro(event)">
+        <div class="f">
+          <label>Nombre Completo <span class="req">*</span></label>
+          <input type="text" id="reg-nombre" placeholder="Juan Pérez" required>
+        </div>
 
-      <div class="form-group">
-        <label for="reg-nombre">Nombre Completo</label>
-        <input type="text" id="reg-nombre" class="form-control" placeholder="ej. Juan Pérez" required>
-      </div>
+        <div class="f">
+          <label>Correo Electrónico <span class="req">*</span></label>
+          <input type="email" id="reg-correo" placeholder="vendedor@casabereal.com" required>
+        </div>
 
-      <div class="form-group">
-        <label for="reg-email">Correo Electrónico</label>
-        <input type="email" id="reg-email" class="form-control" placeholder="ej. juan@casabereal.com" required>
-      </div>
+        <div class="f">
+          <label>Teléfono de Contacto <span class="req">*</span></label>
+          <input type="tel" id="reg-telefono" placeholder="0412-1234567" required>
+        </div>
 
-      <div class="form-group">
-        <label for="reg-telefono">Teléfono / WhatsApp</label>
-        <input type="tel" id="reg-telefono" class="form-control" placeholder="ej. +584121234567" required>
-      </div>
+        <div class="f">
+          <label>Rol Solicitado <span class="req">*</span></label>
+          <select id="reg-rol" required>
+            <option value="vendedor">Vendedor / Asesor Comercial</option>
+            <option value="gerente">Gerente de Ventas</option>
+            <option value="administrador">Administrador</option>
+          </select>
+        </div>
 
-      <div class="form-group">
-        <label for="reg-rol">Rol Solicitado</label>
-        <select id="reg-rol" class="form-control select-control" required>
-          <option value="vendedor">Vendedor / Asesor Comercial</option>
-          <option value="gerente">Gerente de Ventas</option>
-          <option value="administrador">Administrador</option>
-        </select>
-      </div>
+        <div class="f">
+          <label>Contraseña Deseada <span class="req">*</span></label>
+          <input type="password" id="reg-pass" placeholder="••••••••" required>
+          <div class="hint">Mínimo 6 caracteres</div>
+        </div>
 
-      <div class="form-group">
-        <label for="reg-pass">Contraseña</label>
-        <input type="password" id="reg-pass" class="form-control" placeholder="Mínimo 6 caracteres" required minlength="6">
-      </div>
+        <div class="err" id="err-registro">No se pudo procesar la solicitud. Intente nuevamente.</div>
 
-      <button type="submit" id="btn-registro" class="btn-submit">
-        <span class="spinner" id="sp-registro"></span>
-        <span id="txt-registro">Enviar Solicitud de Registro</span>
-      </button>
-    </form>
+        <div class="pend" id="pend-registro">
+          <strong>¡Solicitud Enviada!</strong>
+          <span>Tu cuenta se encuentra en estado <b>Pendiente de Aprobación</b> por el Administrador. Te notificaremos al ser activado.</span>
+        </div>
 
-    <div class="footer-text">
-      &copy; 2026 Casabe Real. Todos los derechos reservados.
+        <button type="submit" class="btn" id="btn-registro">
+          <div class="sp" id="sp-registro"></div>
+          <span id="txt-registro">Enviar Solicitud</span>
+        </button>
+      </form>
+
+    </div>
+
+    <div class="card-ft">
+      ¿Necesitas ayuda? <a href="#">Contactar a Soporte</a>
     </div>
   </div>
+
+  <div class="ver">SCCR v2.5.0 &bull; Casabe Real &copy; 2026</div>
 </div>
 
 <script>
-  // ── CONFIGURACIÓN DE CONEXIÓN CON APPS SCRIPT ──────────────
-  // Pega aquí la URL de tu Web App publicada en Apps Script
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzEjz94G1cO_zL9DTBvMYyCWMeknqydyWMibWbj5c-dHipQNtqS5mgCOny9xOxSLfJpug/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbzEjz94G1cO_zL9DTBvMYyCWMeknqydyWMibWbj5c-dHipQNtqS5mgCOny9xOxSLfJpug/exec";
 
-  let currentTab = 'login';
-
+  // Cambiar entre Pestañas Login / Registro
   function switchTab(tab) {
-    currentTab = tab;
-    hideAlert();
+    const isLogin = tab === 'login';
+    document.getElementById('tab-login').classList.toggle('on', isLogin);
+    document.getElementById('tab-registro').classList.toggle('on', !isLogin);
+    document.getElementById('panel-login').classList.toggle('on', isLogin);
+    document.getElementById('panel-registro').classList.toggle('on', !isLogin);
     
-    document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
-      btn.classList.toggle('active', (tab === 'login' && idx === 0) || (tab === 'registro' && idx === 1));
-    });
-
-    document.getElementById('form-login').style.display = tab === 'login' ? 'block' : 'none';
-    document.getElementById('form-registro').style.display = tab === 'registro' ? 'block' : 'none';
+    // Ocultar mensajes de error/pendiente
+    document.getElementById('err-login').classList.remove('show');
+    document.getElementById('err-registro').classList.remove('show');
+    document.getElementById('pend-registro').classList.remove('show');
   }
 
-  function showAlert(msg, type = 'error') {
-    const box = document.getElementById('alert-msg');
-    box.className = 'alert alert-' + type;
-    box.textContent = msg;
-    box.style.display = 'block';
-  }
+  // Manejador del Iniciar Sesión
+  function handleLogin(e) {
+    e.preventDefault();
+    const usuario = document.getElementById('login-usuario').value.trim();
+    const pass = document.getElementById('login-pass').value.trim();
+    
+    const btn = document.getElementById('btn-login');
+    const sp = document.getElementById('sp-login');
+    const err = document.getElementById('err-login');
 
-  function hideAlert() {
-    const box = document.getElementById('alert-msg');
-    box.style.display = 'none';
-  }
+    // UI Loading State
+    btn.disabled = true;
+    sp.classList.add('show');
+    err.classList.remove('show');
 
-  // Generación de Hash SHA-256 en Frontend
-  async function sha256(str) {
-    const buffer = new TextEncoder().encode(str);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  }
-
-  // Enviar Petición (Soporta google.script.run y fetch Web App)
-  async function sendRequest(payload) {
-    // Si la App está corriendo dentro del entorno nativo de Apps Script
     if (typeof google !== 'undefined' && google.script && google.script.run) {
-      return new Promise((resolve, reject) => {
-        if (payload.action === 'login') {
-          google.script.run
-            .withSuccessHandler(resolve)
-            .withFailureHandler(reject)
-            .actionLogin(payload);
-        } else if (payload.action === 'registrar') {
-          google.script.run
-            .withSuccessHandler(resolve)
-            .withFailureHandler(reject)
-            .actionRegistrar(payload);
+      google.script.run
+        .withSuccessHandler(onLoginSuccess)
+        .withFailureHandler(onLoginError)
+        .autenticarUsuario({ usuario, pass });
+    } else {
+      // Petición HTTP Fetch a la Web App de Google Apps Script
+      fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'login', usuario, pass })
+      })
+      .then(response => response.json())
+      .then(res => {
+        if (res.status === "SUCCESS") {
+          onLoginSuccess(res);
         } else {
-          reject(new Error("Acción no soportada en entorno de servidor"));
+          onLoginError(res.message || "Credenciales incorrectas o cuenta no activa.");
         }
+      })
+      .catch(errFetch => {
+        onLoginError("Error de conexión con el servidor. Intente nuevamente.");
       });
     }
-
-    // Petición Externa mediante HTTP POST (Web App Deployment)
-    if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("TU_APPS_SCRIPT_URL_AQUI")) {
-      throw new Error("Debe configurar la constante APPS_SCRIPT_URL con la URL de su Web App.");
-    }
-
-    const response = await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload)
-    });
-
-    return await response.json();
   }
 
-  // Manejo de Inicio de Sesión
-  async function handleLogin(e) {
+  function onLoginSuccess(res) {
+    if (res.status === "SUCCESS") {
+      // Guardar sesión local temporal
+      localStorage.setItem('sccr_user', JSON.stringify(res));
+      // Redirección según rol especificado en Arquitectura SCCR 
+      window.location.href = res.redirect || (res.rol + '.html');
+    } else {
+      onLoginError(res.message || "Error al autenticar");
+    }
+  }
+
+  function onLoginError(msg) {
+    const btn = document.getElementById('btn-login');
+    const sp = document.getElementById('sp-login');
+    const err = document.getElementById('err-login');
+
+    btn.disabled = false;
+    sp.classList.remove('show');
+    err.textContent = msg || "Credenciales incorrectas o cuenta no activa.";
+    err.classList.add('show');
+  }
+
+  // Manejador de Solicitud de Registro
+  function handleRegistro(e) {
     e.preventDefault();
-    hideAlert();
+    const datos = {
+      nombre: document.getElementById('reg-nombre').value.trim(),
+      correo: document.getElementById('reg-correo').value.trim(),
+      telefono: document.getElementById('reg-telefono').value.trim(),
+      rol: document.getElementById('reg-rol').value,
+      pass: document.getElementById('reg-pass').value.trim(),
+      estado: "PENDIENTE" // Estado automático especificado en la arquitectura 
+    };
 
-    const userVal = document.getElementById('login-user').value.trim();
-    const passVal = document.getElementById('login-pass').value;
+    const btn = document.getElementById('btn-registro');
+    const sp = document.getElementById('sp-registro');
+    const err = document.getElementById('err-registro');
+    const pend = document.getElementById('pend-registro');
 
-    if (!userVal || !passVal) {
-      showAlert('Por favor, ingresa usuario y contraseña.');
-      return;
-    }
+    btn.disabled = true;
+    sp.classList.add('show');
+    err.classList.remove('show');
+    pend.classList.remove('show');
 
-    setLoading('login', true);
-
-    try {
-      const passHash = await sha256(passVal);
-      const res = await sendRequest({
-        action: 'login',
-        user: userVal,
-        pass_hash: passHash
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      google.script.run
+        .withSuccessHandler(onRegistroSuccess)
+        .withFailureHandler(onRegistroError)
+        .registrarUsuario(datos);
+    } else {
+      // Petición HTTP Fetch a la Web App de Google Apps Script para registro
+      fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(Object.assign({ action: 'registro' }, datos))
+      })
+      .then(response => response.json())
+      .then(res => {
+        if (res.status === "SUCCESS") {
+          onRegistroSuccess(res);
+        } else {
+          onRegistroError(res.message || "No se pudo procesar la solicitud.");
+        }
+      })
+      .catch(errFetch => {
+        onRegistroError("Error de conexión con el servidor. Intente nuevamente.");
       });
-
-      if (res.status === 'SUCCESS') {
-        showAlert('¡Acceso concedido! Redirigiendo...', 'success');
-        // Guardar sesión del usuario localmente
-        localStorage.setItem('sccr_user', JSON.stringify(res.user));
-        
-        setTimeout(() => {
-          // Redirección según rol de usuario
-          const rol = (res.user.rol || '').toLowerCase();
-          if (rol === 'vendedor') {
-            window.location.href = 'vendedor.html';
-          } else if (rol === 'gerente') {
-            window.location.href = 'gerente.html';
-          } else {
-            window.location.href = 'administrador.html';
-          }
-        }, 1200);
-      } else if (res.status === 'PENDING') {
-        showAlert(res.message || 'Tu usuario aún está pendiente de aprobación.', 'warning');
-      } else {
-        showAlert(res.message || 'Error de autenticación.');
-      }
-    } catch (err) {
-      showAlert('Error al conectar con el servidor: ' + err.message);
-    } finally {
-      setLoading('login', false);
     }
   }
 
-  // Manejo de Solicitud de Registro
-  async function handleRegistro(e) {
-    e.preventDefault();
-    hideAlert();
+  function onRegistroSuccess(res) {
+    const btn = document.getElementById('btn-registro');
+    const sp = document.getElementById('sp-registro');
+    const pend = document.getElementById('pend-registro');
 
-    const user = document.getElementById('reg-user').value.trim();
-    const nombre = document.getElementById('reg-nombre').value.trim();
-    const email = document.getElementById('reg-email').value.trim();
-    const telefono = document.getElementById('reg-telefono').value.trim();
-    const rol = document.getElementById('reg-rol').value;
-    const pass = document.getElementById('reg-pass').value;
-
-    if (!user || !nombre || !email || !telefono || !pass) {
-      showAlert('Todos los campos son obligatorios.');
-      return;
-    }
-
-    setLoading('registro', true);
-
-    try {
-      const passHash = await sha256(pass);
-      const res = await sendRequest({
-        action: 'registrar',
-        user: user,
-        nombre: nombre,
-        email: email,
-        telefono: telefono,
-        rol: rol,
-        pass_hash: passHash
-      });
-
-      if (res.status === 'SUCCESS') {
-        showAlert(res.message, 'success');
-        document.getElementById('form-registro').reset();
-      } else {
-        showAlert(res.message || 'No se pudo procesar la solicitud.');
-      }
-    } catch (err) {
-      showAlert('Error al procesar el registro: ' + err.message);
-    } finally {
-      setLoading('registro', false);
-    }
+    sp.classList.remove('show');
+    pend.classList.add('show');
+    btn.style.display = 'none'; // Ocultar botón tras solicitar exitosamente
   }
 
-  function setLoading(type, isLoading) {
-    const btn = document.getElementById('btn-' + type);
-    const sp = document.getElementById('sp-' + type);
-    const txt = document.getElementById('txt-' + type);
+  function onRegistroError(msg) {
+    const btn = document.getElementById('btn-registro');
+    const sp = document.getElementById('sp-registro');
+    const err = document.getElementById('err-registro');
 
-    btn.disabled = isLoading;
-    sp.style.display = isLoading ? 'inline-block' : 'none';
-    txt.style.opacity = isLoading ? '0.7' : '1';
+    btn.disabled = false;
+    sp.classList.remove('show');
+    err.textContent = msg || "Error al procesar la solicitud.";
+    err.classList.add('show');
   }
 </script>
 </body>
