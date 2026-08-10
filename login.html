@@ -4,134 +4,183 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Casabe Real &mdash; Acceso al Sistema</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  
+  /* Tokens de Diseño Sincronizados con CONFIG.JS */
   :root {
-    --rojo: #C8181E;
-    --rojo-d: #A01015;
-    --rojo-xs: #FEF2F2;
-    --fondo: #F3F4F6;
-    --borde: #E5E7EB;
-    --gris: #6B7280;
-    --negro: #111827;
-    --verde: #059669;
-    --naranja: #D97706;
+    --rojo: #D71920;          /* Primario Rojo Casabe */
+    --rojo-d: #C8181E;        /* Primario Dark / Hover */
+    --rojo-xs: #FEF2F2;       /* Fondo Alerta Error */
+    --fondo: #F5F7FA;         /* Fondo General de Reducción de Fatiga */
+    --card-bg: #FFFFFF;      /* Fondo de Tarjetas */
+    --borde: #E2E8F0;        /* Bordes Suaves */
+    --texto-p: #2D3436;      /* Texto Principal */
+    --texto-s: #7F8C8D;      /* Texto Secundario */
+    --verde: #2ECC71;        /* Éxito / Al Día */
+    --verde-xs: #ECFDF5;
+    --naranja: #F39C12;      /* Advertencia */
     --naranja-xs: #FFFBEB;
-    --r: 14px;
-    --r-sm: 9px;
-    --sh: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-    --sh-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+    --r: 16px;
+    --r-sm: 10px;
+    --sh-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
   }
+
   body {
     font-family: "Inter", sans-serif;
-    background: #111827;
-    background-image: radial-gradient(circle at top right, rgba(200, 24, 30, 0.25), transparent 40%),
-                      radial-gradient(circle at bottom left, rgba(200, 24, 30, 0.15), transparent 40%);
+    background-color: var(--fondo);
+    background-image: 
+      radial-gradient(circle at 90% 10%, rgba(215, 25, 32, 0.08), transparent 40%),
+      radial-gradient(circle at 10% 90%, rgba(215, 25, 32, 0.05), transparent 40%);
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 20px;
-    color: var(--negro);
+    color: var(--texto-p);
   }
+
   .card {
-    background: #FFFFFF;
-    border-radius: 20px;
+    background: var(--card-bg);
+    border-radius: var(--r);
     width: 100%;
     max-width: 440px;
     box-shadow: var(--sh-lg);
+    border: 1px solid var(--borde);
     overflow: hidden;
     position: relative;
   }
+
   .card-header {
-    background: linear-gradient(135deg, var(--rojo), var(--rojo-d));
-    padding: 32px 24px 24px;
+    background: linear-gradient(135deg, var(--rojo) 0%, var(--rojo-d) 100%);
+    padding: 32px 24px 26px;
     text-align: center;
     color: #FFFFFF;
+    position: relative;
   }
-  .brand-logo {
-    width: 64px;
-    height: 64px;
+
+  .brand-logo-container {
+    width: 80px;
+    height: 80px;
     background: #FFFFFF;
-    border-radius: 16px;
-    margin: 0 auto 14px;
+    border-radius: 20px;
+    margin: 0 auto 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 800;
-    font-size: 26px;
-    color: var(--rojo);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    padding: 8px;
   }
+
+  .brand-logo-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
   .card-header h1 {
+    font-family: "Montserrat", sans-serif;
     font-size: 22px;
     font-weight: 700;
-    letter-spacing: -0.5px;
+    letter-spacing: -0.3px;
+    margin-bottom: 4px;
   }
+
   .card-header p {
     font-size: 13px;
-    opacity: 0.9;
-    margin-top: 4px;
+    opacity: 0.92;
+    font-weight: 400;
   }
+
   .tabs {
     display: flex;
-    background: #F9FAFB;
+    background: #F8FAFC;
     border-bottom: 1px solid var(--borde);
   }
+
   .tab-btn {
     flex: 1;
     padding: 14px;
     border: none;
     background: none;
-    font-size: 14px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 13px;
     font-weight: 600;
-    color: var(--gris);
+    color: var(--texto-s);
     cursor: pointer;
     transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
+
   .tab-btn.active {
     color: var(--rojo);
     background: #FFFFFF;
     border-bottom: 2px solid var(--rojo);
   }
+
   .card-body {
     padding: 28px 24px;
   }
+
   .form-group {
     margin-bottom: 18px;
   }
+
   .form-group label {
     display: block;
     font-size: 13px;
     font-weight: 600;
-    color: #374151;
+    color: var(--texto-p);
     margin-bottom: 6px;
   }
+
   .input-wrapper {
     position: relative;
   }
+
+  .input-wrapper i.input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--texto-s);
+    font-size: 14px;
+  }
+
   .form-control {
     width: 100%;
-    padding: 12px 14px;
+    padding: 12px 14px 12px 40px;
     font-size: 14px;
+    color: var(--texto-p);
     border: 1.5px solid var(--borde);
     border-radius: var(--r-sm);
     outline: none;
-    transition: border-color 0.2s ease;
+    transition: all 0.2s ease;
     background: #FFFFFF;
   }
+
   .form-control:focus {
     border-color: var(--rojo);
-    box-shadow: 0 0 0 3px rgba(200, 24, 30, 0.1);
+    box-shadow: 0 0 0 3px rgba(215, 25, 32, 0.12);
   }
+
   .select-control {
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%206B7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%237F8C8D'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 12px center;
+    background-position: right 14px center;
     background-size: 16px;
   }
+
   .btn-submit {
     width: 100%;
     padding: 14px;
@@ -139,7 +188,8 @@
     color: #FFFFFF;
     border: none;
     border-radius: var(--r-sm);
-    font-size: 15px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
     font-weight: 700;
     cursor: pointer;
     transition: background 0.2s ease, transform 0.1s ease;
@@ -147,18 +197,24 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    margin-top: 8px;
+    margin-top: 10px;
+    box-shadow: 0 4px 12px rgba(215, 25, 32, 0.25);
   }
+
   .btn-submit:hover {
     background: var(--rojo-d);
   }
+
   .btn-submit:active {
     transform: scale(0.99);
   }
+
   .btn-submit:disabled {
-    opacity: 0.6;
+    opacity: 0.65;
     cursor: not-allowed;
+    box-shadow: none;
   }
+
   .alert {
     padding: 12px 14px;
     border-radius: var(--r-sm);
@@ -166,39 +222,47 @@
     margin-bottom: 18px;
     display: none;
     line-height: 1.4;
+    align-items: center;
+    gap: 10px;
   }
+
   .alert-error {
     background: var(--rojo-xs);
-    color: var(--rojo-d);
+    color: #991B1B;
     border: 1px solid #FCA5A5;
   }
+
   .alert-success {
-    background: #ECFDF5;
+    background: var(--verde-xs);
     color: #065F46;
     border: 1px solid #6EE7B7;
   }
+
   .alert-warning {
     background: var(--naranja-xs);
     color: #92400E;
     border: 1px solid #FDE68A;
   }
+
   .spinner {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     border: 2px solid #FFFFFF;
     border-top-color: transparent;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
     display: none;
   }
+
   @keyframes spin {
     to { transform: rotate(360deg); }
   }
+
   .footer-text {
     text-align: center;
     font-size: 12px;
-    color: var(--gris);
-    margin-top: 20px;
+    color: var(--texto-s);
+    margin-top: 24px;
   }
 </style>
 </head>
@@ -206,14 +270,20 @@
 
 <div class="card">
   <div class="card-header">
-    <div class="brand-logo">CR</div>
+    <div class="brand-logo-container">
+      <img src="assets/logo-casabe-real.png" alt="Casabe Real" onerror="this.onerror=null; this.parentElement.innerHTML='<span style=\'font-weight:800;font-size:24px;color:var(--rojo)\'>CR</span>';">
+    </div>
     <h1>Casabe Real</h1>
-    <p>Sistema Comercial de Gestión (SCCR)</p>
+    <p>Sistema Comercial de Gestión (SCCR v2.5.0)</p>
   </div>
 
   <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('login')">Iniciar Sesión</button>
-    <button class="tab-btn" onclick="switchTab('registro')">Solicitar Acceso</button>
+    <button class="tab-btn active" id="tab-btn-login" onclick="switchTab('login')">
+      <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+    </button>
+    <button class="tab-btn" id="tab-btn-registro" onclick="switchTab('registro')">
+      <i class="fas fa-user-plus"></i> Solicitar Acceso
+    </button>
   </div>
 
   <div class="card-body">
@@ -221,82 +291,109 @@
 
     <form id="form-login" onsubmit="handleLogin(event)">
       <div class="form-group">
-        <label for="login-user">Usuario o Correo Electrónico</label>
-        <input type="text" id="login-user" class="form-control" placeholder="ej. usuario o correo@ejemplo.com" required>
+        <label for="login-user">Usuario / Cédula / RIF</label>
+        <div class="input-wrapper">
+          <i class="fas fa-user input-icon"></i>
+          <input type="text" id="login-user" class="form-control" placeholder="Ej: v_perez" required autocomplete="username">
+        </div>
       </div>
 
       <div class="form-group">
         <label for="login-pass">Contraseña</label>
-        <input type="password" id="login-pass" class="form-control" placeholder="••••••••" required>
+        <div class="input-wrapper">
+          <i class="fas fa-lock input-icon"></i>
+          <input type="password" id="login-pass" class="form-control" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" required autocomplete="current-password">
+        </div>
       </div>
 
       <button type="submit" id="btn-login" class="btn-submit">
-        <span class="spinner" id="sp-login"></span>
-        <span id="txt-login">Ingresar al Sistema</span>
+        <span id="sp-login" class="spinner"></span>
+        <span id="txt-login"><i class="fas fa-arrow-right-to-bracket"></i> Ingresar al Sistema</span>
       </button>
     </form>
 
-    <form id="form-registro" style="display:none;" onsubmit="handleRegistro(event)">
+    <form id="form-registro" style="display: none;" onsubmit="handleRegistro(event)">
       <div class="form-group">
-        <label for="reg-user">Usuario (ID de Acceso)</label>
-        <input type="text" id="reg-user" class="form-control" placeholder="ej. jperez" required>
+        <label for="reg-user">Usuario deseado</label>
+        <div class="input-wrapper">
+          <i class="fas fa-at input-icon"></i>
+          <input type="text" id="reg-user" class="form-control" placeholder="Ej: v_perez" required>
+        </div>
       </div>
 
       <div class="form-group">
-        <label for="reg-nombre">Nombre Completo</label>
-        <input type="text" id="reg-nombre" class="form-control" placeholder="ej. Juan Pérez" required>
+        <label for="reg-nombre">Nombre y Apellido</label>
+        <div class="input-wrapper">
+          <i class="fas fa-id-card input-icon"></i>
+          <input type="text" id="reg-nombre" class="form-control" placeholder="Ej: Víctor Pérez" required>
+        </div>
       </div>
 
       <div class="form-group">
         <label for="reg-email">Correo Electrónico</label>
-        <input type="email" id="reg-email" class="form-control" placeholder="ej. juan@casabereal.com" required>
+        <div class="input-wrapper">
+          <i class="fas fa-envelope input-icon"></i>
+          <input type="email" id="reg-email" class="form-control" placeholder="correo@ejemplo.com" required>
+        </div>
       </div>
 
       <div class="form-group">
         <label for="reg-telefono">Teléfono / WhatsApp</label>
-        <input type="tel" id="reg-telefono" class="form-control" placeholder="ej. +584121234567" required>
+        <div class="input-wrapper">
+          <i class="fas fa-phone input-icon"></i>
+          <input type="tel" id="reg-telefono" class="form-control" placeholder="+58 412 1234567" required>
+        </div>
       </div>
 
       <div class="form-group">
         <label for="reg-rol">Rol Solicitado</label>
-        <select id="reg-rol" class="form-control select-control" required>
-          <option value="vendedor">Vendedor / Asesor Comercial</option>
-          <option value="gerente">Gerente de Ventas</option>
-          <option value="administrador">Administrador</option>
-        </select>
+        <div class="input-wrapper">
+          <i class="fas fa-briefcase input-icon"></i>
+          <select id="reg-rol" class="form-control select-control" required>
+            <option value="VENDEDOR">Vendedor / Asesor Comercial</option>
+            <option value="GERENTE">Gerente Comercial</option>
+            <option value="ADMINISTRADOR">CEO / Administrador General</option>
+          </select>
+        </div>
       </div>
 
       <div class="form-group">
         <label for="reg-pass">Contraseña</label>
-        <input type="password" id="reg-pass" class="form-control" placeholder="Mínimo 6 caracteres" required minlength="6">
+        <div class="input-wrapper">
+          <i class="fas fa-key input-icon"></i>
+          <input type="password" id="reg-pass" class="form-control" placeholder="Mínimo 6 caracteres" minlength="6" required>
+        </div>
       </div>
 
       <button type="submit" id="btn-registro" class="btn-submit">
-        <span class="spinner" id="sp-registro"></span>
-        <span id="txt-registro">Enviar Solicitud de Registro</span>
+        <span id="sp-registro" class="spinner"></span>
+        <span id="txt-registro"><i class="fas fa-paper-plane"></i> Enviar Solicitud</span>
       </button>
     </form>
 
-    <div class="footer-text">
-      &copy; 2026 Casabe Real. Todos los derechos reservados.
-    </div>
+    <p class="footer-text">&copy; 2025 Casabe Real. Todos los derechos reservados.</p>
   </div>
 </div>
 
-<script>
-  // ── CONFIGURACIÓN DE CONEXIÓN CON APPS SCRIPT ──────────────
-  // Pega aquí la URL de tu Web App publicada en Apps Script
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwmdFz_7ZJNPDL_B3v04a6lBwSkb9a7Fzp8y09PSDoWzB0bxoa8U0yS7VUVaqpc3kMxeQ/exec";
+<script src="config.js"></script>
 
+<script>
   let currentTab = 'login';
+
+  // Al cargar la página, redirigir si ya hay sesión activa
+  document.addEventListener('DOMContentLoaded', () => {
+    const activeUser = window.getSccrUser ? window.getSccrUser() : null;
+    if (activeUser && activeUser.role) {
+      window.redirectSccrByRole(activeUser.role);
+    }
+  });
 
   function switchTab(tab) {
     currentTab = tab;
     hideAlert();
-    
-    document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
-      btn.classList.toggle('active', (tab === 'login' && idx === 0) || (tab === 'registro' && idx === 1));
-    });
+
+    document.getElementById('tab-btn-login').classList.toggle('active', tab === 'login');
+    document.getElementById('tab-btn-registro').classList.toggle('active', tab === 'registro');
 
     document.getElementById('form-login').style.display = tab === 'login' ? 'block' : 'none';
     document.getElementById('form-registro').style.display = tab === 'registro' ? 'block' : 'none';
@@ -305,8 +402,13 @@
   function showAlert(msg, type = 'error') {
     const box = document.getElementById('alert-msg');
     box.className = 'alert alert-' + type;
-    box.textContent = msg;
-    box.style.display = 'block';
+    
+    let iconClass = 'fa-exclamation-circle';
+    if (type === 'success') iconClass = 'fa-check-circle';
+    if (type === 'warning') iconClass = 'fa-triangle-exclamation';
+
+    box.innerHTML = `<i class="fas ${iconClass}"></i> <span>${msg}</span>`;
+    box.style.display = 'flex';
   }
 
   function hideAlert() {
@@ -314,92 +416,79 @@
     box.style.display = 'none';
   }
 
-  // Generación de Hash SHA-256 en Frontend
+  // Generación de Hash SHA-256 para contraseñas seguras
   async function sha256(str) {
-    const buffer = new TextEncoder().encode(str);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
   }
 
-  // Enviar Petición (Soporta google.script.run y fetch Web App)
+  // Envoltorio de petición a la API respaldado por config.js
   async function sendRequest(payload) {
-    // Si la App está corriendo dentro del entorno nativo de Apps Script
-    if (typeof google !== 'undefined' && google.script && google.script.run) {
-      return new Promise((resolve, reject) => {
-        if (payload.action === 'login') {
-          google.script.run
-            .withSuccessHandler(resolve)
-            .withFailureHandler(reject)
-            .actionLogin(payload);
-        } else if (payload.action === 'registrar') {
-          google.script.run
-            .withSuccessHandler(resolve)
-            .withFailureHandler(reject)
-            .actionRegistrar(payload);
-        } else {
-          reject(new Error("Acción no soportada en entorno de servidor"));
-        }
+    if (typeof window.sendSccrRequest === 'function') {
+      return await window.sendSccrRequest(payload.action, payload);
+    } else {
+      // Fallback directo si no detecta config.js
+      const endpoint = window.APPS_SCRIPT_URL || SCCR_CONFIG.APPS_SCRIPT_URL;
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
       });
+      return await res.json();
     }
-
-    // Petición Externa mediante HTTP POST (Web App Deployment)
-    if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("TU_APPS_SCRIPT_URL_AQUI")) {
-      throw new Error("Debe configurar la constante APPS_SCRIPT_URL con la URL de su Web App.");
-    }
-
-    const response = await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload)
-    });
-
-    return await response.json();
   }
 
-  // Manejo de Inicio de Sesión
+  // Manejo del Formulario de Inicio de Sesión
   async function handleLogin(e) {
     e.preventDefault();
     hideAlert();
 
-    const userVal = document.getElementById('login-user').value.trim();
-    const passVal = document.getElementById('login-pass').value;
+    const user = document.getElementById('login-user').value.trim();
+    const pass = document.getElementById('login-pass').value;
 
-    if (!userVal || !passVal) {
-      showAlert('Por favor, ingresa usuario y contraseña.');
+    if (!user || !pass) {
+      showAlert('Por favor ingresa usuario y contraseña.');
       return;
     }
 
     setLoading('login', true);
 
     try {
-      const passHash = await sha256(passVal);
+      const passHash = await sha256(pass);
       const res = await sendRequest({
         action: 'login',
-        user: userVal,
+        user: user,
         pass_hash: passHash
       });
 
-      if (res.status === 'SUCCESS') {
-        showAlert('¡Acceso concedido! Redirigiendo...', 'success');
-        // Guardar sesión del usuario localmente
-        localStorage.setItem('sccr_user', JSON.stringify(res.user));
+      if (res.status === 'SUCCESS' || res.success) {
+        const userData = res.user || {
+          username: user,
+          nombre: res.nombre || user,
+          role: res.rol || 'VENDEDOR'
+        };
+
+        // Guardar sesión en localStorage mediante config.js
+        if (window.setSccrUser) {
+          window.setSccrUser(userData);
+        } else {
+          localStorage.setItem('sccr_user_session', JSON.stringify(userData));
+        }
+
+        showAlert('¡Autenticación exitosa! Redirigiendo...', 'success');
         
         setTimeout(() => {
-          // Redirección según rol de usuario
-          const rol = (res.user.rol || '').toLowerCase();
-          if (rol === 'vendedor') {
-            window.location.href = 'vendedor.html';
-          } else if (rol === 'gerente') {
-            window.location.href = 'gerente.html';
+          if (window.redirectSccrByRole) {
+            window.redirectSccrByRole(userData.role);
           } else {
-            window.location.href = 'administrador.html';
+            window.location.href = (userData.role.toLowerCase() + '.html');
           }
-        }, 1200);
+        }, 1000);
+
       } else if (res.status === 'PENDING') {
-        showAlert(res.message || 'Tu usuario aún está pendiente de aprobación.', 'warning');
+        showAlert(res.message || 'Tu usuario aún está pendiente de aprobación por la administración.', 'warning');
       } else {
-        showAlert(res.message || 'Error de autenticación.');
+        showAlert(res.message || 'Usuario o contraseña incorrectos.');
       }
     } catch (err) {
       showAlert('Error al conectar con el servidor: ' + err.message);
@@ -408,7 +497,7 @@
     }
   }
 
-  // Manejo de Solicitud de Registro
+  // Manejo del Formulario de Registro / Solicitud de Acceso
   async function handleRegistro(e) {
     e.preventDefault();
     hideAlert();
@@ -421,7 +510,7 @@
     const pass = document.getElementById('reg-pass').value;
 
     if (!user || !nombre || !email || !telefono || !pass) {
-      showAlert('Todos los campos son obligatorios.');
+      showAlert('Todos los campos son obligatorios para enviar la solicitud.');
       return;
     }
 
@@ -439,11 +528,11 @@
         pass_hash: passHash
       });
 
-      if (res.status === 'SUCCESS') {
-        showAlert(res.message, 'success');
+      if (res.status === 'SUCCESS' || res.success) {
+        showAlert(res.message || 'Solicitud enviada con éxito. Un administrador revisará tu cuenta.', 'success');
         document.getElementById('form-registro').reset();
       } else {
-        showAlert(res.message || 'No se pudo procesar la solicitud.');
+        showAlert(res.message || 'No se pudo procesar la solicitud de registro.');
       }
     } catch (err) {
       showAlert('Error al procesar el registro: ' + err.message);
