@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCCR - Inteligencia de Negocio & Centro IA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #D71920;
+            --primary-hover: #b51319;
+            --bg-main: #F5F7FA;
+            --card-bg: #FFFFFF;
+            --text-main: #2D3436;
+            --text-sec: #7F8C8D;
+            --success: #2ECC71;
+            --warning: #F39C12;
+            --danger: #E74C3C;
+            --border-color: #E2E8F0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Layout Principal */
+        .sidebar {
+            width: 260px;
+            background-color: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-brand img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .sidebar-brand h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: var(--text-sec);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: rgba(215, 25, 32, 0.08);
+            color: var(--primary);
+        }
+
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Superior */
+        header {
+            background-color: var(--card-bg);
+            padding: 16px 32px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 99;
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--text-sec);
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .breadcrumb span {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        /* Contenedor General */
+        .container {
+            padding: 32px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 28px;
+        }
+
+        .page-header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        .page-header p {
+            color: var(--text-sec);
+            font-size: 15px;
+        }
+
+        /* Secciones Colapsables de KPIs */
+        .kpi-section-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .kpi-section-header {
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fafbfd;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.2s;
+        }
+
+        .kpi-section-header:hover {
+            background-color: #f1f4f9;
+        }
+
+        .kpi-section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .kpi-section-title i {
+            color: var(--primary);
+            font-size: 20px;
+        }
+
+        .toggle-icon {
+            transition: transform 0.3s ease;
+            color: var(--text-sec);
+        }
+
+        .kpi-section-body {
+            padding: 24px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .kpi-section-body.collapsed {
+            display: none;
+        }
+
+        /* Tarjetas de KPI Individuales */
+        .kpi-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .kpi-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .kpi-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-sec);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .kpi-badge {
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .badge-success { background: rgba(46, 204, 113, 0.15); color: var(--success); }
+        .badge-warning { background: rgba(243, 156, 18, 0.15); color: var(--warning); }
+        .badge-danger { background: rgba(231, 76, 60, 0.15); color: var(--danger); }
+
+        .kpi-value {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .kpi-formula {
+            font-size: 12px;
+            color: var(--text-sec);
+            background: var(--bg-main);
+            padding: 6px 10px;
+            border-radius: 6px;
+            border-left: 3px solid var(--primary);
+        }
+
+        /* Capa Memoria + IA */
+        .ai-center-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-top: 32px;
+        }
+
+        @media (max-width: 1024px) {
+            .ai-center-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card-box {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            padding: 24px;
+        }
+
+        .card-box h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-main);
+        }
+
+        .card-box h3 i {
+            color: var(--primary);
+        }
+
+        /* Chat del Agente IA */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 400px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            background: var(--bg-main);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .message.ai {
+            background: white;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        .message.user {
+            background: var(--primary);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        .chat-input-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-input-row input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .chat-input-row input:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        /* Ingesta Manual de Novedades */
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-sec);
+            margin-bottom: 6px;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            background: white;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            border-color: var(--primary);
+        }
+
+        .alert-feed-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        .alert-item {
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid var(--warning);
+            background: #fffdf4;
+        }
+
+        .alert-item.critical {
+            border-left-color: var(--danger);
+            background: #fdf5f5;
+        }
+
+        .alert-item.success {
+            border-left-color: var(--success);
+            background: #f4fbf7;
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <img src="assets/logo-casabe-real.png" alt="Casabe Real">
+            <h2>SCCR v2.5.0</h2>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="dashboard.html"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+            <li><a href="vendedor.html"><i class="fa-solid fa-user-tie"></i> Vendedores</a></li>
+            <li><a href="clientes.html"><i class="fa-solid fa-users"></i> Clientes (Ficha 360°)</a></li>
+            <li><a href="propuesta.html"><i class="fa-solid fa-file-invoice-dollar"></i> Propuestas</a></li>
+            <li><a href="pedidos.html"><i class="fa-solid fa-cart-shopping"></i> Pedidos</a></li>
+            <li><a href="metas.html"><i class="fa-solid fa-bullseye"></i> Metas & Proyecciones</a></li>
+            <li><a href="reportes.html"><i class="fa-solid fa-clipboard-user"></i> Reporte de Gestión</a></li>
+            <li><a href="bi_ia.html" class="active"><i class="fa-solid fa-brain"></i> Inteligencia & IA</a></li>
+        </ul>
+    </aside>
+
+    <div class="main-content">
+        <header>
+            <div class="breadcrumb">
+                Inicio / <span>Inteligencia de Negocio & Centro IA</span>
+            </div>
+            <div class="user-profile">
+                <div class="user-avatar">GA</div>
+                <div style="font-size: 14px; font-weight: 600;">Gerencia Comercial</div>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="page-header">
+                <h1>Inteligencia de Negocio y Centro IA</h1>
+                <p>Monitoreo centralizado de los 10 KPIs estratégicos y análisis contextual impulsado por el Agente IA de Casabe Real.</p>
+            </div>
+
+            <div class="kpi-section-card">
+                <div class="kpi-section-header" onclick="toggleSection('embudo-body', 'embudo-icon')">
+                    <div class="kpi-section-title">
+                        <i class="fa-solid fa-filter"></i> Módulo 1: KPIs de Embudo Comercial
+                    </div>
+                    <i class="fa-solid fa-chevron-down toggle-icon" id="embudo-icon"></i>
+                </div>
+                <div class="kpi-section-body" id="embudo-body">
+                    <div class="kpi-card">
+                        <div>
+                            <div class="kpi-header-row">
+                                <span class="kpi-title">Valor Ponderado Embudo</span>
+                                <span class="kpi-badge badge-success">Saludable</span>
+                            </div>
+                            <div class="kpi-value">$24,850</div>
+                        </div>
+                        <div class="kpi-formula">Fuente: embudo × probabilidad por etapa</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div>
+                            <div class="kpi-header-row">
+                                <span class="kpi-title">Win Rate</span>
+                                <span class="kpi-badge badge-success">≥ 30% Meta</span>
+                            </div>
+                            <div class="kpi-value">34.2%</div>
+                        </div>
+                        <div class="kpi-formula">Fuente: pedidos nuevos ÷ oportunidades totales</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div>
+                            <div class="kpi-header-row">
+                                <span class="kpi-title">Mix de Producto</span>
+                                <span class="kpi-badge badge-warning">Pasapalo Líder</span>
+                            </div>
+                            <div class="kpi-value">58% Pasapalo</div>
+                        </div>
+                        <div class="kpi-formula">Fuente: pedidos_raw desglosado por producto</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="kpi-section-card">
+                <div class="kpi-section-header" onclick="toggleSection('crm-body', 'crm-icon')">
+                    <div class="kpi-section-title">
+                        <i class="fa-solid fa-address-book"></i> Módulo 2: KPIs de CRM & Relacionamiento
+                    </div>
+                    <i class="fa-solid fa-chevron-down toggle-icon" id="crm-icon"></i>
+                </div>
+                <div class="kpi-section-body" id="crm-body">
+                    <div class="kpi-card">
+                        <div>
+                            <div class="kpi-header-row">
+                                <span class="kpi-title">Tasa de Recurrencia</span>
+                                <span class="kpi-badge badge-success">14 días prom.</span>
+                            </div>
+                            <div class="kpi-value">82.5%</div>
+                        </div>
+                        <div class="kpi-formula">Fuente: clientes — días entre pedidos</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div>
+                            <div class="kpi-header-row">
+                                <span class="kpi-title">Clientes en Riesgo</span>
+                                <span class="kpi-badge badge-danger">12 Cuentas</span>
+                            </div>
+                            <div class="kpi-value">12</div>
+                        </div>
+                        <div class="kpi-formula">Fuente: días sin comprar vs. frecuencia promedio</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div>
+                            <div class="kpi-header-row">
+                                <span class="kpi-title">Ticket Promedio Segm.</span>
+                                <span class="kpi-badge badge-success">Estable</span>
+                            </div>
+                            <div class="kpi-value">$415.80</div>
+                        </div>
+                        <div class="kpi-formula">Fuente: pedidos_raw por vendedor/cliente/mes</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div>
+                            <div class="kpi-header-row">
+                                <span class="kpi-title">Valor de Vida (LTV)</span>
+                                <span class="kpi-badge badge-success">Alto Valor</span>
+                            </div>
+                            <div class="kpi-value">$7,480</div>
+                        </div>
+                        <div class="kpi-formula">Fuente: ticket × frecuencia × meses activo</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="kpi-section-card">
+                <div class="kpi-section-header" onclick="toggleSection('eficiencia-body', 'eficiencia-icon')">
+                    <div class="kpi-section-title">
+                        <i class="fa-solid fa-gauge-high"></i> Módulo 3: KPIs de Eficiencia Operativa
+                    </div>
+                    <i class="fa-solid fa-chevron-down toggle-icon" id="eficiencia-icon"></i>
+                </div>
+                <div class="kpi-section-body" id="eficiencia-body">
+                    <div class="kpi-card">
+                        <div>
+                            <div class="kpi-header-row">
+                                <span class="kpi-title">Conversaciones vs Pedidos</span>
+                                <span class="kpi-badge badge-success">Óptimo</span>
+                            </div>
+                            <div class="kpi-value">3.2 : 1</div>
+                        </div>
+                        <div class="kpi-formula">Fuente: oportunidades embudo vs. pedidos cerrados</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div>
+                            <div class="kpi-header-row">
+                                <span class="kpi-title">Tasa de Abandono</span>
+                                <span class="kpi-badge badge-warning">15.4%</span>
+                            </div>
+                            <div class="kpi-value">15.4%</div>
+                        </div>
+                        <div class="kpi-formula">Fuente: oportunidades perdidas ÷ totales</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div>
+                            <div class="kpi-header-row">
+                                <span class="kpi-title">Interacciones por Pedido</span>
+                                <span class="kpi-badge badge-success">2.8 contactos</span>
+                            </div>
+                            <div class="kpi-value">2.8</div>
+                        </div>
+                        <div class="kpi-formula">Fuente: campo num_contactos en Reporte de Gestión</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ai-center-grid">
+                <div class="card-box">
+                    <h3><i class="fa-solid fa-brain"></i> Centro de Inteligencia Comercial (Agente IA)</h3>
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="message ai">
+                                ¡Hola! Soy el Agente IA de Casabe Real. Analizo en tiempo real los reportes de gestión y las novedades comerciales. ¿Qué deseas consultar sobre el rendimiento actual, la cartera de clientes o las proyecciones de venta?
+                            </div>
+                        </div>
+                        <div class="chat-input-row">
+                            <input type="text" id="userInput" placeholder="Ej. ¿Cuáles clientes están en riesgo por falta de pedidos este mes?" onkeypress="handleKeyPress(event)">
+                            <button class="btn-primary" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-box">
+                    <h3><i class="fa-solid fa-sliders"></i> Contexto & Novedades</h3>
+                    <div class="form-group">
+                        <label>Registrar Novedad Comercial (Manual)</label>
+                        <textarea id="novedadInput" rows="3" placeholder="Ej. Ajuste de precios 5% en línea Pasapalo a partir del lunes..."></textarea>
+                    </div>
+                    <button class="btn-primary" style="width: 100%; padding: 10px; margin-bottom: 20px;" onclick="agregarNovedad()">Ingresar a Memoria IA</button>
+
+                    <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-sec); margin-bottom: 8px;">Feed de Alertas Activas</label>
+                    <div class="alert-feed-list" id="alertFeed">
+                        <div class="alert-item critical">
+                            <span>12 Clientes superaron frecuencia sin recompra.</span>
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                        <div class="alert-item">
+                            <span>Incremento de 5% en costos de despacho zona Norte.</span>
+                            <i class="fa-solid fa-circle-info"></i>
+                        </div>
+                        <div class="alert-item success">
+                            <span>Meta semanal superada en un 104% (Canal Restaurante).</span>
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Función para colapsar / expandir secciones de KPIs
+        function toggleSection(bodyId, iconId) {
+            const body = document.getElementById(bodyId);
+            const icon = document.getElementById(iconId);
+            body.classList.toggle('collapsed');
+            if (body.classList.contains('collapsed')) {
+                icon.style.transform = 'rotate(-90deg)';
+            } else {
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Simulación de interacción con el Agente IA
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const chatMessages = document.getElementById('chatMessages');
+            const text = input.value.trim();
+
+            if (!text) return;
+
+            // Mensaje del usuario
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message user';
+            userMsg.textContent = text;
+            chatMessages.appendChild(userMsg);
+            input.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Respuesta simulada del Agente IA basada en el contexto de Casabe Real
+            setTimeout(() => {
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'message ai';
+                
+                let responseText = "Analizando las bases de datos y la memoria comercial de Casabe Real... ";
+                const lower = text.toLowerCase();
+
+                if (lower.includes('riesgo') || lower.includes('cliente')) {
+                    responseText += "Actualmente se detectan 12 cuentas en riesgo en el Módulo CRM (superaron su ciclo de recompra estimado). Se recomienda activar visitas prioritarias asignadas al rutero de los asesores.";
+                } else if (lower.includes('meta') || lower.includes('venta') || lower.includes('cumplimiento')) {
+                    responseText += "El cumplimiento global del mes se encuentra en el umbral verde (≥ 90%), destacando la línea Pasapalo con un mix del 58%. El Run-Rate proyecta un cierre de ciclo exitoso.";
+                } else {
+                    responseText += "He registrado tu consulta. Con base en los reportes de gestión recientes y el embudo comercial, la operación mantiene estabilidad con un Win Rate de 34.2%. ¿Requieres algún desglose adicional por vendedor o zona?";
+                }
+
+                aiMsg.textContent = responseText;
+                chatMessages.appendChild(aiMsg);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 800);
+        }
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // Función para agregar novedades comerciales al feed
+        function agregarNovedad() {
+            const textarea = document.getElementById('novedadInput');
+            const feed = document.getElementById('alertFeed');
+            const text = textarea.value.trim();
+
+            if (!text) return;
+
+            const newItem = document.createElement('div');
+            newItem.className = 'alert-item';
+            newItem.innerHTML = `<span>${text}</span><i class="fa-solid fa-circle-info"></i>`;
+            
+            feed.prepend(newItem);
+            textarea.value = '';
+        }
+    </script>
+</body>
+</html>
