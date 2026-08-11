@@ -18,7 +18,7 @@
     
     // URL Principal del Web App desplegado en Google Apps Script (Code.gs)
     // Reemplaza esta constante con la URL obtenida al publicar tu Aplicación Web
-    APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbx_TU_APPS_SCRIPT_URL_AQUI/exec',
+    APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbxL5c2i3KcZi7hu3U5dJTBES_7h_sIkNxiY9h2-VA2KnxD6NesC76mdpdXTvc_q8kFXOQ/exec',
     
     // Claves para el almacenamiento local (localStorage)
     STORAGE_KEYS: {
