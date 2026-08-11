@@ -3,101 +3,85 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Casabe Real &mdash; Acceso al Sistema</title>
+<title>Casabe Real &mdash; Acceso al Sistema (SCCR)</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<script src="config.js"></script>
 
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   
-  /* Tokens de Diseño Sincronizados con CONFIG.JS */
+  /* Variables alineadas con SCCR_CONFIG.THEME */
   :root {
-    --rojo: #D71920;          /* Primario Rojo Casabe */
-    --rojo-d: #C8181E;        /* Primario Dark / Hover */
-    --rojo-xs: #FEF2F2;       /* Fondo Alerta Error */
-    --fondo: #F5F7FA;         /* Fondo General de Reducción de Fatiga */
-    --card-bg: #FFFFFF;      /* Fondo de Tarjetas */
-    --borde: #E2E8F0;        /* Bordes Suaves */
-    --texto-p: #2D3436;      /* Texto Principal */
-    --texto-s: #7F8C8D;      /* Texto Secundario */
-    --verde: #2ECC71;        /* Éxito / Al Día */
-    --verde-xs: #ECFDF5;
-    --naranja: #F39C12;      /* Advertencia */
-    --naranja-xs: #FFFBEB;
-    --r: 16px;
-    --r-sm: 10px;
-    --sh-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+    --rojo: #D71920;
+    --rojo-d: #A01015;
+    --rojo-xs: #FEF2F2;
+    --fondo: #F5F7FA;
+    --borde: #E5E7EB;
+    --gris: #7F8C8D;
+    --negro: #2D3436;
+    --verde: #2ECC71;
+    --amarillo: #F39C12;
+    --r: 12px;
+    --r-sm: 8px;
+    --sh: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
   }
 
   body {
-    font-family: "Inter", sans-serif;
+    font-family: 'Inter', sans-serif;
     background-color: var(--fondo);
-    background-image: 
-      radial-gradient(circle at 90% 10%, rgba(215, 25, 32, 0.08), transparent 40%),
-      radial-gradient(circle at 10% 90%, rgba(215, 25, 32, 0.05), transparent 40%);
+    color: var(--negro);
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 20px;
-    color: var(--texto-p);
   }
 
-  .card {
-    background: var(--card-bg);
-    border-radius: var(--r);
+  .login-card {
+    background: #FFFFFF;
     width: 100%;
     max-width: 440px;
-    box-shadow: var(--sh-lg);
+    border-radius: var(--r);
+    box-shadow: var(--sh);
     border: 1px solid var(--borde);
     overflow: hidden;
-    position: relative;
   }
 
-  .card-header {
-    background: linear-gradient(135deg, var(--rojo) 0%, var(--rojo-d) 100%);
-    padding: 32px 24px 26px;
-    text-align: center;
-    color: #FFFFFF;
-    position: relative;
-  }
-
-  .brand-logo-container {
-    width: 80px;
-    height: 80px;
+  .brand-header {
     background: #FFFFFF;
-    border-radius: 20px;
-    margin: 0 auto 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-    padding: 8px;
+    padding: 32px 24px 20px 24px;
+    text-align: center;
+    border-bottom: 1px solid var(--borde);
   }
 
-  .brand-logo-container img {
-    max-width: 100%;
-    max-height: 100%;
+  .brand-logo-img {
+    max-width: 190px;
+    height: auto;
     object-fit: contain;
+    margin-bottom: 8px;
   }
 
-  .card-header h1 {
-    font-family: "Montserrat", sans-serif;
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-    margin-bottom: 4px;
+  .brand-logo-fallback {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--rojo);
+    text-transform: uppercase;
+    letter-spacing: -0.5px;
   }
 
-  .card-header p {
+  .brand-subtitle {
     font-size: 13px;
-    opacity: 0.92;
-    font-weight: 400;
+    color: var(--gris);
+    font-weight: 500;
+    margin-top: 4px;
   }
 
+  /* Pestañas */
   .tabs {
     display: flex;
     background: #F8FAFC;
@@ -106,27 +90,25 @@
 
   .tab-btn {
     flex: 1;
-    padding: 14px;
+    padding: 14px 10px;
+    background: transparent;
     border: none;
-    background: none;
-    font-family: "Montserrat", sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 13px;
     font-weight: 600;
-    color: var(--texto-s);
+    color: var(--gris);
     cursor: pointer;
     transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+    border-bottom: 3px solid transparent;
   }
 
   .tab-btn.active {
     color: var(--rojo);
+    border-bottom-color: var(--rojo);
     background: #FFFFFF;
-    border-bottom: 2px solid var(--rojo);
   }
 
+  /* Formulario */
   .card-body {
     padding: 28px 24px;
   }
@@ -137,9 +119,11 @@
 
   .form-group label {
     display: block;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
-    color: var(--texto-p);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--negro);
     margin-bottom: 6px;
   }
 
@@ -147,12 +131,12 @@
     position: relative;
   }
 
-  .input-wrapper i.input-icon {
+  .input-wrapper i {
     position: absolute;
     left: 14px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--texto-s);
+    color: var(--gris);
     font-size: 14px;
   }
 
@@ -160,27 +144,30 @@
     width: 100%;
     padding: 12px 14px 12px 40px;
     font-size: 14px;
-    color: var(--texto-p);
-    border: 1.5px solid var(--borde);
+    font-family: 'Inter', sans-serif;
+    border: 1px solid var(--borde);
     border-radius: var(--r-sm);
-    outline: none;
-    transition: all 0.2s ease;
     background: #FFFFFF;
+    color: var(--negro);
+    outline: none;
+    transition: border-color 0.2s;
   }
 
   .form-control:focus {
     border-color: var(--rojo);
-    box-shadow: 0 0 0 3px rgba(215, 25, 32, 0.12);
+    box-shadow: 0 0 0 3px rgba(215, 25, 32, 0.1);
   }
 
-  .select-control {
+  select.form-control {
+    padding-left: 40px;
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%237F8C8D'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%3c7F8C8D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
     background-repeat: no-repeat;
-    background-position: right 14px center;
+    background-position: right 12px center;
     background-size: 16px;
   }
 
+  /* Botones */
   .btn-submit {
     width: 100%;
     padding: 14px;
@@ -188,58 +175,52 @@
     color: #FFFFFF;
     border: none;
     border-radius: var(--r-sm);
-    font-family: "Montserrat", sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 14px;
     font-weight: 700;
     cursor: pointer;
-    transition: background 0.2s ease, transform 0.1s ease;
+    transition: background 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     margin-top: 10px;
-    box-shadow: 0 4px 12px rgba(215, 25, 32, 0.25);
   }
 
   .btn-submit:hover {
     background: var(--rojo-d);
   }
 
-  .btn-submit:active {
-    transform: scale(0.99);
-  }
-
   .btn-submit:disabled {
-    opacity: 0.65;
+    opacity: 0.6;
     cursor: not-allowed;
-    box-shadow: none;
   }
 
+  /* Alertas */
   .alert {
     padding: 12px 14px;
     border-radius: var(--r-sm);
     font-size: 13px;
     margin-bottom: 18px;
     display: none;
-    line-height: 1.4;
     align-items: center;
     gap: 10px;
   }
 
-  .alert-error {
+  .alert-danger {
     background: var(--rojo-xs);
-    color: #991B1B;
+    color: var(--rojo-d);
     border: 1px solid #FCA5A5;
   }
 
   .alert-success {
-    background: var(--verde-xs);
+    background: #ECFDF5;
     color: #065F46;
-    border: 1px solid #6EE7B7;
+    border: 1px solid #A7F3D0;
   }
 
   .alert-warning {
-    background: var(--naranja-xs);
+    background: #FFFBEB;
     color: #92400E;
     border: 1px solid #FDE68A;
   }
@@ -247,112 +228,103 @@
   .spinner {
     width: 16px;
     height: 16px;
-    border: 2px solid #FFFFFF;
-    border-top-color: transparent;
+    border: 2px solid #ffffff;
+    border-bottom-color: transparent;
     border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    display: none;
+    display: inline-block;
+    animation: rotation 1s linear infinite;
   }
 
-  @keyframes spin {
-    to { transform: rotate(360deg); }
+  @keyframes rotation {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
 
   .footer-text {
-    text-align: center;
-    font-size: 12px;
-    color: var(--texto-s);
     margin-top: 24px;
+    font-size: 12px;
+    color: var(--gris);
+    text-align: center;
   }
 </style>
 </head>
 <body>
 
-<div class="card">
-  <div class="card-header">
-    <div class="brand-logo-container">
-      <img src="assets/logo-casabe-real.png" alt="Casabe Real" onerror="this.onerror=null; this.parentElement.innerHTML='<span style=\'font-weight:800;font-size:24px;color:var(--rojo)\'>CR</span>';">
-    </div>
-    <h1>Casabe Real</h1>
-    <p>Sistema Comercial de Gestión (SCCR v2.5.0)</p>
+<div class="login-card">
+  <div class="brand-header">
+    <img src="assets/logo-casabe-real.png" alt="Casabe Real" class="brand-logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
+    <div id="logo-fallback" class="brand-logo-fallback" style="display:none;">CASABE REAL</div>
+    <div class="brand-subtitle">Sistema Comercial Casabe Real (SCCR)</div>
   </div>
 
   <div class="tabs">
-    <button class="tab-btn active" id="tab-btn-login" onclick="switchTab('login')">
-      <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+    <button type="button" class="tab-btn active" onclick="switchTab('login')">
+      <i class="fas fa-key"></i> Iniciar Sesión
     </button>
-    <button class="tab-btn" id="tab-btn-registro" onclick="switchTab('registro')">
-      <i class="fas fa-user-plus"></i> Solicitar Acceso
+    <button type="button" class="tab-btn" onclick="switchTab('registro')">
+      <i class="fas fa-user-plus"></i> Registro de Nuevo Usuario
     </button>
   </div>
 
   <div class="card-body">
-    <div id="alert-msg" class="alert"></div>
+    <div id="alert-box" class="alert"></div>
 
     <form id="form-login" onsubmit="handleLogin(event)">
       <div class="form-group">
-        <label for="login-user">Usuario / Cédula / RIF</label>
+        <label for="login-user">Usuario</label>
         <div class="input-wrapper">
-          <i class="fas fa-user input-icon"></i>
-          <input type="text" id="login-user" class="form-control" placeholder="Ej: v_perez" required autocomplete="username">
+          <i class="fas fa-user"></i>
+          <input type="text" id="login-user" class="form-control" placeholder="Ingresa tu usuario" required autocomplete="username">
         </div>
       </div>
 
       <div class="form-group">
         <label for="login-pass">Contraseña</label>
         <div class="input-wrapper">
-          <i class="fas fa-lock input-icon"></i>
+          <i class="fas fa-lock"></i>
           <input type="password" id="login-pass" class="form-control" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" required autocomplete="current-password">
         </div>
       </div>
 
       <button type="submit" id="btn-login" class="btn-submit">
-        <span id="sp-login" class="spinner"></span>
-        <span id="txt-login"><i class="fas fa-arrow-right-to-bracket"></i> Ingresar al Sistema</span>
+        <span id="sp-login" class="spinner" style="display:none;"></span>
+        <span id="txt-login"><i class="fas fa-sign-in-alt"></i> Entrar al Sistema</span>
       </button>
     </form>
 
-    <form id="form-registro" style="display: none;" onsubmit="handleRegistro(event)">
+    <form id="form-registro" style="display:none;" onsubmit="handleRegistro(event)">
       <div class="form-group">
-        <label for="reg-user">Usuario deseado</label>
+        <label for="reg-user">Usuario para el Sistema</label>
         <div class="input-wrapper">
-          <i class="fas fa-at input-icon"></i>
-          <input type="text" id="reg-user" class="form-control" placeholder="Ej: v_perez" required>
+          <i class="fas fa-at"></i>
+          <input type="text" id="reg-user" class="form-control" placeholder="Ej: perez.j" required autocomplete="off">
         </div>
       </div>
 
       <div class="form-group">
-        <label for="reg-nombre">Nombre y Apellido</label>
+        <label for="reg-nombre">Nombre Completo</label>
         <div class="input-wrapper">
-          <i class="fas fa-id-card input-icon"></i>
-          <input type="text" id="reg-nombre" class="form-control" placeholder="Ej: Víctor Pérez" required>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="reg-email">Correo Electrónico</label>
-        <div class="input-wrapper">
-          <i class="fas fa-envelope input-icon"></i>
-          <input type="email" id="reg-email" class="form-control" placeholder="correo@ejemplo.com" required>
+          <i class="fas fa-id-card"></i>
+          <input type="text" id="reg-nombre" class="form-control" placeholder="Ej: Juan Pérez" required autocomplete="name">
         </div>
       </div>
 
       <div class="form-group">
         <label for="reg-telefono">Teléfono / WhatsApp</label>
         <div class="input-wrapper">
-          <i class="fas fa-phone input-icon"></i>
-          <input type="tel" id="reg-telefono" class="form-control" placeholder="+58 412 1234567" required>
+          <i class="fas fa-phone"></i>
+          <input type="tel" id="reg-telefono" class="form-control" placeholder="Ej: +58 412 1234567" required autocomplete="tel">
         </div>
       </div>
 
       <div class="form-group">
         <label for="reg-rol">Rol Solicitado</label>
         <div class="input-wrapper">
-          <i class="fas fa-briefcase input-icon"></i>
-          <select id="reg-rol" class="form-control select-control" required>
-            <option value="VENDEDOR">Vendedor / Asesor Comercial</option>
-            <option value="GERENTE">Gerente Comercial</option>
-            <option value="ADMINISTRADOR">CEO / Administrador General</option>
+          <i class="fas fa-user-tag"></i>
+          <select id="reg-rol" class="form-control">
+            <option value="vendedor">Vendedor / Asesor</option>
+            <option value="gerente">Gerente Comercial</option>
+            <option value="administrador">CEO / Administrador</option>
           </select>
         </div>
       </div>
@@ -360,85 +332,66 @@
       <div class="form-group">
         <label for="reg-pass">Contraseña</label>
         <div class="input-wrapper">
-          <i class="fas fa-key input-icon"></i>
-          <input type="password" id="reg-pass" class="form-control" placeholder="Mínimo 6 caracteres" minlength="6" required>
+          <i class="fas fa-lock"></i>
+          <input type="password" id="reg-pass" class="form-control" placeholder="Crea tu contraseña" required autocomplete="new-password">
         </div>
       </div>
 
       <button type="submit" id="btn-registro" class="btn-submit">
-        <span id="sp-registro" class="spinner"></span>
-        <span id="txt-registro"><i class="fas fa-paper-plane"></i> Enviar Solicitud</span>
+        <span id="sp-registro" class="spinner" style="display:none;"></span>
+        <span id="txt-registro"><i class="fas fa-user-check"></i> Registro de Nuevo Usuario</span>
       </button>
     </form>
-
-    <p class="footer-text">&copy; 2025 Casabe Real. Todos los derechos reservados.</p>
   </div>
 </div>
 
-<script src="config.js"></script>
+<div class="footer-text">
+  &copy; <span id="year-copy"></span> Casabe Real &bull; Todos los derechos reservados.
+</div>
 
 <script>
-  let currentTab = 'login';
+  document.getElementById('year-copy').textContent = new Date().getFullYear();
 
-  // Al cargar la página, redirigir si ya hay sesión activa
-  document.addEventListener('DOMContentLoaded', () => {
-    const activeUser = window.getSccrUser ? window.getSccrUser() : null;
-    if (activeUser && activeUser.role) {
-      window.redirectSccrByRole(activeUser.role);
+  // Redirección automática si ya existe una sesión activa
+  document.addEventListener('DOMContentLoaded', function() {
+    if (window.getSccrUser && window.redirectSccrByRole) {
+      const activeUser = window.getSccrUser();
+      if (activeUser && activeUser.user && activeUser.rol) {
+        window.redirectSccrByRole(activeUser.rol);
+      }
     }
   });
 
+  // Alternar entre pestañas Login / Registro
   function switchTab(tab) {
-    currentTab = tab;
     hideAlert();
+    const btnLogin = document.querySelectorAll('.tab-btn')[0];
+    const btnReg = document.querySelectorAll('.tab-btn')[1];
+    const formLogin = document.getElementById('form-login');
+    const formReg = document.getElementById('form-registro');
 
-    document.getElementById('tab-btn-login').classList.toggle('active', tab === 'login');
-    document.getElementById('tab-btn-registro').classList.toggle('active', tab === 'registro');
-
-    document.getElementById('form-login').style.display = tab === 'login' ? 'block' : 'none';
-    document.getElementById('form-registro').style.display = tab === 'registro' ? 'block' : 'none';
-  }
-
-  function showAlert(msg, type = 'error') {
-    const box = document.getElementById('alert-msg');
-    box.className = 'alert alert-' + type;
-    
-    let iconClass = 'fa-exclamation-circle';
-    if (type === 'success') iconClass = 'fa-check-circle';
-    if (type === 'warning') iconClass = 'fa-triangle-exclamation';
-
-    box.innerHTML = `<i class="fas ${iconClass}"></i> <span>${msg}</span>`;
-    box.style.display = 'flex';
-  }
-
-  function hideAlert() {
-    const box = document.getElementById('alert-msg');
-    box.style.display = 'none';
-  }
-
-  // Generación de Hash SHA-256 para contraseñas seguras
-  async function sha256(str) {
-    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
-    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-  }
-
-  // Envoltorio de petición a la API respaldado por config.js
-  async function sendRequest(payload) {
-    if (typeof window.sendSccrRequest === 'function') {
-      return await window.sendSccrRequest(payload.action, payload);
+    if (tab === 'login') {
+      btnLogin.classList.add('active');
+      btnReg.classList.remove('active');
+      formLogin.style.display = 'block';
+      formReg.style.display = 'none';
     } else {
-      // Fallback directo si no detecta config.js
-      const endpoint = window.APPS_SCRIPT_URL || SCCR_CONFIG.APPS_SCRIPT_URL;
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload)
-      });
-      return await res.json();
+      btnReg.classList.add('active');
+      btnLogin.classList.remove('active');
+      formReg.style.display = 'block';
+      formLogin.style.display = 'none';
     }
   }
 
-  // Manejo del Formulario de Inicio de Sesión
+  // Generador Hash SHA-256
+  async function sha256(str) {
+    const buffer = new TextEncoder().encode(str);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  // Ejecución de Login
   async function handleLogin(e) {
     e.preventDefault();
     hideAlert();
@@ -447,7 +400,7 @@
     const pass = document.getElementById('login-pass').value;
 
     if (!user || !pass) {
-      showAlert('Por favor ingresa usuario y contraseña.');
+      showAlert('Por favor ingrese su usuario y contraseña.', 'danger');
       return;
     }
 
@@ -461,56 +414,48 @@
         pass_hash: passHash
       });
 
-      if (res.status === 'SUCCESS' || res.success) {
-        const userData = res.user || {
-          username: user,
-          nombre: res.nombre || user,
-          role: res.rol || 'VENDEDOR'
-        };
-
-        // Guardar sesión en localStorage mediante config.js
+      if (res.status === 'SUCCESS') {
+        showAlert('¡Acceso correcto! Redirigiendo...', 'success');
+        
+        // Guardar sesión en config.js
         if (window.setSccrUser) {
-          window.setSccrUser(userData);
-        } else {
-          localStorage.setItem('sccr_user_session', JSON.stringify(userData));
+          window.setSccrUser(res.user);
         }
 
-        showAlert('¡Autenticación exitosa! Redirigiendo...', 'success');
-        
         setTimeout(() => {
           if (window.redirectSccrByRole) {
-            window.redirectSccrByRole(userData.role);
+            window.redirectSccrByRole(res.user.rol);
           } else {
-            window.location.href = (userData.role.toLowerCase() + '.html');
+            window.location.href = 'vendedor.html';
           }
         }, 1000);
 
       } else if (res.status === 'PENDING') {
-        showAlert(res.message || 'Tu usuario aún está pendiente de aprobación por la administración.', 'warning');
+        showAlert(res.message || 'Tu solicitud de acceso aún está pendiente de aprobación.', 'warning');
       } else {
-        showAlert(res.message || 'Usuario o contraseña incorrectos.');
+        showAlert(res.message || 'Usuario o contraseña incorrectos.', 'danger');
       }
+
     } catch (err) {
-      showAlert('Error al conectar con el servidor: ' + err.message);
+      showAlert('Error al conectar con la base de datos SCCR: ' + err.message, 'danger');
     } finally {
       setLoading('login', false);
     }
   }
 
-  // Manejo del Formulario de Registro / Solicitud de Acceso
+  // Ejecución de Registro de Nuevo Usuario
   async function handleRegistro(e) {
     e.preventDefault();
     hideAlert();
 
     const user = document.getElementById('reg-user').value.trim();
     const nombre = document.getElementById('reg-nombre').value.trim();
-    const email = document.getElementById('reg-email').value.trim();
     const telefono = document.getElementById('reg-telefono').value.trim();
     const rol = document.getElementById('reg-rol').value;
     const pass = document.getElementById('reg-pass').value;
 
-    if (!user || !nombre || !email || !telefono || !pass) {
-      showAlert('Todos los campos son obligatorios para enviar la solicitud.');
+    if (!user || !nombre || !telefono || !pass) {
+      showAlert('Todos los campos son obligatorios.', 'danger');
       return;
     }
 
@@ -518,29 +463,59 @@
 
     try {
       const passHash = await sha256(pass);
+      
+      // Alias de correo institucional para mantener compatibilidad técnica con Code.gs
+      const emailAlias = `${user.toLowerCase().replace(/\s+/g, '')}@casabereal.local`;
+
       const res = await sendRequest({
         action: 'registrar',
         user: user,
         nombre: nombre,
-        email: email,
+        email: emailAlias,
         telefono: telefono,
         rol: rol,
         pass_hash: passHash
       });
 
-      if (res.status === 'SUCCESS' || res.success) {
-        showAlert(res.message || 'Solicitud enviada con éxito. Un administrador revisará tu cuenta.', 'success');
+      if (res.status === 'SUCCESS') {
+        showAlert(res.message, 'success');
         document.getElementById('form-registro').reset();
       } else {
-        showAlert(res.message || 'No se pudo procesar la solicitud de registro.');
+        showAlert(res.message || 'No se pudo procesar el registro.', 'danger');
       }
     } catch (err) {
-      showAlert('Error al procesar el registro: ' + err.message);
+      showAlert('Error al procesar la solicitud: ' + err.message, 'danger');
     } finally {
       setLoading('registro', false);
     }
   }
 
+  // Envío Unificado a la API de Google Apps Script
+  async function sendRequest(payload) {
+    // Si la función global de config.js está disponible, se utiliza directamente
+    if (window.sendSccrRequest) {
+      return await window.sendSccrRequest(payload.action, payload);
+    }
+
+    // Respaldo de conexión asíncrona
+    const endpoint = (typeof SCCR_CONFIG !== 'undefined' && SCCR_CONFIG.APPS_SCRIPT_URL)
+      ? SCCR_CONFIG.APPS_SCRIPT_URL
+      : '';
+
+    if (!endpoint) {
+      throw new Error('No se ha configurado la URL de Apps Script en config.js');
+    }
+
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+
+    return await response.json();
+  }
+
+  // Controladores de UI
   function setLoading(type, isLoading) {
     const btn = document.getElementById('btn-' + type);
     const sp = document.getElementById('sp-' + type);
@@ -549,6 +524,23 @@
     btn.disabled = isLoading;
     sp.style.display = isLoading ? 'inline-block' : 'none';
     txt.style.opacity = isLoading ? '0.7' : '1';
+  }
+
+  function showAlert(msg, type = 'danger') {
+    const box = document.getElementById('alert-box');
+    box.className = `alert alert-${type}`;
+    box.style.display = 'flex';
+    
+    let icon = 'fa-exclamation-circle';
+    if (type === 'success') icon = 'fa-check-circle';
+    if (type === 'warning') icon = 'fa-clock';
+
+    box.innerHTML = `<i class="fas ${icon}"></i> <span>${msg}</span>`;
+  }
+
+  function hideAlert() {
+    const box = document.getElementById('alert-box');
+    box.style.display = 'none';
   }
 </script>
 </body>
