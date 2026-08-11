@@ -10,6 +10,264 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  
+  /* Tokens de Diseño Sincronizados con CONFIG.JS */
+  :root {
+    --rojo: #D71920;          /* Primario Rojo Casabe */
+    --rojo-d: #C8181E;        /* Primario Dark / Hover */
+    --rojo-xs: #FEF2F2;       /* Fondo Alerta Error */
+    --fondo: #F5F7FA;         /* Fondo General de Reducción de Fatiga */
+    --card-bg: #FFFFFF;      /* Fondo de Tarjetas */
+    --borde: #E2E8F0;        /* Bordes Suaves */
+    --texto-p: #2D3436;      /* Texto Principal */
+    --texto-s: #7F8C8D;      /* Texto Secundario */
+    --verde: #2ECC71;        /* Éxito / Al Día */
+    --verde-xs: #ECFDF5;
+    --naranja: #F39C12;      /* Advertencia */
+    --naranja-xs: #FFFBEB;
+    --r: 16px;
+    --r-sm: 10px;
+    --sh-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  }
+
+  body {
+    font-family: "Inter", sans-serif;
+    background-color: var(--fondo);
+    background-image: 
+      radial-gradient(circle at 90% 10%, rgba(215, 25, 32, 0.08), transparent 40%),
+      radial-gradient(circle at 10% 90%, rgba(215, 25, 32, 0.05), transparent 40%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: var(--texto-p);
+  }
+
+  .card {
+    background: var(--card-bg);
+    border-radius: var(--r);
+    width: 100%;
+    max-width: 440px;
+    box-shadow: var(--sh-lg);
+    border: 1px solid var(--borde);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, var(--rojo) 0%, var(--rojo-d) 100%);
+    padding: 32px 24px 26px;
+    text-align: center;
+    color: #FFFFFF;
+    position: relative;
+  }
+
+  .brand-logo-container {
+    width: 80px;
+    height: 80px;
+    background: #FFFFFF;
+    border-radius: 20px;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    padding: 8px;
+  }
+
+  .brand-logo-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  .card-header h1 {
+    font-family: "Montserrat", sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    margin-bottom: 4px;
+  }
+
+  .card-header p {
+    font-size: 13px;
+    opacity: 0.92;
+    font-weight: 400;
+  }
+
+  .tabs {
+    display: flex;
+    background: #F8FAFC;
+    border-bottom: 1px solid var(--borde);
+  }
+
+  .tab-btn {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    background: none;
+    font-family: "Montserrat", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--texto-s);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .tab-btn.active {
+    color: var(--rojo);
+    background: #FFFFFF;
+    border-bottom: 2px solid var(--rojo);
+  }
+
+  .card-body {
+    padding: 28px 24px;
+  }
+
+  .form-group {
+    margin-bottom: 18px;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--texto-p);
+    margin-bottom: 6px;
+  }
+
+  .input-wrapper {
+    position: relative;
+  }
+
+  .input-wrapper i.input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--texto-s);
+    font-size: 14px;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 12px 14px 12px 40px;
+    font-size: 14px;
+    color: var(--texto-p);
+    border: 1.5px solid var(--borde);
+    border-radius: var(--r-sm);
+    outline: none;
+    transition: all 0.2s ease;
+    background: #FFFFFF;
+  }
+
+  .form-control:focus {
+    border-color: var(--rojo);
+    box-shadow: 0 0 0 3px rgba(215, 25, 32, 0.12);
+  }
+
+  .select-control {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%237F8C8D'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+  }
+
+  .btn-submit {
+    width: 100%;
+    padding: 14px;
+    background: var(--rojo);
+    color: #FFFFFF;
+    border: none;
+    border-radius: var(--r-sm);
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+    box-shadow: 0 4px 12px rgba(215, 25, 32, 0.25);
+  }
+
+  .btn-submit:hover {
+    background: var(--rojo-d);
+  }
+
+  .btn-submit:active {
+    transform: scale(0.99);
+  }
+
+  .btn-submit:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .alert {
+    padding: 12px 14px;
+    border-radius: var(--r-sm);
+    font-size: 13px;
+    margin-bottom: 18px;
+    display: none;
+    line-height: 1.4;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .alert-error {
+    background: var(--rojo-xs);
+    color: #991B1B;
+    border: 1px solid #FCA5A5;
+  }
+
+  .alert-success {
+    background: var(--verde-xs);
+    color: #065F46;
+    border: 1px solid #6EE7B7;
+  }
+
+  .alert-warning {
+    background: var(--naranja-xs);
+    color: #92400E;
+    border: 1px solid #FDE68A;
+  }
+
+  .spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #FFFFFF;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: none;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .footer-text {
+    text-align: center;
+    font-size: 12px;
+    color: var(--texto-s);
+    margin-top: 24px;
+  }
+</style>
+</head>
+<body>
+
 <div class="card">
   <div class="card-header">
     <div class="brand-logo-container">
@@ -24,7 +282,7 @@
       <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
     </button>
     <button class="tab-btn" id="tab-btn-registro" onclick="switchTab('registro')">
-      <i class="fas fa-user-plus"></i> Registro Nuevo Usuario
+      <i class="fas fa-user-plus"></i> Solicitar Acceso
     </button>
   </div>
 
@@ -68,6 +326,14 @@
         <div class="input-wrapper">
           <i class="fas fa-id-card input-icon"></i>
           <input type="text" id="reg-nombre" class="form-control" placeholder="Ej: Víctor Pérez" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="reg-email">Correo Electrónico</label>
+        <div class="input-wrapper">
+          <i class="fas fa-envelope input-icon"></i>
+          <input type="email" id="reg-email" class="form-control" placeholder="correo@ejemplo.com" required>
         </div>
       </div>
 
@@ -238,6 +504,7 @@
 
     const user = document.getElementById('reg-user').value.trim();
     const nombre = document.getElementById('reg-nombre').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
     const telefono = document.getElementById('reg-telefono').value.trim();
     const rol = document.getElementById('reg-rol').value;
     const pass = document.getElementById('reg-pass').value;
@@ -255,6 +522,7 @@
         action: 'registrar',
         user: user,
         nombre: nombre,
+        email: email,
         telefono: telefono,
         rol: rol,
         pass_hash: passHash
