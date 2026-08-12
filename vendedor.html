@@ -1,482 +1,959 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Casabe Real &mdash; Portal Vendedor (SCCR v2.5.0)</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    /* Paleta Cromática Oficial SCCR */
-    --rojo: #D71920;
-    --rojo-d: #B5131A;
-    --rojo-xs: #FEF2F2;
-    --blanco: #FFFFFF;
-    --fondo: #F5F7FA;
-    --borde: #E5E7EB;
-    --texto-principal: #2D3436;
-    --texto-secundario: #7F8C8D;
-    --negro: #111827;
-    
-    /* Semáforos y Estados */
-    --verde: #2ECC71;
-    --verde-xs: #ECFDF5;
-    --amarillo: #F39C12;
-    --amarillo-xs: #FFFBEB;
-    --rojo-critico: #E74C3C;
-    --azul: #2563EB;
-    --azul-xs: #EFF6FF;
-    
-    /* Layout */
-    --r: 12px;
-    --r-sm: 8px;
-    --sh: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCCR v2.5.0 - Portal del Vendedor / Asesor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  
-  body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--fondo);
-    color: var(--texto-principal);
-    display: flex;
-    min-height: 100vh;
-  }
+    <style>
+        /* ==========================================================================
+           1. DESIGN SYSTEM & VARIABLES (SCCR v2.5.0 Master Specifications)
+           ========================================================================== */
+        :root {
+            --primary-red: #D71920;      /* Primario (Rojo Casabe) */
+            --bg-general: #F5F7FA;       /* Fondo General */
+            --card-bg: #FFFFFF;          /* Tarjetas / Header */
+            --text-primary: #2D3436;     /* Texto Principal */
+            --text-secondary: #7F8C8D;   /* Texto Secundario */
+            --status-success: #2ECC71;   /* Éxito / Alerta Verde (≥90%) */
+            --status-warning: #F39C12;   /* Advertencia / Amarillo (75%-89%) */
+            --status-critical: #E74C3C;  /* Alerta Crítica / Rojo (<75%) */
+            --border-color: #E2E8F0;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --font-title: 'Montserrat', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
 
-  h1, h2, h3, h4 { font-family: 'Montserrat', sans-serif; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-  /* SIDEBAR DE NAVEGACIÓN */
-  aside {
-    width: 260px;
-    background: var(--blanco);
-    border-right: 1px solid var(--borde);
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 0; bottom: 0; left: 0;
-    z-index: 100;
-  }
-  .sidebar-brand {
-    padding: 24px 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    border-bottom: 1px solid var(--borde);
-  }
-  .sidebar-brand img {
-    height: 36px;
-    object-fit: contain;
-  }
-  .sidebar-brand span {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    color: var(--negro);
-  }
-  .sidebar-menu {
-    padding: 20px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    overflow-y: auto;
-    flex: 1;
-  }
-  .menu-label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    color: var(--texto-secundario);
-    padding: 10px 12px 4px;
-    letter-spacing: 0.5px;
-  }
-  .menu-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 14px;
-    border-radius: var(--r-sm);
-    color: var(--texto-principal);
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-  }
-  .menu-item:hover, .menu-item.active {
-    background-color: var(--rojo-xs);
-    color: var(--rojo);
-  }
-  .menu-icon {
-    font-size: 18px;
-    line-height: 1;
-    width: 24px;
-    text-align: center;
-  }
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-general);
+            color: var(--text-primary);
+            line-height: 1.5;
+            font-size: 14px;
+        }
 
-  /* CONTENIDO PRINCIPAL */
-  .main-content {
-    margin-left: 260px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-  }
+        /* ==========================================================================
+           2. HEADER & NAVEGACIÓN PRINCIPAL
+           ========================================================================== */
+        header.app-header {
+            background-color: var(--card-bg);
+            border-bottom: 2px solid var(--primary-red);
+            padding: 0.75rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-sm);
+        }
 
-  /* HEADER SUPERIOR */
-  header {
-    background: var(--blanco);
-    border-bottom: 1px solid var(--borde);
-    padding: 16px 32px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 90;
-  }
-  .breadcrumb {
-    font-size: 13px;
-    color: var(--texto-secundario);
-    margin-bottom: 4px;
-  }
-  .breadcrumb span { color: var(--rojo); font-weight: 600; }
-  .page-title {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--texto-principal);
-  }
-  .user-area {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .user-badge {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: var(--fondo);
-    padding: 8px 16px;
-    border-radius: 50px;
-    border: 1px solid var(--borde);
-  }
-  .user-avatar {
-    width: 36px; height: 36px;
-    background: var(--rojo);
-    color: var(--blanco);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 700;
-    font-size: 14px;
-  }
-  .user-info .name { font-size: 14px; font-weight: 600; color: var(--negro); }
-  .user-info .role { font-size: 12px; color: var(--texto-secundario); }
-  
-  .btn-logout {
-    background: var(--rojo-xs);
-    color: var(--rojo);
-    border: 1px solid var(--rojo);
-    padding: 8px 16px;
-    border-radius: 50px;
-    font-weight: 600;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn-logout:hover {
-    background: var(--rojo);
-    color: var(--blanco);
-  }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
 
-  /* CONTAINER / GRID DE 12 COLUMNAS */
-  .container {
-    padding: 32px;
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 24px;
-    max-width: 1600px;
-    margin: 0 auto;
-    width: 100%;
-  }
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-  .col-12 { grid-column: span 12; }
-  .col-8  { grid-column: span 8; }
-  .col-4  { grid-column: span 4; }
-  .col-6  { grid-column: span 6; }
+        .brand-container img {
+            height: 42px;
+            width: auto;
+            object-fit: contain;
+        }
 
-  @media(max-width: 1200px) {
-    .col-8, .col-4, .col-6 { grid-column: span 12; }
-  }
+        .brand-title h1 {
+            font-family: var(--font-title);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-red);
+            line-height: 1.1;
+        }
 
-  /* TARJETAS / COMPONENTES */
-  .card {
-    background: var(--blanco);
-    border-radius: var(--r);
-    border: 1px solid var(--borde);
-    box-shadow: var(--sh);
-    padding: 24px;
-  }
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  .card-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--texto-principal);
-  }
+        .brand-title span {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
 
-  /* KPIs SUPERIORES */
-  .kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 20px;
-    grid-column: span 12;
-  }
-  .kpi-card {
-    background: var(--blanco);
-    border: 1px solid var(--borde);
-    border-radius: var(--r);
-    padding: 20px;
-    box-shadow: var(--sh);
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    position: relative;
-    overflow: hidden;
-  }
-  .kpi-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; bottom: 0;
-    width: 4px;
-    background: var(--rojo);
-  }
-  .kpi-label { font-size: 13px; font-weight: 500; color: var(--texto-secundario); text-transform: uppercase; }
-  .kpi-value { font-size: 32px; font-weight: 700; color: var(--texto-principal); }
-  .kpi-sub { font-size: 12px; color: var(--verde); font-weight: 600; display: flex; align-items: center; gap: 4px; }
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #F8FAFC;
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+        }
 
-  /* TABLAS */
-  .table-responsive { width: 100%; overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
-  th { background: var(--fondo); color: var(--texto-secundario); font-weight: 600; padding: 12px 16px; border-bottom: 1px solid var(--borde); }
-  td { padding: 14px 16px; border-bottom: 1px solid var(--borde); color: var(--texto-principal); }
-  tr:hover td { background-color: var(--rojo-xs); }
+        .user-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background-color: var(--primary-red);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
 
-  /* BOTONES Y ACCIONES */
-  .btn {
-    background: var(--rojo);
-    color: var(--blanco);
-    border: none;
-    padding: 10px 20px;
-    border-radius: var(--r-sm);
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: background 0.2s;
-  }
-  .btn:hover { background: var(--rojo-d); }
-  
-  .badge {
-    padding: 4px 10px;
-    border-radius: 50px;
-    font-size: 12px;
-    font-weight: 600;
-  }
-  .badge.green { background: var(--verde-xs); color: var(--verde); }
-  .badge.yellow { background: var(--amarillo-xs); color: var(--amarillo); }
-  .badge.red { background: var(--rojo-xs); color: var(--rojo-critico); }
-  .badge.blue { background: var(--azul-xs); color: var(--azul); }
+        .user-info {
+            line-height: 1.2;
+        }
 
-  /* RUTERO & EMBUDO */
-  .rutero-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 16px;
-    border: 1px solid var(--borde);
-    border-radius: var(--r-sm);
-    margin-bottom: 10px;
-    background: var(--blanco);
-  }
-</style>
+        .user-name {
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        /* Navegación del Vendedor */
+        nav.main-nav {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-top: 4px;
+            border-top: 1px solid #EDF2F7;
+        }
+
+        .nav-link {
+            padding: 8px 14px;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 13px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover {
+            background-color: #FFF5F5;
+            color: var(--primary-red);
+        }
+
+        .nav-link.active {
+            background-color: var(--primary-red);
+            color: white;
+        }
+
+        /* ==========================================================================
+           3. METRICS QUICK BAR (SECCIÓN SUPERIOR DE CONTROL)
+           ========================================================================== */
+        .metrics-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            padding: 1rem 1.5rem 0.5rem;
+        }
+
+        .metric-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .metric-value {
+            font-family: var(--font-title);
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 4px 0;
+        }
+
+        .progress-dual {
+            margin-top: 6px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            margin-bottom: 2px;
+        }
+
+        .progress-bar-bg {
+            height: 6px;
+            background-color: #E2E8F0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 4px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        .traffic-light-dots {
+            display: flex;
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .dot-badge {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .dot-badge.green { background: #E8F8F0; color: #1E824C; }
+        .dot-badge.yellow { background: #FEF9E7; color: #D68910; }
+        .dot-badge.red { background: #FDEDEC; color: #CB4335; }
+
+        /* ==========================================================================
+           4. CONTENEDOR PRINCIPAL Y PANELES DÍNAMICOS
+           ========================================================================== */
+        main.main-container {
+            padding: 1rem 1.5rem;
+        }
+
+        .view-panel {
+            display: none;
+        }
+
+        .view-panel.active {
+            display: block;
+        }
+
+        /* BREADCRUMB */
+        .breadcrumb {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .breadcrumb span {
+            color: var(--primary-red);
+            font-weight: 600;
+        }
+
+        /* GRID Y CONTENEDORES */
+        .grid-12 {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 16px;
+        }
+
+        .col-12 { grid-column: span 12; }
+        .col-8  { grid-column: span 8; }
+        .col-6  { grid-column: span 6; }
+        .col-4  { grid-column: span 4; }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-family: var(--font-title);
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* TABLAS Y LISTAS */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table.data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        table.data-table th {
+            background-color: #F8FAFC;
+            color: var(--text-secondary);
+            padding: 10px 12px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        table.data-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        table.data-table tr:hover {
+            background-color: #FAFAFA;
+        }
+
+        /* FORMULARIOS (REPORTE DE GESTIÓN & PEDIDOS) */
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 9px 12px;
+            font-family: var(--font-body);
+            font-size: 13px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-red);
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            background: #F8FAFC;
+            padding: 6px 10px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* BOTONES */
+        .btn {
+            padding: 9px 16px;
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-red);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #B51218;
+        }
+
+        .btn-secondary {
+            background-color: #E2E8F0;
+            color: var(--text-primary);
+        }
+
+        /* PIPELINE EMBUDO 5 ETAPAS */
+        .funnel-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .funnel-stage {
+            background: #F8FAFC;
+            border-radius: var(--radius-sm);
+            padding: 10px;
+            border-top: 3px solid var(--border-color);
+        }
+
+        .funnel-stage.e1 { border-top-color: #3498DB; }
+        .funnel-stage.e2 { border-top-color: #9B59B6; }
+        .funnel-stage.e3 { border-top-color: #F39C12; }
+        .funnel-stage.e4 { border-top-color: #E67E22; }
+        .funnel-stage.e5 { border-top-color: #2ECC71; }
+
+        .funnel-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .funnel-card {
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 6px;
+            font-size: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* ADAPTABILIDAD MOBILE */
+        @media (max-width: 992px) {
+            .col-8, .col-6, .col-4 { grid-column: span 12; }
+            .funnel-container { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
 
-  <aside>
-    <div class="sidebar-brand">
-      <img src="assets/logo-casabe-real.png" alt="Casabe Real Logo">
-      <span>SCCR v2.5.0</span>
-    </div>
-    <div class="sidebar-menu">
-      <div class="menu-label">Navegación Principal</div>
-      <a href="dashboard.html" class="menu-item">
-        <span class="menu-icon">📊</span>
-        Dashboard
-      </a>
-      <a href="clientes.html" class="menu-item">
-        <span class="menu-icon">👥</span>
-        Clientes
-      </a>
-      <a href="metas.html" class="menu-item">
-        <span class="menu-icon">🎯</span>
-        Meta
-      </a>
-      <a href="propuesta.html" class="menu-item">
-        <span class="menu-icon">💡</span>
-        Propuesta
-      </a>
-      <a href="pedidos.html" class="menu-item">
-        <span class="menu-icon">📦</span>
-        Pedidos
-      </a>
-      <a href="reportes.html" class="menu-item">
-        <span class="menu-icon">📋</span>
-        Reporte de Gestión
-      </a>
-      <a href="embudo.html" class="menu-item">
-        <span class="menu-icon">🔻</span>
-        Embudo
-      </a>
-      <a href="bi_ia.html" class="menu-item">
-        <span class="menu-icon">🤖</span>
-        BI + IA
-      </a>
-    </div>
-  </aside>
+    <header class="app-header">
+        <div class="header-top">
+            <div class="brand-container">
+                <img src="assets/logo-casabe-real.png" alt="Casabe Real Logo" onerror="this.src='https://via.placeholder.com/140x40?text=Casabe+Real'">
+                <div class="brand-title">
+                    <h1>SCCR v2.5.0</h1>
+                    <span>Sistema Comercial Casabe Real</span>
+                </div>
+            </div>
 
-  <div class="main-content">
-    <header>
-      <div>
-        <div class="breadcrumb">Inicio / <span>Vendedor</span> / Portal Principal</div>
-        <h1 class="page-title">Panel de Asesor Comercial</h1>
-      </div>
-      <div class="user-area">
-        <div class="user-badge">
-          <div class="user-avatar" id="user-initials">VC</div>
-          <div class="user-info">
-            <div class="name" id="user-name-display">Asesor Comercial</div>
-            <div class="role">Vendedor Asignado</div>
-          </div>
+            <div class="user-profile">
+                <div class="user-avatar">JP</div>
+                <div class="user-info">
+                    <div class="user-name">Juan Pérez</div>
+                    <div class="user-role">Asesor Comercial - Gran Caracas</div>
+                </div>
+            </div>
         </div>
-        <button onclick="cerrarSesion()" class="btn-logout" title="Cerrar Sesión">🚪 Salir</button>
-      </div>
+
+        <nav class="main-nav">
+            <a href="#" class="nav-link active" onclick="switchTab('dashboard', this)"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            <a href="#" class="nav-link" onclick="switchTab('clientes', this)"><i class="fa-solid fa-users"></i> Clientes</a>
+            <a href="#" class="nav-link" onclick="switchTab('metas', this)"><i class="fa-solid fa-bullseye"></i> Meta</a>
+            <a href="#" class="nav-link" onclick="switchTab('reporte', this)"><i class="fa-solid fa-clipboard-list"></i> Reporte de Gestión</a>
+            <a href="#" class="nav-link" onclick="switchTab('embudo', this)"><i class="fa-solid fa-filter"></i> Embudo</a>
+            <a href="#" class="nav-link" onclick="switchTab('propuestas', this)"><i class="fa-solid fa-file-signature"></i> Propuestas</a>
+            <a href="#" class="nav-link" onclick="switchTab('pedidos', this)"><i class="fa-solid fa-cart-shopping"></i> Pedidos</a>
+        </nav>
     </header>
 
-    <div class="container">
-      
-      <div class="kpi-grid">
-        <div class="kpi-card">
-          <span class="kpi-label">Venta Acumulada ($ USD)</span>
-          <span class="kpi-value" id="kpi-usd">$ 14,850</span>
-          <span class="kpi-sub"><span>▲</span> 92% Cumplimiento Meta</span>
-        </div>
-        <div class="kpi-card">
-          <span class="kpi-label">Venta Acumulada (Cajas)</span>
-          <span class="kpi-value" id="kpi-cajas">1,240</span>
-          <span class="kpi-sub"><span>▲</span> Meta: 1,350 Cajas</span>
-        </div>
-        <div class="kpi-card">
-          <span class="kpi-label">Propuestas Pendientes</span>
-          <span class="kpi-value" id="kpi-prop">6</span>
-          <span class="kpi-sub" style="color: var(--amarillo);">En negociación activa</span>
-        </div>
-        <div class="kpi-card">
-          <span class="kpi-label">Visitas Ejecutadas Hoy</span>
-          <span class="kpi-value" id="kpi-visitas">4 / 5</span>
-          <span class="kpi-sub" style="color: var(--verde);">Rutero al día</span>
-        </div>
-      </div>
-
-      <div class="card col-8">
-        <div class="card-header">
-          <h2 class="card-title">Mi Cartera de Clientes</h2>
-          <a href="clientes.html" class="btn" style="padding: 6px 12px; font-size: 12px;">Ver Directorio</a>
-        </div>
-        <div class="table-responsive">
-          <table>
-            <thead>
-              <tr>
-                <th>Cliente / Establecimiento</th>
-                <th>Clasificación</th>
-                <th>Último Pedido</th>
-                <th>Estatus Recompra</th>
-              </tr>
-            </thead>
-            <tbody id="tabla-cartera">
-              <tr>
-                <td><strong>Supermercados Central</strong><br><small style="color:var(--texto-secundario)">RIF: J-30129482-1</small></td>
-                <td><span class="badge green">Tipo A</span></td>
-                <td>Hace 4 días</td>
-                <td><span class="badge green">Al día</span></td>
-              </tr>
-              <tr>
-                <td><strong>Distribuidora Los Andes</strong><br><small style="color:var(--texto-secundario)">RIF: J-40891234-5</small></td>
-                <td><span class="badge green">Tipo A</span></td>
-                <td>Hace 12 días</td>
-                <td><span class="badge yellow">Por vencer</span></td>
-              </tr>
-              <tr>
-                <td><strong>Bodegón El Punto</strong><br><small style="color:var(--texto-secundario)">RIF: V-15482910-3</small></td>
-                <td><span class="badge blue">Tipo B</span></td>
-                <td>Hace 35 días</td>
-                <td><span class="badge red">En riesgo</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="card col-4">
-        <div class="card-header">
-          <h2 class="card-title">Rutero Diario</h2>
-          <a href="reportes.html" class="btn" style="padding: 6px 12px; font-size: 12px;">Reportar Visita</a>
-        </div>
-        <div style="display:flex; flex-direction:column; gap:10px;">
-          <div class="rutero-item">
-            <div>
-              <strong>Panadería La Mansión</strong><br>
-              <small style="color:var(--texto-secundario)">09:30 AM — Presentación</small>
+    <section class="metrics-bar">
+        <div class="metric-card">
+            <div class="metric-header">
+                <span>META VENDEDOR (MES)</span>
+                <i class="fa-solid fa-chart-pie" style="color: var(--primary-red);"></i>
             </div>
-            <span class="badge green">Completada</span>
-          </div>
-          <div class="rutero-item">
-            <div>
-              <strong>Minimarket Express</strong><br>
-              <small style="color:var(--texto-secundario)">11:00 AM — Toma de Pedido</small>
+            <div class="metric-value">$4,250 / 850 Cjs</div>
+            <div class="progress-dual">
+                <div class="progress-label">
+                    <span>Avance ($ USD): 82%</span>
+                    <span>Meta: $5,180</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: 82%; background-color: var(--status-warning);"></div>
+                </div>
+                <div class="progress-label">
+                    <span>Avance (Cajas): 78%</span>
+                    <span>Meta: 1,090 Cjs</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: 78%; background-color: var(--status-warning);"></div>
+                </div>
             </div>
-            <span class="badge green">Completada</span>
-          </div>
-          <div class="rutero-item">
-            <div>
-              <strong>Restaurante Brasa & Sabor</strong><br>
-              <small style="color:var(--texto-secundario)">03:00 PM — Cita Pendiente</small>
-            </div>
-            <span class="badge yellow">Programada</span>
-          </div>
         </div>
-      </div>
 
-    </div>
-  </div>
+        <div class="metric-card">
+            <div class="metric-header">
+                <span>PROPUESTAS PENDIENTES</span>
+                <i class="fa-solid fa-clock" style="color: #3498DB;"></i>
+            </div>
+            <div class="metric-value">6 Activas</div>
+            <span style="font-size: 11px; color: var(--text-secondary);">4 en negociación | 2 por vencer</span>
+        </div>
 
-  <script>
-    // Inicialización del Portal de Vendedor
-    document.addEventListener("DOMContentLoaded", () => {
-      console.log("Portal Vendedor SCCR v2.5.0 cargado correctamente con Menú Oficial.");
-    });
+        <div class="metric-card">
+            <div class="metric-header">
+                <span>SEMÁFORO RECOMPRA CRM</span>
+                <i class="fa-solid fa-traffic-light"></i>
+            </div>
+            <div class="traffic-light-dots">
+                <div class="dot-badge green"><i class="fa-solid fa-circle"></i> 18 Al día</div>
+                <div class="dot-badge yellow"><i class="fa-solid fa-circle"></i> 5 Límite</div>
+                <div class="dot-badge red"><i class="fa-solid fa-circle"></i> 3 En Riesgo</div>
+            </div>
+            <span style="font-size: 11px; color: var(--text-secondary); margin-top: 8px;">Total Cartera: 26 Cuentas</span>
+        </div>
 
-    function cerrarSesion() {
-      if(confirm('¿Estás seguro de cerrar sesión?')) {
-        sessionStorage.removeItem('sccr');
-        window.location.href = 'login.html';
-      }
-    }
-  </script>
+        <div class="metric-card">
+            <div class="metric-header">
+                <span>RUTERO DE HOY</span>
+                <i class="fa-solid fa-route" style="color: var(--status-success);"></i>
+            </div>
+            <div class="metric-value">5 / 8 Visitas</div>
+            <div class="progress-bar-bg" style="margin-top: 6px;">
+                <div class="progress-bar-fill" style="width: 62.5%; background-color: var(--status-success);"></div>
+            </div>
+            <span style="font-size: 11px; color: var(--text-secondary);">3 Contactos efectivos logrados</span>
+        </div>
+    </section>
+
+    <main class="main-container">
+
+        <div id="view-dashboard" class="view-panel active">
+            <div class="breadcrumb">Inicio / <span>Dashboard del Asesor</span></div>
+            
+            <div class="grid-12">
+                <div class="col-8">
+                    <div class="card">
+                        <div class="card-title">
+                            <span>Resumen de Ventas y Proyección (Run-Rate)</span>
+                            <span class="dot-badge yellow"><i class="fa-solid fa-triangle-exclamation"></i> Estado: At Risk (78%)</span>
+                        </div>
+                        <div class="grid-12" style="margin-bottom: 15px;">
+                            <div class="col-4" style="background:#F8FAFC; padding:10px; border-radius:6px;">
+                                <small style="color:var(--text-secondary);">Ritmo Diario Requerido</small>
+                                <div style="font-size:18px; font-weight:700; color:var(--primary-red);">$155.00 / día</div>
+                            </div>
+                            <div class="col-4" style="background:#F8FAFC; padding:10px; border-radius:6px;">
+                                <small style="color:var(--text-secondary);">Proyección Cierre ($)</small>
+                                <div style="font-size:18px; font-weight:700;">$4,650.00</div>
+                            </div>
+                            <div class="col-4" style="background:#F8FAFC; padding:10px; border-radius:6px;">
+                                <small style="color:var(--text-secondary);">Brecha (GAP)</small>
+                                <div style="font-size:18px; font-weight:700; color:var(--status-critical);">-$530.00</div>
+                            </div>
+                        </div>
+                        <p style="font-size: 12px; color: var(--text-secondary);">
+                            <i class="fa-solid fa-circle-info"></i> Ajuste sugerido: Impulsar cierre de propuestas en etapa de Presentación para cubrir la brecha antes del cierre de mes.
+                        </p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Rutero Operativo Asignado para Hoy</div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Cliente / Razón Social</th>
+                                        <th>Canal</th>
+                                        <th>Zona</th>
+                                        <th>Estado Semáforo</th>
+                                        <th>Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Bodegón Gourmet Caracas</strong></td>
+                                        <td>Bodegones</td>
+                                        <td>Caracas Este</td>
+                                        <td><span class="dot-badge green">Al día</span></td>
+                                        <td><button class="btn btn-primary" style="padding:4px 8px; font-size:11px;" onclick="switchTab('reporte')">Reportar</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Restaurante La Estancia</strong></td>
+                                        <td>HORECA</td>
+                                        <td>Caracas Este</td>
+                                        <td><span class="dot-badge yellow">Límite</span></td>
+                                        <td><button class="btn btn-primary" style="padding:4px 8px; font-size:11px;" onclick="switchTab('reporte')">Reportar</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Supermercado Plaza C.A.</strong></td>
+                                        <td>Cadenas</td>
+                                        <td>Caracas Este</td>
+                                        <td><span class="dot-badge red">Riesgo</span></td>
+                                        <td><button class="btn btn-primary" style="padding:4px 8px; font-size:11px;" onclick="switchTab('reporte')">Reportar</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-title">Oportunidades Inmediatas</div>
+                        <div class="funnel-card">
+                            <strong>Hotel Altamira Suites</strong><br>
+                            <small style="color:var(--text-secondary);">Propuesta enviada: $640.00</small><br>
+                            <span class="dot-badge yellow" style="margin-top:4px; display:inline-block;">Esperando Respuesta</span>
+                        </div>
+                        <div class="funnel-card">
+                            <strong>Grupo Gastro CCS</strong><br>
+                            <small style="color:var(--text-secondary);">Muestra entregada - Línea Pasapalo</small><br>
+                            <span class="dot-badge green" style="margin-top:4px; display:inline-block;">Cita Agendada</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-clientes" class="view-panel">
+            <div class="breadcrumb">Inicio / <span>Directorio de Clientes Asignados</span></div>
+            <div class="card">
+                <div class="card-title">
+                    <span>Directorio y Filtros Avanzados</span>
+                    <button class="btn btn-primary" style="font-size:12px;"><i class="fa-solid fa-plus"></i> Nuevo Prospecto</button>
+                </div>
+                <div class="grid-12" style="margin-bottom:15px;">
+                    <div class="col-4">
+                        <input type="text" class="form-control" placeholder="Buscar por Nombre, RIF o Contacto...">
+                    </div>
+                    <div class="col-4">
+                        <select class="form-control">
+                            <option value="">Todas las Zonas</option>
+                            <option>Caracas Este</option>
+                            <option>Caracas Oeste</option>
+                            <option>La Guaira</option>
+                            <option>Altos Mirandinos</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <select class="form-control">
+                            <option value="">Todos los Canales</option>
+                            <option>HORECA</option>
+                            <option>Cadenas</option>
+                            <option>Supermercados</option>
+                            <option>Bodegones</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Razón Social / RIF</th>
+                                <th>Clasificación</th>
+                                <th>Canal / Zona</th>
+                                <th>Semáforo CRM</th>
+                                <th>Días Crédito</th>
+                                <th>Acción 360°</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Inversiones Gourmet 2021 C.A.</strong><br><small style="color:var(--text-secondary);">J-40982341-0</small></td>
+                                <td><span style="font-weight:700; color:var(--primary-red);">Clase A</span></td>
+                                <td>HORECA / Caracas Este</td>
+                                <td><span class="dot-badge green"><i class="fa-solid fa-circle"></i> Al Día</span></td>
+                                <td>15 Días ($1,200 Límite)</td>
+                                <td><button class="btn btn-secondary" style="padding:4px 8px; font-size:11px;"><i class="fa-solid fa-eye"></i> Ficha 360°</button></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Distribuidora Central La Guaira</strong><br><small style="color:var(--text-secondary);">J-31092834-2</small></td>
+                                <td><span style="font-weight:700;">Clase B</span></td>
+                                <td>Bodegones / La Guaira</td>
+                                <td><span class="dot-badge red"><i class="fa-solid fa-circle"></i> En Riesgo</span></td>
+                                <td>Contado</td>
+                                <td><button class="btn btn-secondary" style="padding:4px 8px; font-size:11px;"><i class="fa-solid fa-eye"></i> Ficha 360°</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-metas" class="view-panel">
+            <div class="breadcrumb">Inicio / <span>Control de Metas Individuales</span></div>
+            <div class="grid-12">
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-title">Desglose por Línea de Producto ($ USD)</div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Línea</th>
+                                        <th>Meta USD</th>
+                                        <th>Ejecutado</th>
+                                        <th>% Cumplimiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Pasapalo</strong></td>
+                                        <td>$2,500.00</td>
+                                        <td>$2,100.00</td>
+                                        <td><span class="dot-badge green">84%</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Restaurante</strong></td>
+                                        <td>$1,800.00</td>
+                                        <td>$1,400.00</td>
+                                        <td><span class="dot-badge yellow">77%</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Torta</strong></td>
+                                        <td>$880.00</td>
+                                        <td>$750.00</td>
+                                        <td><span class="dot-badge green">85%</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-title">Incentivos y Comisiones</div>
+                        <p style="font-size:13px; margin-bottom:10px;">Estatus actual de hitos alcanzados en el mes:</p>
+                        <div style="background:#F8FAFC; padding:12px; border-radius:6px; margin-bottom:8px; border-left:4px solid var(--status-success);">
+                            <strong>Hito 80% Superado</strong> - Comisión base activada (1.5%).
+                        </div>
+                        <div style="background:#F8FAFC; padding:12px; border-radius:6px; margin-bottom:8px; border-left:4px solid var(--border-color);">
+                            <strong>Hito 100% (Pendiente)</strong> - Bono adicional por aceleración (+0.5%).
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-reporte" class="view-panel">
+            <div class="breadcrumb">Inicio / <span>Reporte de Gestión Diario de Campo</span></div>
+            <div class="card">
+                <div class="card-title">Formulario de Registro Operativo de Rutero</div>
+                <form id="form-reporte">
+                    <div class="grid-12">
+                        <div class="col-4 form-group">
+                            <label>Tipo de Cliente</label>
+                            <select class="form-control" id="rep-tipo-cliente">
+                                <option value="recurrente">Cliente Recurrente</option>
+                                <option value="prospecto">Prospecto / Oportunidad (Nuevo)</option>
+                            </select>
+                        </div>
+                        <div class="col-8 form-group">
+                            <label>Cliente / Razón Social</label>
+                            <select class="form-control" id="rep-cliente">
+                                <option>Bodegón Gourmet Caracas</option>
+                                <option>Restaurante La Estancia</option>
+                                <option>Supermercado Plaza C.A.</option>
+                            </select>
+                        </div>
+
+                        <div class="col-4 form-group">
+                            <label>Contacto Efectivo</label>
+                            <select class="form-control" id="rep-contacto">
+                                <option value="Si">Sí (Atendido por decisor)</option>
+                                <option value="No">No (Cerrado, ausente, etc.)</option>
+                            </select>
+                        </div>
+
+                        <div class="col-8 form-group">
+                            <label>Datos Capturados del Decisor</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-item"><input type="checkbox"> Nombre Decisor</label>
+                                <label class="checkbox-item"><input type="checkbox"> Teléfono / WhatsApp</label>
+                                <label class="checkbox-item"><input type="checkbox"> Correo Electrónico</label>
+                                <label class="checkbox-item"><input type="checkbox"> Dirección Despacho</label>
+                            </div>
+                        </div>
+
+                        <div class="col-4 form-group">
+                            <label>Gestión de Cita</label>
+                            <select class="form-control">
+                                <option>Cita Hoy (Realizada)</option>
+                                <option>Cita Futura (Fecha Agendada)</option>
+                                <option>Sin Cita (Visita en frío)</option>
+                            </select>
+                        </div>
+
+                        <div class="col-4 form-group">
+                            <label>Resultado Cita</label>
+                            <select class="form-control">
+                                <option>Interesado</option>
+                                <option>Reprogramada</option>
+                                <option>No Interesado</option>
+                                <option>Cierre Inmediato</option>
+                            </select>
+                        </div>
+
+                        <div class="col-4 form-group">
+                            <label>Estatus de Cierre</label>
+                            <select class="form-control" id="rep-cierre" onchange="toggleMotivoNoVenta(this.value)">
+                                <option value="pedido_rec">Pedido Recurrente</option>
+                                <option value="pedido_1era">Pedido 1era Vez</option>
+                                <option value="sin_pedido">Sin Pedido</option>
+                                <option value="rechazado">Rechazado</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 form-group" id="box-motivo-noventa" style="display:none; background:#FDEDEC; padding:12px; border-radius:6px;">
+                            <label style="color:var(--status-critical);">Motivo de No Venta (Obligatorio si no hay pedido)</label>
+                            <select class="form-control">
+                                <option value="">Seleccione Motivo...</option>
+                                <option>Precio</option>
+                                <option>Inventario Propio Alto</option>
+                                <option>Condiciones de Crédito</option>
+                                <option>Competencia</option>
+                                <option>Otro</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 form-group">
+                            <label>Observaciones / Minuta de Acuerdos</label>
+                            <textarea class="form-control" rows="3" placeholder="Escriba los compromisos, objeciones o detalles relevantes para la Bitácora 360°..."></textarea>
+                        </div>
+                    </div>
+
+                    <div style="text-align: right; margin-top: 10px;">
+                        <button type="button" class="btn btn-secondary">Cancelar</button>
+                        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Guardar Reporte de Gestión</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="view-embudo" class="view-panel">
+            <div class="breadcrumb">Inicio / <span>Pipeline de Conversión del Embudo</span></div>
+            <div class="card">
+                <div class="card-title">Embudo Comercial de 5 Etapas</div>
+                <div class="funnel-container">
+                    <div class="funnel-stage e1">
+                        <div class="funnel-title">1. Prospección</div>
+                        <div class="funnel-card">
+                            <strong>Hotel Humboldt</strong><br>
+                            <small>Contacto: Chef Marco</small>
+                        </div>
+                    </div>
+                    <div class="funnel-stage e2">
+                        <div class="funnel-title">2. Contacto</div>
+                        <div class="funnel-card">
+                            <strong>Café Las Mercedes</strong><br>
+                            <small>Reunión realizada</small>
+                        </div>
+                    </div>
+                    <div class="funnel-stage e3">
+                        <div class="funnel-title">3. Presentación</div>
+                        <div class="funnel-card">
+                            <strong>Hotel Altamira Suites</strong><br>
+                            <small>Propuesta: $640.00</small>
+                        </div>
+                    </div>
+                    <div class="funnel-stage e4">
+                        <div class="funnel-title">4. Activación</div>
+                        <div class="funnel-card">
+                            <strong>Bodegón Gourmet</strong><br>
+                            <small>2 Pedidos realizados</small>
+                        </div>
+                    </div>
+                    <div class="funnel-stage e5">
+                        <div class="funnel-title">5. Fidelización</div>
+                        <div class="funnel-card">
+                            <strong>Restaurante La Estancia</strong><br>
+                            <small>6+ Pedidos (Recurrente)</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-propuestas" class="view-panel">
+            <div class="breadcrumb">Inicio / <span>Gestión de Propuestas Comerciales</span></div>
+            <div class="card">
+                <div class="card-title">
+                    <span>Propuestas Emitidas</span>
+                    <button class="btn btn-primary" style="font-size:12px;"><i class="fa-solid fa-plus"></i> Generar Propuesta</button>
+                </div>
+                <p style="font-size:13px; color:var(--text-secondary);">Muestrario de cotizaciones enviadas a clientes para seguimiento directo.</p>
+            </div>
+        </div>
+
+        <div id="view-pedidos" class="view-panel">
+            <div class="breadcrumb">Inicio / <span>Captura y Registro de Pedidos</span></div>
+            <div class="card">
+                <div class="card-title">
+                    <span>Captura de Órdenes de Venta</span>
+                    <button class="btn btn-primary" style="font-size:12px;"><i class="fa-solid fa-cart-plus"></i> Crear Nuevo Pedido</button>
+                </div>
+                <p style="font-size:13px; color:var(--text-secondary);">Módulo para la inyección de pedidos aprobados directamente al backend de facturación.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Función para alternar pestañas del menú principal
+        function switchTab(tabId, element) {
+            // Ocultar todos los paneles
+            const panels = document.querySelectorAll('.view-panel');
+            panels.forEach(panel => panel.classList.remove('active'));
+
+            // Desmarcar todos los enlaces
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => link.classList.remove('active'));
+
+            // Activar panel seleccionado
+            const selectedPanel = document.getElementById('view-' + tabId);
+            if (selectedPanel) {
+                selectedPanel.classList.add('active');
+            }
+
+            // Marcar enlace activo
+            if (element) {
+                element.classList.add('active');
+            }
+        }
+
+        // Mostrar / ocultar campo obligatorio de Motivo No Venta
+        function toggleMotivoNoVenta(val) {
+            const box = document.getElementById('box-motivo-noventa');
+            if (val === 'sin_pedido' || val === 'rechazado') {
+                box.style.display = 'block';
+            } else {
+                box.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>
 
