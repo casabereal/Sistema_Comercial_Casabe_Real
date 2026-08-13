@@ -3,378 +3,186 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Casabe Real &mdash; Portal Vendedor (SCCR v2.5.0)</title>
+<title>Casabe Real — Portal Vendedor (SCCR v2.5.0)</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  /* ====================================================
-     OPCIÓN B — SIDEBAR ROJO DE MARCA + FONDO NEUTRO
-     SCCR Design System v1.0
-     ==================================================== */
-  :root {
-    --rojo:       #C8181E;
-    --rojo-d:     #A01015;
-    --rojo-xs:    #FEF2F2;
-    --fondo:      #F3F4F6;
-    --borde:      #E5E7EB;
-    --gris:       #6B7280;
-    --negro:      #111827;
-    --naranja:    #D97706;
-    --naranja-xs: #FFFBEB;
-    --blanco:     #FFFFFF;
-    --verde:      #2ECC71;
-    --verde-xs:   #ECFDF5;
-    --amarillo:   #F39C12;
-    --amarillo-xs:#FFFBEB;
-    --azul:       #2563EB;
-    --azul-xs:    #EFF6FF;
-    --rojo-critico: #E74C3C;
-    --r:    14px;
-    --r-sm: 9px;
-    --sh:   0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
-    --sh-lg:0 8px 32px rgba(0,0,0,.14);
-  }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --rojo:#C8181E;--rojo-d:#A01015;--rojo-xs:#FEF2F2;
+  --blanco:#FFFFFF;--fondo:#F3F4F6;--borde:#E5E7EB;
+  --gris:#6B7280;--negro:#111827;
+  --verde:#059669;--verde-xs:#ECFDF5;
+  --naranja:#D97706;--naranja-xs:#FFFBEB;
+  --azul:#2563EB;--azul-xs:#EFF6FF;
+  --r:14px;--r-sm:9px;
+  --sh:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+  --sh-md:0 4px 16px rgba(0,0,0,.10);
+}
+body{font-family:"Inter",sans-serif;background:var(--fondo);color:var(--negro);min-height:100vh;display:flex;flex-direction:column;}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+/* ══════════════════════════════════════
+   HEADER — copia exacta de pedidos.html
+   ══════════════════════════════════════ */
+.hd{background:var(--rojo);padding:14px 18px 13px;display:flex;align-items:center;gap:11px;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.hd img{width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25));flex-shrink:0}
+.hd-txt h1{font-size:15px;font-weight:700;color:#fff;letter-spacing:-.2px;line-height:1.2}
+.hd-txt p{font-size:10.5px;color:rgba(255,255,255,.7);margin-top:1px}
+.hd-vend{margin-left:auto;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.hd-vend-name{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);border-radius:20px;padding:5px 11px;font-size:11px;font-weight:600;color:#fff;white-space:nowrap}
+.btn-logout{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:6px 8px;cursor:pointer;color:rgba(255,255,255,.8);font-size:12px;transition:background .2s;white-space:nowrap;font-family:"Inter",sans-serif;font-weight:500}
+.btn-logout:hover{background:rgba(255,255,255,.22)}
 
-  body {
-    font-family: "Inter", sans-serif;
-    background: var(--fondo);
-    color: var(--negro);
-    display: flex;
-    min-height: 100vh;
-  }
+/* ══════════════════════════════════════
+   MENÚ DE NAVEGACIÓN HORIZONTAL
+   ══════════════════════════════════════ */
+.nav-bar{background:var(--blanco);border-bottom:1px solid var(--borde);padding:0 18px;display:flex;overflow-x:auto;white-space:nowrap;box-shadow:var(--sh);}
+.nav-bar::-webkit-scrollbar{height:3px;}
+.nav-bar::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px;}
+.nav-item{display:inline-block;padding:11px 14px;font-size:13px;font-weight:500;color:var(--negro);text-decoration:none;transition:all .2s;border-bottom:3px solid transparent;font-family:"Inter",sans-serif;}
+.nav-item:hover{background:var(--fondo);color:var(--rojo);}
+.nav-item.active{font-weight:700;color:var(--rojo);border-bottom-color:var(--rojo);}
 
-  /* SIDEBAR — ROJO DE MARCA con efectos decorativos internos */
-  aside {
-    width: 260px;
-    background: var(--rojo);
-    box-shadow: var(--sh-lg);
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 0; bottom: 0; left: 0;
-    z-index: 100;
-    overflow: hidden;
-  }
-  /* Efecto decorativo en sidebar */
-  aside::before {
-    content: "";
-    position: absolute;
-    top: -40%; left: -30%;
-    width: 100%; height: 100%;
-    background: rgba(255,255,255,.04);
-    border-radius: 50%;
-    pointer-events: none;
-  }
-  aside::after {
-    content: "";
-    position: absolute;
-    bottom: -30%; right: -20%;
-    width: 80%; height: 80%;
-    background: rgba(0,0,0,.08);
-    border-radius: 50%;
-    pointer-events: none;
-  }
+/* ══════════════════════════════════════
+   CONTENIDO PRINCIPAL
+   ══════════════════════════════════════ */
+.main-container{flex:1;padding:22px 18px 32px;max-width:1400px;width:100%;margin:0 auto;}
 
-  .sidebar-brand {
-    padding: 24px 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    border-bottom: 1px solid rgba(255,255,255,.15);
-    position: relative;
-    z-index: 1;
-  }
-  .sidebar-brand img { height: 36px; object-fit: contain; filter: brightness(0) invert(1); }
-  .sidebar-brand span {
-    font-weight: 700;
-    font-size: 15px;
-    color: var(--blanco);
-    letter-spacing: -0.3px;
-  }
+/* Breadcrumb + Título */
+.page-header{margin-bottom:20px;}
+.breadcrumb{font-size:12px;color:var(--gris);margin-bottom:4px;}
+.breadcrumb span{color:var(--rojo);font-weight:600;}
+.page-title{font-size:22px;font-weight:800;color:var(--negro);}
+.page-title .highlight{color:var(--rojo);}
 
-  .sidebar-menu {
-    padding: 20px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    overflow-y: auto;
-    flex: 1;
-    position: relative;
-    z-index: 1;
-  }
-  .menu-label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    color: rgba(255,255,255,.55);
-    padding: 10px 12px 4px;
-    letter-spacing: 0.5px;
-  }
-  .menu-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 11px 14px;
-    border-radius: var(--r-sm);
-    color: rgba(255,255,255,.85);
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-  }
-  .menu-item:hover, .menu-item.active {
-    background: rgba(255,255,255,.15);
-    color: var(--blanco);
-  }
-  .menu-icon { font-size: 17px; line-height: 1; width: 22px; text-align: center; }
+/* ══════════════════════════════════════
+   KPIs
+   ══════════════════════════════════════ */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:20px;}
+.kpi-card{background:var(--blanco);border:1px solid var(--borde);border-radius:var(--r);padding:18px 18px 18px 22px;box-shadow:var(--sh);display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden;}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;bottom:0;width:4px;background:var(--rojo);border-radius:4px 0 0 4px;}
+.kpi-label{font-size:11px;font-weight:600;color:var(--gris);text-transform:uppercase;letter-spacing:.4px;}
+.kpi-value{font-size:28px;font-weight:800;color:var(--negro);}
+.kpi-sub{font-size:11px;color:var(--verde);font-weight:600;display:flex;align-items:center;gap:4px;}
 
-  /* CONTENIDO PRINCIPAL */
-  .main-content {
-    margin-left: 260px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-  }
+/* ══════════════════════════════════════
+   GRID DE TARJETAS
+   ══════════════════════════════════════ */
+.content-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+.col-2{grid-column:span 2;}
+.col-1{grid-column:span 1;}
+@media(max-width:900px){.col-2,.col-1{grid-column:span 3;}}
 
-  /* HEADER — blanco con sombra suave */
-  header {
-    background: var(--blanco);
-    border-bottom: 1px solid var(--borde);
-    box-shadow: var(--sh);
-    padding: 16px 32px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 90;
-  }
-  .breadcrumb { font-size: 13px; color: var(--gris); margin-bottom: 4px; }
-  .breadcrumb span { color: var(--rojo); font-weight: 600; }
-  .page-title { font-size: 22px; font-weight: 700; color: var(--negro); letter-spacing: -0.4px; }
-  .user-area { display: flex; align-items: center; gap: 16px; }
-  .user-badge {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: var(--fondo);
-    padding: 8px 16px;
-    border-radius: 50px;
-    border: 1px solid var(--borde);
-  }
-  .user-avatar {
-    width: 34px; height: 34px;
-    background: var(--rojo);
-    color: var(--blanco);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-size: 13px;
-  }
-  .user-info .name { font-size: 14px; font-weight: 600; color: var(--negro); }
-  .user-info .role { font-size: 12px; color: var(--gris); }
-  .btn-logout {
-    background: var(--rojo-xs);
-    color: var(--rojo);
-    border: 1px solid var(--rojo);
-    padding: 8px 16px;
-    border-radius: 50px;
-    font-weight: 600;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn-logout:hover { background: var(--rojo); color: var(--blanco); }
+.card{background:var(--blanco);border-radius:var(--r);border:1px solid var(--borde);box-shadow:var(--sh);overflow:hidden;}
+.card-hd{padding:14px 16px;border-bottom:1px solid var(--borde);display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:700;color:var(--negro);}
+.card-bd{padding:16px;}
 
-  /* CONTAINER */
-  .container {
-    padding: 28px 32px 40px;
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 20px;
-    max-width: 1600px;
-    margin: 0 auto;
-    width: 100%;
-  }
-  .col-12 { grid-column: span 12; }
-  .col-8  { grid-column: span 8; }
-  .col-4  { grid-column: span 4; }
-  .col-6  { grid-column: span 6; }
-  @media(max-width: 1200px) { .col-8, .col-4, .col-6 { grid-column: span 12; } }
+/* ══════════════════════════════════════
+   TABLA
+   ══════════════════════════════════════ */
+.tbl{width:100%;border-collapse:collapse;font-size:13px;}
+.tbl th{background:var(--fondo);color:var(--gris);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.3px;padding:10px 14px;border-bottom:1px solid var(--borde);text-align:left;}
+.tbl td{padding:13px 14px;border-bottom:1px solid var(--borde);color:var(--negro);}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tr:hover td{background:var(--fondo);}
 
-  /* TARJETAS — blanco, borde sutil, sombra suave */
-  .card {
-    background: var(--blanco);
-    border-radius: var(--r);
-    border: 1px solid var(--borde);
-    box-shadow: var(--sh);
-    padding: 24px;
-  }
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  .card-title { font-size: 16px; font-weight: 600; color: var(--negro); }
+/* ══════════════════════════════════════
+   BOTÓN
+   ══════════════════════════════════════ */
+.btn{background:var(--rojo);color:#fff;border:none;padding:7px 14px;border-radius:var(--r-sm);font-weight:600;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;text-decoration:none;transition:background .2s;font-family:"Inter",sans-serif;}
+.btn:hover{background:var(--rojo-d);}
 
-  /* KPIs */
-  .kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-    gap: 16px;
-    grid-column: span 12;
-  }
-  .kpi-card {
-    background: var(--blanco);
-    border-radius: var(--r);
-    border: 1px solid var(--borde);
-    box-shadow: var(--sh);
-    padding: 20px 20px 20px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    position: relative;
-    overflow: hidden;
-  }
-  .kpi-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; bottom: 0;
-    width: 4px;
-    background: var(--rojo);
-    border-radius: 4px 0 0 4px;
-  }
-  .kpi-label { font-size: 11px; font-weight: 600; color: var(--gris); text-transform: uppercase; letter-spacing: 0.5px; }
-  .kpi-value { font-size: 30px; font-weight: 700; color: var(--negro); letter-spacing: -1px; }
-  .kpi-sub   { font-size: 12px; color: var(--verde); font-weight: 600; display: flex; align-items: center; gap: 4px; }
+/* ══════════════════════════════════════
+   BADGES
+   ══════════════════════════════════════ */
+.badge{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;}
+.badge.green{background:var(--verde-xs);color:#15803D;}
+.badge.yellow{background:var(--naranja-xs);color:#B45309;}
+.badge.red{background:var(--rojo-xs);color:#DC2626;}
+.badge.blue{background:var(--azul-xs);color:var(--azul);}
 
-  /* TABLAS */
-  .table-responsive { width: 100%; overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
-  th { background: var(--fondo); color: var(--gris); font-weight: 600; padding: 11px 16px; border-bottom: 1px solid var(--borde); font-size: 12px; text-transform: uppercase; letter-spacing: 0.4px; }
-  td { padding: 13px 16px; border-bottom: 1px solid var(--borde); color: var(--negro); }
-  tr:hover td { background-color: var(--rojo-xs); }
+/* ══════════════════════════════════════
+   RUTERO ITEMS
+   ══════════════════════════════════════ */
+.rutero-item{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border:1px solid var(--borde);border-radius:var(--r-sm);margin-bottom:8px;background:var(--fondo);}
+.rutero-item:last-child{margin-bottom:0;}
+.rutero-item strong{font-size:13px;display:block;}
+.rutero-item small{font-size:11px;color:var(--gris);}
 
-  /* BOTONES */
-  .btn {
-    background: var(--rojo);
-    color: var(--blanco);
-    border: none;
-    padding: 10px 20px;
-    border-radius: var(--r-sm);
-    font-weight: 700;
-    font-size: 15px;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: background 0.2s;
-  }
-  .btn:hover   { background: var(--rojo-d); }
-  .btn:active  { transform: scale(.99); }
-  .btn:disabled { background: #D1D5DB; }
-
-  /* BADGES */
-  .badge { padding: 4px 10px; border-radius: 50px; font-size: 12px; font-weight: 600; }
-  .badge.green  { background: var(--verde-xs);    color: var(--verde); }
-  .badge.yellow { background: var(--amarillo-xs); color: var(--amarillo); }
-  .badge.red    { background: var(--rojo-xs);     color: var(--rojo-critico); }
-  .badge.blue   { background: var(--azul-xs);     color: var(--azul); }
-
-  /* RUTERO */
-  .rutero-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 16px;
-    border: 1px solid var(--borde);
-    border-radius: var(--r-sm);
-    margin-bottom: 8px;
-    background: var(--blanco);
-    transition: border-color 0.2s;
-  }
-  .rutero-item:hover { border-color: var(--rojo); }
-
-  /* MENSAJES */
-  .err  { background: var(--rojo-xs);    border: 1px solid #FECACA;  border-radius: var(--r-sm); color: var(--rojo); }
-  .pend { background: var(--naranja-xs); border: 1px solid #FDE68A; }
-  .pend strong { color: var(--naranja); }
-  .pend span   { color: var(--naranja); }
+/* ══════════════════════════════════════
+   FOOTER
+   ══════════════════════════════════════ */
+footer{background:var(--blanco);border-top:1px solid var(--borde);padding:14px 18px;text-align:center;font-size:12px;color:var(--gris);}
+footer strong{color:var(--negro);}
 </style>
 </head>
 <body>
 
-  <aside>
-    <div class="sidebar-brand">
-      <img src="assets/logo-casabe-real.png" alt="Casabe Real Logo">
-      <span>SCCR v2.5.0</span>
+  <!-- ══ HEADER (idéntico a pedidos.html) ══ -->
+  <header class="hd">
+    <img src="assets/logo-casabe-real.png" alt="Casabe Real">
+    <div class="hd-txt">
+      <h1>Portal Vendedor</h1>
+      <p>Sistema Comercial Casabe Real — SCCR v2.5.0</p>
     </div>
-    <div class="sidebar-menu">
-      <div class="menu-label">Navegación Principal</div>
-      <a href="dashboard.html" class="menu-item"><span class="menu-icon">📊</span>Dashboard</a>
-      <a href="clientes.html"  class="menu-item"><span class="menu-icon">👥</span>Clientes</a>
-      <a href="metas.html"     class="menu-item"><span class="menu-icon">🎯</span>Meta</a>
-      <a href="propuesta.html" class="menu-item"><span class="menu-icon">💡</span>Propuesta</a>
-      <a href="pedidos.html"   class="menu-item"><span class="menu-icon">📦</span>Pedidos</a>
-      <a href="reportes.html"  class="menu-item"><span class="menu-icon">📋</span>Reporte de Gestión</a>
-      <a href="embudo.html"    class="menu-item"><span class="menu-icon">🔻</span>Embudo</a>
-      <a href="bi_ia.html"     class="menu-item"><span class="menu-icon">🤖</span>BI + IA</a>
+    <div class="hd-vend">
+      <div class="hd-vend-name" id="user-name-display">Asesor Comercial</div>
+      <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
     </div>
-  </aside>
+  </header>
 
-  <div class="main-content">
-    <header>
-      <div>
-        <div class="breadcrumb">Inicio / <span>Vendedor</span> / Portal Principal</div>
-        <h1 class="page-title">Panel de Asesor Comercial</h1>
+  <!-- ══ MENÚ HORIZONTAL (sin iconos, sin BI+IA) ══ -->
+  <nav class="nav-bar">
+    <a href="dashboard.html" class="nav-item">Dashboard</a>
+    <a href="clientes.html" class="nav-item">Clientes</a>
+    <a href="metas.html" class="nav-item">Meta</a>
+    <a href="propuesta.html" class="nav-item">Propuesta</a>
+    <a href="pedidos.html" class="nav-item">Pedidos</a>
+    <a href="reportes.html" class="nav-item">Reporte de Gestión</a>
+    <a href="embudo.html" class="nav-item">Embudo</a>
+  </nav>
+
+  <!-- ══ CONTENIDO PRINCIPAL ══ -->
+  <main class="main-container">
+
+    <div class="page-header">
+      <div class="breadcrumb">Inicio / <span>Vendedor</span> / Portal Principal</div>
+      <h1 class="page-title">Panel de <span class="highlight">Asesor Comercial</span></h1>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <span class="kpi-label">Venta Acumulada ($ USD)</span>
+        <span class="kpi-value" id="kpi-usd">$ 14,850</span>
+        <span class="kpi-sub">▲ 92% Cumplimiento Meta</span>
       </div>
-      <div class="user-area">
-        <div class="user-badge">
-          <div class="user-avatar" id="user-initials">VC</div>
-          <div class="user-info">
-            <div class="name" id="user-name-display">Asesor Comercial</div>
-            <div class="role">Vendedor Asignado</div>
-          </div>
-        </div>
-        <button onclick="cerrarSesion()" class="btn-logout" title="Cerrar Sesión">🚪 Salir</button>
+      <div class="kpi-card">
+        <span class="kpi-label">Venta Acumulada (Cajas)</span>
+        <span class="kpi-value" id="kpi-cajas">1,240</span>
+        <span class="kpi-sub">▲ Meta: 1,350 Cajas</span>
       </div>
-    </header>
-
-    <div class="container">
-
-      <div class="kpi-grid">
-        <div class="kpi-card">
-          <span class="kpi-label">Venta Acumulada ($ USD)</span>
-          <span class="kpi-value" id="kpi-usd">$ 14,850</span>
-          <span class="kpi-sub"><span>▲</span> 92% Cumplimiento Meta</span>
-        </div>
-        <div class="kpi-card">
-          <span class="kpi-label">Venta Acumulada (Cajas)</span>
-          <span class="kpi-value" id="kpi-cajas">1,240</span>
-          <span class="kpi-sub"><span>▲</span> Meta: 1,350 Cajas</span>
-        </div>
-        <div class="kpi-card">
-          <span class="kpi-label">Propuestas Pendientes</span>
-          <span class="kpi-value" id="kpi-prop">6</span>
-          <span class="kpi-sub" style="color: var(--amarillo);">En negociación activa</span>
-        </div>
-        <div class="kpi-card">
-          <span class="kpi-label">Visitas Ejecutadas Hoy</span>
-          <span class="kpi-value" id="kpi-visitas">4 / 5</span>
-          <span class="kpi-sub" style="color: var(--verde);">Rutero al día</span>
-        </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Propuestas Pendientes</span>
+        <span class="kpi-value" id="kpi-prop">6</span>
+        <span class="kpi-sub" style="color:var(--naranja);">En negociación activa</span>
       </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Visitas Ejecutadas Hoy</span>
+        <span class="kpi-value" id="kpi-visitas">4 / 5</span>
+        <span class="kpi-sub">Rutero al día</span>
+      </div>
+    </div>
 
-      <div class="card col-8">
-        <div class="card-header">
-          <h2 class="card-title">Mi Cartera de Clientes</h2>
-          <a href="clientes.html" class="btn" style="padding: 6px 12px; font-size: 12px;">Ver Directorio</a>
+    <!-- Tabla + Rutero -->
+    <div class="content-grid">
+
+      <div class="card col-2">
+        <div class="card-hd">
+          Mi Cartera de Clientes
+          <a href="clientes.html" class="btn">Ver Directorio</a>
         </div>
-        <div class="table-responsive">
-          <table>
+        <div class="card-bd" style="padding:0;overflow-x:auto;">
+          <table class="tbl">
             <thead>
               <tr>
                 <th>Cliente / Establecimiento</th>
@@ -407,30 +215,30 @@
         </div>
       </div>
 
-      <div class="card col-4">
-        <div class="card-header">
-          <h2 class="card-title">Rutero Diario</h2>
-          <a href="reportes.html" class="btn" style="padding: 6px 12px; font-size: 12px;">Reportar Visita</a>
+      <div class="card col-1">
+        <div class="card-hd">
+          Rutero Diario
+          <a href="reportes.html" class="btn">Reportar</a>
         </div>
-        <div style="display:flex; flex-direction:column; gap:10px;">
+        <div class="card-bd">
           <div class="rutero-item">
             <div>
-              <strong>Panadería La Mansión</strong><br>
-              <small style="color:var(--gris)">09:30 AM — Presentación</small>
+              <strong>Panadería La Mansión</strong>
+              <small>09:30 AM — Presentación</small>
             </div>
             <span class="badge green">Completada</span>
           </div>
           <div class="rutero-item">
             <div>
-              <strong>Minimarket Express</strong><br>
-              <small style="color:var(--gris)">11:00 AM — Toma de Pedido</small>
+              <strong>Minimarket Express</strong>
+              <small>11:00 AM — Toma de Pedido</small>
             </div>
             <span class="badge green">Completada</span>
           </div>
           <div class="rutero-item">
             <div>
-              <strong>Restaurante Brasa &amp; Sabor</strong><br>
-              <small style="color:var(--gris)">03:00 PM — Cita Pendiente</small>
+              <strong>Restaurante Brasa & Sabor</strong>
+              <small>03:00 PM — Cita Pendiente</small>
             </div>
             <span class="badge yellow">Programada</span>
           </div>
@@ -438,12 +246,28 @@
       </div>
 
     </div>
-  </div>
+  </main>
+
+  <!-- ══ FOOTER ══ -->
+  <footer>
+    <p>&copy; 2026 <strong>Sistema Comercial Casabe Real (SCCR)</strong>. Todos los derechos reservados. &nbsp;|&nbsp; v2.5.0 &nbsp;|&nbsp; 0412.290.58.33</p>
+  </footer>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      console.log("Portal Vendedor SCCR v2.5.0 — Opción B: Sidebar Rojo.");
+      // Destacar ítem activo según la URL actual
+      const path = window.location.pathname.split('/').pop() || 'vendedor.html';
+      document.querySelectorAll('.nav-item').forEach(link => {
+        if (link.getAttribute('href') === path) link.classList.add('active');
+      });
+      // Nombre del vendedor desde sessionStorage
+      try {
+        const sess = JSON.parse(sessionStorage.getItem('sccr') || '{}');
+        if (sess.nombre) document.getElementById('user-name-display').textContent = sess.nombre;
+      } catch(e) {}
+      console.log("Portal Vendedor SCCR v2.5.0 cargado correctamente.");
     });
+
     function cerrarSesion() {
       if(confirm('¿Estás seguro de cerrar sesión?')) {
         sessionStorage.removeItem('sccr');
