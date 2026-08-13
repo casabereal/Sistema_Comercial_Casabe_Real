@@ -2,12 +2,17 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>Sistema Comercial Casabe Real (SCCR) — Clientes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCCR - Módulo de Clientes</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    
     <style>
+        /* ==========================================================================
+           1. DESIGN SYSTEM - NUEVO LAYOUT (Basado en gemini-code...)
+           ========================================================================== */
         :root {
             --primary-red: #D30000;
             --white: #FFFFFF;
@@ -15,12 +20,8 @@
             --text-dark: #333333;
             --border-color: #E0E0E0;
             --sidebar-hover: #F1F3F5;
-            /* Compatibilidad con variables de clientes */
-            --rojo-casabe: #D30000;
-            --fondo-app: #F5F7FA;
-            --tarjeta-bg: #FFFFFF;
-            --texto-main: #2D3436;
-            --texto-sec: #7F8C8D;
+            
+            /* Colores Semánticos Operativos (Mantenidos para las lógicas de estado) */
             --exito: #2ECC71;
             --advertencia: #F39C12;
             --alerta: #E74C3C;
@@ -30,7 +31,6 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -40,10 +40,12 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            font-size: 0.75rem; /* Reducción del tamaño base de texto en un 25% */
+            font-size: 0.75rem; /* Reducción de escala base del nuevo layout */
         }
 
-        /* 1. HEADER */
+        /* ==========================================================================
+           2. HEADER & NAV (NUEVO LAYOUT)
+           ========================================================================== */
         header {
             background-color: var(--primary-red);
             color: var(--white);
@@ -87,16 +89,9 @@
             line-height: 1.3;
         }
 
-        .header-right .user-name {
-            font-weight: 600;
-        }
+        .header-right .user-name { font-weight: 600; }
+        .header-right .user-role { font-size: 0.65rem; opacity: 0.9; }
 
-        .header-right .user-role {
-            font-size: 0.65rem;
-            opacity: 0.9;
-        }
-
-        /* 2. SIDEBAR / MENÚ WEB HORIZONTAL */
         .sidebar-menu {
             background-color: var(--white);
             border-bottom: 1px solid var(--border-color);
@@ -107,13 +102,8 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
-        .sidebar-menu::-webkit-scrollbar {
-            height: 3px;
-        }
-        .sidebar-menu::-webkit-scrollbar-thumb {
-            background: #ccc;
-            border-radius: 2px;
-        }
+        .sidebar-menu::-webkit-scrollbar { height: 3px; }
+        .sidebar-menu::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
 
         .menu-item {
             display: inline-block;
@@ -138,7 +128,9 @@
             border-bottom-color: var(--primary-red);
         }
 
-        /* 3. ESPACIO CENTRAL */
+        /* ==========================================================================
+           3. MAIN CONTAINER & ESTRUCTURA
+           ========================================================================== */
         .main-container {
             flex: 1;
             padding: 22px 18px;
@@ -147,160 +139,242 @@
             margin: 0 auto;
         }
 
-        /* 4. FOOTER DE CIERRE */
-        footer {
-            background-color: var(--white);
-            border-top: 1px solid var(--border-color);
-            padding: 12px 18px;
-            text-align: center;
-            font-family: 'Open Sans', sans-serif;
-            font-size: 0.65rem;
-            color: #777;
-        }
-
-        /* Estilos específicos originales del módulo de clientes (sin sidebar vertical) */
-        .main-content {
-            width: 100%;
-        }
-        .header-seccion {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        .titulo-seccion h2 {
+        .section-header { margin-bottom: 18px; }
+        .section-header h1 {
             font-family: 'League Spartan', sans-serif;
             font-size: 1.5rem;
-            color: var(--texto-main);
-        }
-        .titulo-seccion p {
-            color: var(--texto-sec);
-            font-size: 0.75rem;
-        }
-        .search-box {
-            position: relative;
-            min-width: 280px;
-        }
-        .search-box input {
-            width: 100%;
-            padding: 10px 15px 10px 38px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 0.75rem;
-            outline: none;
-            background: #fff;
-        }
-        .search-box span {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--texto-sec);
-        }
-        .tabla-card {
-            background: var(--tarjeta-bg);
-            border-radius: 10px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            border: 1px solid var(--border-color);
-            overflow: hidden;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
-        th, td {
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.75rem;
-        }
-        th {
-            background-color: #FAFAFA;
-            font-family: 'League Spartan', sans-serif;
             font-weight: 700;
-            color: var(--texto-sec);
-            text-transform: uppercase;
+            color: var(--text-dark);
+            margin-bottom: 6px;
         }
-        tr:hover {
-            background-color: #FAFAFA;
+        .section-header .highlight { color: var(--primary-red); }
+
+        .content-card {
+            background-color: var(--white);
+            border-radius: 6px;
+            padding: 18px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+            margin-bottom: 18px;
+        }
+
+        /* ==========================================================================
+           4. ADAPTACIÓN DE COMPONENTES FUNCIONALES (KPIs, TABLA, FILTROS)
+           ========================================================================== */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .kpi-card {
+            background: var(--white);
+            padding: 18px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
             cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
         }
-        .badge {
-            padding: 4px 8px;
-            border-radius: 20px;
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary-red);
+        }
+
+        .kpi-title {
+            font-size: 0.75rem;
+            color: #777;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .kpi-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+            font-family: 'League Spartan', sans-serif;
+        }
+
+        /* Barras de Progreso Duales */
+        .progress-container { margin-top: 10px; }
+        .progress-label {
             font-size: 0.65rem;
             font-weight: 600;
-            display: inline-block;
+            color: #777;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3px;
         }
-        .badge-si { background: var(--exito); color: white; }
-        .badge-no { background: var(--texto-sec); color: white; }
-        
-        /* Drawer Overlay & Content */
+        .progress-bar-bg {
+            width: 100%;
+            background-color: var(--light-bg);
+            height: 6px;
+            border-radius: 3px;
+            margin-bottom: 8px;
+            overflow: hidden;
+        }
+        .progress-bar-fill { height: 100%; background-color: var(--exito); border-radius: 3px; }
+        .progress-bar-fill.cajas { background-color: var(--advertencia); }
+
+        /* Filtros y Búsqueda */
+        .filters-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            outline: none;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .search-input:focus { border-color: var(--primary-red); }
+
+        .active-filter-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--primary-red);
+            margin-bottom: 12px;
+            display: none;
+        }
+
+        .btn {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            font-family: 'Open Sans', sans-serif;
+        }
+        .btn-primary { background: var(--primary-red); color: var(--white); }
+        .btn-outline { background: var(--white); color: var(--primary-red); border: 1px solid var(--primary-red); }
+
+        /* TABLA DINÁMICA */
+        .table-container {
+            overflow: hidden;
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        th {
+            background-color: var(--light-bg);
+            font-size: 0.75rem;
+            color: #777;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        td { font-size: 0.75rem; color: var(--text-dark); }
+        tr:hover { background-color: var(--sidebar-hover); cursor: pointer; }
+
+        .status-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            display: inline-block; margin-right: 5px;
+        }
+        .status-dot.verde { background-color: var(--exito); }
+        .status-dot.amarillo { background-color: var(--advertencia); }
+        .status-dot.rojo { background-color: var(--alerta); }
+
+        .tag-info {
+            font-size: 0.65rem;
+            background: var(--light-bg);
+            padding: 3px 6px;
+            border-radius: 4px;
+            color: #777;
+            font-weight: 600;
+        }
+
+        /* ==========================================================================
+           5. FICHA CLIENTE 360° (DRAWER LATERAL)
+           ========================================================================== */
         .drawer-overlay {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4);
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
             display: none;
             z-index: 2000;
         }
-        .client-drawer {
+
+        .drawer {
             position: fixed;
-            top: 0; right: -400px; width: 380px; height: 100%;
-            background: white;
+            top: 0; right: -600px;
+            width: 500px;
+            height: 100vh;
+            background: var(--white);
             box-shadow: -4px 0 15px rgba(0,0,0,0.1);
-            z-index: 2001;
             transition: right 0.3s ease;
+            z-index: 2001;
             display: flex;
             flex-direction: column;
         }
-        .client-drawer.open { right: 0; }
+
+        .drawer.open { right: 0; }
+
         .drawer-header {
             padding: 20px;
-            background: var(--primary-red);
-            color: white;
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .drawer-header h3 {
-            font-family: 'League Spartan', sans-serif;
-            font-size: 1.15rem;
-        }
-        .drawer-close {
-            background: none; border: none; color: white; font-size: 1.25rem; cursor: pointer;
-        }
-        .drawer-body {
-            padding: 20px;
-            flex: 1;
-            overflow-y: auto;
-        }
-        .drawer-body p { margin-bottom: 12px; font-size: 0.75rem; }
 
+        .drawer-header h2 { 
+            font-family: 'League Spartan', sans-serif;
+            font-size: 1.25rem; 
+            color: var(--primary-red);
+        }
+
+        .close-btn {
+            background: none; border: none; font-size: 20px;
+            cursor: pointer; color: #777;
+        }
+
+        .drawer-content {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+            font-size: 0.75rem;
+        }
+
+        .drawer-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 10px;
+            background: var(--light-bg);
+        }
+
+        /* Responsive Clientes */
+        @media (max-width: 900px) {
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+            .drawer { width: 100%; right: -100%; }
+        }
+        @media (max-width: 500px) {
+            .kpi-grid { grid-template-columns: 1fr; }
+        }
         @media (max-width: 768px) {
-            header {
-                padding: 0 10px;
-                height: 50px;
-            }
-            .header-left img {
-                width: 38px;
-                height: 38px;
-            }
-            .header-title {
-                font-size: 0.7rem;
-            }
-            .header-right {
-                font-size: 0.6rem;
-            }
-            .menu-item {
-                padding: 9px 10px;
-                font-size: 0.65rem;
-            }
-            .main-container {
-                padding: 15px 10px;
-            }
-            .client-drawer { width: 100%; right: -100%; }
+            header { padding: 0 10px; height: 50px; }
+            .header-left img { width: 38px; height: 38px; }
+            .header-title { font-size: 0.7rem; }
+            .header-right { font-size: 0.6rem; }
+            .menu-item { padding: 9px 10px; font-size: 0.65rem; }
+            .main-container { padding: 15px 10px; }
+            .section-header h1 { font-size: 1.15rem; }
         }
     </style>
 </head>
@@ -308,12 +382,12 @@
 
     <header>
         <div class="header-left">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABDUAAAPgCAYAAAAiJEfzAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAABTLpJREFUeNrsvc+PFde5770PDrzm7RefTyD6+9olsQIkScZQbzDCDHLdnHtzIeBQPIrkZeXCuhJn4SvcOTAa2dO8EI50MMgIkR7oZValeQgwwfwC2c6XoRon4IfvgOEaN4ezTpLHxu7/V9bQXi/qxqmpV7arat4+01dC9f1StWlW7nr96nu8zmQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFPN3DAEAAADA+JlOpyuBT92XPvrO1fQRwodLS0u3mAUAAOMDUQMAAABgzkyn032Th4WErN+J53Pe5rnZY5nRqMWHs0ee6HEx5/cXst4H8QQAoFsQNQAAAAAaMp1OfUFhxfn37smm4DDJ+TeMmwve/yV6fFT0nkWlpQrNbwIAEAZw9w10sACACADmAAAMB5v1Z258OAAAAYH8APAKAfEAAAAYDAEAHvE04JAH189aX/wIAPbV49A==" alt="Logo Casabe Real">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABDUAAAPgCAYAAAAiJEfzAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAABTLpJREFUeNrsvc+PFde5770PDrzm7RfTyD6+9ollQIkScZQbzDCDHLdnHtzIeBQPIrkZeXCuhJn4SvcOTAa2dO8EI50MMgIkR7oZValeQgwwfwC2c6XoRon4IfvgOEaN4ezTpLHxu7/V9bQXi/qxqmpV7arat4+01dC9f1StWlW7nr96nu8zmQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFPN3DAEAAADA+JlOpyuBT92XPvrO1fQRwodLS0u3mAUAAOMDUQMAAABgzkyn032Th4WErN+J53Pe5rnZY5nRqMWHs0ee6HEx5/cXst4H8QQAoFsQNQAAAAAaMp1OfUFhxfn37smm4DDJ+TeMmwve/yV6fFT0nkWlpQsNbwIAEAZw9w10sACACADmAAAMB5v1Z258OAAAAYH8APAKAfEAAAAYDAEAHvE04JAH189aX/wIAPbV49A==" alt="Logo Casabe Real">
             <span class="header-title">SISTEMA COMERCIAL CASABE REAL</span>
         </div>
         <div class="header-right">
-            <div class="user-name" id="hd-nombre">Carlos Mendoza</div>
-            <div class="user-role" id="hd-vend">CEO / Administrador</div>
+            <div class="user-name">Carlos Mendoza</div>
+            <div class="user-role">CEO / Administrador</div>
         </div>
     </header>
 
@@ -332,91 +406,199 @@
     </nav>
 
     <main class="main-container">
-        <div class="main-content">
-            <div class="header-seccion">
-                <div class="titulo-seccion">
-                    <h2>Módulo de Clientes</h2>
-                    <p>Gestión y seguimiento de cartera comercial</p>
-                </div>
-                <div class="search-box">
-                    <span>🔍</span>
-                    <input type="text" id="searchInput" placeholder="Buscar cliente..." onkeyup="filtrarClientes()">
+        
+        <div class="section-header">
+            <h1>Gestión de <span class="highlight">Clientes y Cartera</span></h1>
+            <p style="color: #777; font-size: 0.7rem;">Vendedor (Vista Filtrada)</p>
+        </div>
+
+        <div class="kpi-grid">
+            <div class="kpi-card" onclick="filtrarClientes('todos', 'Todos los Clientes en Cartera')">
+                <div class="kpi-title">Meta de Ventas vs. Real</div>
+                <div class="progress-container">
+                    <div class="progress-label"><span>$ USD (85%)</span> <span>$8,500 / $10,000</span></div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 85%;"></div></div>
+                    
+                    <div class="progress-label"><span>Cajas (72%)</span> <span>360 / 500 Cajas</span></div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill cajas" style="width: 72%;"></div></div>
                 </div>
             </div>
 
-            <div class="tabla-card">
+            <div class="kpi-card" onclick="filtrarClientes('propuestas', 'Clientes con Propuestas Pendientes')">
+                <div class="kpi-title">Propuestas Pendientes</div>
+                <div class="kpi-value">18</div>
+                <div style="font-size: 0.65rem; color: var(--advertencia); font-weight: 600;">Esperando respuesta</div>
+            </div>
+
+            <div class="kpi-card" onclick="filtrarClientes('riesgo', 'Clientes en Riesgo de Recompra (Rojo y Amarillo)')">
+                <div class="kpi-title">Semáforo de Recompra</div>
+                <div style="display: flex; gap: 15px; margin-top: 5px;">
+                    <div style="text-align: center;">
+                        <span class="status-dot verde" style="width: 12px; height: 12px;"></span>
+                        <div style="font-size: 1rem; font-weight: 700; color: var(--text-dark); font-family: 'League Spartan', sans-serif;">92</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <span class="status-dot amarillo" style="width: 12px; height: 12px;"></span>
+                        <div style="font-size: 1rem; font-weight: 700; color: var(--text-dark); font-family: 'League Spartan', sans-serif;">14</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <span class="status-dot rojo" style="width: 12px; height: 12px;"></span>
+                        <div style="font-size: 1rem; font-weight: 700; color: var(--text-dark); font-family: 'League Spartan', sans-serif;">6</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="kpi-card" onclick="filtrarClientes('visitas', 'Rutero: Visitas Programadas para Hoy')">
+                <div class="kpi-title">Visitas del Día</div>
+                <div class="kpi-value">4 / 10</div>
+                <div style="font-size: 0.65rem; color: #777; font-weight: 600;">6 Pendientes por visitar</div>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <div class="filters-bar">
+                <input type="text" class="search-input" placeholder="Buscar por Nombre, RIF o Contacto..." id="searchInput" onkeyup="filtrarPorTexto()">
+                <button class="btn btn-outline" onclick="filtrarClientes('todos', '')">Limpiar Filtros</button>
+            </div>
+            
+            <div id="activeFilterLabel" class="active-filter-label"></div>
+
+            <div class="table-container">
                 <table>
                     <thead>
                         <tr>
-                            <th>Cliente</th>
-                            <th>Contacto</th>
-                            <th>Teléfono</th>
-                            <th>Propuesta</th>
-                            <th>Visita Hoy</th>
+                            <th>Razón Social / Comercial</th>
+                            <th>RIF / Contacto</th>
+                            <th>Semáforo Recompra</th>
+                            <th>Detalle Operativo</th>
+                            <th>Acción</th>
                         </tr>
                     </thead>
-                    <tbody id="tablaClientes">
+                    <tbody id="clientesTableBody">
                         </tbody>
                 </table>
             </div>
         </div>
     </main>
 
-    <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
-    <div class="client-drawer" id="clientDrawer">
-        <div class="drawer-header">
-            <h3 id="d-nombre">Detalle del Cliente</h3>
-            <button class="drawer-close" onclick="closeDrawer()">✕</button>
-        </div>
-        <div class="drawer-body">
-            <p><strong>Persona de Contacto:</strong> <span id="d-contacto"></span></p>
-            <p><strong>Teléfono:</strong> <span id="d-telefono"></span></p>
-            <hr style="margin: 15px 0; border: none; border-top: 1px solid var(--border-color);">
-            <div id="d-detalle"></div>
-        </div>
-    </div>
-
     <footer>
         <p>&copy; 2026 Sistema Comercial Casabe Real (SCCR). Todos los derechos reservados.</p>
     </footer>
 
+    <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+    <div class="drawer" id="clientDrawer">
+        <div class="drawer-header">
+            <h2 id="d-nombre">Nombre Comercial</h2>
+            <button class="close-btn" onclick="closeDrawer()">&times;</button>
+        </div>
+        <div class="drawer-content">
+            <p><strong>Contacto:</strong> <span id="d-contacto"></span> | <strong>Teléfono:</strong> <span id="d-telefono"></span></p>
+            <br>
+            <div style="background: var(--light-bg); padding: 15px; border-radius: 6px; border: 1px solid var(--border-color);">
+                <h3 style="color: var(--primary-red); font-size: 0.8rem; margin-bottom: 10px; font-family: 'League Spartan', sans-serif;">Detalle de la Métrica Activa</h3>
+                <p id="d-detalle" style="font-size: 0.75rem;"></p>
+            </div>
+        </div>
+        <div class="drawer-footer">
+            <button class="btn btn-primary" style="flex:1;">Crear Pedido</button>
+            <button class="btn btn-outline" style="flex:1;">Emitir Propuesta</button>
+        </div>
+    </div>
+
     <script>
+        // Mock de datos enriquecido con los atributos para cada KPI
         const clientesDB = [
-            { nombre: "Supermercado El Dorado", contacto: "Lic. Mario Pérez", tlf: "0414-1234567", tiene_propuesta: true, detalle_propuesta: "Propuesta enviada para ingreso de Casabe Tradicional 200g y Mini Casabe.", visita_hoy: false, detalle_visita: "" },
-            { nombre: "Distribuidora Los Andes C.A.", contacto: "Ana Gómez", tlf: "0412-9876543", tiene_propuesta: false, detalle_propuesta: "", visita_hoy: true, detalle_visita: "Revisión de inventario en anaquel y reposición sugerida." },
-            { nombre: "Automercados Central", contacto: "Carlos Silva", tlf: "0424-5558899", tiene_propuesta: true, detalle_propuesta: "Negociación activa para espacio preferencial en pasillo central.", visita_hoy: true, detalle_visita: "Cierre de pedido semanal pendiente." },
-            { nombre: "Inversiones Cerveceras del Este", contacto: "Mariana Rivas", tlf: "0416-3332211", tiene_propuesta: false, detalle_propuesta: "", visita_hoy: false, detalle_visita: "" }
+            { id: 1, nombre: "Supermercado El Rey", rif: "J-30495832-1", contacto: "Pedro Gómez", tlf: "0412-5551234", estado: "verde", tiene_propuesta: true, detalle_propuesta: "Propuesta #PRP-092 por $450 enviada el Lunes.", visita_hoy: false, en_riesgo: false },
+            { id: 2, nombre: "Bodegón La Castellana", rif: "J-40592834-9", contacto: "Luis Silva", tlf: "0424-9994321", estado: "amarillo", tiene_propuesta: false, detalle_propuesta: "Sin propuestas activas.", visita_hoy: true, detalle_visita: "Visita programada: 10:30 AM (Cobranza y Reposición).", en_riesgo: true },
+            { id: 3, nombre: "Distribuidora Central", rif: "J-29384756-3", contacto: "Ana Martínez", tlf: "0414-1112233", estado: "rojo", tiene_propuesta: true, detalle_propuesta: "Propuesta #PRP-085 por $1,200. Cliente dudando por precio.", visita_hoy: true, detalle_visita: "Visita programada: 02:00 PM (Reactivación Urgente).", en_riesgo: true },
+            { id: 4, nombre: "Restaurante Ávila", rif: "J-50123984-2", contacto: "Carlos Ruiz", tlf: "0412-3334455", estado: "verde", tiene_propuesta: false, detalle_propuesta: "", visita_hoy: false, en_riesgo: false },
+            { id: 5, nombre: "Cadenas Express", rif: "J-20093847-1", contacto: "María López", tlf: "0416-8887766", estado: "amarillo", tiene_propuesta: true, detalle_propuesta: "Propuesta #PRP-094 por $300. En revisión por gerencia.", visita_hoy: false, en_riesgo: true }
         ];
 
-        function renderTable(data) {
-            const tbody = document.getElementById('tablaClientes');
-            tbody.innerHTML = '';
-            data.forEach((c, index) => {
+        let clientesActuales = [...clientesDB];
+
+        // Función para renderizar la tabla según los datos filtrados
+        function renderTable(datos) {
+            const tbody = document.getElementById('clientesTableBody');
+            tbody.innerHTML = "";
+
+            if(datos.length === 0) {
+                tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>No se encontraron clientes para esta métrica.</td></tr>";
+                return;
+            }
+
+            datos.forEach(cliente => {
                 const tr = document.createElement('tr');
-                tr.onclick = () => openDrawer(c);
+                tr.onclick = () => openDrawer(cliente);
+                
+                let estadoTexto = cliente.estado === 'verde' ? 'Al día' : (cliente.estado === 'amarillo' ? 'Límite' : 'En Riesgo');
+                
+                // Generar etiqueta descriptiva
+                let detalleHtml = "";
+                if (cliente.tiene_propuesta) {
+                    detalleHtml += `<span class="tag-info" style="color: var(--advertencia); border: 1px solid var(--advertencia);">📝 Propuesta Pendiente</span><br>`;
+                }
+                if (cliente.visita_hoy) {
+                    detalleHtml += `<span class="tag-info" style="color: var(--primary-red); border: 1px solid var(--primary-red); margin-top:5px; display:inline-block;">📍 Visita Hoy</span>`;
+                }
+                if (!cliente.tiene_propuesta && !cliente.visita_hoy) {
+                    detalleHtml = "<span class='tag-info'>Cliente Regular</span>";
+                }
+
                 tr.innerHTML = `
-                    <td><strong>${c.nombre}</strong></td>
-                    <td>${c.contacto}</td>
-                    <td>${c.tlf}</td>
-                    <td><span class="badge ${c.tiene_propuesta ? 'badge-si' : 'badge-no'}">${c.tiene_propuesta ? 'Sí' : 'No'}</span></td>
-                    <td><span class="badge ${c.visita_hoy ? 'badge-si' : 'badge-no'}">${c.visita_hoy ? 'Sí' : 'No'}</span></td>
+                    <td style="font-weight: 600; color: var(--primary-red); font-family: 'League Spartan', sans-serif;">${cliente.nombre}</td>
+                    <td>${cliente.rif}<br><span style="font-size:0.65rem; color:#777;">${cliente.contacto}</span></td>
+                    <td><span class="status-dot ${cliente.estado}"></span> ${estadoTexto}</td>
+                    <td>${detalleHtml}</td>
+                    <td><button class="btn btn-outline">Ver Ficha</button></td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        function filtrarClientes() {
+        // Función que actúa al hacer clic en los KPIs
+        function filtrarClientes(filtro, tituloFiltro) {
+            const label = document.getElementById('activeFilterLabel');
+            
+            if(filtro === 'todos') {
+                clientesActuales = [...clientesDB];
+                label.style.display = 'none';
+            } else {
+                label.style.display = 'block';
+                label.innerText = `Filtro Activo: ${tituloFiltro} (${clientesActuales.length} resultados)`;
+                
+                if(filtro === 'propuestas') {
+                    clientesActuales = clientesDB.filter(c => c.tiene_propuesta);
+                } else if(filtro === 'riesgo') {
+                    clientesActuales = clientesDB.filter(c => c.en_riesgo);
+                } else if(filtro === 'visitas') {
+                    clientesActuales = clientesDB.filter(c => c.visita_hoy);
+                }
+            }
+            
+            if(filtro !== 'todos') {
+                label.innerText = `Filtro Activo: ${tituloFiltro} (${clientesActuales.length} resultados)`;
+            }
+            
+            renderTable(clientesActuales);
+        }
+
+        // Buscador por texto
+        function filtrarPorTexto() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             const filtrados = clientesDB.filter(c => 
                 c.nombre.toLowerCase().includes(query) || 
+                c.rif.toLowerCase().includes(query) || 
                 c.contacto.toLowerCase().includes(query)
             );
             renderTable(filtrados);
         }
 
+        // Funciones del Drawer
         function openDrawer(cliente) {
             document.getElementById('drawerOverlay').style.display = 'block';
             document.getElementById('clientDrawer').classList.add('open');
+            
             document.getElementById('d-nombre').innerText = cliente.nombre;
             document.getElementById('d-contacto').innerText = cliente.contacto;
             document.getElementById('d-telefono').innerText = cliente.tlf;
@@ -434,6 +616,7 @@
             document.getElementById('clientDrawer').classList.remove('open');
         }
 
+        // Inicializar
         window.onload = () => {
             renderTable(clientesDB);
         };
