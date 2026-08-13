@@ -1,11 +1,199 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Casabe Real — Pedidos</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Sistema Comercial Casabe Real (SCCR) — Pedidos</title>
+    <!-- Google Fonts: League Spartan & Open Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-red: #D30000;
+            --white: #FFFFFF;
+            --light-bg: #F8F9FA;
+            --text-dark: #333333;
+            --border-color: #E0E0E0;
+            --sidebar-hover: #F1F3F5;
+            /* Compatibilidad con variables originales de pedidos */
+            --rojo: #D30000;
+            --rojo-d: #A01015;
+            --rojo-xs: #FEF2F2;
+            --blanco: #FFFFFF;
+            --fondo: #F8F9FA;
+            --borde: #E5E7EB;
+            --gris: #6B7280;
+            --negro: #111827;
+            --verde: #059669;
+            --verde-xs: #ECFDF5;
+            --naranja: #D97706;
+            --naranja-xs: #FFFBEB;
+            --wa: #25D366;
+            --r: 14px;
+            --r-sm: 9px;
+            --sh: 0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+            --sh-md: 0 4px 16px rgba(0,0,0,.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            font-size: 0.75rem;
+        }
+
+        /* 1. HEADER */
+        header {
+            background-color: var(--primary-red);
+            color: var(--white);
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 18px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .header-left img {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
+            display: block;
+        }
+
+        .header-title {
+            font-family: 'League Spartan', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .header-right {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 0.7rem;
+            text-align: right;
+            line-height: 1.3;
+        }
+
+        .header-right .user-name {
+            font-weight: 600;
+        }
+
+        .header-right .user-role {
+            font-size: 0.65rem;
+            opacity: 0.9;
+        }
+
+        /* 2. SIDEBAR / MENÚ WEB HORIZONTAL */
+        .sidebar-menu {
+            background-color: var(--white);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 18px;
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .sidebar-menu::-webkit-scrollbar {
+            height: 3px;
+        }
+        .sidebar-menu::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 2px;
+        }
+
+        .menu-item {
+            display: inline-block;
+            padding: 12px 14px;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 0.7rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .menu-item:hover {
+            background-color: var(--sidebar-hover);
+            color: var(--primary-red);
+        }
+
+        .menu-item.active {
+            font-family: 'League Spartan', sans-serif;
+            font-weight: 700;
+            color: var(--primary-red);
+            border-bottom-color: var(--primary-red);
+        }
+
+        /* 3. ESPACIO CENTRAL */
+        .main-container {
+            flex: 1;
+            padding: 22px 18px;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* 4. FOOTER DE CIERRE */
+        footer {
+            background-color: var(--white);
+            border-top: 1px solid var(--border-color);
+            padding: 12px 18px;
+            text-align: center;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 0.65rem;
+            color: #777;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 0 10px;
+                height: 50px;
+            }
+            .header-left img {
+                width: 38px;
+                height: 38px;
+            }
+            .header-title {
+                font-size: 0.7rem;
+            }
+            .header-right {
+                font-size: 0.6rem;
+            }
+            .menu-item {
+                padding: 9px 10px;
+                font-size: 0.65rem;
+            }
+            .main-container {
+                padding: 15px 10px;
+            }
+        }
+    </style>
+    <!-- Estilos internos originales del módulo de pedidos -->
+    <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
   --rojo:#C8181E;--rojo-d:#A01015;--rojo-xs:#FEF2F2;
@@ -172,6 +360,37 @@ body{font-family:"Inter",sans-serif;background:var(--fondo);color:var(--negro);m
 </style>
 </head>
 <body>
+
+    <!-- 1. HEADER -->
+    <header>
+        <div class="header-left">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABDUAAAPgCAYAAAAiJEfzAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAABTLpJREFUeNrsvc+PFde5770PDrzm7RefTyD6+9olsQIkScZQbzDCDHLdnHtzIeBQPIrkZeXCuhJn4SvcOTAa2dO8EI50MMgIkR7oZValeQgwwfwC2c6XoRon4IfvgOEaN4ezTpLHxu7/V9bQXi/qxqmpV7arat4+01dC9f1StWlW7nr96nu8zmQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFPN3DAEAAADA+JlOpyuBT92XPvrO1fQRwodLS0u3mAUAAOMDUQMAAABgzkyn032Th4WErN+J53Pe5rnZY5nRqMWHs0ee6HEx5/cXst4H8QQAoFsQNQAAAAAaMp1OfUFhxfn37smm4DDJ+TeMmwve/yV6fFT0nkWlpQrNbwIAEAZw9w10sACACADmAAAMB5v1Z258OAAAAYH8APAKAfEAAAAYDAEAHvE04JAH189aX/wIAPbV49A==" alt="Logo Casabe Real">
+            <span class="header-title">SISTEMA COMERCIAL CASABE REAL</span>
+        </div>
+        <div class="header-right">
+            <div class="user-name" id="hd-nombre">Carlos Mendoza</div>
+            <div class="user-role" id="hd-vend">CEO / Administrador</div>
+        </div>
+    </header>
+
+    <!-- 2. SIDEBAR / MENÚ WEB HORIZONTAL -->
+    <nav class="sidebar-menu">
+        <a href="inicio.html" class="menu-item">INICIO</a>
+        <a href="clientes.html" class="menu-item">CLIENTES</a>
+        <a href="meta.html" class="menu-item">META</a>
+        <a href="propuesta.html" class="menu-item">PROPUESTA</a>
+        <a href="pedido.html" class="menu-item active">PEDIDO</a>
+        <a href="reporte.html" class="menu-item">REPORTE</a>
+        <a href="embudo.html" class="menu-item">EMBUDO</a>
+        <a href="dashboard.html" class="menu-item">DASHBOARD</a>
+        <a href="bi-ia.html" class="menu-item">BI+IA</a>
+        <a href="cargas.html" class="menu-item">CARGAS</a>
+        <a href="historico.html" class="menu-item">HISTORICO</a>
+    </nav>
+
+    <!-- 3. ESPACIO CENTRAL -->
+    <main class="main-container">
+        
 
 <!-- ═══════════════════════════════════════
      PANTALLA 1: AUTH (LOGIN / REGISTRO)
@@ -424,6 +643,450 @@ body{font-family:"Inter",sans-serif;background:var(--fondo);color:var(--negro);m
 <div class="toast" id="toast"></div>
 
 <script>
+// ═══ CONFIG ═══════════════════════════════════
+con
+st API = 'https://script.google.com/macros/s/AKfycbysSUeGA965zGGIF1Zpcbji1SNmkM_kKNoXmFwud6P7kHv0cTlKNJopVF3T93QKhqPs9A/exec'; // reemplazar al conectar Apps Script
+
+const CAT = [
+  {id:'pas', n:'Casabe Real tipo Pasapalo',   d:'Caja de 90 paquetes', p:220},
+  {id:'res', n:'Casabe Real tipo Restaurante', d:'Caja de 40 paquetes', p:260},
+  {id:'tor', n:'Casabe Real tipo Torta',       d:'Caja de 40 paquetes', p:200}
+];
+
+// ═══ SESION ════════════════════════════════════
+// Usuarios demo para pruebas (se reemplaza por Apps Script)
+const DEMO_USERS = [
+  {user:'admin',   pass:'admin123',  nombre:'Administrador', rol:'admin',    estado:'activo'},
+  {user:'vendedor1',pass:'vend123',  nombre:'Carlos Cova',   rol:'vendedor', estado:'activo'},
+  {user:'vendedor2',pass:'vend456',  nombre:'María Pérez',   rol:'vendedor', estado:'activo'}
+];
+
+let SESSION = null; // {user, nombre, rol}
+
+function loadSession(){
+  try{
+    const s = sessionStorage.getItem('sccr_session');
+    if(s){ SESSION = JSON.parse(s); showApp(); }
+  } catch(e){}
+}
+function saveSession(data){
+  SESSION = data;
+  sessionStorage.setItem('sccr_session', JSON.stringify(data));
+}
+function clearSession(){
+  SESSION = null;
+  sessionStorage.removeItem('sccr_session');
+}
+
+// ═══ AUTH ══════════════════════════════════════
+function switchTab(tab){
+  ['login','registro'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('on', t===tab);
+    document.getElementById('form-'+t).classList.toggle('on', t===tab);
+  });
+  document.getElementById('err-login').classList.remove('show');
+  document.getElementById('err-reg').classList.remove('show');
+  document.getElementById('pending-box').style.display='none';
+}
+
+async function doLogin(){
+  const user  = document.getElementById('l-user').value.trim().toLowerCase();
+  const pass  = document.getElementById('l-pass').value;
+  const errEl = document.getElementById('err-login');
+  const btn   = document.getElementById('btn-login');
+  const txt   = document.getElementById('login-txt');
+  const sp    = document.getElementById('spin-login');
+
+  if(!user||!pass){errEl.textContent='Completa usuario y contraseña.';errEl.classList.add('show');return;}
+
+  btn.disabled=true; txt.style.display='none'; sp.classList.add('show');
+  errEl.classList.remove('show');
+
+  try{
+    let found = null;
+
+    if(API !== 'TU_APPS_SCRIPT_URL_AQUI'){
+      // Llamada real al Apps Script
+      const r = await fetch(`${API}?action=login&user=${encodeURIComponent(user)}&pass=${encodeURIComponent(pass)}`);
+      const d = await r.json();
+      if(d.ok) found = d.data;
+    } else {
+      // Modo demo
+      await new Promise(r=>setTimeout(r,900));
+      found = DEMO_USERS.find(u=>u.user===user && u.pass===pass) || null;
+    }
+
+    if(found){
+      if(found.estado === 'pendiente'){
+        errEl.textContent = 'Tu cuenta está pendiente de aprobación por el administrador.';
+        errEl.classList.add('show');
+      } else {
+        saveSession({user: found.user, nombre: found.nombre, rol: found.rol});
+        showApp();
+      }
+    } else {
+      errEl.textContent = 'Usuario o contraseña incorrectos.';
+      errEl.classList.add('show');
+    }
+  } catch(e){
+    errEl.textContent = 'Error de conexión. Intenta de nuevo.';
+    errEl.classList.add('show');
+  }
+
+  btn.disabled=false; txt.style.display=''; sp.classList.remove('show');
+}
+
+async function doRegistro(){
+  const nombre = document.getElementById('r-nombre').value.trim();
+  const user   = document.getElementById('r-user').value.trim().toLowerCase().replace(/\s+/g,'');
+  const pass   = document.getElementById('r-pass').value;
+  const pass2  = document.getElementById('r-pass2').value;
+  const errEl  = document.getElementById('err-reg');
+  const btn    = document.getElementById('btn-reg');
+  const txt    = document.getElementById('reg-txt');
+  const sp     = document.getElementById('spin-reg');
+
+  errEl.classList.remove('show');
+  if(!nombre||!user||!pass||!pass2){errEl.textContent='Completa todos los campos.';errEl.classList.add('show');return;}
+  if(pass.length < 6){errEl.textContent='La contraseña debe tener al menos 6 caracteres.';errEl.classList.add('show');return;}
+  if(pass !== pass2){errEl.textContent='Las contraseñas no coinciden.';errEl.classList.add('show');return;}
+  if(!/^[a-z0-9_-]+$/.test(user)){errEl.textContent='El usuario solo puede tener letras, números, guiones y guión bajo.';errEl.classList.add('show');return;}
+
+  btn.disabled=true; txt.style.display='none'; sp.classList.add('show');
+
+  try{
+    if(API !== 'TU_APPS_SCRIPT_URL_AQUI'){
+      const r = await fetch(API, {method:'POST', body: JSON.stringify({action:'registro', nombre, user, pass})});
+      const d = await r.json();
+      if(!d.ok){errEl.textContent = d.msg||'Error al registrar.';errEl.classList.add('show');}
+      else { mostrarPendiente(); }
+    } else {
+      // Modo demo
+      await new Promise(r=>setTimeout(r,1000));
+      mostrarPendiente();
+    }
+  } catch(e){
+    errEl.textContent = 'Error de conexión. Intenta de nuevo.';
+    errEl.classList.add('show');
+  }
+
+  btn.disabled=false; txt.style.display=''; sp.classList.remove('show');
+}
+
+function mostrarPendiente(){
+  document.getElementById('r-nombre').value='';
+  document.getElementById('r-user').value='';
+  document.getElementById('r-pass').value='';
+  document.getElementById('r-pass2').value='';
+  document.getElementById('pending-box').style.display='block';
+  document.getElementById('btn-reg').style.display='none';
+}
+
+function showApp(){
+  document.getElementById('scr-auth').style.display='none';
+  document.getElementById('scr-app').style.display='flex';
+  document.getElementById('hd-nombre').textContent = SESSION.nombre;
+  resetPedido();
+  setStep(1);
+}
+
+function doLogout(){
+  if(!confirm('¿Cerrar sesión?')) return;
+  clearSession();
+  document.getElementById('scr-app').style.display='none';
+  document.getElementById('scr-auth').style.display='flex';
+  document.getElementById('l-user').value='';
+  document.getElementById('l-pass').value='';
+  switchTab('login');
+}
+
+// ═══ TIPO CLIENTE ═══════════════════════════════
+let tipo = 'activo', rifFile = null;
+
+function setTipo(t){
+  tipo = t;
+  document.getElementById('tb-act').classList.toggle('on', t==='activo');
+  document.getElementById('tb-new').classList.toggle('on', t==='nuevo');
+  document.getElementById('blq-rif').style.display = t==='nuevo' ? 'block' : 'none';
+}
+
+function onRif(i){
+  if(i.files && i.files[0]){
+    rifFile = i.files[0];
+    document.getElementById('rif-nm').textContent = rifFile.name;
+    document.getElementById('rif-ok').classList.add('show');
+    i.closest('.rif-area').style.display='none';
+  }
+}
+function rmRif(){
+  rifFile=null;
+  document.getElementById('rif-inp').value='';
+  document.getElementById('rif-ok').classList.remove('show');
+  document.querySelector('.rif-area').style.display='';
+}
+
+// ═══ PRODUCTOS ══════════════════════════════════
+let cnt = 0;
+
+function prodOpts(){
+  return CAT.map(p=>`<option value="${p.id}">${p.n} &middot; $${p.p}</option>`).join('');
+}
+function addProd(){
+  cnt++;
+  const n = cnt;
+  const d = document.createElement('div');
+  d.className='prod-row'; d.id='pr'+n;
+  d.innerHTML=`
+    <div class="prod-top">
+      <span class="prod-num">Producto ${n}</span>
+      ${n>1?`<button class="btn-rm" onclick="rmProd(${n})">&#10005;</button>`:''}
+    </div>
+    <div class="cf" style="margin-bottom:9px">
+      <label style="font-size:11.5px;font-weight:600;display:block;margin-bottom:5px">
+        Producto <span class="req">*</span>
+      </label>
+      <select id="sel${n}" onchange="updD(${n})">${prodOpts()}</select>
+    </div>
+    <div class="prod-grid">
+      <div>
+        <span class="qty-lbl">Cajas <span class="req">*</span></span>
+        <input class="qty-inp" type="number" id="qty${n}" value="1" min="1" max="999"
+               inputmode="numeric" oninput="updD(${n})">
+      </div>
+      <div></div>
+    </div>
+    <div class="prod-sub" id="det${n}">
+      <span id="dsc${n}">&#8212;</span>
+      <strong id="sub${n}">$0</strong>
+    </div>`;
+  document.getElementById('prod-list').appendChild(d);
+  updD(n); calcTotal();
+}
+function rmProd(n){ document.getElementById('pr'+n)?.remove(); calcTotal(); }
+function updD(n){
+  const s = document.getElementById('sel'+n);
+  const q = parseInt(document.getElementById('qty'+n)?.value) || 0;
+  const p = CAT.find(x=>x.id===s?.value);
+  if(!p) return;
+  document.getElementById('dsc'+n).textContent = p.d;
+  document.getElementById('sub'+n).textContent = '$'+(p.p*q).toLocaleString('es-VE');
+  calcTotal();
+}
+function calcTotal(){
+  let tot=0, cj=0;
+  document.querySelectorAll('[id^="sel"]').forEach(s=>{
+    const n = s.id.replace('sel','');
+    const q = parseInt(document.getElementById('qty'+n)?.value)||0;
+    const p = CAT.find(x=>x.id===s.value);
+    if(p){ tot+=p.p*q; cj+=q; }
+  });
+  document.getElementById('total-txt').textContent = '$'+tot.toLocaleString('es-VE');
+  document.getElementById('cajas-txt').textContent = cj+(cj===1?' caja':' cajas');
+}
+function getProds(){
+  const r=[];
+  document.querySelectorAll('[id^="sel"]').forEach(s=>{
+    const n = s.id.replace('sel','');
+    const q = parseInt(document.getElementById('qty'+n)?.value)||0;
+    const p = CAT.find(x=>x.id===s.value);
+    if(p && q>0) r.push({...p, cajas:q, sub:p.p*q});
+  });
+  return r;
+}
+
+// ═══ STEPS ══════════════════════════════════════
+function setStep(paso){
+  [1,2,3].forEach(i=>{
+    const s=document.getElementById('s'+i);
+    const c=document.getElementById('sc'+i);
+    s.classList.remove('active','done');
+    if(i<paso){ s.classList.add('done'); c.textContent='✓'; }
+    else if(i===paso){ s.classList.add('active'); c.textContent=i; }
+    else c.textContent=i;
+  });
+  [1,2].forEach(i=>document.getElementById('ln'+i)?.classList.toggle('done', i<paso));
+}
+
+// ═══ RESUMEN ════════════════════════════════════
+function goResumen(){
+  const razon = document.getElementById('razon').value.trim();
+  const establ = document.getElementById('establ').value.trim();
+  if(!razon){ toast('⚠️ Ingresa la Razón Social'); return; }
+  if(!establ){ toast('⚠️ Ingresa el nombre del establecimiento'); return; }
+  if(tipo==='nuevo' && !rifFile){ toast('⚠️ Debes cargar la imagen del RIF'); return; }
+  const prods = getProds();
+  if(!prods.length){ toast('⚠️ Agrega al menos un producto'); return; }
+
+  const hoy = new Date();
+  const fecha = hoy.toLocaleDateString('es-VE',{day:'2-digit',month:'long',year:'numeric'});
+  document.getElementById('r-fecha').textContent  = fecha;
+  document.getElementById('r-vend').textContent   = SESSION.nombre;
+  document.getElementById('r-razon').textContent  = razon;
+  document.getElementById('r-establ').textContent = establ;
+  document.getElementById('r-cont').textContent   = document.getElementById('contacto').value||'—';
+  document.getElementById('r-tel').textContent    = document.getElementById('telefono').value||'—';
+  document.getElementById('r-tipo').textContent   = tipo==='activo'?'✅ Cliente Activo':'🆕 Cliente Nuevo';
+  const tot = prods.reduce((a,p)=>a+p.sub,0);
+  document.getElementById('r-total').textContent  = '$'+tot.toLocaleString('es-VE');
+  document.getElementById('r-prods').innerHTML    = prods.map(p=>`
+    <div class="res-pi">
+      <span>${p.cajas}× ${p.n.replace('Casabe Real tipo ','')}</span>
+      <span>$${p.sub.toLocaleString('es-VE')}</span>
+    </div>`).join('');
+
+  document.getElementById('pnl-form').style.display='none';
+  document.getElementById('pnl-resumen').style.display='block';
+  setStep(3); scrollTo({top:0,behavior:'smooth'});
+}
+function goForm(){
+  document.getElementById('pnl-resumen').style.display='none';
+  document.getElementById('pnl-form').style.display='block';
+  setStep(2); scrollTo({top:0,behavior:'smooth'});
+}
+
+// ═══ GENERAR PEDIDO ═════════════════════════════
+async function genPedido(){
+  const btn=document.getElementById('btn-gen');
+  const txt=document.getElementById('gen-txt');
+  const sp=document.getElementById('spin-gen');
+  btn.disabled=true; txt.style.display='none'; sp.classList.add('show');
+
+  const prods = getProds();
+  const tot   = prods.reduce((a,p)=>a+p.sub,0);
+  const payload = {
+    action: 'nuevoPedido',
+    fecha: new Date().toISOString(),
+    vendedor: SESSION.nombre,
+    userVendedor: SESSION.user,
+    razonSocial: document.getElementById('razon').value.trim(),
+    establecimiento: document.getElementById('establ').value.trim(),
+    contacto: document.getElementById('contacto').value.trim(),
+    telefono: document.getElementById('telefono').value.trim(),
+    tipoCliente: tipo,
+    productos: prods.map(p=>({nombre:p.n, cajas:p.cajas, precio:p.p, subtotal:p.sub})),
+    totalUSD: tot,
+    condicionPago: '5 días'
+  };
+
+  try{
+    let num;
+    if(API !== 'TU_APPS_SCRIPT_URL_AQUI'){
+      const r = await fetch(API, {method:'POST', body:JSON.stringify(payload)});
+      const d = await r.json();
+      num = d.numeroPedido;
+    } else {
+      await new Promise(r=>setTimeout(r,1400));
+      num = 'CR-'+String(Math.floor(Math.random()*9000)+1000);
+    }
+    document.getElementById('ok-num').textContent = num;
+    document.getElementById('pnl-resumen').style.display='none';
+    document.getElementById('pnl-ok').style.display='block';
+    scrollTo({top:0,behavior:'smooth'});
+  } catch(e){
+    toast('❌ Error al enviar. Intenta de nuevo.');
+    btn.disabled=false; txt.style.display=''; sp.classList.remove('show');
+  }
+}
+
+// ═══ WHATSAPP ═══════════════════════════════════
+function waShare(){
+  const prods = getProds();
+  const tot   = prods.reduce((a,p)=>a+p.sub,0);
+  const fecha = new Date().toLocaleDateString('es-VE');
+  let m = `🧾 *PEDIDO CASABE REAL*
+📅 ${fecha}
+👤 ${SESSION.nombre}
+
+`;
+  m += `🏪 *Cliente*
+• ${document.getElementById('razon').value}
+`;
+  m += `• ${document.getElementById('establ').value}
+`;
+  const ct=document.getElementById('contacto').value;
+  const tf=document.getElementById('telefono').value;
+  if(ct) m+=`• Contacto: ${ct}
+`;
+  if(tf) m+=`• Telf: ${tf}
+`;
+  m += `• ${tipo==='activo'?'Cliente Activo':'Cliente Nuevo'}
+
+`;
+  m += `📦 *Productos*
+`;
+  prods.forEach(p=>m+=`• ${p.n.replace('Casabe Real tipo ','')} · ${p.cajas} caja${p.cajas>1?'s':''} → $${p.sub.toLocaleString('es-VE')}
+`);
+  m += `
+💰 *Total: $${tot.toLocaleString('es-VE')}*
+⏱️ Crédito 5 días`;
+  open('https://wa.me/?text='+encodeURIComponent(m),'_blank');
+}
+
+// ═══ NUEVO PEDIDO ════════════════════════════════
+function nuevo(){
+  resetPedido();
+  document.getElementById('pnl-ok').style.display='none';
+  document.getElementById('pnl-form').style.display='block';
+  setStep(1); scrollTo({top:0,behavior:'smooth'});
+}
+function resetPedido(){
+  document.getElementById('razon').value='';
+  document.getElementById('establ').value='';
+  document.getElementById('contacto').value='';
+  document.getElementById('telefono').value='';
+  setTipo('activo'); rmRif();
+  document.getElementById('prod-list').innerHTML='';
+  cnt=0; addProd(); calcTotal();
+}
+
+// ═══ TOAST ══════════════════════════════════════
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// ═══ INICIO ══════════════════════════════════════
+window.addEventListener('DOMContentLoaded', ()=>{
+  // ── Opción B: verificar sesión — si no existe, ir al login central ──
+  try{
+    const raw = sessionStorage.getItem('sccr');
+    if(!raw){ window.location.href='login.html'; return; }
+    const s = JSON.parse(raw);
+    if(!s || !s.user){ window.location.href='login.html'; return; }
+    // Sesión válida — pre-cargar datos del usuario
+    SESSION = s;
+    ['hd-nombre','hd-vend'].forEach(id=>{
+      const el = document.getElementById(id);
+      if(el) el.textContent = s.nombre;
+    });
+    const btnAdmin = document.getElementById('btn-admin-gear');
+    if(btnAdmin) btnAdmin.style.display = s.rol==='admin' ? '' : 'none';
+    // Saltar la pantalla de login interna — ir directo al formulario
+    const scrAuth = document.getElementById('scr-auth');
+    const scrApp  = document.getElementById('scr-app');
+    if(scrAuth) scrAuth.style.display = 'none';
+    if(scrApp)  scrApp.style.display  = 'flex';
+    resetPedido(); setStep(1);
+  } catch(e){
+    window.location.href = 'login.html'; return;
+  }
+  loadSession();
+  // Enter en login
+  document.getElementById('l-pass').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+  document.getElementById('l-user').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+});
+</script>
+
+    </main>
+
+    <!-- 4. FOOTER DE CIERRE -->
+    <footer>
+        <p>&copy; 2026 Sistema Comercial Casabe Real (SCCR). Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Scripts funcionales originales -->
+    <script>
 // ═══ CONFIG ═══════════════════════════════════
 const API = 'https://script.google.com/macros/s/AKfycbysSUeGA965zGGIF1Zpcbji1SNmkM_kKNoXmFwud6P7kHv0cTlKNJopVF3T93QKhqPs9A/exec'; // reemplazar al conectar Apps Script
 
