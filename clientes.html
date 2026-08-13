@@ -15,10 +15,11 @@
             --text-dark: #333333;
             --border-color: #E0E0E0;
             --sidebar-hover: #F1F3F5;
+            /* Compatibilidad con variables de clientes */
             --rojo-casabe: #D30000;
-            --fondo-app: #F8F9FA;
+            --fondo-app: #F5F7FA;
             --tarjeta-bg: #FFFFFF;
-            --texto-main: #333333;
+            --texto-main: #2D3436;
             --texto-sec: #7F8C8D;
             --exito: #2ECC71;
             --advertencia: #F39C12;
@@ -39,9 +40,10 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            font-size: 0.75rem;
+            font-size: 0.75rem; /* Reducción del tamaño base de texto en un 25% */
         }
 
+        /* 1. HEADER */
         header {
             background-color: var(--primary-red);
             color: var(--white);
@@ -94,6 +96,7 @@
             opacity: 0.9;
         }
 
+        /* 2. SIDEBAR / MENÚ WEB HORIZONTAL */
         .sidebar-menu {
             background-color: var(--white);
             border-bottom: 1px solid var(--border-color);
@@ -135,6 +138,7 @@
             border-bottom-color: var(--primary-red);
         }
 
+        /* 3. ESPACIO CENTRAL */
         .main-container {
             flex: 1;
             padding: 22px 18px;
@@ -143,6 +147,7 @@
             margin: 0 auto;
         }
 
+        /* 4. FOOTER DE CIERRE */
         footer {
             background-color: var(--white);
             border-top: 1px solid var(--border-color);
@@ -153,23 +158,125 @@
             color: #777;
         }
 
-        /* Estilos originales de clientes */
-        .module-container { background: var(--tarjeta-bg); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .search-bar { width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.85rem; margin-bottom: 20px; outline: none; transition: border-color 0.2s; }
-        .search-bar:focus { border-color: var(--rojo-casabe); }
-        .client-table { width: 100%; border-collapse: collapse; text-align: left; }
-        .client-table th { background-color: var(--fondo-app); color: var(--texto-sec); font-weight: 600; padding: 12px 15px; border-bottom: 2px solid var(--border-color); font-size: 0.75rem; text-transform: uppercase; }
-        .client-table td { padding: 14px 15px; border-bottom: 1px solid var(--border-color); font-size: 0.8rem; }
-        .client-table tr:hover { background-color: var(--fondo-app); cursor: pointer; }
-        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 600; display: inline-block; }
-        .badge-propuesta { background-color: rgba(46, 204, 113, 0.15); color: var(--exito); }
-        .badge-visita { background-color: rgba(243, 156, 18, 0.15); color: var(--advertencia); }
-        .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 2000; }
-        .drawer { position: fixed; top: 0; right: -400px; width: 400px; height: 100%; background: var(--tarjeta-bg); box-shadow: -5px 0 15px rgba(0,0,0,0.1); z-index: 2100; transition: right 0.3s ease; display: flex; flex-direction: column; }
-        .drawer.open { right: 0; }
-        .drawer-header { padding: 20px; background: var(--rojo-casabe); color: var(--white); display: flex; justify-content: space-between; align-items: center; }
-        .drawer-body { padding: 20px; overflow-y: auto; flex: 1; }
-        .close-btn { background: none; border: none; color: var(--white); font-size: 1.2rem; cursor: pointer; }
+        /* Estilos específicos originales del módulo de clientes (sin sidebar vertical) */
+        .main-content {
+            width: 100%;
+        }
+        .header-seccion {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .titulo-seccion h2 {
+            font-family: 'League Spartan', sans-serif;
+            font-size: 1.5rem;
+            color: var(--texto-main);
+        }
+        .titulo-seccion p {
+            color: var(--texto-sec);
+            font-size: 0.75rem;
+        }
+        .search-box {
+            position: relative;
+            min-width: 280px;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px 10px 38px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.75rem;
+            outline: none;
+            background: #fff;
+        }
+        .search-box span {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--texto-sec);
+        }
+        .tabla-card {
+            background: var(--tarjeta-bg);
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        th, td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.75rem;
+        }
+        th {
+            background-color: #FAFAFA;
+            font-family: 'League Spartan', sans-serif;
+            font-weight: 700;
+            color: var(--texto-sec);
+            text-transform: uppercase;
+        }
+        tr:hover {
+            background-color: #FAFAFA;
+            cursor: pointer;
+        }
+        .badge {
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .badge-si { background: var(--exito); color: white; }
+        .badge-no { background: var(--texto-sec); color: white; }
+        
+        /* Drawer Overlay & Content */
+        .drawer-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            display: none;
+            z-index: 2000;
+        }
+        .client-drawer {
+            position: fixed;
+            top: 0; right: -400px; width: 380px; height: 100%;
+            background: white;
+            box-shadow: -4px 0 15px rgba(0,0,0,0.1);
+            z-index: 2001;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .client-drawer.open { right: 0; }
+        .drawer-header {
+            padding: 20px;
+            background: var(--primary-red);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .drawer-header h3 {
+            font-family: 'League Spartan', sans-serif;
+            font-size: 1.15rem;
+        }
+        .drawer-close {
+            background: none; border: none; color: white; font-size: 1.25rem; cursor: pointer;
+        }
+        .drawer-body {
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+        .drawer-body p { margin-bottom: 12px; font-size: 0.75rem; }
 
         @media (max-width: 768px) {
             header {
@@ -193,9 +300,7 @@
             .main-container {
                 padding: 15px 10px;
             }
-            .section-header h1 {
-                font-size: 1.15rem;
-            }
+            .client-drawer { width: 100%; right: -100%; }
         }
     </style>
 </head>
@@ -203,12 +308,12 @@
 
     <header>
         <div class="header-left">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABDUAAAPgCAYAAAAiJEfzAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAABTLpJREFUeNrsvc+PFde5770PDrzm7RfTyD6+9ollQIkScZQbzDCDHLdnHtzIeBQPIrkZeXCuhJn4SvcOTAa2dO8EI50MMgIkR7oZValeQgwwfwC2c6XoRon4IfvgOEaN4ezTpLHxu7/V9bQXi/qxqmpV7arat4+01dC9f1StWlW7nr96nu8zmQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFPN3DAEAAADA+JlOpyuBT92XPvrO1fQRwodLS0u3mAUAAOMDUQMAAABgzkyn032Th4WErN+J53Pe5rnZY5nRqMWHs0ee6HEx5/cXst4H8QQAoFsQNQAAAAAaMp1OfUFhxfn37smm4DDJ+TeMmwve/yV6fFT0nkWlpQsNbwIAEAZw9w10sACACADmAAAMB5v1Z258OAAAAYH8APAKAfEAAAAYDAEAHvE04JAH189aX/wIAPbV49A==" alt="Logo Casabe Real">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABDUAAAPgCAYAAAAiJEfzAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAABTLpJREFUeNrsvc+PFde5770PDrzm7RefTyD6+9olsQIkScZQbzDCDHLdnHtzIeBQPIrkZeXCuhJn4SvcOTAa2dO8EI50MMgIkR7oZValeQgwwfwC2c6XoRon4IfvgOEaN4ezTpLHxu7/V9bQXi/qxqmpV7arat4+01dC9f1StWlW7nr96nu8zmQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFPN3DAEAAADA+JlOpyuBT92XPvrO1fQRwodLS0u3mAUAAOMDUQMAAABgzkyn032Th4WErN+J53Pe5rnZY5nRqMWHs0ee6HEx5/cXst4H8QQAoFsQNQAAAAAaMp1OfUFhxfn37smm4DDJ+TeMmwve/yV6fFT0nkWlpQrNbwIAEAZw9w10sACACADmAAAMB5v1Z258OAAAAYH8APAKAfEAAAAYDAEAHvE04JAH189aX/wIAPbV49A==" alt="Logo Casabe Real">
             <span class="header-title">SISTEMA COMERCIAL CASABE REAL</span>
         </div>
         <div class="header-right">
-            <div class="user-name">Carlos Mendoza</div>
-            <div class="user-role">CEO / Administrador</div>
+            <div class="user-name" id="hd-nombre">Carlos Mendoza</div>
+            <div class="user-role" id="hd-vend">CEO / Administrador</div>
         </div>
     </header>
 
@@ -227,36 +332,44 @@
     </nav>
 
     <main class="main-container">
-        <div class="module-container">
-            <div class="section-header" style="margin-bottom: 20px;">
-                <h1>Módulo de <span class="highlight" style="color: var(--rojo-casabe);">Clientes</span></h1>
+        <div class="main-content">
+            <div class="header-seccion">
+                <div class="titulo-seccion">
+                    <h2>Módulo de Clientes</h2>
+                    <p>Gestión y seguimiento de cartera comercial</p>
+                </div>
+                <div class="search-box">
+                    <span>🔍</span>
+                    <input type="text" id="searchInput" placeholder="Buscar cliente..." onkeyup="filtrarClientes()">
+                </div>
             </div>
-            
-            <input type="text" id="searchInput" class="search-bar" placeholder="Buscar por cliente o contacto..." onkeyup="filterClients()">
 
-            <table class="client-table">
-                <thead>
-                    <tr>
-                        <th>Cliente</th>
-                        <th>Contacto</th>
-                        <th>Teléfono</th>
-                        <th>Estado / Acción Hoy</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    </tbody>
-            </table>
+            <div class="tabla-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Contacto</th>
+                            <th>Teléfono</th>
+                            <th>Propuesta</th>
+                            <th>Visita Hoy</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaClientes">
+                        </tbody>
+                </table>
+            </div>
         </div>
     </main>
 
     <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
-    <div class="drawer" id="clientDrawer">
+    <div class="client-drawer" id="clientDrawer">
         <div class="drawer-header">
             <h3 id="d-nombre">Detalle del Cliente</h3>
-            <button class="close-btn" onclick="closeDrawer()">&times;</button>
+            <button class="drawer-close" onclick="closeDrawer()">✕</button>
         </div>
         <div class="drawer-body">
-            <p><strong>Contacto:</strong> <span id="d-contacto"></span></p>
+            <p><strong>Persona de Contacto:</strong> <span id="d-contacto"></span></p>
             <p><strong>Teléfono:</strong> <span id="d-telefono"></span></p>
             <hr style="margin: 15px 0; border: none; border-top: 1px solid var(--border-color);">
             <div id="d-detalle"></div>
@@ -269,33 +382,30 @@
 
     <script>
         const clientesDB = [
-            { id: 1, nombre: "Supermercados El Ahorro", contacto: "Mariana Gómez", tlf: "0414-1234567", tiene_propuesta: true, detalle_propuesta: "Propuesta enviada de surtido Premium Casabe 200g.", visita_hoy: false, detalle_visita: "" },
-            { id: 2, nombre: "Distribuidora Oriental C.A.", contacto: "José Rivas", tlf: "0412-9876543", tiene_propuesta: false, detalle_propuesta: "", visita_hoy: true, detalle_visita: "Visita de seguimiento programada a las 10:00 AM." },
-            { id: 3, nombre: "Hipermercados Central", contacto: "Ana Pérez", tlf: "0424-5556677", tiene_propuesta: true, detalle_propuesta: "Negociación de espacio en anaquel principal.", visita_hoy: true, detalle_visita: "Revisión de inventario y reposición." }
+            { nombre: "Supermercado El Dorado", contacto: "Lic. Mario Pérez", tlf: "0414-1234567", tiene_propuesta: true, detalle_propuesta: "Propuesta enviada para ingreso de Casabe Tradicional 200g y Mini Casabe.", visita_hoy: false, detalle_visita: "" },
+            { nombre: "Distribuidora Los Andes C.A.", contacto: "Ana Gómez", tlf: "0412-9876543", tiene_propuesta: false, detalle_propuesta: "", visita_hoy: true, detalle_visita: "Revisión de inventario en anaquel y reposición sugerida." },
+            { nombre: "Automercados Central", contacto: "Carlos Silva", tlf: "0424-5558899", tiene_propuesta: true, detalle_propuesta: "Negociación activa para espacio preferencial en pasillo central.", visita_hoy: true, detalle_visita: "Cierre de pedido semanal pendiente." },
+            { nombre: "Inversiones Cerveceras del Este", contacto: "Mariana Rivas", tlf: "0416-3332211", tiene_propuesta: false, detalle_propuesta: "", visita_hoy: false, detalle_visita: "" }
         ];
 
         function renderTable(data) {
-            const tbody = document.getElementById('tableBody');
+            const tbody = document.getElementById('tablaClientes');
             tbody.innerHTML = '';
-            data.forEach(c => {
-                let badge = '';
-                if(c.tiene_propuesta) badge += `<span class="badge badge-propuesta">Propuesta</span> `;
-                if(c.visita_hoy) badge += `<span class="badge badge-visita">Visita Hoy</span> `;
-                if(!badge) badge = `<span style="color: var(--texto-sec);">Sin actividad</span>`;
-
+            data.forEach((c, index) => {
                 const tr = document.createElement('tr');
                 tr.onclick = () => openDrawer(c);
                 tr.innerHTML = `
-                    <td style="font-weight: 600;">${c.nombre}</td>
+                    <td><strong>${c.nombre}</strong></td>
                     <td>${c.contacto}</td>
                     <td>${c.tlf}</td>
-                    <td>${badge}</td>
+                    <td><span class="badge ${c.tiene_propuesta ? 'badge-si' : 'badge-no'}">${c.tiene_propuesta ? 'Sí' : 'No'}</span></td>
+                    <td><span class="badge ${c.visita_hoy ? 'badge-si' : 'badge-no'}">${c.visita_hoy ? 'Sí' : 'No'}</span></td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        function filterClients() {
+        function filtrarClientes() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             const filtrados = clientesDB.filter(c => 
                 c.nombre.toLowerCase().includes(query) || 
