@@ -2,393 +2,248 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SCCR - Módulo de Clientes</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Sistema Comercial Casabe Real (SCCR) — Clientes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        /* ==========================================================================
-           1. DESIGN SYSTEM Y VARIABLES OFICIALES SCCR v2.5.0
-           ========================================================================== */
         :root {
-            --rojo-casabe: #D71920;
-            --fondo-app: #F5F7FA;
+            --primary-red: #D30000;
+            --white: #FFFFFF;
+            --light-bg: #F8F9FA;
+            --text-dark: #333333;
+            --border-color: #E0E0E0;
+            --sidebar-hover: #F1F3F5;
+            --rojo-casabe: #D30000;
+            --fondo-app: #F8F9FA;
             --tarjeta-bg: #FFFFFF;
-            --texto-main: #2D3436;
+            --texto-main: #333333;
             --texto-sec: #7F8C8D;
             --exito: #2ECC71;
             --advertencia: #F39C12;
             --alerta: #E74C3C;
-            --border-color: #E2E8F0;
         }
 
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--fondo-app);
-            color: var(--texto-main);
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* ==========================================================================
-           2. LAYOUT Y CABECERA
-           ========================================================================== */
-        .sidebar {
-            width: 260px;
-            background-color: var(--tarjeta-bg);
-            border-right: 1px solid var(--border-color);
-            padding: 20px;
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-dark);
             display: flex;
             flex-direction: column;
+            min-height: 100vh;
+            font-size: 0.75rem;
         }
 
-        .sidebar img.logo {
-            width: 100%;
-            max-width: 180px;
-            margin-bottom: 30px;
-            align-self: center;
-        }
-
-        .main-content {
-            flex: 1;
-            padding: 30px;
-            overflow-y: auto;
-        }
-
-        .page-header {
+        header {
+            background-color: var(--primary-red);
+            color: var(--white);
+            height: 60px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
-        }
-
-        .page-header h1 {
-            font-size: 24px;
-            font-weight: 700;
-        }
-
-        .breadcrumb {
-            font-size: 14px;
-            color: var(--texto-sec);
-            margin-top: 5px;
-        }
-
-        /* ==========================================================================
-           3. TARJETAS DE MÉTRICAS (KPI TOP) CON INTERACTIVIDAD
-           ========================================================================== */
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .kpi-card {
-            background: var(--tarjeta-bg);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
-            border: 1px solid var(--border-color);
-            cursor: pointer;
-            transition: transform 0.2s, border-color 0.2s;
-        }
-
-        .kpi-card:hover {
-            transform: translateY(-3px);
-            border-color: var(--rojo-casabe);
-        }
-
-        .kpi-title {
-            font-size: 14px;
-            color: var(--texto-sec);
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .kpi-value {
-            font-size: 30px;
-            font-weight: 700;
-            color: var(--texto-main);
-            margin-bottom: 5px;
-        }
-
-        /* Barras de Progreso Duales (Meta vs Real) */
-        .progress-container {
-            margin-top: 10px;
-        }
-        
-        .progress-label {
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--texto-sec);
-            display: flex;
             justify-content: space-between;
-            margin-bottom: 3px;
-        }
-
-        .progress-bar-bg {
-            width: 100%;
-            background-color: var(--fondo-app);
-            height: 6px;
-            border-radius: 3px;
-            margin-bottom: 8px;
-            overflow: hidden;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            background-color: var(--exito);
-            border-radius: 3px;
-        }
-        
-        .progress-bar-fill.cajas { background-color: var(--advertencia); }
-
-        /* ==========================================================================
-           4. DIRECTORIO COMERCIAL Y FILTROS
-           ========================================================================== */
-        .filters-bar {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-            align-items: center;
-        }
-
-        .search-input {
-            flex: 1;
-            padding: 10px 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 14px;
-            outline: none;
-        }
-
-        .search-input:focus {
-            border-color: var(--rojo-casabe);
-        }
-
-        .active-filter-label {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--rojo-casabe);
-            margin-bottom: 15px;
-            display: none;
-        }
-
-        /* TABLA DINÁMICA */
-        .table-container {
-            background: var(--tarjeta-bg);
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
-            border: 1px solid var(--border-color);
-            overflow: hidden;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        th {
-            background-color: #F8FAFC;
-            font-size: 14px;
-            color: var(--texto-sec);
-            font-weight: 600;
-        }
-
-        td {
-            font-size: 14px;
-            color: var(--texto-main);
-        }
-
-        tr:hover {
-            background-color: var(--fondo-app);
-            cursor: pointer;
-        }
-
-        .status-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 5px;
-        }
-        .status-dot.verde { background-color: var(--exito); }
-        .status-dot.amarillo { background-color: var(--advertencia); }
-        .status-dot.rojo { background-color: var(--alerta); }
-
-        .tag-info {
-            font-size: 12px;
-            background: var(--fondo-app);
-            padding: 3px 8px;
-            border-radius: 6px;
-            color: var(--texto-sec);
-            font-weight: 500;
-        }
-
-        /* ==========================================================================
-           5. FICHA CLIENTE 360° (DRAWER LATERAL)
-           ========================================================================== */
-        .drawer-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5);
-            display: none;
+            padding: 0 18px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
             z-index: 1000;
         }
 
-        .drawer {
-            position: fixed;
-            top: 0; right: -600px;
-            width: 550px;
-            height: 100vh;
-            background: var(--tarjeta-bg);
-            box-shadow: -4px 0 15px rgba(0,0,0,0.1);
-            transition: right 0.3s ease;
-            z-index: 1001;
+        .header-left {
             display: flex;
-            flex-direction: column;
-        }
-
-        .drawer.open { right: 0; }
-
-        .drawer-header {
-            padding: 25px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 11px;
         }
 
-        .close-btn {
-            background: none; border: none; font-size: 24px;
-            cursor: pointer; color: var(--texto-sec);
+        .header-left img {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
+            display: block;
         }
 
-        .drawer-content {
-            padding: 25px;
-            overflow-y: auto;
-            flex: 1;
+        .header-title {
+            font-family: 'League Spartan', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
 
-        .drawer-footer {
-            padding: 20px;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            gap: 10px;
-            background: var(--tarjeta-bg);
+        .header-right {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 0.7rem;
+            text-align: right;
+            line-height: 1.3;
         }
 
-        .btn {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 8px;
+        .header-right .user-name {
             font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-            transition: opacity 0.2s;
         }
-        .btn-primary { background: var(--rojo-casabe); color: white; }
-        .btn-outline { background: white; color: var(--rojo-casabe); border: 1px solid var(--rojo-casabe); }
 
+        .header-right .user-role {
+            font-size: 0.65rem;
+            opacity: 0.9;
+        }
+
+        .sidebar-menu {
+            background-color: var(--white);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 18px;
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .sidebar-menu::-webkit-scrollbar {
+            height: 3px;
+        }
+        .sidebar-menu::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 2px;
+        }
+
+        .menu-item {
+            display: inline-block;
+            padding: 12px 14px;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 0.7rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .menu-item:hover {
+            background-color: var(--sidebar-hover);
+            color: var(--primary-red);
+        }
+
+        .menu-item.active {
+            font-family: 'League Spartan', sans-serif;
+            font-weight: 700;
+            color: var(--primary-red);
+            border-bottom-color: var(--primary-red);
+        }
+
+        .main-container {
+            flex: 1;
+            padding: 22px 18px;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        footer {
+            background-color: var(--white);
+            border-top: 1px solid var(--border-color);
+            padding: 12px 18px;
+            text-align: center;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 0.65rem;
+            color: #777;
+        }
+
+        /* Estilos originales de clientes */
+        .module-container { background: var(--tarjeta-bg); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .search-bar { width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.85rem; margin-bottom: 20px; outline: none; transition: border-color 0.2s; }
+        .search-bar:focus { border-color: var(--rojo-casabe); }
+        .client-table { width: 100%; border-collapse: collapse; text-align: left; }
+        .client-table th { background-color: var(--fondo-app); color: var(--texto-sec); font-weight: 600; padding: 12px 15px; border-bottom: 2px solid var(--border-color); font-size: 0.75rem; text-transform: uppercase; }
+        .client-table td { padding: 14px 15px; border-bottom: 1px solid var(--border-color); font-size: 0.8rem; }
+        .client-table tr:hover { background-color: var(--fondo-app); cursor: pointer; }
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 600; display: inline-block; }
+        .badge-propuesta { background-color: rgba(46, 204, 113, 0.15); color: var(--exito); }
+        .badge-visita { background-color: rgba(243, 156, 18, 0.15); color: var(--advertencia); }
+        .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 2000; }
+        .drawer { position: fixed; top: 0; right: -400px; width: 400px; height: 100%; background: var(--tarjeta-bg); box-shadow: -5px 0 15px rgba(0,0,0,0.1); z-index: 2100; transition: right 0.3s ease; display: flex; flex-direction: column; }
+        .drawer.open { right: 0; }
+        .drawer-header { padding: 20px; background: var(--rojo-casabe); color: var(--white); display: flex; justify-content: space-between; align-items: center; }
+        .drawer-body { padding: 20px; overflow-y: auto; flex: 1; }
+        .close-btn { background: none; border: none; color: var(--white); font-size: 1.2rem; cursor: pointer; }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 0 10px;
+                height: 50px;
+            }
+            .header-left img {
+                width: 38px;
+                height: 38px;
+            }
+            .header-title {
+                font-size: 0.7rem;
+            }
+            .header-right {
+                font-size: 0.6rem;
+            }
+            .menu-item {
+                padding: 9px 10px;
+                font-size: 0.65rem;
+            }
+            .main-container {
+                padding: 15px 10px;
+            }
+            .section-header h1 {
+                font-size: 1.15rem;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <aside class="sidebar">
-        <img src="assets/logo-casabe-real.png" alt="Logo Casabe Real" class="logo">
-        <div style="color: var(--texto-sec); font-size: 14px; margin-top: 20px; line-height: 2.5;">
-            <div>📊 Dashboard</div>
-            <div>🎯 Meta</div>
-            <div style="color: var(--rojo-casabe); font-weight: 700;">👥 Clientes</div>
-            <div>🛒 Pedidos</div>
-            <div>📝 Propuestas</div>
-            <div>📍 Rutero Diario</div>
+    <header>
+        <div class="header-left">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABDUAAAPgCAYAAAAiJEfzAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAABTLpJREFUeNrsvc+PFde5770PDrzm7RfTyD6+9ollQIkScZQbzDCDHLdnHtzIeBQPIrkZeXCuhJn4SvcOTAa2dO8EI50MMgIkR7oZValeQgwwfwC2c6XoRon4IfvgOEaN4ezTpLHxu7/V9bQXi/qxqmpV7arat4+01dC9f1StWlW7nr96nu8zmQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFPN3DAEAAADA+JlOpyuBT92XPvrO1fQRwodLS0u3mAUAAOMDUQMAAABgzkyn032Th4WErN+J53Pe5rnZY5nRqMWHs0ee6HEx5/cXst4H8QQAoFsQNQAAAAAaMp1OfUFhxfn37smm4DDJ+TeMmwve/yV6fFT0nkWlpQsNbwIAEAZw9w10sACACADmAAAMB5v1Z258OAAAAYH8APAKAfEAAAAYDAEAHvE04JAH189aX/wIAPbV49A==" alt="Logo Casabe Real">
+            <span class="header-title">SISTEMA COMERCIAL CASABE REAL</span>
         </div>
-    </aside>
+        <div class="header-right">
+            <div class="user-name">Carlos Mendoza</div>
+            <div class="user-role">CEO / Administrador</div>
+        </div>
+    </header>
 
-    <main class="main-content">
-        <div class="page-header">
-            <div>
-                <h1>Gestión de Clientes y Cartera</h1>
-                <div class="breadcrumb">Inicio / Operaciones / Clientes</div>
+    <nav class="sidebar-menu">
+        <a href="inicio.html" class="menu-item">INICIO</a>
+        <a href="clientes.html" class="menu-item active">CLIENTES</a>
+        <a href="meta.html" class="menu-item">META</a>
+        <a href="propuesta.html" class="menu-item">PROPUESTA</a>
+        <a href="pedido.html" class="menu-item">PEDIDO</a>
+        <a href="reporte.html" class="menu-item">REPORTE</a>
+        <a href="embudo.html" class="menu-item">EMBUDO</a>
+        <a href="dashboard.html" class="menu-item">DASHBOARD</a>
+        <a href="bi-ia.html" class="menu-item">BI+IA</a>
+        <a href="cargas.html" class="menu-item">CARGAS</a>
+        <a href="historico.html" class="menu-item">HISTORICO</a>
+    </nav>
+
+    <main class="main-container">
+        <div class="module-container">
+            <div class="section-header" style="margin-bottom: 20px;">
+                <h1>Módulo de <span class="highlight" style="color: var(--rojo-casabe);">Clientes</span></h1>
             </div>
-            <div style="font-size: 14px; font-weight: 600;">Rol: <span style="color: var(--rojo-casabe);">Vendedor (Vista Filtrada)</span></div>
-        </div>
-
-        <div class="kpi-grid">
             
-            <div class="kpi-card" onclick="filtrarClientes('todos', 'Todos los Clientes en Cartera')">
-                <div class="kpi-title">Meta de Ventas vs. Real</div>
-                <div class="progress-container">
-                    <div class="progress-label"><span>$ USD (85%)</span> <span>$8,500 / $10,000</span></div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 85%;"></div></div>
-                    
-                    <div class="progress-label"><span>Cajas (72%)</span> <span>360 / 500 Cajas</span></div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill cajas" style="width: 72%;"></div></div>
-                </div>
-            </div>
+            <input type="text" id="searchInput" class="search-bar" placeholder="Buscar por cliente o contacto..." onkeyup="filterClients()">
 
-            <div class="kpi-card" onclick="filtrarClientes('propuestas', 'Clientes con Propuestas Pendientes')">
-                <div class="kpi-title">Propuestas Pendientes</div>
-                <div class="kpi-value">18</div>
-                <div style="font-size: 12px; color: var(--advertencia); font-weight: 600;">Esperando respuesta</div>
-            </div>
-
-            <div class="kpi-card" onclick="filtrarClientes('riesgo', 'Clientes en Riesgo de Recompra (Rojo y Amarillo)')">
-                <div class="kpi-title">Semáforo de Recompra</div>
-                <div style="display: flex; gap: 15px; margin-top: 10px;">
-                    <div style="text-align: center;">
-                        <span class="status-dot verde" style="width: 15px; height: 15px;"></span>
-                        <div style="font-size: 18px; font-weight: 700; color: var(--texto-main);">92</div>
-                    </div>
-                    <div style="text-align: center;">
-                        <span class="status-dot amarillo" style="width: 15px; height: 15px;"></span>
-                        <div style="font-size: 18px; font-weight: 700; color: var(--texto-main);">14</div>
-                    </div>
-                    <div style="text-align: center;">
-                        <span class="status-dot rojo" style="width: 15px; height: 15px;"></span>
-                        <div style="font-size: 18px; font-weight: 700; color: var(--texto-main);">6</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="kpi-card" onclick="filtrarClientes('visitas', 'Rutero: Visitas Programadas para Hoy')">
-                <div class="kpi-title">Visitas del Día</div>
-                <div class="kpi-value">4 / 10</div>
-                <div style="font-size: 12px; color: var(--texto-sec); font-weight: 600;">6 Pendientes por visitar</div>
-            </div>
-        </div>
-
-        <div class="filters-bar">
-            <input type="text" class="search-input" placeholder="Buscar por Nombre, RIF o Contacto..." id="searchInput" onkeyup="filtrarPorTexto()">
-            <button class="btn btn-outline" onclick="filtrarClientes('todos', '')">Limpiar Filtros</button>
-        </div>
-        
-        <div id="activeFilterLabel" class="active-filter-label"></div>
-
-        <div class="table-container">
-            <table>
+            <table class="client-table">
                 <thead>
                     <tr>
-                        <th>Razón Social / Comercial</th>
-                        <th>RIF / Contacto</th>
-                        <th>Semáforo Recompra</th>
-                        <th>Detalle Operativo (Métrica)</th>
-                        <th>Acción</th>
+                        <th>Cliente</th>
+                        <th>Contacto</th>
+                        <th>Teléfono</th>
+                        <th>Estado / Acción Hoy</th>
                     </tr>
                 </thead>
-                <tbody id="clientesTableBody">
+                <tbody id="tableBody">
                     </tbody>
             </table>
         </div>
@@ -397,118 +252,61 @@
     <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
     <div class="drawer" id="clientDrawer">
         <div class="drawer-header">
-            <h2 id="d-nombre">Nombre Comercial</h2>
+            <h3 id="d-nombre">Detalle del Cliente</h3>
             <button class="close-btn" onclick="closeDrawer()">&times;</button>
         </div>
-        <div class="drawer-content">
-            <p><strong>Contacto:</strong> <span id="d-contacto"></span> | <strong>Teléfono:</strong> <span id="d-telefono"></span></p>
-            <br>
-            <div style="background: var(--fondo-app); padding: 15px; border-radius: 8px;">
-                <h3 style="color: var(--rojo-casabe); font-size: 14px; margin-bottom: 10px;">Detalle de la Métrica Activa</h3>
-                <p id="d-detalle" style="font-size: 14px;"></p>
-            </div>
-        </div>
-        <div class="drawer-footer">
-            <button class="btn btn-primary">Crear Pedido</button>
-            <button class="btn btn-outline">Emitir Propuesta</button>
+        <div class="drawer-body">
+            <p><strong>Contacto:</strong> <span id="d-contacto"></span></p>
+            <p><strong>Teléfono:</strong> <span id="d-telefono"></span></p>
+            <hr style="margin: 15px 0; border: none; border-top: 1px solid var(--border-color);">
+            <div id="d-detalle"></div>
         </div>
     </div>
 
+    <footer>
+        <p>&copy; 2026 Sistema Comercial Casabe Real (SCCR). Todos los derechos reservados.</p>
+    </footer>
+
     <script>
-        // Mock de datos enriquecido con los atributos para cada KPI
         const clientesDB = [
-            { id: 1, nombre: "Supermercado El Rey", rif: "J-30495832-1", contacto: "Pedro Gómez", tlf: "0412-5551234", estado: "verde", tiene_propuesta: true, detalle_propuesta: "Propuesta #PRP-092 por $450 enviada el Lunes.", visita_hoy: false, en_riesgo: false },
-            { id: 2, nombre: "Bodegón La Castellana", rif: "J-40592834-9", contacto: "Luis Silva", tlf: "0424-9994321", estado: "amarillo", tiene_propuesta: false, detalle_propuesta: "Sin propuestas activas.", visita_hoy: true, detalle_visita: "Visita programada: 10:30 AM (Cobranza y Reposición).", en_riesgo: true },
-            { id: 3, nombre: "Distribuidora Central", rif: "J-29384756-3", contacto: "Ana Martínez", tlf: "0414-1112233", estado: "rojo", tiene_propuesta: true, detalle_propuesta: "Propuesta #PRP-085 por $1,200. Cliente dudando por precio.", visita_hoy: true, detalle_visita: "Visita programada: 02:00 PM (Reactivación Urgente).", en_riesgo: true },
-            { id: 4, nombre: "Restaurante Ávila", rif: "J-50123984-2", contacto: "Carlos Ruiz", tlf: "0412-3334455", estado: "verde", tiene_propuesta: false, detalle_propuesta: "", visita_hoy: false, en_riesgo: false },
-            { id: 5, nombre: "Cadenas Express", rif: "J-20093847-1", contacto: "María López", tlf: "0416-8887766", estado: "amarillo", tiene_propuesta: true, detalle_propuesta: "Propuesta #PRP-094 por $300. En revisión por gerencia.", visita_hoy: false, en_riesgo: true }
+            { id: 1, nombre: "Supermercados El Ahorro", contacto: "Mariana Gómez", tlf: "0414-1234567", tiene_propuesta: true, detalle_propuesta: "Propuesta enviada de surtido Premium Casabe 200g.", visita_hoy: false, detalle_visita: "" },
+            { id: 2, nombre: "Distribuidora Oriental C.A.", contacto: "José Rivas", tlf: "0412-9876543", tiene_propuesta: false, detalle_propuesta: "", visita_hoy: true, detalle_visita: "Visita de seguimiento programada a las 10:00 AM." },
+            { id: 3, nombre: "Hipermercados Central", contacto: "Ana Pérez", tlf: "0424-5556677", tiene_propuesta: true, detalle_propuesta: "Negociación de espacio en anaquel principal.", visita_hoy: true, detalle_visita: "Revisión de inventario y reposición." }
         ];
 
-        let clientesActuales = [...clientesDB];
+        function renderTable(data) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            data.forEach(c => {
+                let badge = '';
+                if(c.tiene_propuesta) badge += `<span class="badge badge-propuesta">Propuesta</span> `;
+                if(c.visita_hoy) badge += `<span class="badge badge-visita">Visita Hoy</span> `;
+                if(!badge) badge = `<span style="color: var(--texto-sec);">Sin actividad</span>`;
 
-        // Función para renderizar la tabla según los datos filtrados
-        function renderTable(datos) {
-            const tbody = document.getElementById('clientesTableBody');
-            tbody.innerHTML = "";
-
-            if(datos.length === 0) {
-                tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>No se encontraron clientes para esta métrica.</td></tr>";
-                return;
-            }
-
-            datos.forEach(cliente => {
                 const tr = document.createElement('tr');
-                tr.onclick = () => openDrawer(cliente);
-                
-                let estadoTexto = cliente.estado === 'verde' ? 'Al día' : (cliente.estado === 'amarillo' ? 'Límite (Amarillo)' : 'En Riesgo (Rojo)');
-                
-                // Generar etiqueta descriptiva basada en el estado del cliente
-                let detalleHtml = "";
-                if (cliente.tiene_propuesta) {
-                    detalleHtml += `<span class="tag-info" style="color: var(--advertencia); border: 1px solid var(--advertencia);">📝 Propuesta Pendiente</span><br>`;
-                }
-                if (cliente.visita_hoy) {
-                    detalleHtml += `<span class="tag-info" style="color: var(--rojo-casabe); border: 1px solid var(--rojo-casabe); margin-top:5px; display:inline-block;">📍 Visita Hoy</span>`;
-                }
-                if (!cliente.tiene_propuesta && !cliente.visita_hoy) {
-                    detalleHtml = "<span class='tag-info'>Cliente Regular</span>";
-                }
-
+                tr.onclick = () => openDrawer(c);
                 tr.innerHTML = `
-                    <td style="font-weight: 600; color: var(--rojo-casabe);">${cliente.nombre}</td>
-                    <td>${cliente.rif}<br><span style="font-size:12px; color:var(--texto-sec);">${cliente.contacto}</span></td>
-                    <td><span class="status-dot ${cliente.estado}"></span> ${estadoTexto}</td>
-                    <td>${detalleHtml}</td>
-                    <td><button class="btn btn-outline" style="padding: 6px 12px; font-size: 12px;">Ver Ficha</button></td>
+                    <td style="font-weight: 600;">${c.nombre}</td>
+                    <td>${c.contacto}</td>
+                    <td>${c.tlf}</td>
+                    <td>${badge}</td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        // Función que actúa al hacer clic en los KPIs
-        function filtrarClientes(filtro, tituloFiltro) {
-            const label = document.getElementById('activeFilterLabel');
-            
-            if(filtro === 'todos') {
-                clientesActuales = [...clientesDB];
-                label.style.display = 'none';
-            } else {
-                label.style.display = 'block';
-                label.innerText = `Filtro Activo: ${tituloFiltro} (${clientesActuales.length} resultados)`;
-                
-                if(filtro === 'propuestas') {
-                    clientesActuales = clientesDB.filter(c => c.tiene_propuesta);
-                } else if(filtro === 'riesgo') {
-                    clientesActuales = clientesDB.filter(c => c.en_riesgo);
-                } else if(filtro === 'visitas') {
-                    clientesActuales = clientesDB.filter(c => c.visita_hoy);
-                }
-            }
-            
-            // Actualizar etiqueta con la cantidad correcta post-filtrado
-            if(filtro !== 'todos') {
-                label.innerText = `Filtro Activo: ${tituloFiltro} (${clientesActuales.length} resultados)`;
-            }
-            
-            renderTable(clientesActuales);
-        }
-
-        // Buscador por texto
-        function filtrarPorTexto() {
+        function filterClients() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             const filtrados = clientesDB.filter(c => 
                 c.nombre.toLowerCase().includes(query) || 
-                c.rif.toLowerCase().includes(query) || 
                 c.contacto.toLowerCase().includes(query)
             );
             renderTable(filtrados);
         }
 
-        // Funciones del Drawer
         function openDrawer(cliente) {
             document.getElementById('drawerOverlay').style.display = 'block';
             document.getElementById('clientDrawer').classList.add('open');
-            
             document.getElementById('d-nombre').innerText = cliente.nombre;
             document.getElementById('d-contacto').innerText = cliente.contacto;
             document.getElementById('d-telefono').innerText = cliente.tlf;
@@ -526,7 +324,6 @@
             document.getElementById('clientDrawer').classList.remove('open');
         }
 
-        // Inicializar tabla al cargar
         window.onload = () => {
             renderTable(clientesDB);
         };
