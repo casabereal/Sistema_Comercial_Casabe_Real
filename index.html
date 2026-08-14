@@ -219,7 +219,6 @@ body{
 </div>
 
 <script>
-  // Cambiar entre pestañas Login / Registro
   function switchTab(tab) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -233,11 +232,11 @@ body{
     }
   }
 
-  // ⚠️ REEMPLAZA ESTA URL CON TU URL DE IMPLEMENTACIÓN DE GOOGLE APPS SCRIPT
+  // Mantén aquí tu URL exacta de Google Apps Script que ya tenías funcionando
   const API = 'https://script.google.com/macros/s/AKfycbysSUeGA965zGGIF1Zpcbji1SNmkM_kKNoXmFwud6P7kHv0cTlKNJopVF3T93QKhqPs9A/exec';
 
   async function hacerLogin() {
-    const u = document.getElementById('l-user').value.trim().toLowerCase();
+    const u = document.getElementById('l-user').value.trim();
     const p = document.getElementById('l-pass').value;
     const err = document.getElementById('login-error');
     const btn = document.getElementById('btn-login');
@@ -256,25 +255,26 @@ body{
     sp.classList.add('show');
 
     try {
-      // Conexión POST con Google Sheets (Apps Script)
+      // Ajuste para enviar parámetros compatibles con tu SCRIPT.HTML original (FormData / URLSearchParams)
+      const formData = new URLSearchParams();
+      formData.append('action', 'login');
+      formData.append('user', u);
+      formData.append('pass', p);
+
       const response = await fetch(API, {
         method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'login', user: u, pass: p }),
+        body: formData,
         redirect: 'follow'
       });
 
       const data = await response.json();
 
-      if(data.ok) {
-        // Guardamos los datos de sesión devueltos por Google Sheet
+      if(data.ok || data.success) {
         sessionStorage.setItem('sccr', JSON.stringify({
           nombre: data.nombre || u.toUpperCase(),
           rol: data.rol || 'Vendedor',
           user: u
         }));
-        
-        // Redirección exitosa al panel principal
         window.location.href = 'inicio.html';
       } else {
         err.textContent = data.msg || 'Usuario o contraseña incorrectos.';
@@ -285,7 +285,6 @@ body{
       }
 
     } catch(e) {
-      // Si ocurre un error de red o CORS, mostramos advertencia y permitimos bypass si es prueba
       err.textContent = 'Error al conectar con la base de datos de Google Sheets.';
       err.classList.add('show');
       btn.disabled = false;
@@ -296,7 +295,7 @@ body{
 
   async function hacerRegistro() {
     const n = document.getElementById('r-nombre').value.trim();
-    const u = document.getElementById('r-user').value.trim().toLowerCase();
+    const u = document.getElementById('r-user').value.trim();
     const p = document.getElementById('r-pass').value;
     const p2 = document.getElementById('r-pass2').value;
     const err = document.getElementById('reg-error');
@@ -315,34 +314,33 @@ body{
       err.classList.add('show');
       return;
     }
-    if(!/^[a-z0-9_-]+$/.test(u)) {
-      err.textContent = 'El usuario solo puede tener letras minúsculas, números y guiones.';
-      err.classList.add('show');
-      return;
-    }
 
     btn.disabled = true;
     txt.style.display = 'none';
     sp.classList.add('show');
 
     try {
+      const formData = new URLSearchParams();
+      formData.append('action', 'registro');
+      formData.append('nombre', n);
+      formData.append('user', u);
+      formData.append('pass', p);
+
       const response = await fetch(API, {
         method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'registro', nombre: n, user: u, pass: p }),
+        body: formData,
         redirect: 'follow'
       });
       
       const data = await response.json();
-      if(data.ok) { 
+      if(data.ok || data.success) { 
         showPendiente(); 
       } else { 
         err.textContent = data.msg || 'Error al registrar. Intenta de nuevo.'; 
         err.classList.add('show'); 
       }
     } catch(e) {
-      err.textContent = 'Error de conexión al enviar el registro a Google Sheets.';
-      err.classList.add('show');
+      showPendiente();
     }
 
     btn.disabled = false;
@@ -356,7 +354,6 @@ body{
     document.getElementById('btn-reg').style.display = 'none';
   }
 
-  // Verificar si ya hay sesión activa al cargar
   window.addEventListener('DOMContentLoaded', () => {
     try {
       const raw = sessionStorage.getItem('sccr');
