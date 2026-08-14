@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Casabe Real — Portal Vendedor (SCCR v2.5.0)</title>
+<title>Casabe Real — Inicio / Portal Comercial (SCCR v2.5.0)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -45,9 +45,7 @@ body{
   font-size:0.75rem;
 }
 
-/* ══════════════════════════════════════
-   1. HEADER
-   ══════════════════════════════════════ */
+/* HEADER */
 header{
   background-color:var(--primary-red);
   color:var(--white);
@@ -115,9 +113,7 @@ header{
   background:rgba(255,255,255,.22);
 }
 
-/* ══════════════════════════════════════
-   2. SIDEBAR / MENÚ WEB HORIZONTAL
-   ══════════════════════════════════════ */
+/* MENÚ WEB HORIZONTAL */
 .sidebar-menu{
   background-color:var(--white);
   border-bottom:1px solid var(--border-color);
@@ -155,9 +151,7 @@ header{
   border-bottom-color:var(--primary-red);
 }
 
-/* ══════════════════════════════════════
-   3. ESPACIO CENTRAL
-   ══════════════════════════════════════ */
+/* ESPACIO CENTRAL */
 .main-container{
   flex:1;
   padding:22px 18px 32px;
@@ -165,8 +159,6 @@ header{
   width:100%;
   margin:0 auto;
 }
-
-/* Breadcrumb + Título de Sección */
 .section-header{
   margin-bottom:18px;
 }
@@ -191,9 +183,7 @@ header{
   color:var(--primary-red);
 }
 
-/* ══════════════════════════════════════
-   KPIs
-   ══════════════════════════════════════ */
+/* KPIs */
 .kpi-grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -244,9 +234,7 @@ header{
   gap:4px;
 }
 
-/* ══════════════════════════════════════
-   GRID DE TARJETAS
-   ══════════════════════════════════════ */
+/* TARJETAS Y CONTENIDO */
 .content-grid{
   display:grid;
   grid-template-columns:1fr 1fr 1fr;
@@ -278,9 +266,7 @@ header{
   padding:16px;
 }
 
-/* ══════════════════════════════════════
-   TABLA
-   ══════════════════════════════════════ */
+/* TABLA */
 .tbl{
   width:100%;
   border-collapse:collapse;
@@ -305,9 +291,7 @@ header{
 .tbl tr:last-child td{border-bottom:none;}
 .tbl tr:hover td{background:var(--light-bg);}
 
-/* ══════════════════════════════════════
-   BOTÓN
-   ══════════════════════════════════════ */
+/* BOTÓN Y BADGES */
 .btn{
   background:var(--primary-red);
   color:#fff;
@@ -326,9 +310,6 @@ header{
 }
 .btn:hover{background:var(--rojo-d);}
 
-/* ══════════════════════════════════════
-   BADGES
-   ══════════════════════════════════════ */
 .badge{
   padding:3px 8px;
   border-radius:20px;
@@ -340,9 +321,6 @@ header{
 .badge.red{background:var(--rojo-xs);color:#DC2626;}
 .badge.blue{background:var(--azul-xs);color:var(--azul);}
 
-/* ══════════════════════════════════════
-   RUTERO ITEMS
-   ══════════════════════════════════════ */
 .rutero-item{
   display:flex;
   justify-content:space-between;
@@ -357,9 +335,7 @@ header{
 .rutero-item strong{font-size:0.72rem;display:block;}
 .rutero-item small{font-size:0.65rem;color:var(--gris);}
 
-/* ══════════════════════════════════════
-   4. FOOTER DE CIERRE
-   ══════════════════════════════════════ */
+/* FOOTER */
 footer{
   background-color:var(--white);
   border-top:1px solid var(--border-color);
@@ -371,34 +347,11 @@ footer{
 }
 footer strong{color:var(--text-dark);}
 
-/* ══════════════════════════════════════
-   RESPONSIVE DESIGN ADAPTATIVO
-   ══════════════════════════════════════ */
 @media (max-width: 768px) {
-    header {
-        padding: 0 10px;
-        height: 50px;
-    }
-    .header-left img {
-        width: 38px;
-        height: 38px;
-    }
-    .header-title {
-        font-size: 0.7rem;
-    }
-    .header-user-info {
-        font-size: 0.6rem;
-    }
-    .menu-item {
-        padding: 9px 10px;
-        font-size: 0.65rem;
-    }
-    .main-container {
-        padding: 15px 10px;
-    }
-    .section-header h1 {
-        font-size: 1.15rem;
-    }
+    header { padding: 0 10px; height: 50px; }
+    .header-title { font-size: 0.7rem; }
+    .main-container { padding: 15px 10px; }
+    .section-header h1 { font-size: 1.15rem; }
 }
 </style>
 </head>
@@ -406,20 +359,20 @@ footer strong{color:var(--text-dark);}
 
   <header>
     <div class="header-left">
-      <img src="assets/logo-casabe-real.png" alt="Casabe Real">
+      <img src="assets/logo-casabe-real.png" alt="Casabe Real" onerror="this.style.display='none'">
       <span class="header-title">Sistema Comercial Casabe Real</span>
     </div>
     <div class="header-right">
       <div class="header-user-info">
-        <div class="user-name" id="user-name-display">Asesor Comercial</div>
-        <div class="user-role">Portal Vendedor (SCCR v2.5.0)</div>
+        <div class="user-name" id="user-name-display">Cargando...</div>
+        <div class="user-role" id="user-role-display">Portal Comercial</div>
       </div>
       <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
     </div>
   </header>
 
   <nav class="sidebar-menu">
-    <a href="vendedor.html" class="menu-item active">INICIO</a>
+    <a href="inicio.html" class="menu-item active">INICIO</a>
     <a href="clientes.html" class="menu-item">CLIENTES</a>
     <a href="meta.html" class="menu-item">META</a>
     <a href="propuesta.html" class="menu-item">PROPUESTA</a>
@@ -427,37 +380,37 @@ footer strong{color:var(--text-dark);}
     <a href="reporte.html" class="menu-item">REPORTE</a>
     <a href="embudo.html" class="menu-item">EMBUDO</a>
     <a href="dashboard.html" class="menu-item">DASHBOARD</a>
-    <a href="bi-ia.html" class="menu-item">BI+IA</a>
-    <a href="cargas.html" class="menu-item">CARGAS</a>
-    <a href="historico.html" class="menu-item">HISTORICO</a>
+    <a href="bi-ia.html" class="menu-item admin-only">BI+IA</a>
+    <a href="cargas.html" class="menu-item admin-only">CARGAS</a>
+    <a href="historico.html" class="menu-item admin-only">HISTORICO</a>
   </nav>
 
   <main class="main-container">
 
     <div class="section-header">
-      <div class="breadcrumb">Inicio / <span>Vendedor</span> / Panel Principal</div>
-      <h1>Panel de <span class="highlight">Asesor Comercial</span></h1>
+      <div class="breadcrumb">Sistema / <span>Inicio</span></div>
+      <h1>Panel de Control <span class="highlight" id="panel-subtitle">Comercial</span></h1>
     </div>
 
     <div class="kpi-grid">
       <div class="kpi-card">
         <span class="kpi-label">Venta Acumulada ($ USD)</span>
-        <span class="kpi-value" id="kpi-usd">$ 14,850</span>
+        <span class="kpi-value">$ 14,850</span>
         <span class="kpi-sub">▲ 92% Cumplimiento Meta</span>
       </div>
       <div class="kpi-card">
         <span class="kpi-label">Venta Acumulada (Cajas)</span>
-        <span class="kpi-value" id="kpi-cajas">1,240</span>
+        <span class="kpi-value">1,240</span>
         <span class="kpi-sub">▲ Meta: 1,350 Cajas</span>
       </div>
       <div class="kpi-card">
         <span class="kpi-label">Propuestas Pendientes</span>
-        <span class="kpi-value" id="kpi-prop">6</span>
+        <span class="kpi-value">6</span>
         <span class="kpi-sub" style="color:var(--naranja);">En negociación activa</span>
       </div>
       <div class="kpi-card">
         <span class="kpi-label">Visitas Ejecutadas Hoy</span>
-        <span class="kpi-value" id="kpi-visitas">4 / 5</span>
+        <span class="kpi-value">4 / 5</span>
         <span class="kpi-sub">Rutero al día</span>
       </div>
     </div>
@@ -466,7 +419,7 @@ footer strong{color:var(--text-dark);}
 
       <div class="card col-2">
         <div class="card-hd">
-          Mi Cartera de Clientes
+          Cartera de Clientes Activos
           <a href="clientes.html" class="btn">Ver Directorio</a>
         </div>
         <div class="card-bd" style="padding:0;overflow-x:auto;">
@@ -479,7 +432,7 @@ footer strong{color:var(--text-dark);}
                 <th>Estatus Recompra</th>
               </tr>
             </thead>
-            <tbody id="tabla-cartera">
+            <tbody>
               <tr>
                 <td><strong>Supermercados Central</strong><br><small style="color:var(--gris)">RIF: J-30129482-1</small></td>
                 <td><span class="badge green">Tipo A</span></td>
@@ -493,7 +446,7 @@ footer strong{color:var(--text-dark);}
                 <td><span class="badge yellow">Por vencer</span></td>
               </tr>
               <tr>
-                <td><strong>Bodegón El Punto</strong><br><small style="color:var(--gris)">RIF: V-15482910-3</small></td>
+                <td><strong>Bodegón El Punto</strong><br><small style="color:var(--gris)">V-15482910-3</small></td>
                 <td><span class="badge blue">Tipo B</span></td>
                 <td>Hace 35 días</td>
                 <td><span class="badge red">En riesgo</span></td>
@@ -542,17 +495,38 @@ footer strong{color:var(--text-dark);}
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // Destacar ítem activo según la URL actual
-      const path = window.location.pathname.split('/').pop() || 'vendedor.html';
+      // 1. Marcar enlace activo
+      const path = window.location.pathname.split('/').pop() || 'inicio.html';
       document.querySelectorAll('.menu-item').forEach(link => {
         if (link.getAttribute('href') === path) link.classList.add('active');
       });
-      // Nombre del vendedor desde sessionStorage
+
+      // 2. Cargar sesión y configurar permisos por rol
       try {
-        const sess = JSON.parse(sessionStorage.getItem('sccr') || '{}');
-        if (sess.nombre) document.getElementById('user-name-display').textContent = sess.nombre;
-      } catch(e) {}
-      console.log("Portal Vendedor SCCR v2.5.0 cargado correctamente con diseño unificado.");
+        const raw = sessionStorage.getItem('sccr');
+        if (raw) {
+          const sess = JSON.parse(raw);
+          if (sess.nombre) {
+            document.getElementById('user-name-display').textContent = sess.nombre;
+          }
+          if (sess.rol) {
+            document.getElementById('user-role-display').textContent = sess.rol;
+            // Si NO es CEO ni Administrador, ocultamos los módulos de administración en el menú
+            if (sess.rol.toUpperCase() !== 'CEO' && sess.rol.toUpperCase() !== 'ADMINISTRADOR' && sess.rol.toUpperCase() !== 'ADMIN') {
+              document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+            } else {
+              document.getElementById('panel-subtitle').textContent = 'Gerencial / CEO';
+            }
+          }
+        } else {
+          // Valores por defecto si se entra directo sin login previo (modo prueba)
+          document.getElementById('user-name-display').textContent = "Asesor Comercial";
+          document.getElementById('user-role-display').textContent = "Portal Vendedor";
+          document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+        }
+      } catch(e) {
+        document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+      }
     });
 
     function cerrarSesion() {
