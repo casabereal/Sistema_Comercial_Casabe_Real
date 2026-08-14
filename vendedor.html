@@ -4,97 +4,337 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Casabe Real — Portal Vendedor (SCCR v2.5.0)</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --rojo:#C8181E;--rojo-d:#A01015;--rojo-xs:#FEF2F2;
-  --blanco:#FFFFFF;--fondo:#F3F4F6;--borde:#E5E7EB;
-  --gris:#6B7280;--negro:#111827;
-  --verde:#059669;--verde-xs:#ECFDF5;
-  --naranja:#D97706;--naranja-xs:#FFFBEB;
-  --azul:#2563EB;--azul-xs:#EFF6FF;
-  --r:14px;--r-sm:9px;
-  --sh:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+  --primary-red:#D30000;
+  --rojo:#D30000;
+  --rojo-d:#A01015;
+  --rojo-xs:#FEF2F2;
+  --white:#FFFFFF;
+  --blanco:#FFFFFF;
+  --light-bg:#F8F9FA;
+  --fondo:#F8F9FA;
+  --border-color:#E0E0E0;
+  --borde:#E0E0E0;
+  --text-dark:#333333;
+  --negro:#333333;
+  --gris:#6B7280;
+  --sidebar-hover:#F1F3F5;
+  --verde:#059669;
+  --verde-xs:#ECFDF5;
+  --naranja:#D97706;
+  --naranja-xs:#FFFBEB;
+  --azul:#2563EB;
+  --azul-xs:#EFF6FF;
+  --r:6px;
+  --r-sm:6px;
+  --sh:0 2px 4px rgba(0,0,0,0.05);
   --sh-md:0 4px 16px rgba(0,0,0,.10);
 }
-body{font-family:"Inter",sans-serif;background:var(--fondo);color:var(--negro);min-height:100vh;display:flex;flex-direction:column;}
+body{
+  font-family:'Open Sans', sans-serif;
+  background-color:var(--light-bg);
+  color:var(--text-dark);
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+  font-size:0.75rem;
+}
 
 /* ══════════════════════════════════════
-   HEADER — copia exacta de pedidos.html
+   1. HEADER
    ══════════════════════════════════════ */
-.hd{background:var(--rojo);padding:14px 18px 13px;display:flex;align-items:center;gap:11px;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.18)}
-.hd img{width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25));flex-shrink:0}
-.hd-txt h1{font-size:15px;font-weight:700;color:#fff;letter-spacing:-.2px;line-height:1.2}
-.hd-txt p{font-size:10.5px;color:rgba(255,255,255,.7);margin-top:1px}
-.hd-vend{margin-left:auto;display:flex;align-items:center;gap:6px;flex-shrink:0}
-.hd-vend-name{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);border-radius:20px;padding:5px 11px;font-size:11px;font-weight:600;color:#fff;white-space:nowrap}
-.btn-logout{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:6px 8px;cursor:pointer;color:rgba(255,255,255,.8);font-size:12px;transition:background .2s;white-space:nowrap;font-family:"Inter",sans-serif;font-weight:500}
-.btn-logout:hover{background:rgba(255,255,255,.22)}
+header{
+  background-color:var(--primary-red);
+  color:var(--white);
+  height:60px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 18px;
+  box-shadow:0 2px 4px rgba(0,0,0,0.1);
+  position:sticky;
+  top:0;
+  z-index:1000;
+}
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+.header-left img{
+  width:42px;
+  height:42px;
+  object-fit:contain;
+  filter:drop-shadow(0 2px 6px rgba(0,0,0,0.25));
+  display:block;
+}
+.header-title{
+  font-family:'League Spartan', sans-serif;
+  font-size:0.95rem;
+  font-weight:700;
+  letter-spacing:0.5px;
+  text-transform:uppercase;
+}
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.header-user-info{
+  font-family:'Open Sans', sans-serif;
+  font-size:0.7rem;
+  text-align:right;
+  line-height:1.3;
+}
+.header-user-info .user-name{
+  font-weight:600;
+}
+.header-user-info .user-role{
+  font-size:0.65rem;
+  opacity:0.9;
+}
+.btn-logout{
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:6px;
+  padding:5px 10px;
+  cursor:pointer;
+  color:rgba(255,255,255,.9);
+  font-size:0.7rem;
+  transition:background .2s;
+  white-space:nowrap;
+  font-family:'Open Sans', sans-serif;
+  font-weight:600;
+}
+.btn-logout:hover{
+  background:rgba(255,255,255,.22);
+}
 
 /* ══════════════════════════════════════
-   MENÚ DE NAVEGACIÓN HORIZONTAL
+   2. SIDEBAR / MENÚ WEB HORIZONTAL
    ══════════════════════════════════════ */
-.nav-bar{background:var(--blanco);border-bottom:1px solid var(--borde);padding:0 18px;display:flex;overflow-x:auto;white-space:nowrap;box-shadow:var(--sh);}
-.nav-bar::-webkit-scrollbar{height:3px;}
-.nav-bar::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px;}
-.nav-item{display:inline-block;padding:11px 14px;font-size:13px;font-weight:500;color:var(--negro);text-decoration:none;transition:all .2s;border-bottom:3px solid transparent;font-family:"Inter",sans-serif;}
-.nav-item:hover{background:var(--fondo);color:var(--rojo);}
-.nav-item.active{font-weight:700;color:var(--rojo);border-bottom-color:var(--rojo);}
+.sidebar-menu{
+  background-color:var(--white);
+  border-bottom:1px solid var(--border-color);
+  padding:0 18px;
+  display:flex;
+  overflow-x:auto;
+  white-space:nowrap;
+  box-shadow:0 1px 3px rgba(0,0,0,0.05);
+}
+.sidebar-menu::-webkit-scrollbar{
+  height:3px;
+}
+.sidebar-menu::-webkit-scrollbar-thumb{
+  background:#ccc;
+  border-radius:2px;
+}
+.menu-item{
+  display:inline-block;
+  padding:12px 14px;
+  font-family:'Open Sans', sans-serif;
+  font-size:0.7rem;
+  color:var(--text-dark);
+  text-decoration:none;
+  transition:all 0.2s ease;
+  border-bottom:3px solid transparent;
+}
+.menu-item:hover{
+  background-color:var(--sidebar-hover);
+  color:var(--primary-red);
+}
+.menu-item.active{
+  font-family:'League Spartan', sans-serif;
+  font-weight:700;
+  color:var(--primary-red);
+  border-bottom-color:var(--primary-red);
+}
 
 /* ══════════════════════════════════════
-   CONTENIDO PRINCIPAL
+   3. ESPACIO CENTRAL
    ══════════════════════════════════════ */
-.main-container{flex:1;padding:22px 18px 32px;max-width:1400px;width:100%;margin:0 auto;}
+.main-container{
+  flex:1;
+  padding:22px 18px 32px;
+  max-width:1400px;
+  width:100%;
+  margin:0 auto;
+}
 
-/* Breadcrumb + Título */
-.page-header{margin-bottom:20px;}
-.breadcrumb{font-size:12px;color:var(--gris);margin-bottom:4px;}
-.breadcrumb span{color:var(--rojo);font-weight:600;}
-.page-title{font-size:22px;font-weight:800;color:var(--negro);}
-.page-title .highlight{color:var(--rojo);}
+/* Breadcrumb + Título de Sección */
+.section-header{
+  margin-bottom:18px;
+}
+.breadcrumb{
+  font-size:0.68rem;
+  color:var(--gris);
+  margin-bottom:4px;
+}
+.breadcrumb span{
+  color:var(--primary-red);
+  font-weight:600;
+}
+.section-header h1{
+  font-family:'League Spartan', sans-serif;
+  font-size:1.5rem;
+  font-weight:700;
+  color:var(--text-dark);
+  margin-bottom:6px;
+}
+.section-header .highlight{
+  font-family:'League Spartan', sans-serif;
+  color:var(--primary-red);
+}
 
 /* ══════════════════════════════════════
    KPIs
    ══════════════════════════════════════ */
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:20px;}
-.kpi-card{background:var(--blanco);border:1px solid var(--borde);border-radius:var(--r);padding:18px 18px 18px 22px;box-shadow:var(--sh);display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden;}
-.kpi-card::before{content:'';position:absolute;top:0;left:0;bottom:0;width:4px;background:var(--rojo);border-radius:4px 0 0 4px;}
-.kpi-label{font-size:11px;font-weight:600;color:var(--gris);text-transform:uppercase;letter-spacing:.4px;}
-.kpi-value{font-size:28px;font-weight:800;color:var(--negro);}
-.kpi-sub{font-size:11px;color:var(--verde);font-weight:600;display:flex;align-items:center;gap:4px;}
+.kpi-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+  margin-bottom:20px;
+}
+.kpi-card{
+  background:var(--white);
+  border:1px solid var(--border-color);
+  border-radius:var(--r);
+  padding:18px 18px 18px 22px;
+  box-shadow:var(--sh);
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  position:relative;
+  overflow:hidden;
+}
+.kpi-card::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  bottom:0;
+  width:4px;
+  background:var(--primary-red);
+  border-radius:4px 0 0 4px;
+}
+.kpi-label{
+  font-size:0.65rem;
+  font-weight:600;
+  color:var(--gris);
+  text-transform:uppercase;
+  letter-spacing:.4px;
+}
+.kpi-value{
+  font-size:1.4rem;
+  font-weight:800;
+  color:var(--text-dark);
+  font-family:'League Spartan', sans-serif;
+}
+.kpi-sub{
+  font-size:0.68rem;
+  color:var(--verde);
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  gap:4px;
+}
 
 /* ══════════════════════════════════════
    GRID DE TARJETAS
    ══════════════════════════════════════ */
-.content-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+.content-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:16px;
+}
 .col-2{grid-column:span 2;}
 .col-1{grid-column:span 1;}
 @media(max-width:900px){.col-2,.col-1{grid-column:span 3;}}
 
-.card{background:var(--blanco);border-radius:var(--r);border:1px solid var(--borde);box-shadow:var(--sh);overflow:hidden;}
-.card-hd{padding:14px 16px;border-bottom:1px solid var(--borde);display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:700;color:var(--negro);}
-.card-bd{padding:16px;}
+.card{
+  background:var(--white);
+  border-radius:var(--r);
+  border:1px solid var(--border-color);
+  box-shadow:var(--sh);
+  overflow:hidden;
+}
+.card-hd{
+  padding:14px 16px;
+  border-bottom:1px solid var(--border-color);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-family:'League Spartan', sans-serif;
+  font-size:0.9rem;
+  font-weight:700;
+  color:var(--text-dark);
+}
+.card-bd{
+  padding:16px;
+}
 
 /* ══════════════════════════════════════
    TABLA
    ══════════════════════════════════════ */
-.tbl{width:100%;border-collapse:collapse;font-size:13px;}
-.tbl th{background:var(--fondo);color:var(--gris);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.3px;padding:10px 14px;border-bottom:1px solid var(--borde);text-align:left;}
-.tbl td{padding:13px 14px;border-bottom:1px solid var(--borde);color:var(--negro);}
+.tbl{
+  width:100%;
+  border-collapse:collapse;
+  font-size:0.72rem;
+}
+.tbl th{
+  background:var(--light-bg);
+  color:var(--gris);
+  font-weight:600;
+  font-size:0.65rem;
+  text-transform:uppercase;
+  letter-spacing:.3px;
+  padding:10px 14px;
+  border-bottom:1px solid var(--border-color);
+  text-align:left;
+}
+.tbl td{
+  padding:12px 14px;
+  border-bottom:1px solid var(--border-color);
+  color:var(--text-dark);
+}
 .tbl tr:last-child td{border-bottom:none;}
-.tbl tr:hover td{background:var(--fondo);}
+.tbl tr:hover td{background:var(--light-bg);}
 
 /* ══════════════════════════════════════
    BOTÓN
    ══════════════════════════════════════ */
-.btn{background:var(--rojo);color:#fff;border:none;padding:7px 14px;border-radius:var(--r-sm);font-weight:600;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;text-decoration:none;transition:background .2s;font-family:"Inter",sans-serif;}
+.btn{
+  background:var(--primary-red);
+  color:#fff;
+  border:none;
+  padding:6px 12px;
+  border-radius:var(--r-sm);
+  font-weight:600;
+  font-size:0.68rem;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  text-decoration:none;
+  transition:background .2s;
+  font-family:'Open Sans', sans-serif;
+}
 .btn:hover{background:var(--rojo-d);}
 
 /* ══════════════════════════════════════
    BADGES
    ══════════════════════════════════════ */
-.badge{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;}
+.badge{
+  padding:3px 8px;
+  border-radius:20px;
+  font-size:0.65rem;
+  font-weight:600;
+}
 .badge.green{background:var(--verde-xs);color:#15803D;}
 .badge.yellow{background:var(--naranja-xs);color:#B45309;}
 .badge.red{background:var(--rojo-xs);color:#DC2626;}
@@ -103,53 +343,102 @@ body{font-family:"Inter",sans-serif;background:var(--fondo);color:var(--negro);m
 /* ══════════════════════════════════════
    RUTERO ITEMS
    ══════════════════════════════════════ */
-.rutero-item{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border:1px solid var(--borde);border-radius:var(--r-sm);margin-bottom:8px;background:var(--fondo);}
+.rutero-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 12px;
+  border:1px solid var(--border-color);
+  border-radius:var(--r-sm);
+  margin-bottom:8px;
+  background:var(--light-bg);
+}
 .rutero-item:last-child{margin-bottom:0;}
-.rutero-item strong{font-size:13px;display:block;}
-.rutero-item small{font-size:11px;color:var(--gris);}
+.rutero-item strong{font-size:0.72rem;display:block;}
+.rutero-item small{font-size:0.65rem;color:var(--gris);}
 
 /* ══════════════════════════════════════
-   FOOTER
+   4. FOOTER DE CIERRE
    ══════════════════════════════════════ */
-footer{background:var(--blanco);border-top:1px solid var(--borde);padding:14px 18px;text-align:center;font-size:12px;color:var(--gris);}
-footer strong{color:var(--negro);}
+footer{
+  background-color:var(--white);
+  border-top:1px solid var(--border-color);
+  padding:12px 18px;
+  text-align:center;
+  font-family:'Open Sans', sans-serif;
+  font-size:0.65rem;
+  color:#777;
+}
+footer strong{color:var(--text-dark);}
+
+/* ══════════════════════════════════════
+   RESPONSIVE DESIGN ADAPTATIVO
+   ══════════════════════════════════════ */
+@media (max-width: 768px) {
+    header {
+        padding: 0 10px;
+        height: 50px;
+    }
+    .header-left img {
+        width: 38px;
+        height: 38px;
+    }
+    .header-title {
+        font-size: 0.7rem;
+    }
+    .header-user-info {
+        font-size: 0.6rem;
+    }
+    .menu-item {
+        padding: 9px 10px;
+        font-size: 0.65rem;
+    }
+    .main-container {
+        padding: 15px 10px;
+    }
+    .section-header h1 {
+        font-size: 1.15rem;
+    }
+}
 </style>
 </head>
 <body>
 
-  <!-- ══ HEADER (idéntico a pedidos.html) ══ -->
-  <header class="hd">
-    <img src="assets/logo-casabe-real.png" alt="Casabe Real">
-    <div class="hd-txt">
-      <h1>Portal Vendedor</h1>
-      <p>Sistema Comercial Casabe Real — SCCR v2.5.0</p>
+  <header>
+    <div class="header-left">
+      <img src="assets/logo-casabe-real.png" alt="Casabe Real">
+      <span class="header-title">Sistema Comercial Casabe Real</span>
     </div>
-    <div class="hd-vend">
-      <div class="hd-vend-name" id="user-name-display">Asesor Comercial</div>
+    <div class="header-right">
+      <div class="header-user-info">
+        <div class="user-name" id="user-name-display">Asesor Comercial</div>
+        <div class="user-role">Portal Vendedor (SCCR v2.5.0)</div>
+      </div>
       <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
     </div>
   </header>
 
-  <!-- ══ MENÚ HORIZONTAL (sin iconos, sin BI+IA) ══ -->
-  <nav class="nav-bar">
-    <a href="dashboard.html" class="nav-item">Dashboard</a>
-    <a href="clientes.html" class="nav-item">Clientes</a>
-    <a href="metas.html" class="nav-item">Meta</a>
-    <a href="propuesta.html" class="nav-item">Propuesta</a>
-    <a href="pedidos.html" class="nav-item">Pedidos</a>
-    <a href="reportes.html" class="nav-item">Reporte de Gestión</a>
-    <a href="embudo.html" class="nav-item">Embudo</a>
+  <nav class="sidebar-menu">
+    <a href="vendedor.html" class="menu-item active">INICIO</a>
+    <a href="clientes.html" class="menu-item">CLIENTES</a>
+    <a href="meta.html" class="menu-item">META</a>
+    <a href="propuesta.html" class="menu-item">PROPUESTA</a>
+    <a href="pedido.html" class="menu-item">PEDIDO</a>
+    <a href="reporte.html" class="menu-item">REPORTE</a>
+    <a href="embudo.html" class="menu-item">EMBUDO</a>
+    <a href="dashboard.html" class="menu-item">DASHBOARD</a>
+    <a href="bi-ia.html" class="menu-item">BI+IA</a>
+    <a href="cargas.html" class="menu-item">CARGAS</a>
+    <a href="historico.html" class="menu-item">HISTORICO</a>
   </nav>
 
-  <!-- ══ CONTENIDO PRINCIPAL ══ -->
   <main class="main-container">
 
-    <div class="page-header">
-      <div class="breadcrumb">Inicio / <span>Vendedor</span> / Portal Principal</div>
-      <h1 class="page-title">Panel de <span class="highlight">Asesor Comercial</span></h1>
+    <div class="section-header">
+      <div class="breadcrumb">Inicio / <span>Vendedor</span> / Panel Principal</div>
+      <h1>Panel de <span class="highlight">Asesor Comercial</span></h1>
     </div>
 
-    <!-- KPIs -->
     <div class="kpi-grid">
       <div class="kpi-card">
         <span class="kpi-label">Venta Acumulada ($ USD)</span>
@@ -173,7 +462,6 @@ footer strong{color:var(--negro);}
       </div>
     </div>
 
-    <!-- Tabla + Rutero -->
     <div class="content-grid">
 
       <div class="card col-2">
@@ -218,7 +506,7 @@ footer strong{color:var(--negro);}
       <div class="card col-1">
         <div class="card-hd">
           Rutero Diario
-          <a href="reportes.html" class="btn">Reportar</a>
+          <a href="reporte.html" class="btn">Reportar</a>
         </div>
         <div class="card-bd">
           <div class="rutero-item">
@@ -248,7 +536,6 @@ footer strong{color:var(--negro);}
     </div>
   </main>
 
-  <!-- ══ FOOTER ══ -->
   <footer>
     <p>&copy; 2026 <strong>Sistema Comercial Casabe Real (SCCR)</strong>. Todos los derechos reservados. &nbsp;|&nbsp; v2.5.0 &nbsp;|&nbsp; 0412.290.58.33</p>
   </footer>
@@ -257,7 +544,7 @@ footer strong{color:var(--negro);}
     document.addEventListener("DOMContentLoaded", () => {
       // Destacar ítem activo según la URL actual
       const path = window.location.pathname.split('/').pop() || 'vendedor.html';
-      document.querySelectorAll('.nav-item').forEach(link => {
+      document.querySelectorAll('.menu-item').forEach(link => {
         if (link.getAttribute('href') === path) link.classList.add('active');
       });
       // Nombre del vendedor desde sessionStorage
@@ -265,7 +552,7 @@ footer strong{color:var(--negro);}
         const sess = JSON.parse(sessionStorage.getItem('sccr') || '{}');
         if (sess.nombre) document.getElementById('user-name-display').textContent = sess.nombre;
       } catch(e) {}
-      console.log("Portal Vendedor SCCR v2.5.0 cargado correctamente.");
+      console.log("Portal Vendedor SCCR v2.5.0 cargado correctamente con diseño unificado.");
     });
 
     function cerrarSesion() {
