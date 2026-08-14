@@ -526,7 +526,6 @@ footer strong{color:var(--text-dark);}
             }
           }
         } else {
-          // Modo prueba por defecto si se entra directo sin pasar por login.html
           document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
         }
       } catch(e) {
@@ -538,7 +537,7 @@ footer strong{color:var(--text-dark);}
     function cerrarSesion() {
       if(confirm('¿Estás seguro de cerrar sesión?')) {
         sessionStorage.removeItem('sccr');
-        window.location.href = 'login.html';
+        window.location.href = 'index.html'; // Redirige correctamente a tu login (index.html)
       }
     }
   </script>
