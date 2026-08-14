@@ -232,7 +232,6 @@ body{
     }
   }
 
-  // Mantén aquí tu URL exacta de Google Apps Script que ya tenías funcionando
   const API = 'https://script.google.com/macros/s/AKfycbysSUeGA965zGGIF1Zpcbji1SNmkM_kKNoXmFwud6P7kHv0cTlKNJopVF3T93QKhqPs9A/exec';
 
   async function hacerLogin() {
@@ -255,15 +254,13 @@ body{
     sp.classList.add('show');
 
     try {
-      // Ajuste para enviar parámetros compatibles con tu SCRIPT.HTML original (FormData / URLSearchParams)
-      const formData = new URLSearchParams();
-      formData.append('action', 'login');
-      formData.append('user', u);
-      formData.append('pass', p);
-
       const response = await fetch(API, {
         method: 'POST',
-        body: formData,
+        body: JSON.stringify({
+          action: 'login',
+          user: u,
+          pass: p
+        }),
         redirect: 'follow'
       });
 
@@ -283,9 +280,8 @@ body{
         txt.style.display = '';
         sp.classList.remove('show');
       }
-
     } catch(e) {
-      err.textContent = 'Error al conectar con la base de datos de Google Sheets.';
+      err.textContent = 'Error al conectar con el servidor. Verifique la URL de la API.';
       err.classList.add('show');
       btn.disabled = false;
       txt.style.display = '';
