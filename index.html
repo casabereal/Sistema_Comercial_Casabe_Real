@@ -233,10 +233,11 @@ body{
     }
   }
 
-  const API = 'https://script.google.com/macros/s/AKfycbzX.../exec'; // Cambia por tu endpoint si aplica
+  // ⚠️ REEMPLAZA ESTA URL CON TU URL DE IMPLEMENTACIÓN DE GOOGLE APPS SCRIPT
+  const API = 'https://script.google.com/macros/s/TU_ENDPOINT_DE_APPS_SCRIPT/exec';
 
   async function hacerLogin() {
-    const u = document.getElementById('l-user').value.trim();
+    const u = document.getElementById('l-user').value.trim().toLowerCase();
     const p = document.getElementById('l-pass').value;
     const err = document.getElementById('login-error');
     const btn = document.getElementById('btn-login');
@@ -255,19 +256,37 @@ body{
     sp.classList.add('show');
 
     try {
-      // Simulación de acceso local o conexión a API
-      // Si usas backend externo, aquí procesas la respuesta. 
-      // Por defecto guardamos la sesión y redirigimos a inicio.html:
-      
-      // Ejemplo de guardado de sesión exitosa:
-      const datosUsuario = { nombre: u.toUpperCase(), rol: u === 'admin' ? 'CEO / Administrador' : 'Vendedor' };
-      sessionStorage.setItem('sccr', JSON.stringify(datosUsuario));
-      
-      // REDIRECCIÓN CORRECTA AL ARCHIVO DE INICIO
-      window.location.href = 'inicio.html';
+      // Conexión POST con Google Sheets (Apps Script)
+      const response = await fetch(API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'login', user: u, pass: p }),
+        redirect: 'follow'
+      });
+
+      const data = await response.json();
+
+      if(data.ok) {
+        // Guardamos los datos de sesión devueltos por Google Sheet
+        sessionStorage.setItem('sccr', JSON.stringify({
+          nombre: data.nombre || u.toUpperCase(),
+          rol: data.rol || 'Vendedor',
+          user: u
+        }));
+        
+        // Redirección exitosa al panel principal
+        window.location.href = 'inicio.html';
+      } else {
+        err.textContent = data.msg || 'Usuario o contraseña incorrectos.';
+        err.classList.add('show');
+        btn.disabled = false;
+        txt.style.display = '';
+        sp.classList.remove('show');
+      }
 
     } catch(e) {
-      err.textContent = 'Error de conexión con el servidor.';
+      // Si ocurre un error de red o CORS, mostramos advertencia y permitimos bypass si es prueba
+      err.textContent = 'Error al conectar con la base de datos de Google Sheets.';
       err.classList.add('show');
       btn.disabled = false;
       txt.style.display = '';
@@ -296,26 +315,34 @@ body{
       err.classList.add('show');
       return;
     }
+    if(!/^[a-z0-9_-]+$/.test(u)) {
+      err.textContent = 'El usuario solo puede tener letras minúsculas, números y guiones.';
+      err.classList.add('show');
+      return;
+    }
 
     btn.disabled = true;
     txt.style.display = 'none';
     sp.classList.add('show');
 
     try {
-      const r = await fetch(API, {
+      const response = await fetch(API, {
         method: 'POST',
-        body: JSON.stringify({action: 'registro', nombre: n, user: u, pass: p}),
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'registro', nombre: n, user: u, pass: p }),
         redirect: 'follow'
       });
-      const d = await r.json();
-      if(d.ok) { 
+      
+      const data = await response.json();
+      if(data.ok) { 
         showPendiente(); 
       } else { 
-        err.textContent = d.msg || 'Error al registrar. Intenta de nuevo.'; 
+        err.textContent = data.msg || 'Error al registrar. Intenta de nuevo.'; 
         err.classList.add('show'); 
       }
     } catch(e) {
-      showPendiente();
+      err.textContent = 'Error de conexión al enviar el registro a Google Sheets.';
+      err.classList.add('show');
     }
 
     btn.disabled = false;
@@ -329,12 +356,11 @@ body{
     document.getElementById('btn-reg').style.display = 'none';
   }
 
-  // Verificar si ya hay sesión activa
+  // Verificar si ya hay sesión activa al cargar
   window.addEventListener('DOMContentLoaded', () => {
     try {
       const raw = sessionStorage.getItem('sccr');
       if(raw) {
-        // Si ya está logueado, redirigimos automáticamente a inicio.html
         window.location.href = 'inicio.html';
       }
     } catch(e) {}
