@@ -4,176 +4,182 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SCCR v2.5.0 — Dashboard Ejecutivo</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --primary: #D71920;
-            --primary-hover: #b51319;
-            --bg-general: #F5F7FA;
-            --card-bg: #FFFFFF;
-            --text-main: #2D3436;
-            --text-secondary: #7F8C8D;
+            --primary-red: #D30000;
+            --white: #FFFFFF;
+            --light-bg: #F8F9FA;
+            --text-dark: #333333;
+            --border-color: #E0E0E0;
+            --sidebar-hover: #F1F3F5;
             --success: #2ECC71;
             --warning: #F39C12;
             --danger: #E74C3C;
-            --border-color: #E2E8F0;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', sans-serif;
         }
 
         body {
-            background-color: var(--bg-general);
-            color: var(--text-main);
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-dark);
             display: flex;
+            flex-direction: column;
             min-height: 100vh;
+            font-size: 0.75rem; /* Reducción del tamaño base de texto en un 25% */
         }
 
-        /* Sidebar Estilo BI / CRM */
-        aside {
-            width: 260px;
-            background-color: var(--card-bg);
-            border-right: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            height: 100vh;
-            z-index: 100;
-        }
-
-        .sidebar-brand {
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .sidebar-brand img {
-            width: 40px;
-            height: 40px;
-            object-fit: contain;
-        }
-
-        .sidebar-brand span {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-            font-size: 18px;
-            color: var(--primary);
-        }
-
-        .sidebar-menu {
-            list-style: none;
-            padding: 20px 10px;
-            flex-grow: 1;
-            overflow-y: auto;
-        }
-
-        .sidebar-menu li {
-            margin-bottom: 8px;
-        }
-
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .sidebar-menu a:hover, .sidebar-menu a.active {
-            background-color: rgba(215, 25, 32, 0.08);
-            color: var(--primary);
-        }
-
-        /* Main Wrapper */
-        .main-wrapper {
-            margin-left: 260px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Header Principal */
+        /* 1. HEADER */
         header {
-            background-color: var(--card-bg);
-            padding: 16px 32px;
-            border-bottom: 1px solid var(--border-color);
+            background-color: var(--primary-red);
+            color: var(--white);
+            height: 60px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            padding: 0 18px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             position: sticky;
             top: 0;
-            z-index: 99;
+            z-index: 1000;
         }
 
-        .breadcrumb {
-            font-size: 14px;
-            color: var(--text-secondary);
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 11px;
         }
 
-        .breadcrumb span {
-            color: var(--text-main);
+        .header-left img {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
+            display: block;
+        }
+
+        .header-title {
+            font-family: 'League Spartan', sans-serif;
+            font-size: 0.95rem; /* Reducción del 25% */
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .header-right {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 0.7rem; /* Reducción del 25% */
+            text-align: right;
+            line-height: 1.3;
+        }
+
+        .header-right .user-name {
             font-weight: 600;
         }
 
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .header-right .user-role {
+            font-size: 0.65rem; /* Reducción del 25% */
+            opacity: 0.9;
         }
 
-        .user-avatar {
-            width: 38px;
-            height: 38px;
-            background-color: var(--primary);
-            color: white;
-            border-radius: 50%;
+        /* 2. SIDEBAR / MENÚ WEB HORIZONTAL */
+        .sidebar-menu {
+            background-color: var(--white);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 18px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 14px;
+            overflow-x: auto;
+            white-space: nowrap;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
-        /* Contenido Dinámico de Filas Tácticas */
-        .dashboard-container {
-            padding: 24px 32px;
+        .sidebar-menu::-webkit-scrollbar {
+            height: 3px;
+        }
+        .sidebar-menu::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 2px;
+        }
+
+        .menu-item {
+            display: inline-block;
+            padding: 12px 14px;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 0.7rem; /* Reducción del 25% */
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .menu-item:hover {
+            background-color: var(--sidebar-hover);
+            color: var(--primary-red);
+        }
+
+        .menu-item.active {
+            font-family: 'League Spartan', sans-serif;
+            font-weight: 700;
+            color: var(--primary-red);
+            border-bottom-color: var(--primary-red);
+        }
+
+        /* 3. ESPACIO CENTRAL / DASHBOARD CONTAINER */
+        .main-container {
+            flex: 1;
+            padding: 22px 18px;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
             display: flex;
             flex-direction: column;
-            gap: 24px;
-            max-width: 1440px;
-            margin: 0 auto;
-            width: 100%;
+            gap: 20px;
+        }
+
+        .section-header {
+            margin-bottom: 6px;
+        }
+
+        .section-header h1 {
+            font-family: 'League Spartan', sans-serif;
+            font-size: 1.5rem; /* Reducción del 25% */
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 2px;
+        }
+
+        .section-header .highlight {
+            font-family: 'League Spartan', sans-serif;
+            color: var(--primary-red);
         }
 
         /* Fila 1: 6 Tarjetas KPI */
         .fila-1 {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            gap: 16px;
+            gap: 14px;
         }
 
         .kpi-card {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            padding: 18px;
+            background-color: var(--white);
+            border-radius: 6px;
+            padding: 14px;
             box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            border-left: 4px solid var(--primary);
+            border-left: 4px solid var(--primary-red);
             transition: transform 0.2s;
         }
 
@@ -185,30 +191,30 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: var(--text-secondary);
-            font-size: 12px;
+            color: #777;
+            font-size: 0.65rem;
             font-weight: 600;
             text-transform: uppercase;
         }
 
         .kpi-header i {
-            color: var(--primary);
-            font-size: 16px;
+            color: var(--primary-red);
+            font-size: 0.85rem;
         }
 
         .kpi-value {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 24px;
+            font-family: 'League Spartan', sans-serif;
+            font-size: 1.35rem;
             font-weight: 700;
-            color: var(--text-main);
-            margin: 10px 0 4px 0;
+            color: var(--text-dark);
+            margin: 8px 0 4px 0;
         }
 
         .kpi-footer {
-            font-size: 11px;
+            font-size: 0.65rem;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
         }
 
         .trend-up { color: var(--success); font-weight: 600; }
@@ -218,39 +224,41 @@
         .grid-2col {
             display: grid;
             grid-template-columns: 2fr 1fr;
-            gap: 24px;
+            gap: 18px;
         }
 
         .grid-2col-even {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 24px;
+            gap: 18px;
         }
 
         .card-box {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            padding: 24px;
+            background-color: var(--white);
+            border-radius: 6px;
+            padding: 18px;
             box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 14px;
         }
 
         .card-title {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text-main);
+            font-family: 'League Spartan', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .card-title span {
-            font-size: 12px;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 0.65rem;
             font-weight: 400;
-            color: var(--text-secondary);
+            color: #777;
         }
 
         /* Tablas de Rankings */
@@ -262,33 +270,33 @@
             width: 100%;
             border-collapse: collapse;
             text-align: left;
-            font-size: 14px;
+            font-size: 0.72rem;
         }
 
         th {
-            background-color: #F8FAFC;
-            color: var(--text-secondary);
+            background-color: var(--light-bg);
+            color: #555;
             font-weight: 600;
-            padding: 10px 12px;
+            padding: 8px 10px;
             border-bottom: 1px solid var(--border-color);
         }
 
         td {
-            padding: 12px;
+            padding: 10px;
             border-bottom: 1px solid var(--border-color);
-            color: var(--text-main);
+            color: var(--text-dark);
         }
 
         tr:hover td {
-            background-color: #F8FAFC;
+            background-color: var(--sidebar-hover);
             cursor: pointer;
         }
 
         /* Semáforos */
         .badge {
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 11px;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 0.65rem;
             font-weight: 600;
             display: inline-block;
         }
@@ -300,64 +308,100 @@
         .fila-5 {
             background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
             color: white;
-            border-radius: 12px;
-            padding: 28px;
+            border-radius: 6px;
+            padding: 20px;
             box-shadow: var(--shadow);
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 16px;
         }
 
         .fila-5 .card-title {
             color: white;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 12px;
+            padding-bottom: 10px;
         }
 
         .ai-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 16px;
+            gap: 12px;
         }
 
         .ai-block {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 16px;
+            border-radius: 6px;
+            padding: 12px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
 
         .ai-block h4 {
-            font-size: 13px;
+            font-family: 'League Spartan', sans-serif;
+            font-size: 0.85rem;
             font-weight: 600;
             color: #F8FAFC;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .ai-block h4 i {
-            color: var(--primary);
+            color: var(--primary-red);
         }
 
         .ai-block p {
-            font-size: 12px;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 0.68rem;
             color: #94A3B8;
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
-        /* Responsive Breakpoints */
+        /* 4. FOOTER DE CIERRE */
+        footer {
+            background-color: var(--white);
+            border-top: 1px solid var(--border-color);
+            padding: 12px 18px;
+            text-align: center;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 0.65rem; /* Reducción del 25% */
+            color: #777;
+            margin-top: auto;
+        }
+
+        /* Responsive Design adaptativo */
         @media (max-width: 1200px) {
             .fila-1 { grid-template-columns: repeat(3, 1fr); }
             .ai-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
         @media (max-width: 768px) {
-            aside { display: none; }
-            .main-wrapper { margin-left: 0; }
+            header {
+                padding: 0 10px;
+                height: 50px;
+            }
+            .header-left img {
+                width: 38px;
+                height: 38px;
+            }
+            .header-title {
+                font-size: 0.7rem;
+            }
+            .header-right {
+                font-size: 0.6rem;
+            }
+            .menu-item {
+                padding: 9px 10px;
+                font-size: 0.65rem;
+            }
+            .main-container {
+                padding: 15px 10px;
+            }
+            .section-header h1 {
+                font-size: 1.15rem;
+            }
             .fila-1 { grid-template-columns: 1fr; }
             .grid-2col, .grid-2col-even { grid-template-columns: 1fr; }
             .ai-grid { grid-template-columns: 1fr; }
@@ -366,274 +410,284 @@
 </head>
 <body>
 
-    <aside>
-        <div class="sidebar-brand">
-            <img src="assets/logo-casabe-real.png" alt="Logo Casabe Real">
-            <span>SCCR v2.5.0</span>
+    <header>
+        <div class="header-left">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABDUAAAPgCAYAAAAiJEfzAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAABTLpJREFUeNrsvc+PFde5770PDrzm7RfTyD6+9ollQIkScZQbzDCDHLdnHtzIeBQPIrkZeXCuhJn4SvcOTAa2dO8EI50MMgIkR7oZValeQgwwfwC2c6XoRon4IfvgOEaN4ezTpLHxu7/V9bQXi/qxqmpV7arat4+01dC9f1StWlW7nr96nu8zmQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFPN3DAEAAADA+JlOpyuBT92XPvrO1fQRwodLS0u3mAUAAOMDUQMAAABgzkyn032Th4WErN+J53Pe5rnZY5nRqMWHs0ee6HEx5/cXst4H8QQAoFsQNQAAAAAaMp1OfUFhxfn37smm4DDJ+TeMmwve/yV6fFT0nkWlpQsNbwIAEAZw9w10sACACADmAAAMB5v1Z258OAAAAYH8APAKAfEAAAAYDAEAHvE04JAH189aX/wIAPbV49A==" alt="Logo Casabe Real">
+            <span class="header-title">SISTEMA COMERCIAL CASABE REAL</span>
         </div>
-        <ul class="sidebar-menu">
-            <li><a href="dashboard.html" class="active"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
-            <li><a href="vendedor.html"><i class="fa-solid fa-user-tie"></i> Vendedores</a></li>
-            <li><a href="clientes.html"><i class="fa-solid fa-users"></i> Clientes (360°)</a></li>
-            <li><a href="propuesta.html"><i class="fa-solid fa-file-invoice-dollar"></i> Propuestas</a></li>
-            <li><a href="pedidos.html"><i class="fa-solid fa-cart-shopping"></i> Pedidos</a></li>
-            <li><a href="metas.html"><i class="fa-solid fa-bullseye"></i> Metas & GAP</a></li>
-            <li><a href="login.html"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a></li>
-        </ul>
-    </aside>
+        <div class="header-right">
+            <div class="user-name">Director Comercial</div>
+            <div class="user-role">CEO / Administrador</div>
+        </div>
+    </header>
 
-    <div class="main-wrapper">
-        <header>
-            <div class="breadcrumb">
-                Inicio / <span>Dashboard Ejecutivo</span>
+    <nav class="sidebar-menu">
+        <a href="inicio.html" class="menu-item">INICIO</a>
+        <a href="clientes.html" class="menu-item">CLIENTES</a>
+        <a href="meta.html" class="menu-item">META</a>
+        <a href="propuesta.html" class="menu-item">PROPUESTA</a>
+        <a href="pedido.html" class="menu-item">PEDIDO</a>
+        <a href="reporte.html" class="menu-item">REPORTE</a>
+        <a href="embudo.html" class="menu-item">EMBUDO</a>
+        <a href="dashboard.html" class="menu-item active">DASHBOARD</a>
+        <a href="bi-ia.html" class="menu-item">BI+IA</a>
+        <a href="cargas.html" class="menu-item">CARGAS</a>
+        <a href="historico.html" class="menu-item">HISTORICO</a>
+    </nav>
+
+    <main class="main-container">
+
+        <div class="section-header">
+            <h1>Módulo de <span class="highlight">Dashboard Ejecutivo</span></h1>
+        </div>
+
+        <!-- Fila 1: 6 Tarjetas KPI -->
+        <section class="fila-1">
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <span>Ventas Hoy</span>
+                    <i class="fa-solid fa-calendar-day"></i>
+                </div>
+                <div class="kpi-value">$2,450</div>
+                <div class="kpi-footer">
+                    <span class="trend-up"><i class="fa-solid fa-arrow-up"></i> +12.4%</span> vs ayer
+                </div>
             </div>
-            <div class="user-profile">
-                <span style="font-size: 13px; font-weight: 600;">Director Comercial</span>
-                <div class="user-avatar">DC</div>
+
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <span>Ventas Semana</span>
+                    <i class="fa-solid fa-calendar-week"></i>
+                </div>
+                <div class="kpi-value">$14,820</div>
+                <div class="kpi-footer">
+                    <span class="trend-up"><i class="fa-solid fa-arrow-up"></i> +8.1%</span> vs sem. ant.
+                </div>
             </div>
-        </header>
 
-        <div class="dashboard-container">
-
-            <section class="fila-1">
-                <div class="kpi-card">
-                    <div class="kpi-header">
-                        <span>Ventas Hoy</span>
-                        <i class="fa-solid fa-calendar-day"></i>
-                    </div>
-                    <div class="kpi-value">$2,450</div>
-                    <div class="kpi-footer">
-                        <span class="trend-up"><i class="fa-solid fa-arrow-up"></i> +12.4%</span> vs ayer
-                    </div>
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <span>Ventas Mes</span>
+                    <i class="fa-solid fa-chart-pie"></i>
                 </div>
-
-                <div class="kpi-card">
-                    <div class="kpi-header">
-                        <span>Ventas Semana</span>
-                        <i class="fa-solid fa-calendar-week"></i>
-                    </div>
-                    <div class="kpi-value">$14,820</div>
-                    <div class="kpi-footer">
-                        <span class="trend-up"><i class="fa-solid fa-arrow-up"></i> +8.1%</span> vs sem. ant.
-                    </div>
+                <div class="kpi-value">$58,400</div>
+                <div class="kpi-footer">
+                    <span class="trend-up"><i class="fa-solid fa-arrow-up"></i> +5.3%</span> vs mes ant.
                 </div>
+            </div>
 
-                <div class="kpi-card">
-                    <div class="kpi-header">
-                        <span>Ventas Mes</span>
-                        <i class="fa-solid fa-chart-pie"></i>
-                    </div>
-                    <div class="kpi-value">$58,400</div>
-                    <div class="kpi-footer">
-                        <span class="trend-up"><i class="fa-solid fa-arrow-up"></i> +5.3%</span> vs mes ant.
-                    </div>
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <span>Cajas Vendidas</span>
+                    <i class="fa-solid fa-box-open"></i>
                 </div>
+                <div class="kpi-value">3,420</div>
+                <div class="kpi-footer">
+                    <span class="trend-down"><i class="fa-solid fa-arrow-down"></i> -2.1%</span> vs período
+                </div>
+            </div>
 
-                <div class="kpi-card">
-                    <div class="kpi-header">
-                        <span>Cajas Vendidas</span>
-                        <i class="fa-solid fa-box-open"></i>
-                    </div>
-                    <div class="kpi-value">3,420</div>
-                    <div class="kpi-footer">
-                        <span class="trend-down"><i class="fa-solid fa-arrow-down"></i> -2.1%</span> vs período
-                    </div>
+            <div class="kpi-card" style="border-left-color: var(--success);">
+                <div class="kpi-header">
+                    <span>Clientes Activos</span>
+                    <i class="fa-solid fa-users" style="color: var(--success);"></i>
                 </div>
+                <div class="kpi-value">128</div>
+                <div class="kpi-footer">
+                    <span class="trend-up"><i class="fa-solid fa-arrow-up"></i> +6 nuevas cuentas</span>
+                </div>
+            </div>
 
-                <div class="kpi-card" style="border-left-color: var(--success);">
-                    <div class="kpi-header">
-                        <span>Clientes Activos</span>
-                        <i class="fa-solid fa-users" style="color: var(--success);"></i>
-                    </div>
-                    <div class="kpi-value">128</div>
-                    <div class="kpi-footer">
-                        <span class="trend-up"><i class="fa-solid fa-arrow-up"></i> +6 nuevas cuentas</span>
-                    </div>
+            <div class="kpi-card" style="border-left-color: var(--warning);">
+                <div class="kpi-header">
+                    <span>% Cumplimiento</span>
+                    <i class="fa-solid fa-bullseye" style="color: var(--warning);"></i>
                 </div>
+                <div class="kpi-value">84.2%</div>
+                <div class="kpi-footer">
+                    <span class="badge badge-warning">En Rango (75%-89%)</span>
+                </div>
+            </div>
+        </section>
 
-                <div class="kpi-card" style="border-left-color: var(--warning);">
-                    <div class="kpi-header">
-                        <span>% Cumplimiento</span>
-                        <i class="fa-solid fa-bullseye" style="color: var(--warning);"></i>
-                    </div>
-                    <div class="kpi-value">84.2%</div>
-                    <div class="kpi-footer">
-                        <span class="badge badge-warning">En Rango (75%-89%)</span>
-                    </div>
-                </div>
-            </section>
-
-            <section class="grid-2col">
-                <div class="card-box">
-                    <div class="card-title">
-                        Evolución de Ventas (Tendencia Diaria / Semanal)
-                        <span>USD ($) y Cajas</span>
-                    </div>
-                    <div style="height: 280px; position: relative;">
-                        <canvas id="ventasEvolucionChart"></canvas>
-                    </div>
-                </div>
-                <div class="card-box">
-                    <div class="card-title">
-                        Ventas por Vendedor
-                        <span>Desempeño actual</span>
-                    </div>
-                    <div style="height: 280px; position: relative;">
-                        <canvas id="ventasVendedorChart"></canvas>
-                    </div>
-                </div>
-            </section>
-
-            <section class="grid-2col-even">
-                <div class="card-box">
-                    <div class="card-title">
-                        Ranking de Vendedores
-                        <span>Top asesores comerciales</span>
-                    </div>
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Asesor</th>
-                                    <th>Facturado</th>
-                                    <th>Cajas</th>
-                                    <th>% Meta</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>Carlos Mendoza</strong></td>
-                                    <td>$18,450</td>
-                                    <td>1,120</td>
-                                    <td><span class="badge badge-success">102%</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Mariana Rivas</strong></td>
-                                    <td>$15,200</td>
-                                    <td>940</td>
-                                    <td><span class="badge badge-success">95%</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Alejandro Silva</strong></td>
-                                    <td>$12,100</td>
-                                    <td>780</td>
-                                    <td><span class="badge badge-warning">81%</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Sofía Gómez</strong></td>
-                                    <td>$12,650</td>
-                                    <td>580</td>
-                                    <td><span class="badge badge-danger">72%</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="card-box">
-                    <div class="card-title">
-                        Ranking de Clientes Clave
-                        <span>Top cuentas por volumen y recompra</span>
-                    </div>
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Cliente / Razón Social</th>
-                                    <th>Volumen</th>
-                                    <th>Semáforo</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>Supermercados Central C.A.</strong></td>
-                                    <td>450 Cajas</td>
-                                    <td><span class="badge badge-success">Al día</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Distribidora Alimentos del Este</strong></td>
-                                    <td>380 Cajas</td>
-                                    <td><span class="badge badge-success">Al día</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Hipermercado Metrópolis</strong></td>
-                                    <td>310 Cajas</td>
-                                    <td><span class="badge badge-warning">Por vencer</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Comercializadora La Mayor</strong></td>
-                                    <td>250 Cajas</td>
-                                    <td><span class="badge badge-danger">En riesgo</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <section class="grid-2col">
-                <div class="card-box">
-                    <div class="card-title">
-                        Embudo Comercial (5 Etapas)
-                        <span>Progresión y tasas de conversión</span>
-                    </div>
-                    <div style="height: 250px; position: relative;">
-                        <canvas id="embudoChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="card-box">
-                    <div class="card-title">
-                        Pronóstico de Ventas (Run-Rate & GAP)
-                        <span>Análisis Predictivo</span>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 14px; justify-content: center; height: 100%;">
-                        <div style="background: #F8FAFC; padding: 12px 16px; border-radius: 8px; border-left: 3px solid var(--primary);">
-                            <span style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600;">Proyección de Cierre (Run-Rate)</span>
-                            <div style="font-size: 20px; font-weight: 700; color: var(--text-main);">$69,200 <span style="font-size: 12px; color: var(--success); font-weight: 600;">(92% de la Meta)</span></div>
-                        </div>
-                        <div style="background: #F8FAFC; padding: 12px 16px; border-radius: 8px; border-left: 3px solid var(--warning);">
-                            <span style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600;">Ritmo Diario Requerido</span>
-                            <div style="font-size: 20px; font-weight: 700; color: var(--text-main);">$1,280 / día <span style="font-size: 12px; color: var(--warning);">para cumplir meta</span></div>
-                        </div>
-                        <div style="background: #F8FAFC; padding: 12px 16px; border-radius: 8px; border-left: 3px solid var(--danger);">
-                            <span style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600;">Brecha Comercial (GAP)</span>
-                            <div style="font-size: 20px; font-weight: 700; color: var(--text-main);">$6,800 <span style="font-size: 12px; color: var(--danger);">faltante al cierre</span></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="fila-5">
+        <!-- Fila 2: Gráficos de Evolución y Ventas por Vendedor -->
+        <section class="grid-2col">
+            <div class="card-box">
                 <div class="card-title">
-                    <i class="fa-solid fa-brain" style="color: var(--primary);"></i> Centro de Inteligencia Comercial (Agente IA & Memoria SCCR)
+                    Evolución de Ventas (Tendencia Diaria / Semanal)
+                    <span>USD ($) y Cajas</span>
                 </div>
-                <div class="ai-grid">
-                    <div class="ai-block">
-                        <h4><i class="fa-solid fa-chart-line"></i> Resumen Ejecutivo</h4>
-                        <p>Operación estable con cumplimiento del 84.2%. El canal de pasapalos lidera la rotación de inventario con excelente margen bruto.</p>
-                    </div>
-                    <div class="ai-block">
-                        <h4><i class="fa-solid fa-triangle-exclamation"></i> Alertas</h4>
-                        <p>3 cuentas clave en zona de riesgo (< 75% recompra) detectadas en la ruta norte. Se requiere intervención del supervisor.</p>
-                    </div>
-                    <div class="ai-block">
-                        <h4><i class="fa-solid fa-lightbulb"></i> Recomendaciones</h4>
-                        <p>Impulsar campaña de venta cruzada con línea Torta en clientes de la Etapa 4 (Activación) para elevar ticket promedio.</p>
-                    </div>
-                    <div class="ai-block">
-                        <h4><i class="fa-solid fa-handshake"></i> Oportunidades</h4>
-                        <p>18 propuestas comerciales pendientes por un valor acumulado de $11,400 listas para cierre en los próximos 3 días.</p>
-                    </div>
-                    <div class="ai-block">
-                        <h4><i class="fa-solid fa-shield-halved"></i> Riesgos</h4>
-                        <p>Concentración de cartera en Supermercados Central (35% del volumen total). Monitorear límite de crédito y rotación.</p>
-                    </div>
+                <div style="height: 250px; position: relative;">
+                    <canvas id="ventasEvolucionChart"></canvas>
                 </div>
-            </section>
+            </div>
+            <div class="card-box">
+                <div class="card-title">
+                    Ventas por Vendedor
+                    <span>Desempeño actual</span>
+                </div>
+                <div style="height: 250px; position: relative;">
+                    <canvas id="ventasVendedorChart"></canvas>
+                </div>
+            </div>
+        </section>
 
-        </div>
-    </div>
+        <!-- Fila 3: Rankings de Vendedores y Clientes -->
+        <section class="grid-2col-even">
+            <div class="card-box">
+                <div class="card-title">
+                    Ranking de Vendedores
+                    <span>Top asesores comerciales</span>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Asesor</th>
+                                <th>Facturado</th>
+                                <th>Cajas</th>
+                                <th>% Meta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Carlos Mendoza</strong></td>
+                                <td>$18,450</td>
+                                <td>1,120</td>
+                                <td><span class="badge badge-success">102%</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Mariana Rivas</strong></td>
+                                <td>$15,200</td>
+                                <td>940</td>
+                                <td><span class="badge badge-success">95%</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Alejandro Silva</strong></td>
+                                <td>$12,100</td>
+                                <td>780</td>
+                                <td><span class="badge badge-warning">81%</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sofía Gómez</strong></td>
+                                <td>$12,650</td>
+                                <td>580</td>
+                                <td><span class="badge badge-danger">72%</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card-box">
+                <div class="card-title">
+                    Ranking de Clientes Clave
+                    <span>Top cuentas por volumen y recompra</span>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Cliente / Razón Social</th>
+                                <th>Volumen</th>
+                                <th>Semáforo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Supermercados Central C.A.</strong></td>
+                                <td>450 Cajas</td>
+                                <td><span class="badge badge-success">Al día</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Distribidora Alimentos del Este</strong></td>
+                                <td>380 Cajas</td>
+                                <td><span class="badge badge-success">Al día</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Hipermercado Metrópolis</strong></td>
+                                <td>310 Cajas</td>
+                                <td><span class="badge badge-warning">Por vencer</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Comercializadora La Mayor</strong></td>
+                                <td>250 Cajas</td>
+                                <td><span class="badge badge-danger">En riesgo</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fila 4: Embudo Comercial y Pronóstico -->
+        <section class="grid-2col">
+            <div class="card-box">
+                <div class="card-title">
+                    Embudo Comercial (5 Etapas)
+                    <span>Progresión y tasas de conversión</span>
+                </div>
+                <div style="height: 230px; position: relative;">
+                    <canvas id="embudoChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card-box">
+                <div class="card-title">
+                    Pronóstico de Ventas (Run-Rate & GAP)
+                    <span>Análisis Predictivo</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 10px; justify-content: center; height: 100%;">
+                    <div style="background: var(--light-bg); padding: 10px 14px; border-radius: 6px; border-left: 3px solid var(--primary-red);">
+                        <span style="font-size: 0.65rem; color: #777; text-transform: uppercase; font-weight: 600;">Proyección de Cierre (Run-Rate)</span>
+                        <div style="font-family: 'League Spartan', sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--text-dark);">$69,200 <span style="font-size: 0.7rem; color: var(--success); font-weight: 600;">(92% de la Meta)</span></div>
+                    </div>
+                    <div style="background: var(--light-bg); padding: 10px 14px; border-radius: 6px; border-left: 3px solid var(--warning);">
+                        <span style="font-size: 0.65rem; color: #777; text-transform: uppercase; font-weight: 600;">Ritmo Diario Requerido</span>
+                        <div style="font-family: 'League Spartan', sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--text-dark);">$1,280 / día <span style="font-size: 0.7rem; color: var(--warning);">para cumplir meta</span></div>
+                    </div>
+                    <div style="background: var(--light-bg); padding: 10px 14px; border-radius: 6px; border-left: 3px solid var(--danger);">
+                        <span style="font-size: 0.65rem; color: #777; text-transform: uppercase; font-weight: 600;">Brecha Comercial (GAP)</span>
+                        <div style="font-family: 'League Spartan', sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--text-dark);">$6,800 <span style="font-size: 0.7rem; color: var(--danger);">faltante al cierre</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fila 5: Centro de Inteligencia Comercial IA Ancho Completo -->
+        <section class="fila-5">
+            <div class="card-title">
+                <i class="fa-solid fa-brain" style="color: var(--primary-red);"></i> Centro de Inteligencia Comercial (Agente IA & Memoria SCCR)
+            </div>
+            <div class="ai-grid">
+                <div class="ai-block">
+                    <h4><i class="fa-solid fa-chart-line"></i> Resumen Ejecutivo</h4>
+                    <p>Operación estable con cumplimiento del 84.2%. El canal de pasapalos lidera la rotación de inventario con excelente margen bruto.</p>
+                </div>
+                <div class="ai-block">
+                    <h4><i class="fa-solid fa-triangle-exclamation"></i> Alertas</h4>
+                    <p>3 cuentas clave en zona de riesgo (&lt; 75% recompra) detectadas en la ruta norte. Se requiere intervención del supervisor.</p>
+                </div>
+                <div class="ai-block">
+                    <h4><i class="fa-solid fa-lightbulb"></i> Recomendaciones</h4>
+                    <p>Impulsar campaña de venta cruzada con línea Torta en clientes de la Etapa 4 (Activación) para elevar ticket promedio.</p>
+                </div>
+                <div class="ai-block">
+                    <h4><i class="fa-solid fa-handshake"></i> Oportunidades</h4>
+                    <p>18 propuestas comerciales pendientes por un valor acumulado de $11,400 listas para cierre en los próximos 3 días.</p>
+                </div>
+                <div class="ai-block">
+                    <h4><i class="fa-solid fa-shield-halved"></i> Riesgos</h4>
+                    <p>Concentración de cartera en Supermercados Central (35% del volumen total). Monitorear límite de crédito y rotación.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Sistema Comercial Casabe Real (SCCR). Todos los derechos reservados.</p>
+    </footer>
 
     <script>
         // Gráfico de Evolución de Ventas
@@ -645,8 +699,8 @@
                 datasets: [{
                     label: 'Ventas USD ($)',
                     data: [12000, 15500, 14800, 16100],
-                    borderColor: '#D71920',
-                    backgroundColor: 'rgba(215, 25, 32, 0.05)',
+                    borderColor: '#D30000',
+                    backgroundColor: 'rgba(211, 0, 0, 0.05)',
                     borderWidth: 3,
                     fill: true,
                     tension: 0.3
@@ -657,8 +711,8 @@
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
-                    y: { grid: { color: '#E2E8F0' }, ticks: { font: { family: 'Inter' } } },
-                    x: { grid: { display: false }, ticks: { font: { family: 'Inter' } } }
+                    y: { grid: { color: '#E0E0E0' }, ticks: { font: { family: 'Open Sans', size: 10 } } },
+                    x: { grid: { display: false }, ticks: { font: { family: 'Open Sans', size: 10 } } }
                 }
             }
         });
@@ -672,8 +726,8 @@
                 datasets: [{
                     label: 'Facturado ($)',
                     data: [18450, 15200, 12100, 12650],
-                    backgroundColor: ['#D71920', '#2D3436', '#7F8C8D', '#CBD5E1'],
-                    borderRadius: 6
+                    backgroundColor: ['#D30000', '#333333', '#777777', '#CCCCCC'],
+                    borderRadius: 4
                 }]
             },
             options: {
@@ -681,8 +735,8 @@
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
-                    y: { grid: { color: '#E2E8F0' }, ticks: { font: { family: 'Inter' } } },
-                    x: { grid: { display: false }, ticks: { font: { family: 'Inter' } } }
+                    y: { grid: { color: '#E0E0E0' }, ticks: { font: { family: 'Open Sans', size: 10 } } },
+                    x: { grid: { display: false }, ticks: { font: { family: 'Open Sans', size: 10 } } }
                 }
             }
         });
@@ -696,7 +750,7 @@
                 datasets: [{
                     label: 'Clientes en Etapa',
                     data: [45, 32, 24, 18, 42],
-                    backgroundColor: '#D71920',
+                    backgroundColor: '#D30000',
                     borderRadius: 4
                 }]
             },
@@ -706,8 +760,8 @@
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
-                    x: { grid: { color: '#E2E8F0' }, ticks: { font: { family: 'Inter' } } },
-                    y: { grid: { display: false }, ticks: { font: { family: 'Inter' } } }
+                    x: { grid: { color: '#E0E0E0' }, ticks: { font: { family: 'Open Sans', size: 10 } } },
+                    y: { grid: { display: false }, ticks: { font: { family: 'Open Sans', size: 10 } } }
                 }
             }
         });
