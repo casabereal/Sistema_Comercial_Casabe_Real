@@ -33,7 +33,6 @@
   --r:6px;
   --r-sm:6px;
   --sh:0 2px 4px rgba(0,0,0,0.05);
-  --sh-md:0 4px 16px rgba(0,0,0,.10);
 }
 body{
   font-family:'Open Sans', sans-serif;
@@ -364,8 +363,8 @@ footer strong{color:var(--text-dark);}
     </div>
     <div class="header-right">
       <div class="header-user-info">
-        <div class="user-name" id="user-name-display">Cargando...</div>
-        <div class="user-role" id="user-role-display">Portal Comercial</div>
+        <div class="user-name" id="user-name-display">Asesor Comercial</div>
+        <div class="user-role" id="user-role-display">Portal Vendedor</div>
       </div>
       <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
     </div>
@@ -388,7 +387,7 @@ footer strong{color:var(--text-dark);}
   <main class="main-container">
 
     <div class="section-header">
-      <div class="breadcrumb">Sistema / <span>Inicio</span></div>
+      <div class="breadcrumb">Sistema / <span id="bread-crumb-text">Inicio</span></div>
       <h1>Panel de Control <span class="highlight" id="panel-subtitle">Comercial</span></h1>
     </div>
 
@@ -495,13 +494,17 @@ footer strong{color:var(--text-dark);}
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // 1. Marcar enlace activo
+      // 1. Marcar enlace activo basado en la URL actual
       const path = window.location.pathname.split('/').pop() || 'inicio.html';
       document.querySelectorAll('.menu-item').forEach(link => {
-        if (link.getAttribute('href') === path) link.classList.add('active');
+        if (link.getAttribute('href') === path) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
       });
 
-      // 2. Cargar sesión y configurar permisos por rol
+      // 2. Cargar sesión de forma segura y configurar permisos por rol
       try {
         const raw = sessionStorage.getItem('sccr');
         if (raw) {
@@ -511,20 +514,23 @@ footer strong{color:var(--text-dark);}
           }
           if (sess.rol) {
             document.getElementById('user-role-display').textContent = sess.rol;
-            // Si NO es CEO ni Administrador, ocultamos los módulos de administración en el menú
-            if (sess.rol.toUpperCase() !== 'CEO' && sess.rol.toUpperCase() !== 'ADMINISTRADOR' && sess.rol.toUpperCase() !== 'ADMIN') {
-              document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
-            } else {
+            const rolUpper = sess.rol.toUpperCase();
+            
+            // Si es CEO, Administrador o Admin, mostramos los módulos gerenciales
+            if (rolUpper.includes('CEO') || rolUpper.includes('ADMIN')) {
               document.getElementById('panel-subtitle').textContent = 'Gerencial / CEO';
+              document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
+            } else {
+              // Si es vendedor regular, ocultamos el bloque admin
+              document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
             }
           }
         } else {
-          // Valores por defecto si se entra directo sin login previo (modo prueba)
-          document.getElementById('user-name-display').textContent = "Asesor Comercial";
-          document.getElementById('user-role-display').textContent = "Portal Vendedor";
+          // Modo prueba por defecto si se entra directo sin pasar por login.html
           document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
         }
       } catch(e) {
+        console.error("Error al leer sessionStorage:", e);
         document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
       }
     });
