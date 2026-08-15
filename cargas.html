@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SCCR — Cargas y Configuración</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="assets/sccr-auth.js"></script>
+<style>
+  :root {
+    --rojo:    #C8181E;
+    --rojo-d:  #A01015;
+    --rojo-xs: #FEF2F2;
+    --naranja: #D97706;
+    --fondo:   #F3F4F6;
+    --borde:   #E5E7EB;
+    --gris:    #6B7280;
+    --negro:   #111827;
+    --verde:   #059669;
+    --verde-xs:#ECFDF5;
+    --r:       14px;
+    --r-sm:    9px;
+    --sh:      0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+    --sh-lg:   0 4px 16px rgba(0,0,0,.10);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Inter",sans-serif;background:var(--fondo);color:var(--negro);min-height:100vh;display:flex;flex-direction:column}
+
+  /* ── HEADER ─────────────────────────────────────────────── */
+  .hd{
+    background:var(--rojo);
+    padding:14px 18px 13px;
+    display:flex;align-items:center;justify-content:space-between;
+    position:sticky;top:0;z-index:200;
+  }
+  .hd-left{display:flex;align-items:center;gap:11px}
+  .hd-left img{width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}
+  .hd-title{color:#fff;font-size:.8rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;line-height:1.2}
+  .hd-right{display:flex;align-items:center;gap:10px}
+  .hd-pill{background:rgba(255,255,255,.15);border-radius:50px;padding:5px 13px;font-size:.72rem;color:#fff;font-weight:600}
+  .btn-out{background:transparent;border:1.5px solid rgba(255,255,255,.55);color:#fff;padding:6px 14px;border-radius:50px;font-size:.72rem;font-weight:600;cursor:pointer;transition:.2s}
+  .btn-out:hover{background:rgba(255,255,255,.15)}
+
+  /* ── NAV ────────────────────────────────────────────────── */
+  .nav-bar{background:#fff;border-bottom:1px solid var(--borde);padding:0 18px;display:flex;overflow-x:auto;white-space:nowrap}
+  .nav-bar::-webkit-scrollbar{height:3px}
+  .nav-bar::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px}
+  .nav-item{display:inline-block;padding:12px 14px;font-size:.7rem;font-weight:500;color:var(--gris);text-decoration:none;border-bottom:3px solid transparent;transition:.2s}
+  .nav-item:hover{color:var(--rojo);background:var(--rojo-xs)}
+  .nav-item.active{color:var(--rojo);border-bottom-color:var(--rojo);font-weight:700}
+
+  /* ── LAYOUT ─────────────────────────────────────────────── */
+  .main{flex:1;padding:24px 18px;max-width:1200px;margin:0 auto;width:100%}
+  .page-header{margin-bottom:22px}
+  .page-header h1{font-size:1.4rem;font-weight:800;color:var(--negro);margin-bottom:4px}
+  .page-header p{font-size:.75rem;color:var(--gris)}
+
+  /* ── TABS DE SECCIÓN ─────────────────────────────────────── */
+  .section-tabs{display:flex;gap:6px;margin-bottom:22px;flex-wrap:wrap}
+  .stab{padding:9px 18px;border-radius:var(--r-sm);font-size:.75rem;font-weight:600;border:1.5px solid var(--borde);background:#fff;color:var(--gris);cursor:pointer;transition:.2s}
+  .stab.on{background:var(--rojo);color:#fff;border-color:var(--rojo)}
+  .stab:hover:not(.on){border-color:var(--rojo);color:var(--rojo)}
+
+  /* ── CARD ────────────────────────────────────────────────── */
+  .card{background:#fff;border-radius:var(--r);border:1px solid var(--borde);box-shadow:var(--sh);padding:24px;display:none}
+  .card.on{display:block}
+  .card-title{font-size:1rem;font-weight:700;color:var(--negro);margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--borde)}
+
+  /* ── FORMULARIOS ────────────────────────────────────────── */
+  .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:20px}
+  .f{display:flex;flex-direction:column;gap:5px}
+  .f label{font-size:.72rem;font-weight:600;color:var(--negro)}
+  .f input,.f select{padding:11px 13px;border:1.5px solid var(--borde);border-radius:var(--r-sm);font-size:.8rem;font-family:"Inter",sans-serif;color:var(--negro);background:#fff;outline:none;transition:border .2s}
+  .f input:focus,.f select:focus{border-color:var(--rojo);box-shadow:0 0 0 3px rgba(200,24,30,.10)}
+  .f .hint{font-size:.67rem;color:var(--gris)}
+  .req{color:var(--rojo)}
+
+  /* ── BOTONES ────────────────────────────────────────────── */
+  .btn-primary{background:var(--rojo);color:#fff;border:none;padding:11px 24px;border-radius:var(--r-sm);font-size:.8rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-family:"Inter",sans-serif;transition:.2s}
+  .btn-primary:hover{background:var(--rojo-d)}
+  .btn-primary:disabled{background:#D1D5DB;cursor:not-allowed}
+  .sp{width:16px;height:16px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
+  .sp.show{display:inline-block}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ── ALERTAS ────────────────────────────────────────────── */
+  .alert{border-radius:var(--r-sm);padding:12px 16px;font-size:.78rem;font-weight:500;display:none;margin-top:14px}
+  .alert.show{display:block}
+  .alert.ok{background:var(--verde-xs);border:1px solid #6EE7B7;color:var(--verde)}
+  .alert.err{background:var(--rojo-xs);border:1px solid #FECACA;color:var(--rojo)}
+
+  /* ── TABLA DE USUARIOS ──────────────────────────────────── */
+  .table-wrap{overflow-x:auto;margin-top:20px}
+  table{width:100%;border-collapse:collapse;font-size:.75rem}
+  th{background:var(--fondo);color:var(--gris);font-weight:600;padding:10px 14px;border-bottom:1px solid var(--borde);text-align:left;text-transform:uppercase;font-size:.67rem}
+  td{padding:12px 14px;border-bottom:1px solid var(--borde);color:var(--negro)}
+  tr:hover td{background:var(--rojo-xs)}
+  .badge{display:inline-block;padding:3px 10px;border-radius:50px;font-size:.67rem;font-weight:600}
+  .badge.admin{background:#EDE9FE;color:#7C3AED}
+  .badge.gerente{background:#FEF3C7;color:#92400E}
+  .badge.vendedor{background:var(--rojo-xs);color:var(--rojo)}
+  .badge.activo{background:var(--verde-xs);color:var(--verde)}
+  .badge.inactivo{background:var(--fondo);color:var(--gris)}
+
+  /* ── DIVISOR ────────────────────────────────────────────── */
+  .divider{border:none;border-top:1px solid var(--borde);margin:22px 0}
+
+  /* ── FOOTER ─────────────────────────────────────────────── */
+  footer{text-align:center;padding:18px;font-size:.68rem;color:var(--gris);border-top:1px solid var(--borde);background:#fff;margin-top:auto}
+
+  @media(max-width:600px){
+    .form-grid{grid-template-columns:1fr}
+    .hd-title{font-size:.68rem}
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ───────────────────────────────────────────────── -->
+<header class="hd">
+  <div class="hd-left">
+    <img src="assets/logo-casabe-real.png" alt="Casabe Real">
+    <span class="hd-title">Sistema Comercial<br>Casabe Real</span>
+  </div>
+  <div class="hd-right">
+    <span class="hd-pill" id="user-name-display">—</span>
+    <button class="btn-out" onclick="cerrarSesion()">Salir</button>
+  </div>
+</header>
+
+<!-- ── NAV ──────────────────────────────────────────────────── -->
+<nav class="nav-bar">
+  <a href="inicio.html"    class="nav-item">INICIO</a>
+  <a href="clientes.html"  class="nav-item">CLIENTES</a>
+  <a href="meta.html"      class="nav-item">META</a>
+  <a href="propuesta.html" class="nav-item">PROPUESTA</a>
+  <a href="pedido.html"    class="nav-item">PEDIDO</a>
+  <a href="reporte.html"   class="nav-item">REPORTE</a>
+  <a href="embudo.html"    class="nav-item">EMBUDO</a>
+  <a href="dashboard.html" class="nav-item">DASHBOARD</a>
+  <a href="bi_ia.html"     class="nav-item">BI + IA</a>
+  <a href="cargas.html"    class="nav-item active">CARGAS</a>
+  <a href="historico.html" class="nav-item">HISTÓRICO</a>
+</nav>
+
+<!-- ── MAIN ─────────────────────────────────────────────────── -->
+<main class="main">
+
+  <div class="page-header">
+    <h1>Cargas y Configuración</h1>
+    <p>Gestión de usuarios, clientes, productos y metas &mdash; solo visible para Gerencia y Administración.</p>
+  </div>
+
+  <!-- Tabs de sección -->
+  <div class="section-tabs">
+    <button class="stab on"  onclick="showSection('usuarios')">Registro de Usuarios</button>
+    <button class="stab"     onclick="showSection('clientes')">Registro de Clientes</button>
+    <button class="stab"     onclick="showSection('productos')">Carga de Productos</button>
+    <button class="stab"     onclick="showSection('metas')">Asignación de Metas</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SECCIÓN 1 — REGISTRO DE USUARIOS
+  ══════════════════════════════════════════════════════════ -->
+  <div class="card on" id="sec-usuarios">
+    <h2 class="card-title">Registro de Usuarios</h2>
+
+    <div class="form-grid">
+      <div class="f">
+        <label>Nombre Completo <span class="req">*</span></label>
+        <input type="text" id="u-nombre" placeholder="Ej: Carlos Cova">
+      </div>
+      <div class="f">
+        <label>Usuario (login) <span class="req">*</span></label>
+        <input type="text" id="u-user" placeholder="Ej: ccova" autocapitalize="none">
+        <span class="hint">Sin espacios · solo letras, números y guiones</span>
+      </div>
+      <div class="f">
+        <label>Contraseña <span class="req">*</span></label>
+        <input type="password" id="u-pass" placeholder="Mínimo 6 caracteres">
+      </div>
+      <div class="f">
+        <label>Rol <span class="req">*</span></label>
+        <select id="u-rol">
+          <option value="">— Seleccionar —</option>
+          <option value="vendedor">Vendedor</option>
+          <option value="gerente">Gerente</option>
+          <option value="admin">Administrador</option>
+        </select>
+      </div>
+      <div class="f">
+        <label>Estado</label>
+        <select id="u-estado">
+          <option value="activo">Activo</option>
+          <option value="inactivo">Inactivo</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="btn-usuario" onclick="guardarUsuario()">
+      <span id="txt-usuario">Guardar Usuario</span>
+      <div class="sp" id="sp-usuario"></div>
+    </button>
+    <div class="alert ok" id="ok-usuario"></div>
+    <div class="alert err" id="err-usuario"></div>
+
+    <hr class="divider">
+
+    <!-- Tabla de usuarios existentes -->
+    <h3 style="font-size:.85rem;font-weight:700;color:var(--negro);margin-bottom:12px">Usuarios Registrados</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Usuario</th>
+            <th>Rol</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-usuarios">
+          <tr><td colspan="4" style="text-align:center;color:var(--gris);padding:20px">Cargando usuarios…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SECCIÓN 2 — REGISTRO DE CLIENTES
+  ══════════════════════════════════════════════════════════ -->
+  <div class="card" id="sec-clientes">
+    <h2 class="card-title">Registro de Clientes</h2>
+
+    <div class="form-grid">
+      <div class="f">
+        <label>Razón Social / Nombre Comercial <span class="req">*</span></label>
+        <input type="text" id="c-nombre" placeholder="Ej: Restaurante Ávila">
+      </div>
+      <div class="f">
+        <label>RIF <span class="req">*</span></label>
+        <input type="text" id="c-rif" placeholder="Ej: J-30495832-1">
+      </div>
+      <div class="f">
+        <label>Persona de Contacto <span class="req">*</span></label>
+        <input type="text" id="c-contacto" placeholder="Ej: Pedro Gómez">
+      </div>
+      <div class="f">
+        <label>Teléfono</label>
+        <input type="text" id="c-telefono" placeholder="Ej: 0412-5551234">
+      </div>
+      <div class="f">
+        <label>Sector</label>
+        <select id="c-sector">
+          <option value="">— Seleccionar —</option>
+          <option value="restaurante">Restaurante</option>
+          <option value="hotel">Hotel</option>
+          <option value="bar">Bar</option>
+          <option value="supermercado">Supermercado</option>
+          <option value="bodegon">Bodegón</option>
+          <option value="distribuidor">Distribuidor</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+      <div class="f">
+        <label>Vendedor Asignado <span class="req">*</span></label>
+        <select id="c-vendedor">
+          <option value="">— Seleccionar —</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="btn-cliente" onclick="guardarCliente()">
+      <span id="txt-cliente">Guardar Cliente</span>
+      <div class="sp" id="sp-cliente"></div>
+    </button>
+    <div class="alert ok" id="ok-cliente"></div>
+    <div class="alert err" id="err-cliente"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SECCIÓN 3 — CARGA DE PRODUCTOS
+  ══════════════════════════════════════════════════════════ -->
+  <div class="card" id="sec-productos">
+    <h2 class="card-title">Carga de Productos</h2>
+
+    <div class="form-grid">
+      <div class="f">
+        <label>Nombre del Producto <span class="req">*</span></label>
+        <select id="p-nombre">
+          <option value="">— Seleccionar —</option>
+          <option value="Tipo Pasapalo">Tipo Pasapalo</option>
+          <option value="Tipo Restaurante">Tipo Restaurante</option>
+          <option value="Tipo Torta">Tipo Torta</option>
+        </select>
+      </div>
+      <div class="f">
+        <label>Unidades por Caja <span class="req">*</span></label>
+        <input type="number" id="p-unidades" placeholder="Ej: 12" min="1">
+      </div>
+      <div class="f">
+        <label>Precio Unitario (USD) <span class="req">*</span></label>
+        <input type="number" id="p-precio" placeholder="Ej: 3.50" step="0.01" min="0">
+      </div>
+      <div class="f">
+        <label>Stock Disponible (cajas)</label>
+        <input type="number" id="p-stock" placeholder="Ej: 500" min="0">
+      </div>
+    </div>
+
+    <button class="btn-primary" id="btn-producto" onclick="guardarProducto()">
+      <span id="txt-producto">Guardar Producto</span>
+      <div class="sp" id="sp-producto"></div>
+    </button>
+    <div class="alert ok" id="ok-producto"></div>
+    <div class="alert err" id="err-producto"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SECCIÓN 4 — ASIGNACIÓN DE METAS
+  ══════════════════════════════════════════════════════════ -->
+  <div class="card" id="sec-metas">
+    <h2 class="card-title">Asignación de Metas</h2>
+
+    <div class="form-grid">
+      <div class="f">
+        <label>Vendedor <span class="req">*</span></label>
+        <select id="m-vendedor">
+          <option value="">— Seleccionar —</option>
+        </select>
+      </div>
+      <div class="f">
+        <label>Período <span class="req">*</span></label>
+        <input type="month" id="m-periodo">
+      </div>
+      <div class="f">
+        <label>Meta en USD <span class="req">*</span></label>
+        <input type="number" id="m-usd" placeholder="Ej: 10000" min="0" step="100">
+      </div>
+      <div class="f">
+        <label>Meta en Cajas <span class="req">*</span></label>
+        <input type="number" id="m-cajas" placeholder="Ej: 500" min="0">
+      </div>
+    </div>
+
+    <button class="btn-primary" id="btn-meta" onclick="guardarMeta()">
+      <span id="txt-meta">Asignar Meta</span>
+      <div class="sp" id="sp-meta"></div>
+    </button>
+    <div class="alert ok" id="ok-meta"></div>
+    <div class="alert err" id="err-meta"></div>
+  </div>
+
+</main>
+
+<footer>
+  &copy; 2026 Sistema Comercial Casabe Real (SCCR v2.5.0) &mdash; 0412.290.58.33
+</footer>
+
+<script>
+// ── URL del Apps Script ───────────────────────────────────────
+const API = 'https://script.google.com/macros/s/AKfycbysSUeGA965zGGIF1Zpcbji1SNmkM_kKNoXmFwud6P7kHv0cTlKNJopVF3T93QKhqPs9A/exec';
+
+// ── INIT ──────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  // Solo admin y gerente pueden entrar; si no, redirige
+  const sesion = SCCR.initSCCR(['admin', 'gerente']);
+  if (!sesion) return;
+
+  cargarUsuarios();
+  cargarVendedores();
+
+  // Mes actual como valor por defecto en metas
+  const hoy = new Date();
+  document.getElementById('m-periodo').value =
+    hoy.getFullYear() + '-' + String(hoy.getMonth() + 1).padStart(2, '0');
+});
+
+function cerrarSesion() { SCCR.cerrarSesion(); }
+
+// ── NAVEGACIÓN ENTRE SECCIONES ────────────────────────────────
+function showSection(id) {
+  ['usuarios','clientes','productos','metas'].forEach(s => {
+    document.getElementById('sec-' + s).classList.toggle('on', s === id);
+  });
+  document.querySelectorAll('.stab').forEach((btn, i) => {
+    const ids = ['usuarios','clientes','productos','metas'];
+    btn.classList.toggle('on', ids[i] === id);
+  });
+}
+
+// ── HELPERS UI ────────────────────────────────────────────────
+function setLoading(prefix, on) {
+  document.getElementById('btn-'  + prefix).disabled     =  on;
+  document.getElementById('txt-'  + prefix).style.display = on ? 'none' : '';
+  document.getElementById('sp-'   + prefix).classList.toggle('show', on);
+}
+function showAlert(prefix, type, msg) {
+  ['ok','err'].forEach(t => {
+    const el = document.getElementById(t + '-' + prefix);
+    el.classList.remove('show');
+  });
+  const el = document.getElementById(type + '-' + prefix);
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 5000);
+}
+
+// ── CARGAR LISTA DE VENDEDORES (para selects) ─────────────────
+async function cargarVendedores() {
+  try {
+    const r = await fetch(API + '?action=getUsuarios');
+    const d = await r.json();
+    const vendedores = (d.data || []).filter(u => u.rol === 'vendedor' && u.estado === 'activo');
+    ['c-vendedor', 'm-vendedor'].forEach(id => {
+      const sel = document.getElementById(id);
+      vendedores.forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v.user;
+        opt.textContent = v.nombre;
+        sel.appendChild(opt);
+      });
+    });
+  } catch(e) {
+    // Si falla el API, deja los selects vacíos (modo demo)
+  }
+}
+
+// ── CARGAR TABLA DE USUARIOS ──────────────────────────────────
+async function cargarUsuarios() {
+  const tbody = document.getElementById('tabla-usuarios');
+  try {
+    const r = await fetch(API + '?action=getUsuarios');
+    const d = await r.json();
+    const lista = d.data || [];
+    if (!lista.length) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--gris);padding:20px">Sin usuarios registrados.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = lista.map(u => `
+      <tr>
+        <td style="font-weight:600">${u.nombre}</td>
+        <td style="color:var(--gris)">${u.user}</td>
+        <td><span class="badge ${u.rol}">${u.rol}</span></td>
+        <td><span class="badge ${u.estado}">${u.estado}</span></td>
+      </tr>
+    `).join('');
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--gris);padding:20px">No se pudo cargar la lista.</td></tr>';
+  }
+}
+
+// ── GUARDAR USUARIO ───────────────────────────────────────────
+async function guardarUsuario() {
+  const nombre = document.getElementById('u-nombre').value.trim();
+  const user   = document.getElementById('u-user').value.trim().toLowerCase().replace(/\s+/g,'');
+  const pass   = document.getElementById('u-pass').value;
+  const rol    = document.getElementById('u-rol').value;
+  const estado = document.getElementById('u-estado').value;
+
+  if (!nombre || !user || !pass || !rol) {
+    showAlert('usuario', 'err', 'Completa todos los campos obligatorios.'); return;
+  }
+  if (pass.length < 6) {
+    showAlert('usuario', 'err', 'La contraseña debe tener al menos 6 caracteres.'); return;
+  }
+  if (!/^[a-z0-9_-]+$/.test(user)) {
+    showAlert('usuario', 'err', 'El usuario solo puede tener letras minúsculas, números, guión y guión bajo.'); return;
+  }
+
+  setLoading('usuario', true);
+  const vendedor_id = rol === 'vendedor' ? user : null;
+
+  try {
+    const r = await fetch(API, {
+      method: 'POST',
+      body: JSON.stringify({ action:'crearUsuario', nombre, user, pass, rol, vendedor_id, estado }),
+      redirect: 'follow'
+    });
+    const d = await r.json();
+    if (d.ok) {
+      showAlert('usuario', 'ok', `Usuario "${nombre}" creado exitosamente.`);
+      ['u-nombre','u-user','u-pass'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('u-rol').value = '';
+      cargarUsuarios();
+      cargarVendedores();
+    } else {
+      showAlert('usuario', 'err', d.msg || 'Error al guardar el usuario.');
+    }
+  } catch(e) {
+    showAlert('usuario', 'err', 'Error de conexión. Verifica la red.');
+  }
+  setLoading('usuario', false);
+}
+
+// ── GUARDAR CLIENTE ───────────────────────────────────────────
+async function guardarCliente() {
+  const nombre   = document.getElementById('c-nombre').value.trim();
+  const rif      = document.getElementById('c-rif').value.trim();
+  const contacto = document.getElementById('c-contacto').value.trim();
+  const telefono = document.getElementById('c-telefono').value.trim();
+  const sector   = document.getElementById('c-sector').value;
+  const vendedor_id = document.getElementById('c-vendedor').value;
+
+  if (!nombre || !rif || !contacto || !vendedor_id) {
+    showAlert('cliente', 'err', 'Completa todos los campos obligatorios.'); return;
+  }
+
+  setLoading('cliente', true);
+  try {
+    const r = await fetch(API, {
+      method: 'POST',
+      body: JSON.stringify({ action:'crearCliente', nombre, rif, contacto, telefono, sector, vendedor_id }),
+      redirect: 'follow'
+    });
+    const d = await r.json();
+    if (d.ok) {
+      showAlert('cliente', 'ok', `Cliente "${nombre}" registrado exitosamente.`);
+      ['c-nombre','c-rif','c-contacto','c-telefono'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('c-sector').value   = '';
+      document.getElementById('c-vendedor').value = '';
+    } else {
+      showAlert('cliente', 'err', d.msg || 'Error al guardar el cliente.');
+    }
+  } catch(e) {
+    showAlert('cliente', 'err', 'Error de conexión. Verifica la red.');
+  }
+  setLoading('cliente', false);
+}
+
+// ── GUARDAR PRODUCTO ──────────────────────────────────────────
+async function guardarProducto() {
+  const nombre   = document.getElementById('p-nombre').value;
+  const unidades = document.getElementById('p-unidades').value;
+  const precio   = document.getElementById('p-precio').value;
+  const stock    = document.getElementById('p-stock').value;
+
+  if (!nombre || !unidades || !precio) {
+    showAlert('producto', 'err', 'Completa todos los campos obligatorios.'); return;
+  }
+
+  setLoading('producto', true);
+  try {
+    const r = await fetch(API, {
+      method: 'POST',
+      body: JSON.stringify({ action:'crearProducto', nombre, unidades:+unidades, precio:+precio, stock:+stock||0 }),
+      redirect: 'follow'
+    });
+    const d = await r.json();
+    if (d.ok) {
+      showAlert('producto', 'ok', `Producto "${nombre}" guardado exitosamente.`);
+      ['p-unidades','p-precio','p-stock'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('p-nombre').value = '';
+    } else {
+      showAlert('producto', 'err', d.msg || 'Error al guardar el producto.');
+    }
+  } catch(e) {
+    showAlert('producto', 'err', 'Error de conexión. Verifica la red.');
+  }
+  setLoading('producto', false);
+}
+
+// ── GUARDAR META ──────────────────────────────────────────────
+async function guardarMeta() {
+  const vendedor_id = document.getElementById('m-vendedor').value;
+  const periodo     = document.getElementById('m-periodo').value;
+  const meta_usd    = document.getElementById('m-usd').value;
+  const meta_cajas  = document.getElementById('m-cajas').value;
+
+  if (!vendedor_id || !periodo || !meta_usd || !meta_cajas) {
+    showAlert('meta', 'err', 'Completa todos los campos obligatorios.'); return;
+  }
+
+  setLoading('meta', true);
+  try {
+    const r = await fetch(API, {
+      method: 'POST',
+      body: JSON.stringify({ action:'asignarMeta', vendedor_id, periodo, meta_usd:+meta_usd, meta_cajas:+meta_cajas }),
+      redirect: 'follow'
+    });
+    const d = await r.json();
+    if (d.ok) {
+      showAlert('meta', 'ok', `Meta asignada para el período ${periodo}.`);
+      ['m-usd','m-cajas'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('m-vendedor').value = '';
+    } else {
+      showAlert('meta', 'err', d.msg || 'Error al asignar la meta.');
+    }
+  } catch(e) {
+    showAlert('meta', 'err', 'Error de conexión. Verifica la red.');
+  }
+  setLoading('meta', false);
+}
+</script>
+</body>
+</html>
