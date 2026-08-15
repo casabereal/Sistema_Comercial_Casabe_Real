@@ -85,8 +85,7 @@ body::after{content:"";position:fixed;bottom:-30%;right:-15%;width:60vw;height:6
 
   <div class="card">
     <div class="tabs">
-      <button class="tab on" id="tab-login" onclick="switchTab('login')">Iniciar Sesi&oacute;n</button>
-      <button class="tab"    id="tab-reg"   onclick="switchTab('reg')">Crear Cuenta</button>
+      <button class="tab on" id="tab-login">Iniciar Sesi&oacute;n</button>
     </div>
     <div class="card-body">
 
@@ -111,48 +110,11 @@ body::after{content:"";position:fixed;bottom:-30%;right:-15%;width:60vw;height:6
         </button>
       </div>
 
-      <!-- REGISTRO -->
-      <div class="panel" id="panel-reg">
-        <div class="f">
-          <label>Nombre Completo <span class="req">*</span></label>
-          <input type="text" id="r-nombre" placeholder="Ej: Carlos Cova" autocomplete="name">
-        </div>
-        <div class="f">
-          <label>Usuario <span class="req">*</span></label>
-          <input type="text" id="r-user" placeholder="Ej: ccova" autocomplete="off" autocapitalize="none">
-          <div class="hint">Sin espacios &middot; letras, n&uacute;meros y guiones</div>
-        </div>
-        <div class="f">
-          <label>Contrase&ntilde;a <span class="req">*</span></label>
-          <input type="password" id="r-pass" placeholder="M&iacute;nimo 6 caracteres" autocomplete="new-password">
-        </div>
-        <div class="f">
-          <label>Confirmar Contrase&ntilde;a <span class="req">*</span></label>
-          <input type="password" id="r-pass2" placeholder="Repite la contrase&ntilde;a"
-                 autocomplete="new-password"
-                 onkeydown="if(event.key==='Enter')doReg()">
-        </div>
-        <div class="err" id="err-reg"></div>
-        <button class="btn" id="btn-reg" onclick="doReg()">
-          <span id="txt-reg">Crear Cuenta</span>
-          <div class="sp" id="sp-reg"></div>
-        </button>
-        <div class="pend" id="pend-reg">
-          <strong>&#9203; Cuenta pendiente de aprobaci&oacute;n</strong>
-          <span>Un administrador activar&aacute; tu acceso. Vuelve pronto.</span>
-        </div>
-      </div>
+
 
     </div>
 
-    <div class="card-ft" id="ft-login">
-      &iquest;No tienes cuenta?
-      <a href="#" onclick="switchTab('reg');return false">Reg&iacute;strate</a>
-    </div>
-    <div class="card-ft" id="ft-reg" style="display:none">
-      &iquest;Ya tienes cuenta?
-      <a href="#" onclick="switchTab('login');return false">Iniciar sesi&oacute;n</a>
-    </div>
+
   </div>
 
   <div class="ver">SCCR v2.5.0 &mdash; Casabe Real &copy; 2026</div>
@@ -169,24 +131,6 @@ const DEMO = [
   {user:'vendedor1',pass:'vend123',  nombre:'Carlos Cova',   rol:'vendedor', vendedor_id:'vendedor1',estado:'activo'},
   {user:'vendedor2',pass:'vend456',  nombre:'Maria Perez',   rol:'vendedor', vendedor_id:'vendedor2',estado:'activo'},
 ];
-
-// ── TABS ─────────────────────────────────────────────────────
-function switchTab(t){
-  // Tabs
-  document.getElementById('tab-login').classList.toggle('on', t==='login');
-  document.getElementById('tab-reg').classList.toggle('on',   t==='reg');
-  // Paneles
-  document.getElementById('panel-login').classList.toggle('on', t==='login');
-  document.getElementById('panel-reg').classList.toggle('on',   t==='reg');
-  // Footers
-  document.getElementById('ft-login').style.display = t==='login' ? '' : 'none';
-  document.getElementById('ft-reg').style.display   = t==='reg'   ? '' : 'none';
-  // Limpiar errores
-  document.getElementById('err-login').classList.remove('show');
-  document.getElementById('err-reg').classList.remove('show');
-  document.getElementById('pend-reg').classList.remove('show');
-  document.getElementById('btn-reg').style.display = '';
-}
 
 // ── LOGIN ─────────────────────────────────────────────────────
 async function doLogin(){
@@ -239,48 +183,6 @@ async function doLogin(){
 function loginDemo(u, p){
   const d = DEMO.find(x => x.user===u && x.pass===p && x.estado==='activo');
   return d ? {user:d.user, nombre:d.nombre, rol:d.rol, vendedor_id:d.vendedor_id} : null;
-}
-
-// ── REGISTRO ──────────────────────────────────────────────────
-async function doReg(){
-  const n   = document.getElementById('r-nombre').value.trim();
-  const u   = document.getElementById('r-user').value.trim().toLowerCase().replace(/\s+/g,'');
-  const p   = document.getElementById('r-pass').value;
-  const p2  = document.getElementById('r-pass2').value;
-  const err = document.getElementById('err-reg');
-  const btn = document.getElementById('btn-reg');
-  const txt = document.getElementById('txt-reg');
-  const sp  = document.getElementById('sp-reg');
-
-  err.classList.remove('show');
-
-  if(!n||!u||!p||!p2){ err.textContent='Completa todos los campos.'; err.classList.add('show'); return; }
-  if(p.length<6){ err.textContent='La contrasena debe tener al menos 6 caracteres.'; err.classList.add('show'); return; }
-  if(p!==p2){ err.textContent='Las contrasenias no coinciden.'; err.classList.add('show'); return; }
-  if(!/^[a-z0-9_-]+$/.test(u)){ err.textContent='El usuario solo puede tener letras minusculas, numeros, guion y guion bajo.'; err.classList.add('show'); return; }
-
-  btn.disabled=true; txt.style.display='none'; sp.classList.add('show');
-
-  try{
-    const r = await fetch(API, {
-      method:'POST',
-      body:JSON.stringify({action:'registro', nombre:n, user:u, pass:p}),
-      redirect:'follow'
-    });
-    const d = await r.json();
-    if(d.ok){ showPendiente(); }
-    else { err.textContent = d.msg || 'Error al registrar. Intenta de nuevo.'; err.classList.add('show'); }
-  } catch(e){
-    showPendiente();
-  }
-
-  btn.disabled=false; txt.style.display=''; sp.classList.remove('show');
-}
-
-function showPendiente(){
-  ['r-nombre','r-user','r-pass','r-pass2'].forEach(id => document.getElementById(id).value='');
-  document.getElementById('pend-reg').classList.add('show');
-  document.getElementById('btn-reg').style.display='none';
 }
 
 // ── INIT ──────────────────────────────────────────────────────
