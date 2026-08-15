@@ -155,7 +155,7 @@ body::after{content:"";position:fixed;bottom:-30%;right:-15%;width:60vw;height:6
     </div>
   </div>
 
-  <div class="ver">SCCR v1.0 &mdash; Casabe Real &copy; 2026</div>
+  <div class="ver">SCCR v2.5.0 &mdash; Casabe Real &copy; 2026</div>
 </div>
 
 <script>
@@ -164,10 +164,10 @@ const API = 'https://script.google.com/macros/s/AKfycbysSUeGA965zGGIF1Zpcbji1SNm
 const PORTAL = {admin:'admin.html', gerente:'gerente.html', vendedor:'vendedor.html'};
 
 const DEMO = [
-  {user:'admin',    pass:'admin123', nombre:'Administrador', rol:'admin',    estado:'activo'},
-  {user:'gerente1', pass:'ger123',   nombre:'Ana Gerente',   rol:'gerente',  estado:'activo'},
-  {user:'vendedor1',pass:'vend123',  nombre:'Carlos Cova',   rol:'vendedor', estado:'activo'},
-  {user:'vendedor2',pass:'vend456',  nombre:'Maria Perez',   rol:'vendedor', estado:'activo'},
+  {user:'admin',    pass:'admin123', nombre:'Administrador', rol:'admin',    vendedor_id:null,       estado:'activo'},
+  {user:'gerente1', pass:'ger123',   nombre:'Ana Gerente',   rol:'gerente',  vendedor_id:null,       estado:'activo'},
+  {user:'vendedor1',pass:'vend123',  nombre:'Carlos Cova',   rol:'vendedor', vendedor_id:'vendedor1',estado:'activo'},
+  {user:'vendedor2',pass:'vend456',  nombre:'Maria Perez',   rol:'vendedor', vendedor_id:'vendedor2',estado:'activo'},
 ];
 
 // ── TABS ─────────────────────────────────────────────────────
@@ -208,7 +208,12 @@ async function doLogin(){
     const r = await fetch(API+'?action=login&user='+encodeURIComponent(u)+'&pass='+encodeURIComponent(p), {redirect:'follow'});
     const d = await r.json();
     if(d.ok){
-      sesion = {user:d.data.user, nombre:d.data.nombre, rol:d.data.rol};
+      sesion = {
+        user:        d.data.user,
+        nombre:      d.data.nombre,
+        rol:         d.data.rol,
+        vendedor_id: d.data.rol === 'vendedor' ? d.data.user : null
+      };
     } else if(d.pendiente){
       err.textContent='Tu cuenta esta pendiente de aprobacion por el administrador.';
       err.classList.add('show');
@@ -233,7 +238,7 @@ async function doLogin(){
 
 function loginDemo(u, p){
   const d = DEMO.find(x => x.user===u && x.pass===p && x.estado==='activo');
-  return d ? {user:d.user, nombre:d.nombre, rol:d.rol} : null;
+  return d ? {user:d.user, nombre:d.nombre, rol:d.rol, vendedor_id:d.vendedor_id} : null;
 }
 
 // ── REGISTRO ──────────────────────────────────────────────────
