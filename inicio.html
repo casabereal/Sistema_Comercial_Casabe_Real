@@ -112,7 +112,7 @@ header{
   background:rgba(255,255,255,.22);
 }
 
-/* MENÚ WEB HORIZONTAL */
+/* MENÚ HORIZONTAL */
 .sidebar-menu{
   background-color:var(--white);
   border-bottom:1px solid var(--border-color);
@@ -122,13 +122,8 @@ header{
   white-space:nowrap;
   box-shadow:0 1px 3px rgba(0,0,0,0.05);
 }
-.sidebar-menu::-webkit-scrollbar{
-  height:3px;
-}
-.sidebar-menu::-webkit-scrollbar-thumb{
-  background:#ccc;
-  border-radius:2px;
-}
+.sidebar-menu::-webkit-scrollbar{height:3px;}
+.sidebar-menu::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px;}
 .menu-item{
   display:inline-block;
   padding:12px 14px;
@@ -149,8 +144,10 @@ header{
   color:var(--primary-red);
   border-bottom-color:var(--primary-red);
 }
+/* Ocultos por defecto; JS los muestra según rol */
+.admin-only{ display:none; }
 
-/* ESPACIO CENTRAL */
+/* CONTENIDO */
 .main-container{
   flex:1;
   padding:22px 18px 32px;
@@ -158,18 +155,9 @@ header{
   width:100%;
   margin:0 auto;
 }
-.section-header{
-  margin-bottom:18px;
-}
-.breadcrumb{
-  font-size:0.68rem;
-  color:var(--gris);
-  margin-bottom:4px;
-}
-.breadcrumb span{
-  color:var(--primary-red);
-  font-weight:600;
-}
+.section-header{ margin-bottom:18px; }
+.breadcrumb{ font-size:0.68rem; color:var(--gris); margin-bottom:4px; }
+.breadcrumb span{ color:var(--primary-red); font-weight:600; }
 .section-header h1{
   font-family:'League Spartan', sans-serif;
   font-size:1.5rem;
@@ -204,9 +192,7 @@ header{
 .kpi-card::before{
   content:'';
   position:absolute;
-  top:0;
-  left:0;
-  bottom:0;
+  top:0; left:0; bottom:0;
   width:4px;
   background:var(--primary-red);
   border-radius:4px 0 0 4px;
@@ -233,15 +219,15 @@ header{
   gap:4px;
 }
 
-/* TARJETAS Y CONTENIDO */
+/* TARJETAS */
 .content-grid{
   display:grid;
   grid-template-columns:1fr 1fr 1fr;
   gap:16px;
 }
-.col-2{grid-column:span 2;}
-.col-1{grid-column:span 1;}
-@media(max-width:900px){.col-2,.col-1{grid-column:span 3;}}
+.col-2{ grid-column:span 2; }
+.col-1{ grid-column:span 1; }
+@media(max-width:900px){ .col-2,.col-1{ grid-column:span 3; } }
 
 .card{
   background:var(--white);
@@ -261,16 +247,10 @@ header{
   font-weight:700;
   color:var(--text-dark);
 }
-.card-bd{
-  padding:16px;
-}
+.card-bd{ padding:16px; }
 
 /* TABLA */
-.tbl{
-  width:100%;
-  border-collapse:collapse;
-  font-size:0.72rem;
-}
+.tbl{ width:100%; border-collapse:collapse; font-size:0.72rem; }
 .tbl th{
   background:var(--light-bg);
   color:var(--gris);
@@ -287,10 +267,13 @@ header{
   border-bottom:1px solid var(--border-color);
   color:var(--text-dark);
 }
-.tbl tr:last-child td{border-bottom:none;}
-.tbl tr:hover td{background:var(--light-bg);}
+.tbl tr:last-child td{ border-bottom:none; }
+.tbl tr:hover td{ background:var(--light-bg); }
 
-/* BOTÓN Y BADGES */
+/* Col vendedor — visible solo para directivos */
+.col-vendedor{ display:none; }
+
+/* BOTONES Y BADGES */
 .btn{
   background:var(--primary-red);
   color:#fff;
@@ -307,7 +290,7 @@ header{
   transition:background .2s;
   font-family:'Open Sans', sans-serif;
 }
-.btn:hover{background:var(--rojo-d);}
+.btn:hover{ background:var(--rojo-d); }
 
 .badge{
   padding:3px 8px;
@@ -315,10 +298,10 @@ header{
   font-size:0.65rem;
   font-weight:600;
 }
-.badge.green{background:var(--verde-xs);color:#15803D;}
-.badge.yellow{background:var(--naranja-xs);color:#B45309;}
-.badge.red{background:var(--rojo-xs);color:#DC2626;}
-.badge.blue{background:var(--azul-xs);color:var(--azul);}
+.badge.green{ background:var(--verde-xs); color:#15803D; }
+.badge.yellow{ background:var(--naranja-xs); color:#B45309; }
+.badge.red{ background:var(--rojo-xs); color:#DC2626; }
+.badge.blue{ background:var(--azul-xs); color:var(--azul); }
 
 .rutero-item{
   display:flex;
@@ -330,9 +313,9 @@ header{
   margin-bottom:8px;
   background:var(--light-bg);
 }
-.rutero-item:last-child{margin-bottom:0;}
-.rutero-item strong{font-size:0.72rem;display:block;}
-.rutero-item small{font-size:0.65rem;color:var(--gris);}
+.rutero-item:last-child{ margin-bottom:0; }
+.rutero-item strong{ font-size:0.72rem; display:block; }
+.rutero-item small{ font-size:0.65rem; color:var(--gris); }
 
 /* FOOTER */
 footer{
@@ -344,13 +327,13 @@ footer{
   font-size:0.65rem;
   color:#777;
 }
-footer strong{color:var(--text-dark);}
+footer strong{ color:var(--text-dark); }
 
 @media (max-width: 768px) {
-    header { padding: 0 10px; height: 50px; }
-    .header-title { font-size: 0.7rem; }
-    .main-container { padding: 15px 10px; }
-    .section-header h1 { font-size: 1.15rem; }
+  header { padding:0 10px; height:50px; }
+  .header-title { font-size:0.7rem; }
+  .main-container { padding:15px 10px; }
+  .section-header h1 { font-size:1.15rem; }
 }
 </style>
 </head>
@@ -363,25 +346,29 @@ footer strong{color:var(--text-dark);}
     </div>
     <div class="header-right">
       <div class="header-user-info">
-        <div class="user-name" id="user-name-display">Asesor Comercial</div>
-        <div class="user-role" id="user-role-display">Portal Vendedor</div>
+        <div class="user-name" id="user-name-display">Cargando...</div>
+        <div class="user-role" id="user-role-display">Portal Comercial</div>
       </div>
       <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
     </div>
   </header>
 
-  <nav class="sidebar-menu">
-    <a href="inicio.html" class="menu-item active">INICIO</a>
-    <a href="clientes.html" class="menu-item">CLIENTES</a>
-    <a href="meta.html" class="menu-item">META</a>
+  <!-- ─── MENÚ ────────────────────────────────────────────────
+       Todos los ítems son visibles para vendedor y gerente.
+       Los marcados con .admin-only solo aparecen para admin.
+  ──────────────────────────────────────────────────────────── -->
+  <nav class="sidebar-menu" id="nav-menu">
+    <a href="inicio.html"    class="menu-item active">INICIO</a>
+    <a href="clientes.html"  class="menu-item">CLIENTES</a>
+    <a href="meta.html"      class="menu-item">META</a>
     <a href="propuesta.html" class="menu-item">PROPUESTA</a>
-    <a href="pedido.html" class="menu-item">PEDIDO</a>
-    <a href="reporte.html" class="menu-item">REPORTE</a>
-    <a href="embudo.html" class="menu-item">EMBUDO</a>
+    <a href="pedido.html"    class="menu-item">PEDIDO</a>
+    <a href="reporte.html"   class="menu-item">REPORTE</a>
+    <a href="embudo.html"    class="menu-item">EMBUDO</a>
     <a href="dashboard.html" class="menu-item">DASHBOARD</a>
-    <a href="bi-ia.html" class="menu-item admin-only">BI+IA</a>
-    <a href="cargas.html" class="menu-item admin-only">CARGAS</a>
-    <a href="historico.html" class="menu-item admin-only">HISTORICO</a>
+    <a href="bi-ia.html"     class="menu-item admin-only">BI+IA</a>
+    <a href="cargas.html"    class="menu-item admin-only">CARGAS</a>
+    <a href="historico.html" class="menu-item admin-only">HISTÓRICO</a>
   </nav>
 
   <main class="main-container">
@@ -391,26 +378,27 @@ footer strong{color:var(--text-dark);}
       <h1>Panel de Control <span class="highlight" id="panel-subtitle">Comercial</span></h1>
     </div>
 
+    <!-- KPIs: se rellenan desde sesión (placeholder mientras carga) -->
     <div class="kpi-grid">
       <div class="kpi-card">
         <span class="kpi-label">Venta Acumulada ($ USD)</span>
-        <span class="kpi-value">$ 14,850</span>
-        <span class="kpi-sub">▲ 92% Cumplimiento Meta</span>
+        <span class="kpi-value" id="kpi-usd">—</span>
+        <span class="kpi-sub" id="kpi-usd-sub">Cargando...</span>
       </div>
       <div class="kpi-card">
         <span class="kpi-label">Venta Acumulada (Cajas)</span>
-        <span class="kpi-value">1,240</span>
-        <span class="kpi-sub">▲ Meta: 1,350 Cajas</span>
+        <span class="kpi-value" id="kpi-cajas">—</span>
+        <span class="kpi-sub" id="kpi-cajas-sub">Cargando...</span>
       </div>
       <div class="kpi-card">
         <span class="kpi-label">Propuestas Pendientes</span>
-        <span class="kpi-value">6</span>
-        <span class="kpi-sub" style="color:var(--naranja);">En negociación activa</span>
+        <span class="kpi-value" id="kpi-prop">—</span>
+        <span class="kpi-sub" id="kpi-prop-sub" style="color:var(--naranja);">En negociación activa</span>
       </div>
       <div class="kpi-card">
         <span class="kpi-label">Visitas Ejecutadas Hoy</span>
-        <span class="kpi-value">4 / 5</span>
-        <span class="kpi-sub">Rutero al día</span>
+        <span class="kpi-value" id="kpi-visitas">—</span>
+        <span class="kpi-sub" id="kpi-visitas-sub">Rutero al día</span>
       </div>
     </div>
 
@@ -418,7 +406,7 @@ footer strong{color:var(--text-dark);}
 
       <div class="card col-2">
         <div class="card-hd">
-          Cartera de Clientes Activos
+          <span id="tabla-cartera-titulo">Cartera de Clientes Activos</span>
           <a href="clientes.html" class="btn">Ver Directorio</a>
         </div>
         <div class="card-bd" style="padding:0;overflow-x:auto;">
@@ -426,29 +414,18 @@ footer strong{color:var(--text-dark);}
             <thead>
               <tr>
                 <th>Cliente / Establecimiento</th>
+                <!-- Esta columna solo aparece para gerente/admin -->
+                <th class="col-vendedor">Vendedor</th>
                 <th>Clasificación</th>
                 <th>Último Pedido</th>
                 <th>Estatus Recompra</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="tabla-cartera">
               <tr>
-                <td><strong>Supermercados Central</strong><br><small style="color:var(--gris)">RIF: J-30129482-1</small></td>
-                <td><span class="badge green">Tipo A</span></td>
-                <td>Hace 4 días</td>
-                <td><span class="badge green">Al día</span></td>
-              </tr>
-              <tr>
-                <td><strong>Distribuidora Los Andes</strong><br><small style="color:var(--gris)">RIF: J-40891234-5</small></td>
-                <td><span class="badge green">Tipo A</span></td>
-                <td>Hace 12 días</td>
-                <td><span class="badge yellow">Por vencer</span></td>
-              </tr>
-              <tr>
-                <td><strong>Bodegón El Punto</strong><br><small style="color:var(--gris)">V-15482910-3</small></td>
-                <td><span class="badge blue">Tipo B</span></td>
-                <td>Hace 35 días</td>
-                <td><span class="badge red">En riesgo</span></td>
+                <td colspan="5" style="text-align:center;color:var(--gris);padding:20px;">
+                  Cargando clientes...
+                </td>
               </tr>
             </tbody>
           </table>
@@ -460,27 +437,9 @@ footer strong{color:var(--text-dark);}
           Rutero Diario
           <a href="reporte.html" class="btn">Reportar</a>
         </div>
-        <div class="card-bd">
-          <div class="rutero-item">
-            <div>
-              <strong>Panadería La Mansión</strong>
-              <small>09:30 AM — Presentación</small>
-            </div>
-            <span class="badge green">Completada</span>
-          </div>
-          <div class="rutero-item">
-            <div>
-              <strong>Minimarket Express</strong>
-              <small>11:00 AM — Toma de Pedido</small>
-            </div>
-            <span class="badge green">Completada</span>
-          </div>
-          <div class="rutero-item">
-            <div>
-              <strong>Restaurante Brasa & Sabor</strong>
-              <small>03:00 PM — Cita Pendiente</small>
-            </div>
-            <span class="badge yellow">Programada</span>
+        <div class="card-bd" id="rutero-bd">
+          <div style="text-align:center;color:var(--gris);padding:16px 0;">
+            Cargando rutero...
           </div>
         </div>
       </div>
@@ -492,54 +451,179 @@ footer strong{color:var(--text-dark);}
     <p>&copy; 2026 <strong>Sistema Comercial Casabe Real (SCCR)</strong>. Todos los derechos reservados. &nbsp;|&nbsp; v2.5.0 &nbsp;|&nbsp; 0412.290.58.33</p>
   </footer>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      // 1. Marcar enlace activo basado en la URL actual
-      const path = window.location.pathname.split('/').pop() || 'inicio.html';
-      document.querySelectorAll('.menu-item').forEach(link => {
-        if (link.getAttribute('href') === path) {
-          link.classList.add('active');
-        } else {
-          link.classList.remove('active');
-        }
-      });
+<script>
+// ─────────────────────────────────────────────────────────────
+//  SCCR v2.5.0 — inicio.html
+//
+//  ROLES:
+//    vendedor → ve solo sus propios datos. Menú sin admin-only.
+//    gerente  → ve datos de TODOS los vendedores consolidados.
+//               Mismo menú que vendedor (sin admin-only).
+//    admin    → ve todo. Menú completo (incluye admin-only).
+// ─────────────────────────────────────────────────────────────
 
-      // 2. Cargar sesión de forma segura y configurar permisos por rol
-      try {
-        const raw = sessionStorage.getItem('sccr');
-        if (raw) {
-          const sess = JSON.parse(raw);
-          if (sess.nombre) {
-            document.getElementById('user-name-display').textContent = sess.nombre;
-          }
-          if (sess.rol) {
-            document.getElementById('user-role-display').textContent = sess.rol;
-            const rolUpper = sess.rol.toUpperCase();
-            
-            // Si es CEO, Administrador o Admin, mostramos los módulos gerenciales
-            if (rolUpper.includes('CEO') || rolUpper.includes('ADMIN')) {
-              document.getElementById('panel-subtitle').textContent = 'Gerencial / CEO';
-              document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
-            } else {
-              // Si es vendedor regular, ocultamos el bloque admin
-              document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
-            }
-          }
-        } else {
-          document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
-        }
-      } catch(e) {
-        console.error("Error al leer sessionStorage:", e);
-        document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
-      }
-    });
+const API = 'https://script.google.com/macros/s/AKfycbyWRB5745Ors7n8RYqTqyBfb7LXIX3W9x-LFxfnnJf4Bv7fyoS51KeqKgChaldfmLqjSw/exec';
 
-    function cerrarSesion() {
-      if(confirm('¿Estás seguro de cerrar sesión?')) {
-        sessionStorage.removeItem('sccr');
-        window.location.href = 'index.html'; // Redirige correctamente a tu login (index.html)
-      }
+document.addEventListener('DOMContentLoaded', () => {
+
+  // ── 1. Leer sesión ───────────────────────────────────────
+  let sess = null;
+  try {
+    const raw = sessionStorage.getItem('sccr');
+    if (raw) sess = JSON.parse(raw);
+  } catch(e) {}
+
+  // Sin sesión válida → login
+  if (!sess || !sess.rol) {
+    window.location.href = 'index.html';
+    return;
+  }
+
+  const rol         = sess.rol.toLowerCase();      // 'admin' | 'gerente' | 'vendedor'
+  const esAdmin     = rol === 'admin';
+  const esDirectivo = rol === 'admin' || rol === 'gerente'; // gerente y admin ven todos
+  const vendedorId  = sess.vendedor_id || null;    // solo para vendedores
+
+  // ── 2. Header ────────────────────────────────────────────
+  document.getElementById('user-name-display').textContent = sess.nombre || 'Usuario';
+  document.getElementById('user-role-display').textContent =
+    esAdmin    ? 'Administrador' :
+    rol === 'gerente' ? 'Gerente de Ventas' :
+    'Asesor Comercial';
+
+  // ── 3. Menú: admin-only solo para admin ──────────────────
+  if (esAdmin) {
+    document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
+  }
+  // gerente y vendedor NO ven los ítems admin-only (ya ocultos por CSS por defecto)
+
+  // ── 4. Marcar ítem activo en el menú ─────────────────────
+  const path = window.location.pathname.split('/').pop() || 'inicio.html';
+  document.querySelectorAll('.menu-item').forEach(link => {
+    link.classList.toggle('active', link.getAttribute('href') === path);
+  });
+
+  // ── 5. Título del panel según rol ────────────────────────
+  document.getElementById('panel-subtitle').textContent =
+    esAdmin           ? 'Gerencial / Admin' :
+    rol === 'gerente' ? 'Gerencial / Consolidado' :
+    'Comercial';
+
+  // ── 6. Columna "Vendedor" en tabla: solo para directivos ─
+  if (esDirectivo) {
+    document.querySelectorAll('.col-vendedor').forEach(el => el.style.display = '');
+    document.getElementById('tabla-cartera-titulo').textContent = 'Cartera Consolidada — Todos los Vendedores';
+  }
+
+  // ── 7. Cargar clientes ───────────────────────────────────
+  //  vendedor → filtra por su vendedor_id
+  //  gerente/admin → trae todos (sin filtro)
+  cargarClientes(esDirectivo ? null : vendedorId);
+
+  // ── 8. KPIs placeholder (mientras no hay endpoint de dashboard propio) ──
+  // Se usan valores de sesión si existen, si no se muestran guiones.
+  // Cuando se implemente el endpoint 'dashboard' filtrado por vendedor,
+  // reemplazar esta sección con la llamada al API.
+  setKpisPlaceholder(esDirectivo);
+});
+
+// ─────────────────────────────────────────────────────────────
+//  Carga de clientes desde el API
+// ─────────────────────────────────────────────────────────────
+async function cargarClientes(vendedorId) {
+  const tbody = document.getElementById('tabla-cartera');
+  try {
+    let url = API + '?action=clientes';
+    if (vendedorId) url += '&vendedor=' + encodeURIComponent(vendedorId);
+
+    const r = await fetch(url, { redirect: 'follow' });
+    const d = await r.json();
+
+    if (!d.ok || !d.data || d.data.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--gris);padding:20px;">No hay clientes registrados.</td></tr>';
+      return;
     }
-  </script>
+
+    // Ordenar: primero los más recientes por ultima_compra
+    const clientes = d.data.sort((a, b) => {
+      const fa = parseFecha(a.ultima_compra);
+      const fb = parseFecha(b.ultima_compra);
+      return fb - fa;
+    }).slice(0, 10); // máximo 10 en el resumen
+
+    const mostrarVendedor = document.querySelector('.col-vendedor') &&
+                            document.querySelector('.col-vendedor').style.display !== 'none';
+
+    tbody.innerHTML = clientes.map(c => {
+      const estatus = clasificarEstatus(c.ultima_compra);
+      return `<tr>
+        <td>
+          <strong>${c.razon_social || c.establecimiento || '—'}</strong><br>
+          <small style="color:var(--gris)">${c.establecimiento || ''}</small>
+        </td>
+        ${mostrarVendedor ? `<td><small>${c.vendedor_asignado || '—'}</small></td>` : ''}
+        <td><span class="badge ${badgeClasif(c.clasificacion_abc)}">${c.clasificacion_abc || 'C'}</span></td>
+        <td>${c.ultima_compra || 'Sin compras'}</td>
+        <td><span class="badge ${estatus.cls}">${estatus.label}</span></td>
+      </tr>`;
+    }).join('');
+
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--gris);padding:20px;">Error al cargar clientes. Verifica la conexión.</td></tr>';
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+//  KPIs placeholder
+//  (reemplazar con llamada real al endpoint 'dashboard' cuando esté listo)
+// ─────────────────────────────────────────────────────────────
+function setKpisPlaceholder(esDirectivo) {
+  document.getElementById('kpi-usd').textContent     = '—';
+  document.getElementById('kpi-cajas').textContent   = '—';
+  document.getElementById('kpi-prop').textContent    = '—';
+  document.getElementById('kpi-visitas').textContent = '—';
+
+  document.getElementById('kpi-usd-sub').textContent     = esDirectivo ? 'Consolidado todos los vendedores' : 'Tu venta del mes';
+  document.getElementById('kpi-cajas-sub').textContent   = esDirectivo ? 'Total equipo de ventas' : 'Tu meta de cajas';
+  document.getElementById('kpi-prop-sub').textContent    = 'En negociación activa';
+  document.getElementById('kpi-visitas-sub').textContent = 'Rutero del día';
+
+  // Rutero: placeholder genérico (cada vendedor tiene el suyo en reporte.html)
+  document.getElementById('rutero-bd').innerHTML = `
+    <div style="text-align:center;padding:24px 12px;color:var(--gris);font-size:0.72rem;">
+      Consulta tu rutero completo en el módulo <strong>Reporte</strong>.
+    </div>`;
+}
+
+// ─────────────────────────────────────────────────────────────
+//  Helpers
+// ─────────────────────────────────────────────────────────────
+function parseFecha(str) {
+  if (!str) return new Date(0);
+  const p = str.split('/');
+  if (p.length === 3) return new Date(p[2], p[1] - 1, p[0]);
+  return new Date(str);
+}
+
+function clasificarEstatus(ultimaCompra) {
+  if (!ultimaCompra) return { label: 'Sin actividad', cls: 'red' };
+  const diff = (new Date() - parseFecha(ultimaCompra)) / 86400000; // días
+  if (diff <= 5)  return { label: 'Al día',     cls: 'green'  };
+  if (diff <= 15) return { label: 'Por vencer', cls: 'yellow' };
+  return             { label: 'En riesgo',  cls: 'red'    };
+}
+
+function badgeClasif(abc) {
+  const m = { A: 'green', B: 'blue', C: 'yellow' };
+  return m[abc] || 'yellow';
+}
+
+function cerrarSesion() {
+  if (confirm('¿Estás seguro de cerrar sesión?')) {
+    sessionStorage.removeItem('sccr');
+    window.location.href = 'index.html';
+  }
+}
+</script>
 </body>
 </html>
