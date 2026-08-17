@@ -1,625 +1,657 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SCCR - Módulo de Clientes</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    
-    <style>
-        /* ==========================================================================
-           1. DESIGN SYSTEM - NUEVO LAYOUT (Basado en gemini-code...)
-           ========================================================================== */
-        :root {
-            --primary-red: #D30000;
-            --white: #FFFFFF;
-            --light-bg: #F8F9FA;
-            --text-dark: #333333;
-            --border-color: #E0E0E0;
-            --sidebar-hover: #F1F3F5;
-            
-            /* Colores Semánticos Operativos (Mantenidos para las lógicas de estado) */
-            --exito: #2ECC71;
-            --advertencia: #F39C12;
-            --alerta: #E74C3C;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SCCR — Clientes y Cartera</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<script src="assets/sccr-auth.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --rojo:#D30000;
+  --rojo-d:#A01015;
+  --rojo-xs:#FEF2F2;
+  --white:#FFFFFF;
+  --light-bg:#F8F9FA;
+  --border-color:#E0E0E0;
+  --text-dark:#333333;
+  --gris:#6B7280;
+  --sidebar-hover:#F1F3F5;
+  --verde:#059669;
+  --verde-xs:#ECFDF5;
+  --naranja:#D97706;
+  --naranja-xs:#FFFBEB;
+  --azul:#2563EB;
+  --azul-xs:#EFF6FF;
+  --alerta:#E74C3C;
+  --r:6px;
+  --sh:0 2px 4px rgba(0,0,0,0.05);
+}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+body{
+  font-family:'Open Sans',sans-serif;
+  background:var(--light-bg);
+  color:var(--text-dark);
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+  font-size:0.75rem;
+}
 
-        body {
-            font-family: 'Open Sans', sans-serif;
-            background-color: var(--light-bg);
-            color: var(--text-dark);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            font-size: 0.75rem; /* Reducción de escala base del nuevo layout */
-        }
+/* ── HEADER ──────────────────────────────────────────────── */
+header{
+  background-color:var(--rojo);
+  color:var(--white);
+  height:60px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 18px;
+  box-shadow:0 2px 4px rgba(0,0,0,0.1);
+  position:sticky;
+  top:0;
+  z-index:1000;
+}
+.header-left{display:flex;align-items:center;gap:11px}
+.header-left img{width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25));display:block}
+.header-title{font-family:'League Spartan',sans-serif;font-size:0.95rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.header-right{display:flex;align-items:center;gap:12px}
+.header-user-info{font-size:0.7rem;text-align:right;line-height:1.3}
+.header-user-info .user-name{font-weight:600}
+.header-user-info .user-role{font-size:0.65rem;opacity:.9}
+.btn-logout{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:5px 10px;cursor:pointer;color:rgba(255,255,255,.9);font-size:0.7rem;transition:background .2s;white-space:nowrap;font-family:'Open Sans',sans-serif;font-weight:600}
+.btn-logout:hover{background:rgba(255,255,255,.22)}
 
-        /* ==========================================================================
-           2. HEADER & NAV (NUEVO LAYOUT)
-           ========================================================================== */
-        header {
-            background-color: var(--primary-red);
-            color: var(--white);
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 18px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+/* ── NAV ─────────────────────────────────────────────────── */
+.nav-bar{background:var(--white);border-bottom:1px solid var(--border-color);padding:0 18px;display:flex;overflow-x:auto;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.nav-bar::-webkit-scrollbar{height:3px}
+.nav-bar::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px}
+.menu-item{display:inline-block;padding:12px 14px;font-size:0.7rem;color:var(--text-dark);text-decoration:none;transition:all .2s;border-bottom:3px solid transparent}
+.menu-item:hover{background:var(--sidebar-hover);color:var(--rojo)}
+.menu-item.active{font-family:'League Spartan',sans-serif;font-weight:700;color:var(--rojo);border-bottom-color:var(--rojo)}
+.admin-only{display:none}
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-        }
+/* ── MAIN ────────────────────────────────────────────────── */
+.main-container{flex:1;padding:22px 18px 32px;max-width:1400px;width:100%;margin:0 auto}
+.section-header{margin-bottom:18px}
+.breadcrumb{font-size:0.68rem;color:var(--gris);margin-bottom:4px}
+.breadcrumb span{color:var(--rojo);font-weight:600}
+.section-header h1{font-family:'League Spartan',sans-serif;font-size:1.5rem;font-weight:700;color:var(--text-dark);margin-bottom:4px}
+.section-header .highlight{color:var(--rojo)}
+.section-sub{font-size:0.7rem;color:var(--gris);font-weight:600}
 
-        .header-left img {
-            width: 42px;
-            height: 42px;
-            object-fit: contain;
-            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
-            display: block;
-        }
+/* ── KPIs ────────────────────────────────────────────────── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:22px}
+.kpi-card{
+  background:var(--white);padding:18px;border-radius:var(--r);
+  box-shadow:var(--sh);border:1px solid var(--border-color);
+  cursor:pointer;transition:transform .2s,border-color .2s;
+  position:relative;overflow:hidden;
+}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;bottom:0;width:4px;background:var(--rojo);border-radius:4px 0 0 4px}
+.kpi-card:hover{transform:translateY(-2px);border-color:var(--rojo)}
+.kpi-card.active-filter{border-color:var(--rojo);background:var(--rojo-xs)}
+.kpi-title{font-size:0.65rem;color:var(--gris);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
+.kpi-value{font-size:1.6rem;font-weight:800;color:var(--text-dark);font-family:'League Spartan',sans-serif;margin-bottom:4px}
+.kpi-sub{font-size:0.65rem;font-weight:600;color:var(--verde)}
 
-        .header-title {
-            font-family: 'League Spartan', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
+/* barras de progreso */
+.progress-container{margin-top:8px}
+.progress-label{font-size:0.63rem;font-weight:600;color:var(--gris);display:flex;justify-content:space-between;margin-bottom:3px}
+.progress-bar-bg{width:100%;background:var(--light-bg);height:6px;border-radius:3px;margin-bottom:7px;overflow:hidden}
+.progress-bar-fill{height:100%;background:var(--verde);border-radius:3px;transition:width .6s ease}
+.progress-bar-fill.cajas{background:var(--naranja)}
 
-        .header-right {
-            font-family: 'Open Sans', sans-serif;
-            font-size: 0.7rem;
-            text-align: right;
-            line-height: 1.3;
-        }
+/* semáforo en KPI */
+.semaforo-row{display:flex;gap:14px;margin-top:6px;align-items:center}
+.sem-item{text-align:center}
+.sem-dot{width:11px;height:11px;border-radius:50%;display:inline-block;margin-bottom:3px}
+.sem-dot.verde{background:var(--verde)}
+.sem-dot.amarillo{background:var(--naranja)}
+.sem-dot.rojo{background:var(--alerta)}
+.sem-num{font-size:1rem;font-weight:700;font-family:'League Spartan',sans-serif;color:var(--text-dark)}
 
-        .header-right .user-name { font-weight: 600; }
-        .header-right .user-role { font-size: 0.65rem; opacity: 0.9; }
+/* ── TABLA ───────────────────────────────────────────────── */
+.content-card{background:var(--white);border-radius:var(--r);padding:18px;box-shadow:var(--sh);border:1px solid var(--border-color)}
+.filters-bar{display:flex;gap:10px;margin-bottom:14px;align-items:center;flex-wrap:wrap}
+.search-input{flex:1;min-width:180px;padding:8px 12px;border:1px solid var(--border-color);border-radius:var(--r);font-size:0.75rem;outline:none;font-family:'Open Sans',sans-serif}
+.search-input:focus{border-color:var(--rojo)}
+.active-filter-label{font-size:0.72rem;font-weight:600;color:var(--rojo);margin-bottom:10px;display:none}
 
-        .sidebar-menu {
-            background-color: var(--white);
-            border-bottom: 1px solid var(--border-color);
-            padding: 0 18px;
-            display: flex;
-            overflow-x: auto;
-            white-space: nowrap;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
+.btn{padding:7px 14px;border-radius:var(--r);font-weight:600;font-size:0.72rem;cursor:pointer;font-family:'Open Sans',sans-serif;transition:all .2s;border:none;display:inline-flex;align-items:center;gap:5px}
+.btn-primary{background:var(--rojo);color:#fff}
+.btn-primary:hover{background:var(--rojo-d)}
+.btn-outline{background:var(--white);color:var(--rojo);border:1px solid var(--rojo)}
+.btn-outline:hover{background:var(--rojo-xs)}
 
-        .sidebar-menu::-webkit-scrollbar { height: 3px; }
-        .sidebar-menu::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
+table{width:100%;border-collapse:collapse}
+th,td{padding:11px 12px;text-align:left;border-bottom:1px solid var(--border-color)}
+th{background:var(--light-bg);font-size:0.65rem;color:var(--gris);font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+td{font-size:0.73rem;color:var(--text-dark)}
+tr:hover td{background:var(--sidebar-hover);cursor:pointer}
 
-        .menu-item {
-            display: inline-block;
-            padding: 12px 14px;
-            font-family: 'Open Sans', sans-serif;
-            font-size: 0.7rem;
-            color: var(--text-dark);
-            text-decoration: none;
-            transition: all 0.2s ease;
-            border-bottom: 3px solid transparent;
-        }
+.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px}
+.status-dot.verde{background:var(--verde)}
+.status-dot.amarillo{background:var(--naranja)}
+.status-dot.rojo{background:var(--alerta)}
 
-        .menu-item:hover {
-            background-color: var(--sidebar-hover);
-            color: var(--primary-red);
-        }
+.badge{display:inline-block;padding:3px 8px;border-radius:20px;font-size:0.65rem;font-weight:600}
+.badge.verde{background:var(--verde-xs);color:#15803D}
+.badge.amarillo{background:var(--naranja-xs);color:#B45309}
+.badge.rojo{background:var(--rojo-xs);color:#DC2626}
+.badge.azul{background:var(--azul-xs);color:var(--azul)}
 
-        .menu-item.active {
-            font-family: 'League Spartan', sans-serif;
-            font-weight: 700;
-            color: var(--primary-red);
-            border-bottom-color: var(--primary-red);
-        }
+.tag-info{font-size:0.65rem;background:var(--light-bg);padding:3px 7px;border-radius:4px;color:var(--gris);font-weight:600}
 
-        /* ==========================================================================
-           3. MAIN CONTAINER & ESTRUCTURA
-           ========================================================================== */
-        .main-container {
-            flex: 1;
-            padding: 22px 18px;
-            max-width: 1400px;
-            width: 100%;
-            margin: 0 auto;
-        }
+/* ── DRAWER ──────────────────────────────────────────────── */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;z-index:2000}
+.drawer{
+  position:fixed;top:0;right:-540px;width:480px;height:100vh;
+  background:var(--white);box-shadow:-4px 0 20px rgba(0,0,0,.12);
+  transition:right .3s ease;z-index:2001;display:flex;flex-direction:column;
+}
+.drawer.open{right:0}
+.drawer-header{padding:18px 20px;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:flex-start}
+.drawer-header h2{font-family:'League Spartan',sans-serif;font-size:1.1rem;color:var(--rojo);line-height:1.2}
+.drawer-rif{font-size:0.67rem;color:var(--gris);margin-top:3px}
+.close-btn{background:none;border:none;font-size:20px;cursor:pointer;color:var(--gris);line-height:1;padding:2px}
+.drawer-content{padding:18px 20px;overflow-y:auto;flex:1;font-size:0.75rem;display:flex;flex-direction:column;gap:14px}
+.drawer-section{background:var(--light-bg);border:1px solid var(--border-color);border-radius:var(--r);padding:14px}
+.drawer-section-title{font-family:'League Spartan',sans-serif;font-size:0.82rem;font-weight:700;color:var(--rojo);margin-bottom:10px}
+.drawer-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border-color)}
+.drawer-row:last-child{border-bottom:none}
+.drawer-row .lbl{color:var(--gris);font-weight:600;font-size:0.68rem}
+.drawer-row .val{font-weight:600;font-size:0.73rem;text-align:right}
+.drawer-footer{padding:14px 20px;border-top:1px solid var(--border-color);display:flex;gap:10px;background:var(--light-bg)}
 
-        .section-header { margin-bottom: 18px; }
-        .section-header h1 {
-            font-family: 'League Spartan', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 6px;
-        }
-        .section-header .highlight { color: var(--primary-red); }
+/* ── ESTADO VACÍO / CARGA ────────────────────────────────── */
+.empty-state{text-align:center;padding:36px 20px;color:var(--gris)}
+.empty-state .icon{font-size:2.5rem;margin-bottom:10px}
+.empty-state p{font-size:0.78rem}
 
-        .content-card {
-            background-color: var(--white);
-            border-radius: 6px;
-            padding: 18px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border: 1px solid var(--border-color);
-            margin-bottom: 18px;
-        }
+/* ── FOOTER ──────────────────────────────────────────────── */
+footer{text-align:center;padding:14px 18px;font-size:0.65rem;color:var(--gris);border-top:1px solid var(--border-color);background:var(--white);margin-top:auto}
+footer strong{color:var(--text-dark)}
 
-        /* ==========================================================================
-           4. ADAPTACIÓN DE COMPONENTES FUNCIONALES (KPIs, TABLA, FILTROS)
-           ========================================================================== */
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 22px;
-        }
-
-        .kpi-card {
-            background: var(--white);
-            padding: 18px;
-            border-radius: 6px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border: 1px solid var(--border-color);
-            cursor: pointer;
-            transition: transform 0.2s, border-color 0.2s;
-        }
-
-        .kpi-card:hover {
-            transform: translateY(-2px);
-            border-color: var(--primary-red);
-        }
-
-        .kpi-title {
-            font-size: 0.75rem;
-            color: #777;
-            font-weight: 600;
-            margin-bottom: 8px;
-            font-family: 'Open Sans', sans-serif;
-        }
-
-        .kpi-value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 5px;
-            font-family: 'League Spartan', sans-serif;
-        }
-
-        /* Barras de Progreso Duales */
-        .progress-container { margin-top: 10px; }
-        .progress-label {
-            font-size: 0.65rem;
-            font-weight: 600;
-            color: #777;
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 3px;
-        }
-        .progress-bar-bg {
-            width: 100%;
-            background-color: var(--light-bg);
-            height: 6px;
-            border-radius: 3px;
-            margin-bottom: 8px;
-            overflow: hidden;
-        }
-        .progress-bar-fill { height: 100%; background-color: var(--exito); border-radius: 3px; }
-        .progress-bar-fill.cajas { background-color: var(--advertencia); }
-
-        /* Filtros y Búsqueda */
-        .filters-bar {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            align-items: center;
-        }
-
-        .search-input {
-            flex: 1;
-            padding: 8px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 0.75rem;
-            outline: none;
-            font-family: 'Open Sans', sans-serif;
-        }
-
-        .search-input:focus { border-color: var(--primary-red); }
-
-        .active-filter-label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--primary-red);
-            margin-bottom: 12px;
-            display: none;
-        }
-
-        .btn {
-            padding: 8px 14px;
-            border: none;
-            border-radius: 4px;
-            font-weight: 600;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: opacity 0.2s;
-            font-family: 'Open Sans', sans-serif;
-        }
-        .btn-primary { background: var(--primary-red); color: var(--white); }
-        .btn-outline { background: var(--white); color: var(--primary-red); border: 1px solid var(--primary-red); }
-
-        /* TABLA DINÁMICA */
-        .table-container {
-            overflow: hidden;
-        }
-
-        table { width: 100%; border-collapse: collapse; }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-        }
-        th {
-            background-color: var(--light-bg);
-            font-size: 0.75rem;
-            color: #777;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-        td { font-size: 0.75rem; color: var(--text-dark); }
-        tr:hover { background-color: var(--sidebar-hover); cursor: pointer; }
-
-        .status-dot {
-            width: 8px; height: 8px; border-radius: 50%;
-            display: inline-block; margin-right: 5px;
-        }
-        .status-dot.verde { background-color: var(--exito); }
-        .status-dot.amarillo { background-color: var(--advertencia); }
-        .status-dot.rojo { background-color: var(--alerta); }
-
-        .tag-info {
-            font-size: 0.65rem;
-            background: var(--light-bg);
-            padding: 3px 6px;
-            border-radius: 4px;
-            color: #777;
-            font-weight: 600;
-        }
-
-        /* ==========================================================================
-           5. FICHA CLIENTE 360° (DRAWER LATERAL)
-           ========================================================================== */
-        .drawer-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            z-index: 2000;
-        }
-
-        .drawer {
-            position: fixed;
-            top: 0; right: -600px;
-            width: 500px;
-            height: 100vh;
-            background: var(--white);
-            box-shadow: -4px 0 15px rgba(0,0,0,0.1);
-            transition: right 0.3s ease;
-            z-index: 2001;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .drawer.open { right: 0; }
-
-        .drawer-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .drawer-header h2 { 
-            font-family: 'League Spartan', sans-serif;
-            font-size: 1.25rem; 
-            color: var(--primary-red);
-        }
-
-        .close-btn {
-            background: none; border: none; font-size: 20px;
-            cursor: pointer; color: #777;
-        }
-
-        .drawer-content {
-            padding: 20px;
-            overflow-y: auto;
-            flex: 1;
-            font-size: 0.75rem;
-        }
-
-        .drawer-footer {
-            padding: 15px 20px;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            gap: 10px;
-            background: var(--light-bg);
-        }
-
-        /* Responsive Clientes */
-        @media (max-width: 900px) {
-            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-            .drawer { width: 100%; right: -100%; }
-        }
-        @media (max-width: 500px) {
-            .kpi-grid { grid-template-columns: 1fr; }
-        }
-        @media (max-width: 768px) {
-            header { padding: 0 10px; height: 50px; }
-            .header-left img { width: 38px; height: 38px; }
-            .header-title { font-size: 0.7rem; }
-            .header-right { font-size: 0.6rem; }
-            .menu-item { padding: 9px 10px; font-size: 0.65rem; }
-            .main-container { padding: 15px 10px; }
-            .section-header h1 { font-size: 1.15rem; }
-        }
-    </style>
+@media(max-width:900px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .drawer{width:100%;right:-100%}
+}
+@media(max-width:500px){.kpi-grid{grid-template-columns:1fr}}
+@media(max-width:768px){
+  header{padding:0 10px;height:50px}
+  .header-title{font-size:0.7rem}
+  .main-container{padding:15px 10px}
+  .section-header h1{font-size:1.1rem}
+}
+</style>
 </head>
 <body>
 
-    <header>
-        <div class="header-left">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABDUAAAPgCAYAAAAiJEfzAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAABTLpJREFUeNrsvc+PFde5770PDrzm7RfTyD6+9ollQIkScZQbzDCDHLdnHtzIeBQPIrkZeXCuhJn4SvcOTAa2dO8EI50MMgIkR7oZValeQgwwfwC2c6XoRon4IfvgOEaN4ezTpLHxu7/V9bQXi/qxqmpV7arat4+01dC9f1StWlW7nr96nu8zmQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFPN3DAEAAADA+JlOpyuBT92XPvrO1fQRwodLS0u3mAUAAOMDUQMAAABgzkyn032Th4WErN+J53Pe5rnZY5nRqMWHs0ee6HEx5/cXst4H8QQAoFsQNQAAAAAaMp1OfUFhxfn37smm4DDJ+TeMmwve/yV6fFT0nkWlpQsNbwIAEAZw9w10sACACADmAAAMB5v1Z258OAAAAYH8APAKAfEAAAAYDAEAHvE04JAH189aX/wIAPbV49A==" alt="Logo Casabe Real">
-            <span class="header-title">SISTEMA COMERCIAL CASABE REAL</span>
+<!-- ── HEADER ────────────────────────────────────────────────── -->
+<header>
+  <div class="header-left">
+    <img src="assets/logo-casabe-real.png" alt="Casabe Real" onerror="this.style.display='none'">
+    <span class="header-title">Sistema Comercial Casabe Real</span>
+  </div>
+  <div class="header-right">
+    <div class="header-user-info">
+      <div class="user-name"  id="user-name-display">Cargando...</div>
+      <div class="user-role"  id="user-role-display">Portal Comercial</div>
+    </div>
+    <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
+  </div>
+</header>
+
+<!-- ── NAV ───────────────────────────────────────────────────── -->
+<nav class="nav-bar">
+  <a href="inicio.html"    class="menu-item">INICIO</a>
+  <a href="clientes.html"  class="menu-item active">CLIENTES</a>
+  <a href="meta.html"      class="menu-item">META</a>
+  <a href="propuesta.html" class="menu-item">PROPUESTA</a>
+  <a href="pedido.html"    class="menu-item">PEDIDO</a>
+  <a href="reporte.html"   class="menu-item">REPORTE</a>
+  <a href="embudo.html"    class="menu-item">EMBUDO</a>
+  <a href="dashboard.html" class="menu-item">DASHBOARD</a>
+  <a href="bi-ia.html"     class="menu-item admin-only">BI+IA</a>
+  <a href="cargas.html"    class="menu-item admin-only">CARGAS</a>
+  <a href="historico.html" class="menu-item admin-only">HISTÓRICO</a>
+</nav>
+
+<!-- ── MAIN ──────────────────────────────────────────────────── -->
+<main class="main-container">
+
+  <div class="section-header">
+    <div class="breadcrumb">Sistema / <span>Clientes</span></div>
+    <h1>Gestión de <span class="highlight">Clientes y Cartera</span></h1>
+    <p class="section-sub" id="section-sub">Cargando...</p>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-grid">
+
+    <!-- KPI 1: Meta -->
+    <div class="kpi-card" id="kpi-meta" onclick="filtrarClientes('todos')">
+      <div class="kpi-title">Meta de Ventas vs. Real</div>
+      <div class="progress-container">
+        <div class="progress-label">
+          <span id="kpi-meta-usd-pct">$ USD —%</span>
+          <span id="kpi-meta-usd-val">—</span>
         </div>
-        <div class="header-right">
-            <div class="user-name">Carlos Mendoza</div>
-            <div class="user-role">CEO / Administrador</div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="bar-usd" style="width:0%"></div>
         </div>
-    </header>
-
-    <nav class="sidebar-menu">
-        <a href="inicio.html" class="menu-item">INICIO</a>
-        <a href="clientes.html" class="menu-item active">CLIENTES</a>
-        <a href="meta.html" class="menu-item">META</a>
-        <a href="propuesta.html" class="menu-item">PROPUESTA</a>
-        <a href="pedido.html" class="menu-item">PEDIDO</a>
-        <a href="reporte.html" class="menu-item">REPORTE</a>
-        <a href="embudo.html" class="menu-item">EMBUDO</a>
-        <a href="dashboard.html" class="menu-item">DASHBOARD</a>
-        <a href="bi-ia.html" class="menu-item">BI+IA</a>
-        <a href="cargas.html" class="menu-item">CARGAS</a>
-        <a href="historico.html" class="menu-item">HISTORICO</a>
-    </nav>
-
-    <main class="main-container">
-        
-        <div class="section-header">
-            <h1>Gestión de <span class="highlight">Clientes y Cartera</span></h1>
-            <p style="color: #777; font-size: 0.7rem;">Vendedor (Vista Filtrada)</p>
+        <div class="progress-label">
+          <span id="kpi-meta-cajas-pct">Cajas —%</span>
+          <span id="kpi-meta-cajas-val">—</span>
         </div>
-
-        <div class="kpi-grid">
-            <div class="kpi-card" onclick="filtrarClientes('todos', 'Todos los Clientes en Cartera')">
-                <div class="kpi-title">Meta de Ventas vs. Real</div>
-                <div class="progress-container">
-                    <div class="progress-label"><span>$ USD (85%)</span> <span>$8,500 / $10,000</span></div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 85%;"></div></div>
-                    
-                    <div class="progress-label"><span>Cajas (72%)</span> <span>360 / 500 Cajas</span></div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill cajas" style="width: 72%;"></div></div>
-                </div>
-            </div>
-
-            <div class="kpi-card" onclick="filtrarClientes('propuestas', 'Clientes con Propuestas Pendientes')">
-                <div class="kpi-title">Propuestas Pendientes</div>
-                <div class="kpi-value">18</div>
-                <div style="font-size: 0.65rem; color: var(--advertencia); font-weight: 600;">Esperando respuesta</div>
-            </div>
-
-            <div class="kpi-card" onclick="filtrarClientes('riesgo', 'Clientes en Riesgo de Recompra (Rojo y Amarillo)')">
-                <div class="kpi-title">Semáforo de Recompra</div>
-                <div style="display: flex; gap: 15px; margin-top: 5px;">
-                    <div style="text-align: center;">
-                        <span class="status-dot verde" style="width: 12px; height: 12px;"></span>
-                        <div style="font-size: 1rem; font-weight: 700; color: var(--text-dark); font-family: 'League Spartan', sans-serif;">92</div>
-                    </div>
-                    <div style="text-align: center;">
-                        <span class="status-dot amarillo" style="width: 12px; height: 12px;"></span>
-                        <div style="font-size: 1rem; font-weight: 700; color: var(--text-dark); font-family: 'League Spartan', sans-serif;">14</div>
-                    </div>
-                    <div style="text-align: center;">
-                        <span class="status-dot rojo" style="width: 12px; height: 12px;"></span>
-                        <div style="font-size: 1rem; font-weight: 700; color: var(--text-dark); font-family: 'League Spartan', sans-serif;">6</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="kpi-card" onclick="filtrarClientes('visitas', 'Rutero: Visitas Programadas para Hoy')">
-                <div class="kpi-title">Visitas del Día</div>
-                <div class="kpi-value">4 / 10</div>
-                <div style="font-size: 0.65rem; color: #777; font-weight: 600;">6 Pendientes por visitar</div>
-            </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill cajas" id="bar-cajas" style="width:0%"></div>
         </div>
-
-        <div class="content-card">
-            <div class="filters-bar">
-                <input type="text" class="search-input" placeholder="Buscar por Nombre, RIF o Contacto..." id="searchInput" onkeyup="filtrarPorTexto()">
-                <button class="btn btn-outline" onclick="filtrarClientes('todos', '')">Limpiar Filtros</button>
-            </div>
-            
-            <div id="activeFilterLabel" class="active-filter-label"></div>
-
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Razón Social / Comercial</th>
-                            <th>RIF / Contacto</th>
-                            <th>Semáforo Recompra</th>
-                            <th>Detalle Operativo</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody id="clientesTableBody">
-                        </tbody>
-                </table>
-            </div>
-        </div>
-    </main>
-
-    <footer>
-        <p>&copy; 2026 Sistema Comercial Casabe Real (SCCR). Todos los derechos reservados.</p>
-    </footer>
-
-    <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
-    <div class="drawer" id="clientDrawer">
-        <div class="drawer-header">
-            <h2 id="d-nombre">Nombre Comercial</h2>
-            <button class="close-btn" onclick="closeDrawer()">&times;</button>
-        </div>
-        <div class="drawer-content">
-            <p><strong>Contacto:</strong> <span id="d-contacto"></span> | <strong>Teléfono:</strong> <span id="d-telefono"></span></p>
-            <br>
-            <div style="background: var(--light-bg); padding: 15px; border-radius: 6px; border: 1px solid var(--border-color);">
-                <h3 style="color: var(--primary-red); font-size: 0.8rem; margin-bottom: 10px; font-family: 'League Spartan', sans-serif;">Detalle de la Métrica Activa</h3>
-                <p id="d-detalle" style="font-size: 0.75rem;"></p>
-            </div>
-        </div>
-        <div class="drawer-footer">
-            <button class="btn btn-primary" style="flex:1;">Crear Pedido</button>
-            <button class="btn btn-outline" style="flex:1;">Emitir Propuesta</button>
-        </div>
+      </div>
     </div>
 
-    <script>
-        // Mock de datos enriquecido con los atributos para cada KPI
-        const clientesDB = [
-            { id: 1, nombre: "Supermercado El Rey", rif: "J-30495832-1", contacto: "Pedro Gómez", tlf: "0412-5551234", estado: "verde", tiene_propuesta: true, detalle_propuesta: "Propuesta #PRP-092 por $450 enviada el Lunes.", visita_hoy: false, en_riesgo: false },
-            { id: 2, nombre: "Bodegón La Castellana", rif: "J-40592834-9", contacto: "Luis Silva", tlf: "0424-9994321", estado: "amarillo", tiene_propuesta: false, detalle_propuesta: "Sin propuestas activas.", visita_hoy: true, detalle_visita: "Visita programada: 10:30 AM (Cobranza y Reposición).", en_riesgo: true },
-            { id: 3, nombre: "Distribuidora Central", rif: "J-29384756-3", contacto: "Ana Martínez", tlf: "0414-1112233", estado: "rojo", tiene_propuesta: true, detalle_propuesta: "Propuesta #PRP-085 por $1,200. Cliente dudando por precio.", visita_hoy: true, detalle_visita: "Visita programada: 02:00 PM (Reactivación Urgente).", en_riesgo: true },
-            { id: 4, nombre: "Restaurante Ávila", rif: "J-50123984-2", contacto: "Carlos Ruiz", tlf: "0412-3334455", estado: "verde", tiene_propuesta: false, detalle_propuesta: "", visita_hoy: false, en_riesgo: false },
-            { id: 5, nombre: "Cadenas Express", rif: "J-20093847-1", contacto: "María López", tlf: "0416-8887766", estado: "amarillo", tiene_propuesta: true, detalle_propuesta: "Propuesta #PRP-094 por $300. En revisión por gerencia.", visita_hoy: false, en_riesgo: true }
-        ];
+    <!-- KPI 2: Propuestas -->
+    <div class="kpi-card" id="kpi-prop" onclick="filtrarClientes('propuestas')">
+      <div class="kpi-title">Propuestas Pendientes</div>
+      <div class="kpi-value" id="kpi-prop-val">—</div>
+      <div class="kpi-sub" style="color:var(--naranja)" id="kpi-prop-sub">Esperando respuesta</div>
+    </div>
 
-        let clientesActuales = [...clientesDB];
+    <!-- KPI 3: Semáforo -->
+    <div class="kpi-card" id="kpi-sem" onclick="filtrarClientes('riesgo')">
+      <div class="kpi-title">Semáforo de Recompra</div>
+      <div class="semaforo-row">
+        <div class="sem-item">
+          <div class="sem-dot verde"></div>
+          <div class="sem-num" id="sem-verde">—</div>
+        </div>
+        <div class="sem-item">
+          <div class="sem-dot amarillo"></div>
+          <div class="sem-num" id="sem-amarillo">—</div>
+        </div>
+        <div class="sem-item">
+          <div class="sem-dot rojo"></div>
+          <div class="sem-num" id="sem-rojo">—</div>
+        </div>
+      </div>
+      <div style="font-size:0.63rem;color:var(--gris);margin-top:6px">Al día · Por vencer · En riesgo</div>
+    </div>
 
-        // Función para renderizar la tabla según los datos filtrados
-        function renderTable(datos) {
-            const tbody = document.getElementById('clientesTableBody');
-            tbody.innerHTML = "";
+    <!-- KPI 4: Total cartera -->
+    <div class="kpi-card" id="kpi-total" onclick="filtrarClientes('todos')">
+      <div class="kpi-title">Total en Cartera</div>
+      <div class="kpi-value" id="kpi-total-val">—</div>
+      <div class="kpi-sub" id="kpi-total-sub">Clientes activos</div>
+    </div>
 
-            if(datos.length === 0) {
-                tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>No se encontraron clientes para esta métrica.</td></tr>";
-                return;
-            }
+  </div>
 
-            datos.forEach(cliente => {
-                const tr = document.createElement('tr');
-                tr.onclick = () => openDrawer(cliente);
-                
-                let estadoTexto = cliente.estado === 'verde' ? 'Al día' : (cliente.estado === 'amarillo' ? 'Límite' : 'En Riesgo');
-                
-                // Generar etiqueta descriptiva
-                let detalleHtml = "";
-                if (cliente.tiene_propuesta) {
-                    detalleHtml += `<span class="tag-info" style="color: var(--advertencia); border: 1px solid var(--advertencia);">📝 Propuesta Pendiente</span><br>`;
-                }
-                if (cliente.visita_hoy) {
-                    detalleHtml += `<span class="tag-info" style="color: var(--primary-red); border: 1px solid var(--primary-red); margin-top:5px; display:inline-block;">📍 Visita Hoy</span>`;
-                }
-                if (!cliente.tiene_propuesta && !cliente.visita_hoy) {
-                    detalleHtml = "<span class='tag-info'>Cliente Regular</span>";
-                }
+  <!-- Tabla de clientes -->
+  <div class="content-card">
+    <div class="filters-bar">
+      <input type="text" class="search-input" id="searchInput"
+             placeholder="Buscar por Nombre, RIF o Contacto…" oninput="filtrarPorTexto()">
+      <button class="btn btn-outline" onclick="filtrarClientes('todos')">Limpiar filtros</button>
+    </div>
+    <div class="active-filter-label" id="activeFilterLabel"></div>
 
-                tr.innerHTML = `
-                    <td style="font-weight: 600; color: var(--primary-red); font-family: 'League Spartan', sans-serif;">${cliente.nombre}</td>
-                    <td>${cliente.rif}<br><span style="font-size:0.65rem; color:#777;">${cliente.contacto}</span></td>
-                    <td><span class="status-dot ${cliente.estado}"></span> ${estadoTexto}</td>
-                    <td>${detalleHtml}</td>
-                    <td><button class="btn btn-outline">Ver Ficha</button></td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>Razón Social / Comercial</th>
+            <th>RIF · Contacto</th>
+            <th>Vendedor</th>
+            <th>Semáforo</th>
+            <th>Clasificación</th>
+            <th>Último Pedido</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="clientesTableBody">
+          <tr><td colspan="7" style="text-align:center;padding:28px;color:var(--gris)">Cargando clientes…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-        // Función que actúa al hacer clic en los KPIs
-        function filtrarClientes(filtro, tituloFiltro) {
-            const label = document.getElementById('activeFilterLabel');
-            
-            if(filtro === 'todos') {
-                clientesActuales = [...clientesDB];
-                label.style.display = 'none';
-            } else {
-                label.style.display = 'block';
-                label.innerText = `Filtro Activo: ${tituloFiltro} (${clientesActuales.length} resultados)`;
-                
-                if(filtro === 'propuestas') {
-                    clientesActuales = clientesDB.filter(c => c.tiene_propuesta);
-                } else if(filtro === 'riesgo') {
-                    clientesActuales = clientesDB.filter(c => c.en_riesgo);
-                } else if(filtro === 'visitas') {
-                    clientesActuales = clientesDB.filter(c => c.visita_hoy);
-                }
-            }
-            
-            if(filtro !== 'todos') {
-                label.innerText = `Filtro Activo: ${tituloFiltro} (${clientesActuales.length} resultados)`;
-            }
-            
-            renderTable(clientesActuales);
-        }
+</main>
 
-        // Buscador por texto
-        function filtrarPorTexto() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const filtrados = clientesDB.filter(c => 
-                c.nombre.toLowerCase().includes(query) || 
-                c.rif.toLowerCase().includes(query) || 
-                c.contacto.toLowerCase().includes(query)
-            );
-            renderTable(filtrados);
-        }
+<footer>
+  &copy; 2026 <strong>Sistema Comercial Casabe Real (SCCR)</strong>. Todos los derechos reservados. &nbsp;|&nbsp; v2.5.0 &nbsp;|&nbsp; 0412.290.58.33
+</footer>
 
-        // Funciones del Drawer
-        function openDrawer(cliente) {
-            document.getElementById('drawerOverlay').style.display = 'block';
-            document.getElementById('clientDrawer').classList.add('open');
-            
-            document.getElementById('d-nombre').innerText = cliente.nombre;
-            document.getElementById('d-contacto').innerText = cliente.contacto;
-            document.getElementById('d-telefono').innerText = cliente.tlf;
-            
-            let detalleTexto = "";
-            if (cliente.tiene_propuesta) detalleTexto += `<strong>Propuesta:</strong> ${cliente.detalle_propuesta}<br><br>`;
-            if (cliente.visita_hoy) detalleTexto += `<strong>Visita:</strong> ${cliente.detalle_visita}<br><br>`;
-            if (!cliente.tiene_propuesta && !cliente.visita_hoy) detalleTexto = "El cliente no tiene propuestas pendientes ni visitas asignadas para hoy.";
-            
-            document.getElementById('d-detalle').innerHTML = detalleTexto;
-        }
+<!-- ── DRAWER: Ficha 360° ──────────────────────────────────────── -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="clientDrawer">
+  <div class="drawer-header">
+    <div>
+      <h2 id="d-nombre">—</h2>
+      <div class="drawer-rif" id="d-rif">—</div>
+    </div>
+    <button class="close-btn" onclick="closeDrawer()">&times;</button>
+  </div>
+  <div class="drawer-content">
 
-        function closeDrawer() {
-            document.getElementById('drawerOverlay').style.display = 'none';
-            document.getElementById('clientDrawer').classList.remove('open');
-        }
+    <div class="drawer-section">
+      <div class="drawer-section-title">Información General</div>
+      <div class="drawer-row"><span class="lbl">Contacto</span>    <span class="val" id="d-contacto">—</span></div>
+      <div class="drawer-row"><span class="lbl">Teléfono</span>    <span class="val" id="d-telefono">—</span></div>
+      <div class="drawer-row"><span class="lbl">Sector</span>      <span class="val" id="d-sector">—</span></div>
+      <div class="drawer-row"><span class="lbl">Vendedor</span>    <span class="val" id="d-vendedor">—</span></div>
+      <div class="drawer-row"><span class="lbl">Clasificación</span><span class="val" id="d-clasif">—</span></div>
+    </div>
 
-        // Inicializar
-        window.onload = () => {
-            renderTable(clientesDB);
-        };
-    </script>
+    <div class="drawer-section">
+      <div class="drawer-section-title">Estado Comercial</div>
+      <div class="drawer-row"><span class="lbl">Último Pedido</span>    <span class="val" id="d-ultimo-pedido">—</span></div>
+      <div class="drawer-row"><span class="lbl">Recompra</span>         <span class="val" id="d-recompra">—</span></div>
+      <div class="drawer-row"><span class="lbl">Propuesta Activa</span> <span class="val" id="d-propuesta">—</span></div>
+      <div class="drawer-row"><span class="lbl">Etapa Embudo</span>     <span class="val" id="d-etapa">—</span></div>
+    </div>
+
+    <div class="drawer-section" id="d-obs-section" style="display:none">
+      <div class="drawer-section-title">Observaciones</div>
+      <p id="d-obs" style="font-size:0.73rem;color:var(--text-dark);line-height:1.5"></p>
+    </div>
+
+  </div>
+  <div class="drawer-footer">
+    <a id="btn-drawer-pedido"    href="pedido.html"   class="btn btn-primary" style="flex:1;justify-content:center">Nuevo Pedido</a>
+    <a id="btn-drawer-propuesta" href="propuesta.html" class="btn btn-outline" style="flex:1;justify-content:center">Emitir Propuesta</a>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────────
+//  SCCR v2.5.0 — clientes.html
+//  · Conectado al API (acción: clientes)
+//  · filtrarPorRol(): vendedor ve solo su cartera;
+//    gerente/admin ven todos
+//  · KPIs calculados desde datos reales
+//  · Drawer 360° con datos del cliente
+// ─────────────────────────────────────────────────────────────
+const API = 'https://script.google.com/macros/s/AKfycbyWRB5745Ors7n8RYqTqyBfb7LXIX3W9x-LFxfnnJf4Bv7fyoS51KeqKgChaldfmLqjSw/exec';
+
+let clientesDB      = [];   // datos completos del API
+let clientesFiltros = [];   // subconjunto actualmente visible
+let filtroActivo    = 'todos';
+let sesion          = null;
+let esDirectivo     = false;
+
+// ── INIT ──────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  sesion = SCCR.initSCCR(); // todos los roles pueden ver clientes
+  if (!sesion) return;
+
+  const rol = sesion.rol.toLowerCase();
+  esDirectivo = (rol === 'admin' || rol === 'gerente');
+
+  // Header
+  document.getElementById('user-name-display').textContent = sesion.nombre || '—';
+  document.getElementById('user-role-display').textContent =
+    rol === 'admin' ? 'Administrador' :
+    rol === 'gerente' ? 'Gerente de Ventas' : 'Asesor Comercial';
+
+  // Menú admin-only
+  if (esDirectivo) {
+    document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
+  }
+
+  // Subtítulo según rol
+  document.getElementById('section-sub').textContent =
+    esDirectivo ? 'Vista consolidada — todos los vendedores' :
+    `Tu cartera asignada — ${sesion.nombre}`;
+
+  // Columna "Vendedor" solo visible para directivos (la ocultamos para vendedor)
+  if (!esDirectivo) {
+    document.querySelectorAll('th')[2].style.display = 'none'; // th Vendedor
+  }
+
+  cargarClientes();
+});
+
+function cerrarSesion() { SCCR.cerrarSesion(); }
+
+// ── CARGA PRINCIPAL ───────────────────────────────────────────
+async function cargarClientes() {
+  const tbody = document.getElementById('clientesTableBody');
+  try {
+    // Vendedor filtra por su ID; directivos traen todos
+    let url = API + '?action=clientes';
+    if (!esDirectivo && sesion.vendedor_id) {
+      url += '&vendedor=' + encodeURIComponent(sesion.vendedor_id);
+    }
+
+    const r = await fetch(url, { redirect: 'follow' });
+    const d = await r.json();
+
+    if (!d.ok || !Array.isArray(d.data)) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:28px;color:var(--gris)">No se pudo cargar la cartera de clientes.</td></tr>';
+      return;
+    }
+
+    clientesDB = d.data.map(c => ({
+      ...c,
+      _semaforo: calcularSemaforo(c.ultima_compra)
+    }));
+
+    actualizarKPIs();
+    filtrarClientes('todos');
+
+  } catch(e) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:28px;color:var(--gris)">Error de conexión al cargar clientes.</td></tr>`;
+  }
+}
+
+// ── SEMÁFORO (basado en días desde última compra + crédito 5 días) ──
+function calcularSemaforo(ultimaCompra) {
+  if (!ultimaCompra) return 'rojo';
+  const diff = diasDesde(ultimaCompra);
+  if (diff <= 5)  return 'verde';
+  if (diff <= 15) return 'amarillo';
+  return 'rojo';
+}
+
+function diasDesde(str) {
+  if (!str) return 999;
+  const p = str.split('/');
+  const fecha = p.length === 3
+    ? new Date(+p[2], +p[1] - 1, +p[0])
+    : new Date(str);
+  return Math.floor((new Date() - fecha) / 86400000);
+}
+
+// ── KPIs CALCULADOS DESDE DATOS REALES ───────────────────────
+async function actualizarKPIs() {
+  // Semáforo de recompra
+  const verdes   = clientesDB.filter(c => c._semaforo === 'verde').length;
+  const amarillos = clientesDB.filter(c => c._semaforo === 'amarillo').length;
+  const rojos    = clientesDB.filter(c => c._semaforo === 'rojo').length;
+  document.getElementById('sem-verde').textContent   = verdes;
+  document.getElementById('sem-amarillo').textContent = amarillos;
+  document.getElementById('sem-rojo').textContent    = rojos;
+
+  // Propuestas pendientes (campo propuesta_activa o propuesta del cliente)
+  const conPropuesta = clientesDB.filter(c => c.propuesta_activa || c.tiene_propuesta).length;
+  document.getElementById('kpi-prop-val').textContent = conPropuesta || '0';
+  document.getElementById('kpi-prop-sub').textContent = conPropuesta
+    ? 'Esperando respuesta del cliente'
+    : 'Sin propuestas pendientes';
+
+  // Total cartera
+  document.getElementById('kpi-total-val').textContent = clientesDB.length;
+  document.getElementById('kpi-total-sub').textContent = esDirectivo
+    ? 'Clientes en toda la cartera'
+    : 'Clientes en tu cartera';
+
+  // Meta: consultar endpoint de metas si está disponible
+  try {
+    let urlMeta = API + '?action=getMeta';
+    if (!esDirectivo && sesion.vendedor_id) {
+      urlMeta += '&vendedor=' + encodeURIComponent(sesion.vendedor_id);
+      const hoy = new Date();
+      urlMeta += '&periodo=' + hoy.getFullYear() + '-' + String(hoy.getMonth()+1).padStart(2,'0');
+    }
+    const rm = await fetch(urlMeta, { redirect: 'follow' });
+    const dm = await rm.json();
+    if (dm.ok && dm.data) {
+      const meta = dm.data;
+      const pctUsd   = meta.meta_usd   > 0 ? Math.min(100, Math.round((meta.real_usd   / meta.meta_usd)   * 100)) : 0;
+      const pctCajas = meta.meta_cajas > 0 ? Math.min(100, Math.round((meta.real_cajas / meta.meta_cajas) * 100)) : 0;
+
+      document.getElementById('kpi-meta-usd-pct').textContent   = `$ USD ${pctUsd}%`;
+      document.getElementById('kpi-meta-usd-val').textContent   = `$${fmt(meta.real_usd)} / $${fmt(meta.meta_usd)}`;
+      document.getElementById('bar-usd').style.width            = pctUsd + '%';
+      document.getElementById('kpi-meta-cajas-pct').textContent = `Cajas ${pctCajas}%`;
+      document.getElementById('kpi-meta-cajas-val').textContent = `${fmt(meta.real_cajas)} / ${fmt(meta.meta_cajas)}`;
+      document.getElementById('bar-cajas').style.width          = pctCajas + '%';
+    } else {
+      setMetaPlaceholder();
+    }
+  } catch(e) {
+    setMetaPlaceholder();
+  }
+}
+
+function setMetaPlaceholder() {
+  document.getElementById('kpi-meta-usd-pct').textContent   = '$ USD — sin meta';
+  document.getElementById('kpi-meta-usd-val').textContent   = '';
+  document.getElementById('kpi-meta-cajas-pct').textContent = 'Cajas — sin meta';
+  document.getElementById('kpi-meta-cajas-val').textContent = '';
+}
+
+// ── FILTROS ───────────────────────────────────────────────────
+function filtrarClientes(filtro) {
+  filtroActivo = filtro;
+  const label = document.getElementById('activeFilterLabel');
+  document.querySelectorAll('.kpi-card').forEach(c => c.classList.remove('active-filter'));
+
+  if (filtro === 'todos') {
+    clientesFiltros = [...clientesDB];
+    label.style.display = 'none';
+  } else if (filtro === 'propuestas') {
+    clientesFiltros = clientesDB.filter(c => c.propuesta_activa || c.tiene_propuesta);
+    document.getElementById('kpi-prop').classList.add('active-filter');
+    setLabel(`Propuestas pendientes — ${clientesFiltros.length} clientes`);
+  } else if (filtro === 'riesgo') {
+    clientesFiltros = clientesDB.filter(c => c._semaforo !== 'verde');
+    document.getElementById('kpi-sem').classList.add('active-filter');
+    setLabel(`En riesgo / por vencer — ${clientesFiltros.length} clientes`);
+  }
+
+  renderTabla(clientesFiltros);
+  document.getElementById('searchInput').value = '';
+}
+
+function setLabel(txt) {
+  const label = document.getElementById('activeFilterLabel');
+  label.textContent = 'Filtro activo: ' + txt;
+  label.style.display = 'block';
+}
+
+function filtrarPorTexto() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const base = filtroActivo === 'todos' ? clientesDB :
+               filtroActivo === 'propuestas' ? clientesDB.filter(c => c.propuesta_activa || c.tiene_propuesta) :
+               clientesDB.filter(c => c._semaforo !== 'verde');
+  renderTabla(base.filter(c =>
+    (c.razon_social  || '').toLowerCase().includes(q) ||
+    (c.nombre        || '').toLowerCase().includes(q) ||
+    (c.rif           || '').toLowerCase().includes(q) ||
+    (c.contacto      || '').toLowerCase().includes(q)
+  ));
+}
+
+// ── RENDER TABLA ──────────────────────────────────────────────
+function renderTabla(datos) {
+  const tbody = document.getElementById('clientesTableBody');
+  if (!datos.length) {
+    tbody.innerHTML = `<tr><td colspan="7">
+      <div class="empty-state">
+        <div class="icon">🔍</div>
+        <p>No se encontraron clientes para este filtro.</p>
+      </div></td></tr>`;
+    return;
+  }
+
+  const mostrarVendedor = esDirectivo;
+
+  tbody.innerHTML = datos.map(c => {
+    const nombre  = c.razon_social || c.nombre || '—';
+    const sem     = c._semaforo;
+    const semLabel = sem === 'verde' ? 'Al día' : sem === 'amarillo' ? 'Por vencer' : 'En riesgo';
+    const abc     = c.clasificacion_abc || c.clasificacion || '—';
+    const badgeCls = abc === 'A' ? 'verde' : abc === 'B' ? 'azul' : 'amarillo';
+    const colVend  = mostrarVendedor
+      ? `<td style="font-size:.68rem;color:var(--gris)">${c.vendedor_asignado || c.vendedor || '—'}</td>`
+      : '';
+
+    return `<tr onclick="openDrawer(${JSON.stringify(c).replace(/"/g,'&quot;')})">
+      <td style="font-weight:700;color:var(--rojo);font-family:'League Spartan',sans-serif">${nombre}</td>
+      <td>${c.rif || '—'}<br><small style="color:var(--gris)">${c.contacto || ''}</small></td>
+      ${colVend}
+      <td><span class="status-dot ${sem}"></span><span class="badge ${sem}">${semLabel}</span></td>
+      <td><span class="badge ${badgeCls}">Tipo ${abc}</span></td>
+      <td style="color:var(--gris);font-size:.7rem">${c.ultima_compra || 'Sin pedidos'}</td>
+      <td><button class="btn btn-outline" style="padding:5px 10px;font-size:.67rem">Ver ficha</button></td>
+    </tr>`;
+  }).join('');
+}
+
+// ── DRAWER 360° ───────────────────────────────────────────────
+function openDrawer(c) {
+  document.getElementById('drawerOverlay').style.display = 'block';
+  document.getElementById('clientDrawer').classList.add('open');
+
+  const nombre = c.razon_social || c.nombre || '—';
+  document.getElementById('d-nombre').textContent    = nombre;
+  document.getElementById('d-rif').textContent       = c.rif || 'Sin RIF';
+  document.getElementById('d-contacto').textContent  = c.contacto || '—';
+  document.getElementById('d-telefono').textContent  = c.telefono || '—';
+  document.getElementById('d-sector').textContent    = capitalizar(c.sector || '—');
+  document.getElementById('d-vendedor').textContent  = c.vendedor_asignado || c.vendedor || '—';
+  document.getElementById('d-clasif').textContent    = c.clasificacion_abc
+    ? `Tipo ${c.clasificacion_abc}` : '—';
+
+  const sem = c._semaforo || calcularSemaforo(c.ultima_compra);
+  const semLabel = sem === 'verde' ? '✅ Al día' : sem === 'amarillo' ? '⚠️ Por vencer' : '🔴 En riesgo';
+  document.getElementById('d-ultimo-pedido').textContent = c.ultima_compra || 'Sin compras';
+  document.getElementById('d-recompra').textContent      = semLabel;
+  document.getElementById('d-propuesta').textContent     = (c.propuesta_activa || c.tiene_propuesta) ? 'Sí — pendiente de respuesta' : 'Sin propuesta activa';
+  document.getElementById('d-etapa').textContent         = c.etapa || '—';
+
+  const obsSection = document.getElementById('d-obs-section');
+  if (c.observaciones) {
+    document.getElementById('d-obs').textContent = c.observaciones;
+    obsSection.style.display = '';
+  } else {
+    obsSection.style.display = 'none';
+  }
+
+  // Pasar cliente_id a los botones de acción para contexto
+  const rid = encodeURIComponent(c.rif || '');
+  document.getElementById('btn-drawer-pedido').href    = `pedido.html?cliente=${rid}`;
+  document.getElementById('btn-drawer-propuesta').href = `propuesta.html?cliente=${rid}`;
+}
+
+function closeDrawer() {
+  document.getElementById('drawerOverlay').style.display = 'none';
+  document.getElementById('clientDrawer').classList.remove('open');
+}
+
+// ── HELPERS ───────────────────────────────────────────────────
+function fmt(n) {
+  if (n === undefined || n === null) return '—';
+  return Number(n).toLocaleString('es-VE');
+}
+function capitalizar(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+</script>
 </body>
 </html>
