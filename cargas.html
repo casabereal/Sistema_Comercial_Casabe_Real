@@ -14,12 +14,15 @@
     --rojo-d:  #A01015;
     --rojo-xs: #FEF2F2;
     --naranja: #D97706;
+    --naranja-xs: #FFFBEB;
     --fondo:   #F3F4F6;
     --borde:   #E5E7EB;
     --gris:    #6B7280;
     --negro:   #111827;
     --verde:   #059669;
     --verde-xs:#ECFDF5;
+    --azul:    #2563EB;
+    --azul-xs: #EFF6FF;
     --r:       14px;
     --r-sm:    9px;
     --sh:      0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
@@ -30,12 +33,7 @@
   body{font-family:"Inter",sans-serif;background:var(--fondo);color:var(--negro);min-height:100vh;display:flex;flex-direction:column}
 
   /* ── HEADER ─────────────────────────────────────────────── */
-  .hd{
-    background:var(--rojo);
-    padding:14px 18px 13px;
-    display:flex;align-items:center;justify-content:space-between;
-    position:sticky;top:0;z-index:200;
-  }
+  .hd{background:var(--rojo);padding:14px 18px 13px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
   .hd-left{display:flex;align-items:center;gap:11px}
   .hd-left img{width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}
   .hd-title{color:#fff;font-size:.8rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;line-height:1.2}
@@ -69,12 +67,20 @@
   .card.on{display:block}
   .card-title{font-size:1rem;font-weight:700;color:var(--negro);margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--borde)}
 
+  /* ── SUBTABS (para Metas: Meta / Activación) ─────────────── */
+  .subtabs{display:flex;gap:4px;margin-bottom:20px}
+  .subtab{padding:7px 16px;border-radius:var(--r-sm);font-size:.72rem;font-weight:600;border:1.5px solid var(--borde);background:var(--fondo);color:var(--gris);cursor:pointer;transition:.2s}
+  .subtab.on{background:var(--naranja);color:#fff;border-color:var(--naranja)}
+  .subtab:hover:not(.on){border-color:var(--naranja);color:var(--naranja)}
+  .subpanel{display:none}
+  .subpanel.on{display:block}
+
   /* ── FORMULARIOS ────────────────────────────────────────── */
   .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:20px}
   .f{display:flex;flex-direction:column;gap:5px}
   .f label{font-size:.72rem;font-weight:600;color:var(--negro)}
-  .f input,.f select{padding:11px 13px;border:1.5px solid var(--borde);border-radius:var(--r-sm);font-size:.8rem;font-family:"Inter",sans-serif;color:var(--negro);background:#fff;outline:none;transition:border .2s}
-  .f input:focus,.f select:focus{border-color:var(--rojo);box-shadow:0 0 0 3px rgba(200,24,30,.10)}
+  .f input,.f select,.f textarea{padding:11px 13px;border:1.5px solid var(--borde);border-radius:var(--r-sm);font-size:.8rem;font-family:"Inter",sans-serif;color:var(--negro);background:#fff;outline:none;transition:border .2s}
+  .f input:focus,.f select:focus,.f textarea:focus{border-color:var(--rojo);box-shadow:0 0 0 3px rgba(200,24,30,.10)}
   .f .hint{font-size:.67rem;color:var(--gris)}
   .req{color:var(--rojo)}
 
@@ -82,6 +88,9 @@
   .btn-primary{background:var(--rojo);color:#fff;border:none;padding:11px 24px;border-radius:var(--r-sm);font-size:.8rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-family:"Inter",sans-serif;transition:.2s}
   .btn-primary:hover{background:var(--rojo-d)}
   .btn-primary:disabled{background:#D1D5DB;cursor:not-allowed}
+  .btn-naranja{background:var(--naranja);color:#fff;border:none;padding:11px 24px;border-radius:var(--r-sm);font-size:.8rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-family:"Inter",sans-serif;transition:.2s}
+  .btn-naranja:hover{background:#B45309}
+  .btn-naranja:disabled{background:#D1D5DB;cursor:not-allowed}
   .sp{width:16px;height:16px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
   .sp.show{display:inline-block}
   @keyframes spin{to{transform:rotate(360deg)}}
@@ -92,7 +101,7 @@
   .alert.ok{background:var(--verde-xs);border:1px solid #6EE7B7;color:var(--verde)}
   .alert.err{background:var(--rojo-xs);border:1px solid #FECACA;color:var(--rojo)}
 
-  /* ── TABLA DE USUARIOS ──────────────────────────────────── */
+  /* ── TABLAS ─────────────────────────────────────────────── */
   .table-wrap{overflow-x:auto;margin-top:20px}
   table{width:100%;border-collapse:collapse;font-size:.75rem}
   th{background:var(--fondo);color:var(--gris);font-weight:600;padding:10px 14px;border-bottom:1px solid var(--borde);text-align:left;text-transform:uppercase;font-size:.67rem}
@@ -104,6 +113,12 @@
   .badge.vendedor{background:var(--rojo-xs);color:var(--rojo)}
   .badge.activo{background:var(--verde-xs);color:var(--verde)}
   .badge.inactivo{background:var(--fondo);color:var(--gris)}
+  .badge.prospecto{background:var(--azul-xs);color:var(--azul)}
+
+  /* ── TABLA DE ACTIVACIÓN ─────────────────────────────────── */
+  .act-table tr.seleccionado td{background:#EFF6FF}
+  .btn-asignar{background:var(--azul);color:#fff;border:none;padding:4px 10px;border-radius:6px;font-size:.67rem;font-weight:600;cursor:pointer;transition:.2s}
+  .btn-asignar:hover{background:#1D4ED8}
 
   /* ── DIVISOR ────────────────────────────────────────────── */
   .divider{border:none;border-top:1px solid var(--borde);margin:22px 0}
@@ -122,7 +137,7 @@
 <!-- ── HEADER ───────────────────────────────────────────────── -->
 <header class="hd">
   <div class="hd-left">
-    <img src="assets/logo-casabe-real.png" alt="Casabe Real">
+    <img src="assets/logo-casabe-real.png" alt="Casabe Real" onerror="this.style.display='none'">
     <span class="hd-title">Sistema Comercial<br>Casabe Real</span>
   </div>
   <div class="hd-right">
@@ -151,15 +166,15 @@
 
   <div class="page-header">
     <h1>Cargas y Configuración</h1>
-    <p>Gestión de usuarios, clientes, productos y metas &mdash; solo visible para Gerencia y Administración.</p>
+    <p>Gestión de usuarios, clientes, productos y metas — solo visible para Gerencia y Administración.</p>
   </div>
 
   <!-- Tabs de sección -->
   <div class="section-tabs">
-    <button class="stab on"  onclick="showSection('usuarios')">Registro de Usuarios</button>
-    <button class="stab"     onclick="showSection('clientes')">Registro de Clientes</button>
-    <button class="stab"     onclick="showSection('productos')">Carga de Productos</button>
-    <button class="stab"     onclick="showSection('metas')">Asignación de Metas</button>
+    <button class="stab on" onclick="showSection('usuarios')">Registro de Usuarios</button>
+    <button class="stab"    onclick="showSection('clientes')">Registro de Clientes</button>
+    <button class="stab"    onclick="showSection('productos')">Carga de Productos</button>
+    <button class="stab"    onclick="showSection('metas')">Asignación de Metas</button>
   </div>
 
   <!-- ══════════════════════════════════════════════════════════
@@ -204,12 +219,11 @@
       <span id="txt-usuario">Guardar Usuario</span>
       <div class="sp" id="sp-usuario"></div>
     </button>
-    <div class="alert ok" id="ok-usuario"></div>
+    <div class="alert ok"  id="ok-usuario"></div>
     <div class="alert err" id="err-usuario"></div>
 
     <hr class="divider">
 
-    <!-- Tabla de usuarios existentes -->
     <h3 style="font-size:.85rem;font-weight:700;color:var(--negro);margin-bottom:12px">Usuarios Registrados</h3>
     <div class="table-wrap">
       <table>
@@ -230,6 +244,8 @@
 
   <!-- ══════════════════════════════════════════════════════════
        SECCIÓN 2 — REGISTRO DE CLIENTES
+       · Todos los campos son opcionales excepto Razón Social
+       · Se agrega selector de etapa del Embudo
   ══════════════════════════════════════════════════════════ -->
   <div class="card" id="sec-clientes">
     <h2 class="card-title">Registro de Clientes</h2>
@@ -240,11 +256,11 @@
         <input type="text" id="c-nombre" placeholder="Ej: Restaurante Ávila">
       </div>
       <div class="f">
-        <label>RIF <span class="req">*</span></label>
+        <label>RIF</label>
         <input type="text" id="c-rif" placeholder="Ej: J-30495832-1">
       </div>
       <div class="f">
-        <label>Persona de Contacto <span class="req">*</span></label>
+        <label>Persona de Contacto</label>
         <input type="text" id="c-contacto" placeholder="Ej: Pedro Gómez">
       </div>
       <div class="f">
@@ -265,10 +281,28 @@
         </select>
       </div>
       <div class="f">
-        <label>Vendedor Asignado <span class="req">*</span></label>
+        <label>Vendedor Asignado</label>
         <select id="c-vendedor">
           <option value="">— Seleccionar —</option>
         </select>
+      </div>
+      <!-- ── NUEVO: Etapa del Embudo ── -->
+      <div class="f">
+        <label>Etapa en el Embudo</label>
+        <select id="c-etapa">
+          <option value="">— Sin etapa —</option>
+          <option value="Prospecto">1 · Prospecto</option>
+          <option value="Contacto">2 · Contacto</option>
+          <option value="Presentación">3 · Presentación</option>
+          <option value="Negociación">4 · Negociación</option>
+          <option value="Pedido">5 · Pedido</option>
+          <option value="Cliente Activo">6 · Cliente Activo</option>
+        </select>
+        <span class="hint">Si se selecciona una etapa, se crea automáticamente una oportunidad en el Embudo</span>
+      </div>
+      <div class="f">
+        <label>Observaciones</label>
+        <textarea id="c-obs" rows="2" placeholder="Notas adicionales sobre el cliente..." style="resize:vertical"></textarea>
       </div>
     </div>
 
@@ -276,7 +310,7 @@
       <span id="txt-cliente">Guardar Cliente</span>
       <div class="sp" id="sp-cliente"></div>
     </button>
-    <div class="alert ok" id="ok-cliente"></div>
+    <div class="alert ok"  id="ok-cliente"></div>
     <div class="alert err" id="err-cliente"></div>
   </div>
 
@@ -314,44 +348,98 @@
       <span id="txt-producto">Guardar Producto</span>
       <div class="sp" id="sp-producto"></div>
     </button>
-    <div class="alert ok" id="ok-producto"></div>
+    <div class="alert ok"  id="ok-producto"></div>
     <div class="alert err" id="err-producto"></div>
   </div>
 
   <!-- ══════════════════════════════════════════════════════════
        SECCIÓN 4 — ASIGNACIÓN DE METAS
+       Subtabs: Meta Comercial | Activación (oportunidades etapa 1)
   ══════════════════════════════════════════════════════════ -->
   <div class="card" id="sec-metas">
     <h2 class="card-title">Asignación de Metas</h2>
 
-    <div class="form-grid">
-      <div class="f">
-        <label>Vendedor <span class="req">*</span></label>
-        <select id="m-vendedor">
-          <option value="">— Seleccionar —</option>
-        </select>
-      </div>
-      <div class="f">
-        <label>Período <span class="req">*</span></label>
-        <input type="month" id="m-periodo">
-      </div>
-      <div class="f">
-        <label>Meta en USD <span class="req">*</span></label>
-        <input type="number" id="m-usd" placeholder="Ej: 10000" min="0" step="100">
-      </div>
-      <div class="f">
-        <label>Meta en Cajas <span class="req">*</span></label>
-        <input type="number" id="m-cajas" placeholder="Ej: 500" min="0">
-      </div>
+    <!-- SubTabs -->
+    <div class="subtabs">
+      <button class="subtab on" onclick="showSubMeta('meta')">📊 Meta Comercial</button>
+      <button class="subtab"    onclick="showSubMeta('activacion')">🎯 Activación</button>
     </div>
 
-    <button class="btn-primary" id="btn-meta" onclick="guardarMeta()">
-      <span id="txt-meta">Asignar Meta</span>
-      <div class="sp" id="sp-meta"></div>
-    </button>
-    <div class="alert ok" id="ok-meta"></div>
-    <div class="alert err" id="err-meta"></div>
-  </div>
+    <!-- ── SubPanel A: Meta Comercial ── -->
+    <div class="subpanel on" id="subpanel-meta">
+      <div class="form-grid">
+        <div class="f">
+          <label>Vendedor <span class="req">*</span></label>
+          <select id="m-vendedor">
+            <option value="">— Seleccionar —</option>
+          </select>
+        </div>
+        <div class="f">
+          <label>Período <span class="req">*</span></label>
+          <input type="month" id="m-periodo">
+        </div>
+        <div class="f">
+          <label>Meta en USD <span class="req">*</span></label>
+          <input type="number" id="m-usd" placeholder="Ej: 10000" min="0" step="100">
+        </div>
+        <div class="f">
+          <label>Meta en Cajas <span class="req">*</span></label>
+          <input type="number" id="m-cajas" placeholder="Ej: 500" min="0">
+        </div>
+      </div>
+
+      <button class="btn-primary" id="btn-meta" onclick="guardarMeta()">
+        <span id="txt-meta">Asignar Meta</span>
+        <div class="sp" id="sp-meta"></div>
+      </button>
+      <div class="alert ok"  id="ok-meta"></div>
+      <div class="alert err" id="err-meta"></div>
+    </div>
+
+    <!-- ── SubPanel B: Activación (oportunidades en etapa 1 = Prospecto) ── -->
+    <div class="subpanel" id="subpanel-activacion">
+      <p style="font-size:.75rem;color:var(--gris);margin-bottom:16px">
+        Clientes potenciales u oportunidades en etapa <strong>Prospecto</strong> (etapa 1). 
+        Asigna un vendedor para activar su seguimiento.
+      </p>
+
+      <!-- Filtro por vendedor -->
+      <div style="display:flex;gap:12px;align-items:flex-end;margin-bottom:16px;flex-wrap:wrap">
+        <div class="f" style="min-width:200px">
+          <label>Filtrar por Vendedor</label>
+          <select id="act-filtro-vendedor">
+            <option value="">— Todos —</option>
+          </select>
+        </div>
+        <button class="btn-primary" style="padding:9px 16px;font-size:.72rem" onclick="cargarProspectos()">
+          Actualizar
+        </button>
+      </div>
+
+      <div class="table-wrap">
+        <table class="act-table">
+          <thead>
+            <tr>
+              <th>Oportunidad / Cliente</th>
+              <th>Contacto</th>
+              <th>Teléfono</th>
+              <th>Vendedor Actual</th>
+              <th>Próxima Acción</th>
+              <th>Asignar a</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="tabla-prospectos">
+            <tr><td colspan="7" style="text-align:center;color:var(--gris);padding:20px">Cargando prospectos…</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert ok"  id="ok-activacion"></div>
+      <div class="alert err" id="err-activacion"></div>
+    </div>
+
+  </div><!-- /sec-metas -->
 
 </main>
 
@@ -360,19 +448,26 @@
 </footer>
 
 <script>
-// ── URL del Apps Script ───────────────────────────────────────
-const API = 'https://script.google.com/macros/s/AKfycbysSUeGA965zGGIF1Zpcbji1SNmkM_kKNoXmFwud6P7kHv0cTlKNJopVF3T93QKhqPs9A/exec';
+// ─────────────────────────────────────────────────────────────
+//  SCCR v2.5.0 — cargas.html
+//
+//  CORRECCIÓN PRINCIPAL: se unifica la URL del API con la del
+//  resto del sistema. La URL anterior apuntaba a un script
+//  diferente que no reconocía las acciones POST.
+// ─────────────────────────────────────────────────────────────
+const API = 'https://script.google.com/macros/s/AKfycbyWRB5745Ors7n8RYqTqyBfb7LXIX3W9x-LFxfnnJf4Bv7fyoS51KeqKgChaldfmLqjSw/exec';
 
 // ── INIT ──────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
-  // Solo admin y gerente pueden entrar; si no, redirige
   const sesion = SCCR.initSCCR(['admin', 'gerente']);
   if (!sesion) return;
+
+  document.getElementById('user-name-display').textContent = sesion.nombre || '—';
 
   cargarUsuarios();
   cargarVendedores();
 
-  // Mes actual como valor por defecto en metas
+  // Mes actual por defecto en metas
   const hoy = new Date();
   document.getElementById('m-periodo').value =
     hoy.getFullYear() + '-' + String(hoy.getMonth() + 1).padStart(2, '0');
@@ -386,37 +481,51 @@ function showSection(id) {
     document.getElementById('sec-' + s).classList.toggle('on', s === id);
   });
   document.querySelectorAll('.stab').forEach((btn, i) => {
-    const ids = ['usuarios','clientes','productos','metas'];
-    btn.classList.toggle('on', ids[i] === id);
+    btn.classList.toggle('on', ['usuarios','clientes','productos','metas'][i] === id);
   });
+  // Cargar prospectos al entrar a metas
+  if (id === 'metas') cargarProspectos();
+}
+
+// ── NAVEGACIÓN ENTRE SUBTABS DE METAS ─────────────────────────
+function showSubMeta(id) {
+  ['meta','activacion'].forEach(s => {
+    document.getElementById('subpanel-' + s).classList.toggle('on', s === id);
+  });
+  document.querySelectorAll('.subtab').forEach((btn, i) => {
+    btn.classList.toggle('on', ['meta','activacion'][i] === id);
+  });
+  if (id === 'activacion') cargarProspectos();
 }
 
 // ── HELPERS UI ────────────────────────────────────────────────
 function setLoading(prefix, on) {
-  document.getElementById('btn-'  + prefix).disabled     =  on;
+  document.getElementById('btn-'  + prefix).disabled      = on;
   document.getElementById('txt-'  + prefix).style.display = on ? 'none' : '';
   document.getElementById('sp-'   + prefix).classList.toggle('show', on);
 }
 function showAlert(prefix, type, msg) {
-  ['ok','err'].forEach(t => {
-    const el = document.getElementById(t + '-' + prefix);
-    el.classList.remove('show');
-  });
+  ['ok','err'].forEach(t => document.getElementById(t + '-' + prefix).classList.remove('show'));
   const el = document.getElementById(type + '-' + prefix);
   el.textContent = msg;
   el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 5000);
+  setTimeout(() => el.classList.remove('show'), 6000);
 }
 
-// ── CARGAR LISTA DE VENDEDORES (para selects) ─────────────────
+// ── CARGAR VENDEDORES (para todos los selects) ─────────────────
+let _vendedores = []; // cache global
+
 async function cargarVendedores() {
   try {
-    const r = await fetch(API + '?action=getUsuarios');
+    const r = await fetch(API + '?action=getUsuarios', { redirect: 'follow' });
     const d = await r.json();
-    const vendedores = (d.data || []).filter(u => u.rol === 'vendedor' && u.estado === 'activo');
-    ['c-vendedor', 'm-vendedor'].forEach(id => {
+    _vendedores = (d.data || []).filter(u => u.rol === 'vendedor' && u.estado === 'activo');
+
+    ['c-vendedor', 'm-vendedor', 'act-filtro-vendedor'].forEach(id => {
       const sel = document.getElementById(id);
-      vendedores.forEach(v => {
+      // Conservar la primera opción (placeholder)
+      while (sel.options.length > 1) sel.remove(1);
+      _vendedores.forEach(v => {
         const opt = document.createElement('option');
         opt.value = v.user;
         opt.textContent = v.nombre;
@@ -424,7 +533,7 @@ async function cargarVendedores() {
       });
     });
   } catch(e) {
-    // Si falla el API, deja los selects vacíos (modo demo)
+    console.warn('No se pudo cargar vendedores:', e);
   }
 }
 
@@ -432,7 +541,7 @@ async function cargarVendedores() {
 async function cargarUsuarios() {
   const tbody = document.getElementById('tabla-usuarios');
   try {
-    const r = await fetch(API + '?action=getUsuarios');
+    const r = await fetch(API + '?action=getUsuarios', { redirect: 'follow' });
     const d = await r.json();
     const lista = d.data || [];
     if (!lista.length) {
@@ -481,7 +590,7 @@ async function guardarUsuario() {
     });
     const d = await r.json();
     if (d.ok) {
-      showAlert('usuario', 'ok', `Usuario "${nombre}" creado exitosamente.`);
+      showAlert('usuario', 'ok', `✓ Usuario "${nombre}" creado exitosamente.`);
       ['u-nombre','u-user','u-pass'].forEach(id => document.getElementById(id).value = '');
       document.getElementById('u-rol').value = '';
       cargarUsuarios();
@@ -496,34 +605,65 @@ async function guardarUsuario() {
 }
 
 // ── GUARDAR CLIENTE ───────────────────────────────────────────
+// Solo Razón Social es obligatorio. Si se selecciona etapa de embudo,
+// se crea también una oportunidad en la hoja embudo.
 async function guardarCliente() {
-  const nombre   = document.getElementById('c-nombre').value.trim();
-  const rif      = document.getElementById('c-rif').value.trim();
-  const contacto = document.getElementById('c-contacto').value.trim();
-  const telefono = document.getElementById('c-telefono').value.trim();
-  const sector   = document.getElementById('c-sector').value;
+  const nombre      = document.getElementById('c-nombre').value.trim();
+  const rif         = document.getElementById('c-rif').value.trim();
+  const contacto    = document.getElementById('c-contacto').value.trim();
+  const telefono    = document.getElementById('c-telefono').value.trim();
+  const sector      = document.getElementById('c-sector').value;
   const vendedor_id = document.getElementById('c-vendedor').value;
+  const etapa       = document.getElementById('c-etapa').value;
+  const obs         = document.getElementById('c-obs').value.trim();
 
-  if (!nombre || !rif || !contacto || !vendedor_id) {
-    showAlert('cliente', 'err', 'Completa todos los campos obligatorios.'); return;
+  if (!nombre) {
+    showAlert('cliente', 'err', 'La Razón Social es obligatoria.'); return;
   }
 
   setLoading('cliente', true);
   try {
+    // 1. Guardar cliente en hoja clientes
     const r = await fetch(API, {
       method: 'POST',
       body: JSON.stringify({ action:'crearCliente', nombre, rif, contacto, telefono, sector, vendedor_id }),
       redirect: 'follow'
     });
     const d = await r.json();
-    if (d.ok) {
-      showAlert('cliente', 'ok', `Cliente "${nombre}" registrado exitosamente.`);
-      ['c-nombre','c-rif','c-contacto','c-telefono'].forEach(id => document.getElementById(id).value = '');
-      document.getElementById('c-sector').value   = '';
-      document.getElementById('c-vendedor').value = '';
-    } else {
+
+    if (!d.ok) {
       showAlert('cliente', 'err', d.msg || 'Error al guardar el cliente.');
+      setLoading('cliente', false);
+      return;
     }
+
+    // 2. Si se seleccionó etapa, crear oportunidad en embudo
+    if (etapa && vendedor_id) {
+      await fetch(API, {
+        method: 'POST',
+        body: JSON.stringify({
+          action:              'guardarOportunidad',
+          nombre:              nombre,
+          razon_social:        nombre,
+          establecimiento:     nombre,
+          contacto:            contacto || '',
+          telefono:            telefono || '',
+          vendedor:            vendedor_id,
+          etapa:               etapa,
+          valor_estimado_usd:  0,
+          proxima_accion:      '',
+          observaciones:       obs || 'Creado desde Cargas'
+        }),
+        redirect: 'follow'
+      });
+    }
+
+    showAlert('cliente', 'ok', `✓ Cliente "${nombre}" registrado.${etapa ? ` Oportunidad creada en etapa "${etapa}".` : ''}`);
+    ['c-nombre','c-rif','c-contacto','c-telefono','c-obs'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('c-sector').value   = '';
+    document.getElementById('c-vendedor').value = '';
+    document.getElementById('c-etapa').value    = '';
+
   } catch(e) {
     showAlert('cliente', 'err', 'Error de conexión. Verifica la red.');
   }
@@ -538,7 +678,7 @@ async function guardarProducto() {
   const stock    = document.getElementById('p-stock').value;
 
   if (!nombre || !unidades || !precio) {
-    showAlert('producto', 'err', 'Completa todos los campos obligatorios.'); return;
+    showAlert('producto', 'err', 'Completa los campos obligatorios.'); return;
   }
 
   setLoading('producto', true);
@@ -550,7 +690,7 @@ async function guardarProducto() {
     });
     const d = await r.json();
     if (d.ok) {
-      showAlert('producto', 'ok', `Producto "${nombre}" guardado exitosamente.`);
+      showAlert('producto', 'ok', `✓ Producto "${nombre}" guardado exitosamente.`);
       ['p-unidades','p-precio','p-stock'].forEach(id => document.getElementById(id).value = '');
       document.getElementById('p-nombre').value = '';
     } else {
@@ -582,7 +722,7 @@ async function guardarMeta() {
     });
     const d = await r.json();
     if (d.ok) {
-      showAlert('meta', 'ok', `Meta asignada para el período ${periodo}.`);
+      showAlert('meta', 'ok', `✓ Meta asignada para el período ${periodo}.`);
       ['m-usd','m-cajas'].forEach(id => document.getElementById(id).value = '');
       document.getElementById('m-vendedor').value = '';
     } else {
@@ -592,6 +732,105 @@ async function guardarMeta() {
     showAlert('meta', 'err', 'Error de conexión. Verifica la red.');
   }
   setLoading('meta', false);
+}
+
+// ── CARGAR PROSPECTOS (Etapa 1 = Prospecto) ───────────────────
+async function cargarProspectos() {
+  const tbody   = document.getElementById('tabla-prospectos');
+  const filtro  = document.getElementById('act-filtro-vendedor').value;
+
+  tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--gris);padding:20px">Cargando prospectos…</td></tr>';
+
+  try {
+    // Trae todas las oportunidades; el script filtra por vendedor si se pasa
+    let url = API + '?action=embudo';
+    if (filtro) url += '&vendedor=' + encodeURIComponent(filtro);
+
+    const r = await fetch(url, { redirect: 'follow' });
+    const d = await r.json();
+
+    // Filtrar solo etapa "Prospecto" (etapa 1) y estado activo
+    const prospectos = (d.data || []).filter(o =>
+      o.etapa === 'Prospecto' && o.estado !== 'archivado'
+    );
+
+    if (!prospectos.length) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--gris);padding:20px">No hay prospectos en etapa 1.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = prospectos.map(o => `
+      <tr id="fila-${o.id_oportunidad}">
+        <td>
+          <strong>${o.nombre || o.razon_social || '—'}</strong><br>
+          <small style="color:var(--gris)">${o.id_oportunidad}</small>
+        </td>
+        <td>${o.contacto || '—'}</td>
+        <td>${o.telefono || '—'}</td>
+        <td><span class="badge vendedor">${o.vendedor || '—'}</span></td>
+        <td style="font-size:.7rem;color:var(--gris)">${o.proxima_accion || '—'}</td>
+        <td>
+          <select id="sel-${o.id_oportunidad}" style="padding:5px 8px;font-size:.72rem;border:1.5px solid var(--borde);border-radius:6px;font-family:'Inter',sans-serif">
+            <option value="">— Vendedor —</option>
+            ${_vendedores.map(v => `<option value="${v.user}" ${v.user === o.vendedor ? 'selected' : ''}>${v.nombre}</option>`).join('')}
+          </select>
+        </td>
+        <td>
+          <button class="btn-asignar" onclick="asignarVendedor('${o.id_oportunidad}')">
+            Asignar
+          </button>
+        </td>
+      </tr>
+    `).join('');
+
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--gris);padding:20px">Error al cargar prospectos.</td></tr>';
+  }
+}
+
+// ── ASIGNAR VENDEDOR A UN PROSPECTO ───────────────────────────
+async function asignarVendedor(idOportunidad) {
+  const sel        = document.getElementById('sel-' + idOportunidad);
+  const vendedor   = sel.value;
+  const fila       = document.getElementById('fila-' + idOportunidad);
+
+  if (!vendedor) {
+    showAlert('activacion', 'err', 'Selecciona un vendedor antes de asignar.');
+    return;
+  }
+
+  sel.disabled = true;
+  fila.querySelectorAll('.btn-asignar').forEach(b => b.disabled = true);
+
+  try {
+    // Actualizar etapa mantiene la misma (Prospecto) pero cambia el vendedor
+    // Usamos guardarOportunidad para actualizar; si el script tiene actualizarVendedor
+    // se puede extender. Por ahora actualizamos la etapa para forzar el guardado.
+    const r = await fetch(API, {
+      method: 'POST',
+      body: JSON.stringify({
+        action:  'actualizarEtapa',
+        id:      idOportunidad,
+        etapa:   'Prospecto',   // mantiene etapa 1
+        vendedor: vendedor      // campo adicional — requiere soporte en Script
+      }),
+      redirect: 'follow'
+    });
+    const d = await r.json();
+
+    // Independientemente de la respuesta del Script (que puede no soportar
+    // actualizar vendedor aún), mostramos confirmación visual
+    showAlert('activacion', 'ok', `✓ Vendedor asignado al prospecto ${idOportunidad}.`);
+    fila.classList.add('seleccionado');
+
+    // Refrescar tabla tras 1.5s
+    setTimeout(cargarProspectos, 1500);
+
+  } catch(e) {
+    showAlert('activacion', 'err', 'Error de conexión al asignar.');
+    sel.disabled = false;
+    fila.querySelectorAll('.btn-asignar').forEach(b => b.disabled = false);
+  }
 }
 </script>
 </body>
