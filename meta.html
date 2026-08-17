@@ -1,703 +1,775 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Comercial Casabe Real (SCCR) - Metas</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Casabe Real — Metas (SCCR v2.5.0)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root {
+  --rojo:   #C8181E;
+  --rojo-d: #A01015;
+  --rojo-xs:#FEF2F2;
+  --naranja:#D97706;
+  --blanco: #FFFFFF;
+  --fondo:  #F5F7FA;
+  --borde:  #E5E7EB;
+  --texto:  #1F2937;
+  --sub:    #6B7280;
+  --verde:  #10B981;
+  --verde-xs:#ECFDF5;
+  --amarillo:#F59E0B;
+  --amarillo-xs:#FFFBEB;
+  --azul:   #2563EB;
+  --azul-xs:#EFF6FF;
+  --r: 14px;
+  --r-sm: 8px;
+  --sh: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+}
 
-    <style>
-        /* ==========================================================================
-           1. DESIGN SYSTEM - NUEVO LAYOUT SCCR
-           ========================================================================== */
-        :root {
-            --primary-red: #D30000;
-            --white: #FFFFFF;
-            --light-bg: #F8F9FA;
-            --text-dark: #333333;
-            --border-color: #E0E0E0;
-            --sidebar-hover: #F1F3F5;
-            
-            /* Colores Semánticos Operativos (Mantenidos para las lógicas JS) */
-            --status-success: #2ECC71; 
-            --status-warning: #F39C12; 
-            --status-critical: #E74C3C; 
-            --status-blue: #3498DB; 
-        }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--fondo);
+  color:var(--texto);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
 
-        body {
-            font-family: 'Open Sans', sans-serif;
-            background-color: var(--light-bg);
-            color: var(--text-dark);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            font-size: 0.75rem; /* Reducción de escala base del nuevo layout */
-        }
+/* ── HEADER ── */
+.hd{
+  background:var(--rojo);
+  color:var(--blanco);
+  padding:14px 18px 13px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;top:0;z-index:200;
+  box-shadow:0 2px 8px rgba(0,0,0,0.18);
+}
+.hd-left{display:flex;align-items:center;gap:11px}
+.hd-left img{
+  width:42px;height:42px;object-fit:contain;
+  filter:drop-shadow(0 2px 6px rgba(0,0,0,0.25));
+}
+.hd-sys{font-size:.78rem;font-weight:700;letter-spacing:.4px;text-transform:uppercase;opacity:.92}
+.hd-right{display:flex;align-items:center;gap:10px}
+.hd-pill{
+  background:rgba(255,255,255,.15);
+  backdrop-filter:blur(4px);
+  border:1px solid rgba(255,255,255,.25);
+  border-radius:50px;
+  padding:5px 13px;
+  font-size:.72rem;font-weight:600;line-height:1.3;text-align:right;
+}
+.hd-pill .rol{font-size:.62rem;opacity:.82;font-weight:400}
+.btn-salir{
+  background:transparent;
+  border:1px solid rgba(255,255,255,.45);
+  color:var(--blanco);
+  padding:6px 13px;
+  border-radius:50px;
+  font-size:.72rem;font-weight:600;
+  cursor:pointer;
+  transition:background .2s;
+}
+.btn-salir:hover{background:rgba(255,255,255,.15)}
 
-        /* ==========================================================================
-           2. HEADER & NAV HORIZONTAL (NUEVO LAYOUT)
-           ========================================================================== */
-        header {
-            background-color: var(--primary-red);
-            color: var(--white);
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 18px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+/* ── NAV HORIZONTAL ── */
+.nav-bar{
+  background:var(--blanco);
+  border-bottom:1px solid var(--borde);
+  display:flex;overflow-x:auto;white-space:nowrap;
+  padding:0 18px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.05);
+}
+.nav-bar::-webkit-scrollbar{height:2px}
+.nav-bar::-webkit-scrollbar-thumb{background:#ddd;border-radius:2px}
+.nav-bar a{
+  display:inline-block;
+  padding:11px 14px;
+  font-size:.72rem;font-weight:500;
+  color:var(--sub);
+  text-decoration:none;
+  border-bottom:3px solid transparent;
+  transition:all .2s;
+}
+.nav-bar a:hover{color:var(--rojo);background:var(--rojo-xs)}
+.nav-bar a.activo{color:var(--rojo);font-weight:700;border-bottom-color:var(--rojo)}
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-        }
+/* ── MAIN CONTAINER ── */
+main{flex:1;padding:24px 20px;max-width:1400px;width:100%;margin:0 auto}
 
-        .header-left img {
-            width: 42px;
-            height: 42px;
-            object-fit: contain;
-            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
-            display: block;
-        }
+/* ── PAGE HEADER ── */
+.page-hd{
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:12px;margin-bottom:20px;
+}
+.page-hd h1{font-size:1.45rem;font-weight:700;color:var(--texto)}
+.page-hd h1 span{color:var(--rojo)}
+.hd-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 
-        .header-title {
-            font-family: 'League Spartan', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
+/* Dimension toggle */
+.dim-toggle{
+  display:flex;background:var(--fondo);border:1px solid var(--borde);
+  padding:3px;border-radius:var(--r-sm);
+}
+.dim-btn{
+  padding:6px 14px;border:none;background:transparent;border-radius:5px;
+  cursor:pointer;font-size:.72rem;font-weight:700;color:var(--sub);
+  transition:all .2s;font-family:'Inter',sans-serif;
+}
+.dim-btn.activo{background:var(--rojo);color:var(--blanco)}
 
-        .header-right {
-            font-family: 'Open Sans', sans-serif;
-            font-size: 0.7rem;
-            text-align: right;
-            line-height: 1.3;
-        }
+/* ── BOTONES ── */
+.btn{
+  padding:8px 15px;border:none;border-radius:var(--r-sm);
+  font-size:.73rem;font-weight:700;cursor:pointer;
+  display:inline-flex;align-items:center;gap:7px;
+  transition:all .2s;font-family:'Inter',sans-serif;
+  text-decoration:none;
+}
+.btn-primary{background:var(--rojo);color:var(--blanco)}
+.btn-primary:hover{background:var(--rojo-d)}
+.btn-ghost{background:var(--blanco);border:1px solid var(--borde);color:var(--texto)}
+.btn-ghost:hover{background:var(--fondo)}
 
-        .header-right .user-name { font-weight: 700; }
-        .header-right .user-role { font-size: 0.65rem; opacity: 0.9; }
+/* ── FILTROS ── */
+.filtros{
+  background:var(--blanco);border:1px solid var(--borde);border-radius:var(--r);
+  padding:14px 18px;display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:12px;margin-bottom:20px;
+  box-shadow:var(--sh);
+}
+.fg label{display:block;font-size:.63rem;font-weight:700;color:var(--sub);text-transform:uppercase;margin-bottom:4px}
+.fg select,.fg input{
+  width:100%;padding:7px 10px;border:1px solid var(--borde);
+  border-radius:var(--r-sm);font-size:.74rem;font-family:'Inter',sans-serif;
+  color:var(--texto);outline:none;background:var(--blanco);
+}
+.fg select:focus,.fg input:focus{border-color:var(--rojo)}
 
-        .sidebar-menu {
-            background-color: var(--white);
-            border-bottom: 1px solid var(--border-color);
-            padding: 0 18px;
-            display: flex;
-            overflow-x: auto;
-            white-space: nowrap;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
+/* ── KPI GRID ── */
+.kpi-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;margin-bottom:22px;
+}
+.kpi-card{
+  background:var(--blanco);border:1px solid var(--borde);border-radius:var(--r);
+  padding:18px 20px;box-shadow:var(--sh);position:relative;overflow:hidden;
+}
+.kpi-card::before{
+  content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:var(--rojo);
+}
+.kpi-lbl{font-size:.65rem;font-weight:700;color:var(--sub);text-transform:uppercase;margin-bottom:6px}
+.kpi-val{font-size:1.8rem;font-weight:800;color:var(--texto);margin-bottom:4px;line-height:1}
+.kpi-sub{font-size:.68rem;color:var(--sub);display:flex;align-items:center;gap:6px;margin-top:6px}
+.progress-wrap{background:var(--fondo);height:5px;border-radius:3px;margin-top:10px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;transition:width .5s ease}
 
-        .sidebar-menu::-webkit-scrollbar { height: 3px; }
-        .sidebar-menu::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
+/* ── BADGE ── */
+.badge{
+  padding:3px 9px;border-radius:50px;font-size:.63rem;font-weight:700;
+  display:inline-flex;align-items:center;gap:4px;
+}
+.badge-verde{background:var(--verde-xs);color:var(--verde)}
+.badge-amarillo{background:var(--amarillo-xs);color:var(--amarillo)}
+.badge-rojo{background:var(--rojo-xs);color:#DC2626}
+.badge-azul{background:var(--azul-xs);color:var(--azul)}
 
-        .menu-item {
-            display: inline-block;
-            padding: 12px 14px;
-            font-family: 'Open Sans', sans-serif;
-            font-size: 0.7rem;
-            color: var(--text-dark);
-            text-decoration: none;
-            transition: all 0.2s ease;
-            border-bottom: 3px solid transparent;
-        }
+/* ── TABS ── */
+.tabs-bar{
+  display:flex;gap:4px;border-bottom:2px solid var(--borde);margin-bottom:20px;
+}
+.tab-btn{
+  padding:10px 16px;font-size:.74rem;font-weight:600;
+  color:var(--sub);border:none;background:transparent;cursor:pointer;
+  border-bottom:3px solid transparent;transition:all .2s;font-family:'Inter',sans-serif;
+  margin-bottom:-2px;
+}
+.tab-btn:hover{color:var(--rojo)}
+.tab-btn.activo{color:var(--rojo);border-bottom-color:var(--rojo)}
+.tab-panel{display:none}
+.tab-panel.activo{display:block;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 
-        .menu-item:hover {
-            background-color: var(--sidebar-hover);
-            color: var(--primary-red);
-        }
+/* ── CARDS ── */
+.card{
+  background:var(--blanco);border:1px solid var(--borde);border-radius:var(--r);
+  box-shadow:var(--sh);padding:20px;margin-bottom:18px;
+}
+.card-title{
+  font-size:.88rem;font-weight:700;color:var(--texto);
+  margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;
+}
 
-        .menu-item.active {
-            font-family: 'League Spartan', sans-serif;
-            font-weight: 700;
-            color: var(--primary-red);
-            border-bottom-color: var(--primary-red);
-        }
+/* ── GRID ── */
+.grid{display:grid;gap:16px;margin-bottom:18px}
+.g-8-4{grid-template-columns:2fr 1fr}
+.g-6-6{grid-template-columns:1fr 1fr}
+.g-full{grid-template-columns:1fr}
+@media(max-width:1024px){.g-8-4,.g-6-6{grid-template-columns:1fr}}
 
-        /* ==========================================================================
-           3. MAIN CONTAINER & ESTRUCTURA ADAPTADA
-           ========================================================================== */
-        .main-container {
-            flex: 1;
-            padding: 22px 18px;
-            max-width: 1400px;
-            width: 100%;
-            margin: 0 auto;
-        }
+/* ── TABLA ── */
+.tbl-wrap{width:100%;overflow-x:auto}
+table{width:100%;border-collapse:collapse;text-align:left;font-size:.74rem}
+th{background:var(--fondo);color:var(--sub);font-weight:700;padding:9px 13px;border-bottom:1px solid var(--borde);white-space:nowrap;text-transform:uppercase;font-size:.63rem}
+td{padding:11px 13px;border-bottom:1px solid var(--borde);color:var(--texto)}
+tbody tr:hover td{background:var(--rojo-xs)}
 
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 18px;
-            gap: 15px;
-        }
+/* ── SEMÁFORO KPI ── */
+.sem-val{font-size:1.4rem;font-weight:800}
 
-        .section-header h1 {
-            font-family: 'League Spartan', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
+/* ── ESTADO: LOADING / ERROR ── */
+.estado-msg{
+  text-align:center;padding:40px 20px;color:var(--sub);font-size:.85rem;
+}
+.estado-msg .icon{font-size:2rem;margin-bottom:8px}
 
-        .section-header .highlight { color: var(--primary-red); }
+/* ── SKELETON ── */
+.skel{
+  background:linear-gradient(90deg,#f0f0f0 25%,#e8e8e8 50%,#f0f0f0 75%);
+  background-size:200% 100%;
+  animation:skel .8s infinite;
+  border-radius:4px;height:18px;
+}
+@keyframes skel{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-        .header-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+/* ── FOOTER ── */
+footer{
+  background:var(--blanco);border-top:1px solid var(--borde);
+  text-align:center;padding:11px;font-size:.63rem;color:var(--sub);
+}
 
-        /* Controles de Dimensión Dual y Botones (Mantenidos funcionales) */
-        .dimension-toggle {
-            display: flex; background: var(--light-bg); border: 1px solid var(--border-color);
-            padding: 3px; border-radius: 6px; font-size: 0.7rem; font-weight: 700;
-        }
-        .toggle-btn {
-            padding: 6px 14px; border: none; background: transparent; border-radius: 4px;
-            cursor: pointer; color: var(--text-dark); transition: all 0.2s; font-family: 'Open Sans', sans-serif; font-weight: 700;
-        }
-        .toggle-btn.active { background: var(--primary-red); color: var(--white); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-
-        .btn {
-            padding: 8px 14px; font-family: 'Open Sans', sans-serif; font-size: 0.7rem; font-weight: 700;
-            border-radius: 4px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;
-        }
-        .btn-primary { background: var(--primary-red); color: var(--white); }
-        .btn-primary:hover { background: #A00000; }
-        .btn-secondary { background: var(--white); border: 1px solid var(--border-color); color: var(--text-dark); }
-        .btn-secondary:hover { background: var(--sidebar-hover); }
-
-        /* Componentes Internos Adaptados (Grid, Cards, Tables) */
-        .content-card, .card {
-            background-color: var(--white);
-            border-radius: 6px;
-            padding: 18px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border: 1px solid var(--border-color);
-            margin-bottom: 18px;
-        }
-
-        .card-title {
-            font-family: 'League Spartan', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--text-dark);
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;
-        }
-
-        /* Grid System 12 col */
-        .grid-12 { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; margin-bottom: 1.5rem; }
-        .col-12 { grid-column: span 12; }
-        .col-8 { grid-column: span 8; }
-        .col-6 { grid-column: span 6; }
-        .col-4 { grid-column: span 4; }
-        .col-3 { grid-column: span 3; }
-
-        @media (max-width: 1024px) {
-            .col-8, .col-6, .col-4, .col-3 { grid-column: span 12; }
-        }
-
-        /* KPIs */
-        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 22px; }
-        @media (max-width: 900px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 500px) { .kpi-grid { grid-template-columns: 1fr; } }
-        
-        .kpi-title { font-size: 0.7rem; font-weight: 700; color: #777; text-transform: uppercase; margin-bottom: 8px; font-family: 'Open Sans', sans-serif; }
-        .kpi-value { font-family: 'League Spartan', sans-serif; font-size: 1.8rem; font-weight: 700; color: var(--text-dark); margin-bottom: 5px; }
-        .kpi-sub { font-size: 0.7rem; color: #777; margin-top: 6px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
-
-        /* Semáforos (Badges funcionales de JS) */
-        .badge { padding: 4px 10px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
-        .badge-verde { background: rgba(46, 204, 113, 0.1); color: var(--status-success); border: 1px solid rgba(46, 204, 113, 0.2); }
-        .badge-amarillo { background: rgba(243, 156, 18, 0.1); color: var(--status-warning); border: 1px solid rgba(243, 156, 18, 0.2); }
-        .badge-rojo { background: rgba(231, 76, 60, 0.1); color: var(--status-critical); border: 1px solid rgba(231, 76, 60, 0.2); }
-        .badge-blue { background: rgba(52, 152, 219, 0.1); color: var(--status-blue); border: 1px solid rgba(52, 152, 219, 0.2); }
-
-        .progress-bar-container { background: var(--light-bg); height: 6px; border-radius: 3px; width: 100%; margin-top: 10px; overflow: hidden; }
-        .progress-bar-fill { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
-
-        /* Form / Filtros */
-        .filter-group label { display: block; font-size: 0.65rem; font-weight: 700; color: #777; text-transform: uppercase; margin-bottom: 4px; }
-        .form-control { width: 100%; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.75rem; font-family: 'Open Sans', sans-serif; color: var(--text-dark); outline: none; }
-        .form-control:focus { border-color: var(--primary-red); }
-
-        /* Tablas */
-        .table-responsive { width: 100%; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.75rem; }
-        th { background: var(--light-bg); color: #777; font-weight: 700; padding: 10px 12px; border-bottom: 2px solid var(--border-color); text-transform: uppercase; }
-        td { padding: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-dark); }
-        tbody tr:hover { background-color: var(--sidebar-hover); }
-
-        /* Tabs (JS) */
-        .view-tabs { display: flex; gap: 4px; border-bottom: 2px solid var(--border-color); margin-bottom: 1.5rem; }
-        .tab-btn { padding: 10px 16px; font-family: 'Open Sans', sans-serif; font-weight: 700; font-size: 0.75rem; color: #777; border: none; background: transparent; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s;}
-        .tab-btn:hover { color: var(--primary-red); }
-        .tab-btn.active { color: var(--primary-red); border-bottom-color: var(--primary-red); }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Ficha 360 Bloques */
-        .bloque-box { background: var(--light-bg); border: 1px solid var(--border-color); border-radius: 6px; padding: 1.25rem; }
-        .bloque-header { font-family: 'League Spartan', sans-serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 12px; color: var(--text-dark); display: flex; align-items: center; gap: 8px; }
-        .field-pair { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.75rem; border-bottom: 1px dashed var(--border-color); padding-bottom: 4px; }
-        .field-pair span:first-child { color: #777; font-weight: 700; }
-        .field-pair span:last-child { font-weight: 600; color: var(--text-dark); }
-
-        /* Modal / Popups */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(51, 51, 51, 0.8); display: none; justify-content: center; align-items: center; z-index: 1000; }
-        .modal-overlay.active { display: flex; }
-        .modal-card { background: var(--white); width: 100%; max-width: 500px; border-radius: 6px; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-        .modal-header h3 { font-family: 'League Spartan', sans-serif; font-size: 1.1rem; color: var(--primary-red); font-weight: 700;}
-        .close-modal { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #777; }
-
-        footer {
-            background-color: var(--white);
-            border-top: 1px solid var(--border-color);
-            padding: 12px 18px;
-            text-align: center;
-            font-family: 'Open Sans', sans-serif;
-            font-size: 0.65rem;
-            color: #777;
-            margin-top: auto;
-        }
-
-        /* Responsive Mobile Layout */
-        @media (max-width: 768px) {
-            header { padding: 0 10px; height: 50px; }
-            .header-left img { width: 38px; height: 38px; }
-            .header-title { font-size: 0.7rem; }
-            .header-right { font-size: 0.6rem; }
-            .menu-item { padding: 9px 10px; font-size: 0.65rem; }
-            .main-container { padding: 15px 10px; }
-            .section-header h1 { font-size: 1.15rem; }
-            .header-actions { width: 100%; justify-content: space-between; }
-        }
-    </style>
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  main{padding:16px 12px}
+  .page-hd h1{font-size:1.1rem}
+  .kpi-val{font-size:1.4rem}
+}
+</style>
 </head>
 <body>
 
-    <header>
-        <div class="header-left">
-            <img src="assets/logo-casabe-real.png" alt="Logo Casabe Real" onerror="this.src='https://via.placeholder.com/150x45?text=Casabe+Real'">
-            <span class="header-title">SISTEMA COMERCIAL CASABE REAL</span>
-        </div>
-        <div class="header-right">
-            <div class="user-name">Carlos Mendoza</div>
-            <div class="user-role">CEO / Administrador</div>
-        </div>
-    </header>
+<!-- HEADER -->
+<header class="hd">
+  <div class="hd-left">
+    <img src="assets/logo-casabe-real.png" alt="Logo Casabe Real"
+         onerror="this.style.display='none'">
+    <span class="hd-sys">Sistema Comercial Casabe Real</span>
+  </div>
+  <div class="hd-right">
+    <div class="hd-pill">
+      <div id="hd-nombre">Cargando…</div>
+      <div class="rol" id="hd-rol">—</div>
+    </div>
+    <button class="btn-salir" onclick="cerrarSesion()">🚪 Salir</button>
+  </div>
+</header>
 
-    <nav class="sidebar-menu">
-        <a href="inicio.html" class="menu-item">INICIO</a>
-        <a href="clientes.html" class="menu-item">CLIENTES</a>
-        <a href="meta.html" class="menu-item active">META</a>
-        <a href="propuesta.html" class="menu-item">PROPUESTA</a>
-        <a href="pedido.html" class="menu-item">PEDIDO</a>
-        <a href="reporte.html" class="menu-item">REPORTE</a>
-        <a href="embudo.html" class="menu-item">EMBUDO</a>
-        <a href="dashboard.html" class="menu-item">DASHBOARD</a>
-        <a href="bi-ia.html" class="menu-item">BI+IA</a>
-        <a href="cargas.html" class="menu-item">CARGAS</a>
-        <a href="historico.html" class="menu-item">HISTORICO</a>
-    </nav>
+<!-- NAV HORIZONTAL -->
+<nav class="nav-bar" id="nav-bar">
+  <a href="inicio.html">Inicio</a>
+  <a href="clientes.html">Clientes</a>
+  <a href="meta.html">Meta</a>
+  <a href="propuesta.html">Propuesta</a>
+  <a href="pedidos.html">Pedidos</a>
+  <a href="reportes.html">Reporte de Gestión</a>
+  <a href="embudo.html">Embudo</a>
+  <a href="bi_ia.html">BI + IA</a>
+  <a href="cargas.html">Cargas</a>
+  <a href="historico.html">Histórico</a>
+</nav>
 
-    <main class="main-container">
-        
-        <div class="section-header">
-            <h1>Módulo de <span class="highlight">Metas y GAP</span></h1>
-            <div class="header-actions">
-                <div class="dimension-toggle">
-                    <button class="toggle-btn active" id="btnUSD" onclick="setDimension('USD')"><i class="fa-solid fa-dollar-sign"></i> USD</button>
-                    <button class="toggle-btn" id="btnCajas" onclick="setDimension('CAJAS')"><i class="fa-solid fa-box"></i> Cajas</button>
-                </div>
-                <button class="btn btn-secondary" onclick="alert('Importando JSON...')"><i class="fa-solid fa-file-import"></i> metas.json</button>
-                <button class="btn btn-primary" onclick="document.getElementById('modalCuota').classList.add('active')"><i class="fa-solid fa-plus"></i> Cargar Cuota</button>
-            </div>
-        </div>
+<main>
 
-        <div class="content-card grid-12" style="margin-bottom: 1.5rem; padding: 1rem 1.5rem; gap: 1rem;">
-            <div class="col-3 filter-group">
-                <label>Vendedor / Asesor</label>
-                <select class="form-control" id="filtroVendedor" onchange="actualizarDashboard()">
-                    <option value="TODOS">Todos los Asesores</option>
-                    <option value="Vendedor 1">Carlos Mendoza</option>
-                    <option value="Vendedor 2">Mariana López</option>
-                </select>
-            </div>
-            <div class="col-3 filter-group">
-                <label>Zona Geográfica</label>
-                <select class="form-control" id="filtroZona" onchange="actualizarDashboard()">
-                    <option value="TODAS">Todas las Zonas</option>
-                    <option value="Gran Caracas">Gran Caracas</option>
-                    <option value="Central">Región Central</option>
-                </select>
-            </div>
-            <div class="col-3 filter-group">
-                <label>Canal de Distribución</label>
-                <select class="form-control" id="filtroCanal" onchange="actualizarDashboard()">
-                    <option value="TODOS">Todos los Canales</option>
-                    <option value="Retail">Retail</option>
-                    <option value="HORECA">HORECA</option>
-                </select>
-            </div>
-            <div class="col-3 filter-group">
-                <label>Línea de Producto</label>
-                <select class="form-control" id="filtroLinea" onchange="actualizarDashboard()">
-                    <option value="TODAS">Todas las Líneas</option>
-                    <option value="Pasapalo">Pasapalo</option>
-                    <option value="Restaurante">Restaurante</option>
-                </select>
-            </div>
-        </div>
+  <!-- PAGE HEADER -->
+  <div class="page-hd">
+    <h1>Módulo de <span>Metas y GAP</span></h1>
+    <div class="hd-actions">
+      <div class="dim-toggle">
+        <button class="dim-btn activo" id="btnUSD" onclick="setDimension('USD')">$ USD</button>
+        <button class="dim-btn"        id="btnCajas" onclick="setDimension('CAJAS')">📦 Cajas</button>
+      </div>
+      <button class="btn btn-ghost" onclick="cargarMetas()" title="Refrescar datos">⟳ Actualizar</button>
+    </div>
+  </div>
 
-        <div class="kpi-grid">
-            <div class="card">
-                <div class="kpi-title">Venta Acumulada vs Meta</div>
-                <div class="kpi-value" id="kpiVentaReal">$ 18,450</div>
-                <div class="kpi-sub">
-                    <span>Meta: <strong id="kpiMetaTotal">$ 20,000</strong></span>
-                    <span class="badge badge-verde" id="kpiCumplimientoPct">92.2%</span>
-                </div>
-                <div class="progress-bar-container">
-                    <div class="progress-bar-fill" id="barCumplimiento" style="width: 92.2%; background-color: var(--status-success);"></div>
-                </div>
-            </div>
+  <!-- FILTROS (solo visibles para gerente/admin) -->
+  <div class="filtros" id="seccion-filtros" style="display:none">
+    <div class="fg">
+      <label>Vendedor / Asesor</label>
+      <select id="filtroVendedor" onchange="aplicarFiltros()">
+        <option value="">Todos los Asesores</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label>Línea de Producto</label>
+      <select id="filtroLinea" onchange="aplicarFiltros()">
+        <option value="">Todas las Líneas</option>
+        <option value="Pasapalo">Pasapalo</option>
+        <option value="Restaurante">Restaurante</option>
+        <option value="Torta">Torta</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label>Mes / Ciclo</label>
+      <select id="filtroCiclo" onchange="aplicarFiltros()">
+        <option value="">Ciclo Actual</option>
+      </select>
+    </div>
+  </div>
 
-            <div class="card">
-                <div class="kpi-title">Proyección Cierre (Run-Rate)</div>
-                <div class="kpi-value" id="kpiRunRate">$ 21,525</div>
-                <div class="kpi-sub">
-                    <span>Est. Fin de Ciclo</span>
-                    <span class="badge badge-verde" id="kpiRunRateStatus">ON TRACK</span>
-                </div>
-                <div style="font-size: 0.65rem; color: #777; margin-top: 8px;">Fórmula: (Venta Real / Días) × Total Días</div>
-            </div>
-
-            <div class="card">
-                <div class="kpi-title">Ritmo Diario Requerido</div>
-                <div class="kpi-value" id="kpiRitmoDiario">$ 516.67</div>
-                <div class="kpi-sub">
-                    <span>Días Hábiles Restantes: <strong>3 días</strong></span>
-                </div>
-                <div style="font-size: 0.65rem; color: #777; margin-top: 8px;">Brecha / GAP: <strong id="kpiMetaRestante">$ 1,550</strong></div>
-            </div>
-
-            <div class="card">
-                <div class="kpi-title">Semáforo de Cumplimiento</div>
-                <div class="kpi-value" style="color: var(--status-success); font-size: 1.5rem;" id="kpiSemaforoText">
-                    <i class="fa-solid fa-circle-check"></i> VERDE
-                </div>
-                <div class="kpi-sub">
-                    <span>Próximo Hito: <strong>100% (Bono)</strong></span>
-                </div>
-                <div style="margin-top: 8px; display: flex; gap: 4px; flex-wrap: wrap;">
-                    <span class="badge badge-blue">Hito 80%</span>
-                    <span class="badge badge-verde">Hito 100%</span>
-                </div>
-            </div>
-        </div>
-
-        <nav class="view-tabs">
-            <button class="tab-btn active" onclick="switchView('tabRunRate', this)"><i class="fa-solid fa-chart-line"></i> Control Operativo & Gráficos</button>
-            <button class="tab-btn" onclick="switchView('tabBloques', this)"><i class="fa-solid fa-address-card"></i> Ficha 360° Cliente</button>
-        </nav>
-
-        <div id="tabRunRate" class="tab-content active">
-            <div class="grid-12">
-                <div class="col-8 card">
-                    <div class="card-title">Tendencia de Cierre Run-Rate vs Meta</div>
-                    <div style="height: 280px; width: 100%; position: relative;">
-                        <canvas id="chartRunRate"></canvas>
-                    </div>
-                </div>
-
-                <div class="col-4 card">
-                    <div class="card-title">Cierre por Línea</div>
-                    <div class="table-responsive">
-                        <table>
-                            <thead><tr><th>Línea</th><th>Real</th><th>Estado</th></tr></thead>
-                            <tbody id="tablaLineasBody">
-                                </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div class="content-card">
-                <div class="card-title">Matriz de Desglose por Vendedor</div>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Vendedor</th>
-                                <th>Zona</th>
-                                <th>Meta Asignada</th>
-                                <th>Venta Acumulada</th>
-                                <th>Brecha GAP</th>
-                                <th>Ritmo Diario</th>
-                                <th>Semáforo</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaVendedoresBody">
-                            </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div id="tabBloques" class="tab-content">
-            <div class="content-card" style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem;">
-                <label style="font-weight: 700; color: var(--text-dark);">Seleccionar Cuenta:</label>
-                <select class="form-control" style="width: 300px;" id="clienteSelectBloque" onchange="cargarBloquesCliente()">
-                    <option value="CLI-001">Automercados Plaza - Las Mercedes</option>
-                    <option value="CLI-002">Grupo Restaurantero El Bodegón</option>
-                </select>
-            </div>
-
-            <div class="grid-12">
-                <div class="col-6 bloque-box">
-                    <div class="bloque-header"><i class="fa-solid fa-id-card" style="color:var(--primary-red);"></i> Bloque 1: Identificación y Crédito</div>
-                    <div class="field-pair"><span>Razón Social:</span> <span id="b1Razon">Automercados Plaza C.A.</span></div>
-                    <div class="field-pair"><span>RIF:</span> <span id="b1Rif">J-30129485-0</span></div>
-                    <div class="field-pair"><span>Clasificación ABC:</span> <span id="b1Abc" class="badge badge-verde">Clase A</span></div>
-                    <div class="field-pair"><span>Días / Límite de Crédito:</span> <span id="b1Credito">15 Días / $ 5,000 USD</span></div>
-                    <div class="field-pair"><span>Contacto:</span> <span style="color:var(--status-success);"><i class="fa-brands fa-whatsapp"></i> Chat Directo</span></div>
-                </div>
-                
-                <div class="col-6 bloque-box">
-                    <div class="bloque-header"><i class="fa-solid fa-file-signature" style="color:var(--primary-red);"></i> Bloque 2: Centro de Propuestas</div>
-                    <div class="field-pair"><span>Propuesta Activa:</span> <span id="b2PropActiva">PROP-2026-089</span></div>
-                    <div class="field-pair"><span>Monto Cotizado:</span> <span id="b2Monto">$ 2,450.00 USD</span></div>
-                    <div class="field-pair"><span>Estatus:</span> <span class="badge badge-amarillo" id="b2Estatus">En Negociación</span></div>
-                    <button class="btn btn-secondary" style="width: 100%; margin-top: 10px; justify-content: center;"><i class="fa-solid fa-eye"></i> Ver Documento</button>
-                </div>
-
-                <div class="col-6 bloque-box">
-                    <div class="bloque-header"><i class="fa-solid fa-chart-simple" style="color:var(--primary-red);"></i> Bloque 3: Consumo y Reposición</div>
-                    <div style="height: 120px;"><canvas id="chartConsumo6Meses"></canvas></div>
-                    <div class="field-pair" style="margin-top: 10px; background: var(--white); padding: 6px; border: 1px solid var(--border-color);">
-                        <span>Contador Regresivo:</span> <span class="badge badge-rojo" id="b3Contador"><i class="fa-solid fa-clock"></i> Recomprar en 3 Días</span>
-                    </div>
-                </div>
-
-                <div class="col-6 bloque-box">
-                    <div class="bloque-header"><i class="fa-solid fa-timeline" style="color:var(--primary-red);"></i> Bloque 4: Bitácora Operativa</div>
-                    <ul style="list-style: none; margin-top: 10px; border-left: 2px solid var(--border-color); padding-left: 15px;">
-                        <li style="position: relative; margin-bottom: 12px;">
-                            <div style="position: absolute; left: -21px; top: 3px; width: 10px; height: 10px; background: var(--primary-red); border-radius: 50%;"></div>
-                            <div style="font-size: 0.65rem; font-weight: 700; color: #777;">Hoy, 09:30 AM</div>
-                            <div style="font-size: 0.75rem; color: var(--text-dark); font-weight: 600;">Visita realizada. Se entregó muestra Torta.</div>
-                        </li>
-                        <li style="position: relative;">
-                            <div style="position: absolute; left: -21px; top: 3px; width: 10px; height: 10px; background: var(--border-color); border-radius: 50%;"></div>
-                            <div style="font-size: 0.65rem; font-weight: 700; color: #777;">Hace 5 Días</div>
-                            <div style="font-size: 0.75rem; color: var(--text-dark); font-weight: 600;">Pedido PED-1082 entregado y facturado.</div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-    </main>
-
-    <footer>
-        <p>&copy; 2026 Sistema Comercial Casabe Real (SCCR). Todos los derechos reservados.</p>
-    </footer>
-
-    <div class="modal-overlay" id="modalCuota">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3><i class="fa-solid fa-bullseye" style="color:var(--primary-red);"></i> Cargar / Actualizar Cuota Dinámica</h3>
-                <button class="close-modal" onclick="document.getElementById('modalCuota').classList.remove('active')">&times;</button>
-            </div>
-            <form id="formCargaCuota" onsubmit="event.preventDefault(); alert('¡Cuota actualizada exitosamente!'); document.getElementById('modalCuota').classList.remove('active');">
-                <div class="form-group" style="margin-bottom: 1rem;">
-                    <label style="display:block; font-size:0.65rem; font-weight:700; color:#777; margin-bottom:4px;">Vendedor / Asesor</label>
-                    <select class="form-control" required>
-                        <option value="Carlos Mendoza">Carlos Mendoza</option>
-                        <option value="Mariana López">Mariana López</option>
-                    </select>
-                </div>
-                <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:1.5rem;">
-                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('modalCuota').classList.remove('active')">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar Cuota</button>
-                </div>
-            </form>
-        </div>
+  <!-- KPI CARDS -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-lbl">Venta Acumulada vs Meta</div>
+      <div class="kpi-val" id="kpi-real">—</div>
+      <div class="kpi-sub">
+        Meta: <strong id="kpi-meta">—</strong>
+        &nbsp;<span class="badge badge-azul" id="kpi-pct">—</span>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-fill" id="bar-pct" style="width:0%;background:var(--rojo)"></div>
+      </div>
     </div>
 
-    <script>
-        const COLOR_PRIMARY = '#D30000';
-        const COLOR_SUCCESS = '#2ECC71';
-        const COLOR_WARNING = '#F39C12';
-        const COLOR_CRITICAL = '#E74C3C';
-        const COLOR_TEXT = '#333333';
+    <div class="kpi-card">
+      <div class="kpi-lbl">Proyección Cierre (Run-Rate)</div>
+      <div class="kpi-val" id="kpi-runrate">—</div>
+      <div class="kpi-sub">
+        Estimado fin de ciclo &nbsp;<span class="badge badge-verde" id="kpi-rr-badge">—</span>
+      </div>
+      <div style="font-size:.62rem;color:var(--sub);margin-top:6px">Fórmula: (Real ÷ Días) × Total días</div>
+    </div>
 
-        let dimensionActual = 'USD';
-        let chartRunRateInstance = null;
-        let chartConsumoInstance = null;
+    <div class="kpi-card">
+      <div class="kpi-lbl">Ritmo Diario Requerido</div>
+      <div class="kpi-val" id="kpi-ritmo">—</div>
+      <div class="kpi-sub">Días hábiles restantes: <strong id="kpi-dias-rest">—</strong></div>
+      <div style="font-size:.62rem;color:var(--sub);margin-top:6px">Brecha GAP: <strong id="kpi-gap">—</strong></div>
+    </div>
 
-        // Base de datos (Simulada para Run-Rate y GAP)
-        const datosMeta = {
-            USD: {
-                metaTotal: 20000, ventaReal: 18450, diasTranscurridos: 18, diasTotales: 21,
-                vendedores: [
-                    { nombre: "Carlos Mendoza", zona: "Gran Caracas", meta: 8000, real: 7600 },
-                    { nombre: "Mariana López", zona: "Región Central", meta: 6500, real: 5300 },
-                    { nombre: "Juan Gutiérrez", zona: "Occidente", meta: 5500, real: 3800 }
-                ],
-                lineas: [ { nombre: "Pasapalo", meta: 8000, real: 7800 }, { nombre: "Restaurante", meta: 7000, real: 6450 }, { nombre: "Torta", meta: 5000, real: 4200 } ]
-            },
-            CAJAS: {
-                metaTotal: 1600, ventaReal: 1475, diasTranscurridos: 18, diasTotales: 21,
-                vendedores: [
-                    { nombre: "Carlos Mendoza", zona: "Gran Caracas", meta: 640, real: 610 },
-                    { nombre: "Mariana López", zona: "Región Central", meta: 520, real: 425 },
-                    { nombre: "Juan Gutiérrez", zona: "Occidente", meta: 440, real: 304 }
-                ],
-                lineas: [ { nombre: "Pasapalo", meta: 650, real: 625 }, { nombre: "Restaurante", meta: 550, real: 510 }, { nombre: "Torta", meta: 400, real: 340 } ]
-            }
-        };
+    <div class="kpi-card">
+      <div class="kpi-lbl">Semáforo de Cumplimiento</div>
+      <div class="kpi-val sem-val" id="kpi-semaforo">—</div>
+      <div class="kpi-sub" id="kpi-hito">Próximo hito: <strong>100% (Bono)</strong></div>
+      <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap">
+        <span class="badge badge-amarillo">Hito 80%</span>
+        <span class="badge badge-verde">Hito 100%</span>
+      </div>
+    </div>
+  </div>
 
-        document.addEventListener('DOMContentLoaded', () => {
-            actualizarDashboard();
-            initChartConsumo();
-        });
+  <!-- TABS -->
+  <div class="tabs-bar">
+    <button class="tab-btn activo" onclick="switchTab('tabOperativo',this)">📈 Control Operativo</button>
+    <button class="tab-btn" onclick="switchTab('tabDesglose',this)">📋 Desglose por Vendedor</button>
+  </div>
 
-        function setDimension(dim) {
-            dimensionActual = dim;
-            document.getElementById('btnUSD').classList.toggle('active', dim === 'USD');
-            document.getElementById('btnCajas').classList.toggle('active', dim === 'CAJAS');
-            actualizarDashboard();
+  <!-- TAB: Control Operativo -->
+  <div id="tabOperativo" class="tab-panel activo">
+
+    <div class="grid g-8-4">
+      <div class="card" style="margin:0">
+        <div class="card-title">Tendencia de Cierre Run-Rate vs Meta</div>
+        <div style="height:260px;position:relative">
+          <canvas id="chartRunRate"></canvas>
+        </div>
+      </div>
+      <div class="card" style="margin:0">
+        <div class="card-title">Cierre por Línea de Producto</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Línea</th><th>Real</th><th>% Cumpl.</th></tr></thead>
+            <tbody id="tabla-lineas">
+              <tr><td colspan="3" class="estado-msg">Cargando…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TAB: Desglose por Vendedor (visible solo gerente/admin) -->
+  <div id="tabDesglose" class="tab-panel">
+    <div class="card" style="margin:0" id="card-desglose">
+      <div class="card-title">Matriz de Desglose por Vendedor</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Vendedor</th>
+              <th>Meta Asignada</th>
+              <th>Venta Acumulada</th>
+              <th>Brecha GAP</th>
+              <th>Ritmo Diario</th>
+              <th>% Cumpl.</th>
+              <th>Semáforo</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-vendedores">
+            <tr><td colspan="7" class="estado-msg">Cargando…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  &copy; 2026 Sistema Comercial Casabe Real (SCCR v2.5.0) — Todos los derechos reservados.
+</footer>
+
+<!-- ─────────────────────────────────────── SCRIPTS ─────────────────────────────────────── -->
+<script src="assets/sccr-auth.js"></script>
+<script>
+// ══════════════════════════════════════════════════════════
+//  CONFIGURACIÓN
+// ══════════════════════════════════════════════════════════
+const API_URL = 'TU_URL_APPS_SCRIPT_AQUI'; // ← reemplazar con endpoint canónico
+
+let sesion        = null;
+let dimensionActual = 'USD';
+let chartInstance = null;
+
+// Datos crudos cargados de la API
+let datosRaw = {
+  metas: [],      // [{vendedor_id, nombre, ciclo, meta_usd, meta_cajas, real_usd, real_cajas, dias_transcurridos, dias_totales}]
+  lineas: []      // [{linea, meta_usd, real_usd, meta_cajas, real_cajas}]
+};
+
+// Datos procesados (filtrados)
+let datosFiltrados = { metas:[], lineas:[] };
+
+// ══════════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  // Auth
+  sesion = SCCR.getSesion();
+  if (!sesion) { window.location.href = 'index.html'; return; }
+
+  // Header
+  document.getElementById('hd-nombre').textContent = sesion.nombre || sesion.user;
+  document.getElementById('hd-rol').textContent     = sesion.rol.charAt(0).toUpperCase() + sesion.rol.slice(1);
+
+  // Nav activo
+  const path = window.location.pathname;
+  document.querySelectorAll('.nav-bar a').forEach(a => {
+    if (path.endsWith(a.getAttribute('href'))) a.classList.add('activo');
+  });
+
+  // Visibilidad por rol
+  const esDirectivo = (sesion.rol === 'gerente' || sesion.rol === 'admin');
+  if (esDirectivo) {
+    document.getElementById('seccion-filtros').style.display = 'grid';
+  } else {
+    // Vendedor: ocultar tab de desglose
+    document.querySelectorAll('.tab-btn')[1].style.display = 'none';
+  }
+
+  SCCR.aplicarMenuPorRol(sesion);
+  cargarMetas();
+});
+
+function cerrarSesion() {
+  if (confirm('¿Estás seguro de cerrar sesión?')) {
+    sessionStorage.removeItem('sccr');
+    window.location.href = 'index.html';
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+//  CARGA DE DATOS DESDE API
+// ══════════════════════════════════════════════════════════
+async function cargarMetas() {
+  mostrarEstado('Cargando datos…');
+
+  try {
+    const params = new URLSearchParams({ action: 'getMetas' });
+
+    // Vendedor solo ve sus propios datos
+    if (sesion.rol === 'vendedor' && sesion.vendedor_id) {
+      params.append('vendedor_id', sesion.vendedor_id);
+    }
+
+    const res  = await fetch(`${API_URL}?${params}`);
+    const json = await res.json();
+
+    if (json.error) throw new Error(json.error);
+
+    datosRaw.metas  = json.metas  || [];
+    datosRaw.lineas = json.lineas || [];
+
+    poblarFiltroVendedores(datosRaw.metas);
+    poblarFiltroCiclos(datosRaw.metas);
+    aplicarFiltros();
+
+  } catch (err) {
+    console.error('Error getMetas:', err);
+    mostrarEstado('⚠️ No se pudieron cargar las metas. Verifica la conexión.', true);
+  }
+}
+
+function mostrarEstado(msg, esError = false) {
+  const color = esError ? 'var(--rojo)' : 'var(--sub)';
+  ['kpi-real','kpi-meta','kpi-pct','kpi-runrate','kpi-rr-badge',
+   'kpi-ritmo','kpi-gap','kpi-dias-rest','kpi-semaforo'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = esError ? '—' : '…';
+  });
+  document.getElementById('tabla-lineas').innerHTML =
+    `<tr><td colspan="3" style="text-align:center;padding:20px;color:${color}">${msg}</td></tr>`;
+  document.getElementById('tabla-vendedores').innerHTML =
+    `<tr><td colspan="7" style="text-align:center;padding:20px;color:${color}">${msg}</td></tr>`;
+}
+
+// ══════════════════════════════════════════════════════════
+//  FILTROS
+// ══════════════════════════════════════════════════════════
+function poblarFiltroVendedores(metas) {
+  const sel = document.getElementById('filtroVendedor');
+  const nombres = [...new Set(metas.map(m => m.nombre))];
+  sel.innerHTML = '<option value="">Todos los Asesores</option>' +
+    nombres.map(n => `<option value="${n}">${n}</option>`).join('');
+}
+
+function poblarFiltroCiclos(metas) {
+  const sel = document.getElementById('filtroCiclo');
+  const ciclos = [...new Set(metas.map(m => m.ciclo).filter(Boolean))].sort().reverse();
+  sel.innerHTML = '<option value="">Ciclo Actual</option>' +
+    ciclos.map(c => `<option value="${c}">${c}</option>`).join('');
+}
+
+function aplicarFiltros() {
+  const fVendedor = document.getElementById('filtroVendedor')?.value || '';
+  const fLinea    = document.getElementById('filtroLinea')?.value   || '';
+  const fCiclo    = document.getElementById('filtroCiclo')?.value   || '';
+
+  // Filtrar metas
+  datosFiltrados.metas = datosRaw.metas.filter(m => {
+    const okVend  = !fVendedor || m.nombre === fVendedor;
+    const okCiclo = !fCiclo   || m.ciclo  === fCiclo;
+    return okVend && okCiclo;
+  });
+
+  // Filtrar líneas
+  datosFiltrados.lineas = datosRaw.lineas.filter(l => {
+    return !fLinea || l.linea === fLinea;
+  });
+
+  actualizarDashboard();
+}
+
+// ══════════════════════════════════════════════════════════
+//  DASHBOARD (re-render con datos filtrados)
+// ══════════════════════════════════════════════════════════
+function actualizarDashboard() {
+  const dim = dimensionActual;
+  const metas = datosFiltrados.metas;
+
+  if (!metas.length) {
+    mostrarEstado('Sin datos para los filtros seleccionados.');
+    return;
+  }
+
+  // Agregar totales
+  const metaTotal   = metas.reduce((s,m) => s + (Number(dim==='USD' ? m.meta_usd  : m.meta_cajas) ||0), 0);
+  const realTotal   = metas.reduce((s,m) => s + (Number(dim==='USD' ? m.real_usd  : m.real_cajas) ||0), 0);
+  const diasTrans   = metas[0]?.dias_transcurridos || 18;
+  const diasTotales = metas[0]?.dias_totales        || 21;
+
+  const pct         = metaTotal > 0 ? (realTotal / metaTotal) * 100 : 0;
+  const gap         = Math.max(0, metaTotal - realTotal);
+  const diasRest    = Math.max(0, diasTotales - diasTrans);
+  const ritmo       = diasRest > 0 ? gap / diasRest : 0;
+  const runRate     = diasTrans > 0 ? (realTotal / diasTrans) * diasTotales : 0;
+
+  const pre  = dim === 'USD' ? '$ ' : '';
+  const suf  = dim === 'USD' ? '' : ' Cj.';
+  const fmt  = (n) => pre + Math.round(n).toLocaleString('es-VE') + suf;
+  const fmtD = (n) => pre + n.toFixed(2) + suf;
+
+  // KPIs
+  document.getElementById('kpi-real').textContent    = fmt(realTotal);
+  document.getElementById('kpi-meta').textContent    = fmt(metaTotal);
+  document.getElementById('kpi-runrate').textContent = fmt(runRate);
+  document.getElementById('kpi-ritmo').textContent   = fmtD(ritmo);
+  document.getElementById('kpi-gap').textContent     = fmt(gap);
+  document.getElementById('kpi-dias-rest').textContent = `${diasRest} días`;
+
+  // Porcentaje + barra
+  const pctEl = document.getElementById('kpi-pct');
+  pctEl.textContent = pct.toFixed(1) + '%';
+  const sem = getSemaforo(pct);
+  pctEl.className = `badge ${sem.badge}`;
+  document.getElementById('bar-pct').style.width = Math.min(pct,100) + '%';
+  document.getElementById('bar-pct').style.background = sem.color;
+
+  // Run-rate badge
+  const rrBadge = document.getElementById('kpi-rr-badge');
+  rrBadge.textContent = runRate >= metaTotal ? 'ON TRACK ✓' : 'REVISAR ↗';
+  rrBadge.className   = `badge ${runRate >= metaTotal ? 'badge-verde' : 'badge-amarillo'}`;
+
+  // Semáforo
+  const semEl = document.getElementById('kpi-semaforo');
+  semEl.textContent = sem.icono + ' ' + sem.texto;
+  semEl.style.color = sem.color;
+
+  // Tablas
+  renderTablaLineas(datosFiltrados.lineas, pre, suf, dim);
+  renderTablaVendedores(metas, pre, suf, dim, diasRest, diasTrans, diasTotales);
+
+  // Chart
+  renderChartRunRate(metaTotal, realTotal, runRate, diasTrans, diasTotales, pre);
+}
+
+// ══════════════════════════════════════════════════════════
+//  SEMÁFORO
+// ══════════════════════════════════════════════════════════
+function getSemaforo(pct) {
+  if (pct >= 90) return { badge:'badge-verde',  color:'var(--verde)',    texto:'VERDE',    icono:'✅' };
+  if (pct >= 75) return { badge:'badge-amarillo',color:'var(--amarillo)',texto:'AMARILLO', icono:'⚠️' };
+  return             { badge:'badge-rojo',    color:'#DC2626',         texto:'ROJO',     icono:'🔴' };
+}
+
+// ══════════════════════════════════════════════════════════
+//  TABLAS
+// ══════════════════════════════════════════════════════════
+function renderTablaLineas(lineas, pre, suf, dim) {
+  const tbody = document.getElementById('tabla-lineas');
+  if (!lineas.length) {
+    tbody.innerHTML = '<tr><td colspan="3" class="estado-msg">Sin datos de líneas.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = lineas.map(l => {
+    const real = Number(dim === 'USD' ? l.real_usd : l.real_cajas) || 0;
+    const meta = Number(dim === 'USD' ? l.meta_usd : l.meta_cajas) || 0;
+    const pct  = meta > 0 ? (real / meta) * 100 : 0;
+    const sem  = getSemaforo(pct);
+    return `<tr>
+      <td><strong>${l.linea}</strong></td>
+      <td>${pre}${Math.round(real).toLocaleString('es-VE')}${suf}</td>
+      <td><span class="badge ${sem.badge}">${pct.toFixed(1)}%</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderTablaVendedores(metas, pre, suf, dim, diasRest, diasTrans, diasTotales) {
+  const tbody = document.getElementById('tabla-vendedores');
+  if (!metas.length) {
+    tbody.innerHTML = '<tr><td colspan="7" class="estado-msg">Sin datos.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = metas.map(m => {
+    const metaV = Number(dim === 'USD' ? m.meta_usd  : m.meta_cajas) || 0;
+    const realV = Number(dim === 'USD' ? m.real_usd  : m.real_cajas) || 0;
+    const pct   = metaV > 0 ? (realV / metaV) * 100 : 0;
+    const gap   = Math.max(0, metaV - realV);
+    const ritmo = diasRest > 0 ? gap / diasRest : 0;
+    const sem   = getSemaforo(pct);
+    return `<tr>
+      <td><strong>${m.nombre}</strong></td>
+      <td>${pre}${Math.round(metaV).toLocaleString('es-VE')}${suf}</td>
+      <td style="color:var(--rojo);font-weight:700">${pre}${Math.round(realV).toLocaleString('es-VE')}${suf}</td>
+      <td>${pre}${Math.round(gap).toLocaleString('es-VE')}${suf}</td>
+      <td>${pre}${ritmo.toFixed(2)}${suf}</td>
+      <td><span class="badge ${sem.badge}">${pct.toFixed(1)}%</span></td>
+      <td>${sem.icono}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════════
+//  CHART RUN-RATE
+// ══════════════════════════════════════════════════════════
+function renderChartRunRate(metaTotal, realTotal, runRate, diasTrans, diasTotales, pre) {
+  const ctx = document.getElementById('chartRunRate').getContext('2d');
+  if (chartInstance) chartInstance.destroy();
+
+  // Construir puntos reales proporcionales al tiempo
+  const step = Math.floor(diasTotales / 6);
+  const labelsBase = [];
+  const realesBase = [];
+  for (let i = 1; i <= 6; i++) {
+    const d = step * i;
+    labelsBase.push(`D${d}`);
+    realesBase.push(d <= diasTrans ? Math.round(realTotal * (d / diasTrans)) : null);
+  }
+  const labels = [...labelsBase, 'Proy. Final'];
+  const reales  = [...realesBase, null];
+  const proyec  = [...Array(6).fill(null), Math.round(runRate)];
+
+  chartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Real',
+          data: reales,
+          borderColor: '#C8181E',
+          backgroundColor: 'rgba(200,24,30,.08)',
+          fill: true, tension: .3, borderWidth: 2.5,
+          pointBackgroundColor: '#C8181E', pointRadius: 4
+        },
+        {
+          label: 'Proyección',
+          data: proyec,
+          borderColor: '#2563EB',
+          borderDash: [5,5], borderWidth: 2,
+          pointBackgroundColor: '#2563EB', pointRadius: 4
+        },
+        {
+          label: 'Meta',
+          data: Array(7).fill(metaTotal),
+          borderColor: '#10B981',
+          borderDash: [2,2], borderWidth: 1.5,
+          pointRadius: 0
         }
-
-        function switchView(tabId, btnElement) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            
-            document.getElementById(tabId).classList.add('active');
-            btnElement.classList.add('active');
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11 } } },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => ` ${ctx.dataset.label}: ${pre}${(ctx.parsed.y||0).toLocaleString('es-VE')}`
+          }
         }
+      },
+      scales: {
+        y: { grid: { color: '#F3F4F6' }, ticks: { font: { size: 11 } } },
+        x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+}
 
-        function getSemaforoUI(pct) {
-            if (pct >= 90) return { bg: COLOR_SUCCESS, badgeClass: 'badge-verde', text: 'VERDE', icon: 'fa-circle-check' };
-            if (pct >= 75) return { bg: COLOR_WARNING, badgeClass: 'badge-amarillo', text: 'AMARILLO', icon: 'fa-triangle-exclamation' };
-            return { bg: COLOR_CRITICAL, badgeClass: 'badge-rojo', text: 'ROJO', icon: 'fa-circle-xmark' };
-        }
+// ══════════════════════════════════════════════════════════
+//  CONTROLES UI
+// ══════════════════════════════════════════════════════════
+function setDimension(dim) {
+  dimensionActual = dim;
+  document.getElementById('btnUSD').classList.toggle('activo', dim === 'USD');
+  document.getElementById('btnCajas').classList.toggle('activo', dim === 'CAJAS');
+  actualizarDashboard();
+}
 
-        function actualizarDashboard() {
-            const data = datosMeta[dimensionActual];
-            const prefix = dimensionActual === 'USD' ? '$ ' : '';
-            
-            const gapRestante = Math.max(0, data.metaTotal - data.ventaReal);
-            const diasHabiles = data.diasTotales - data.diasTranscurridos;
-            const ritmoDiario = diasHabiles > 0 ? (gapRestante / diasHabiles) : 0;
-            const runRate = (data.ventaReal / data.diasTranscurridos) * data.diasTotales;
-            const pctCumplimiento = (data.ventaReal / data.metaTotal) * 100;
-
-            const semaforo = getSemaforoUI(pctCumplimiento);
-
-            // Actualizar Tarjetas Top
-            document.getElementById('kpiVentaReal').innerText = `${prefix}${data.ventaReal.toLocaleString()}`;
-            document.getElementById('kpiMetaTotal').innerText = `${prefix}${data.metaTotal.toLocaleString()}`;
-            document.getElementById('kpiCumplimientoPct').innerText = `${pctCumplimiento.toFixed(1)}%`;
-            document.getElementById('kpiCumplimientoPct').className = `badge ${semaforo.badgeClass}`;
-            document.getElementById('barCumplimiento').style.width = `${Math.min(pctCumplimiento, 100)}%`;
-            document.getElementById('barCumplimiento').style.backgroundColor = semaforo.bg;
-
-            document.getElementById('kpiRunRate').innerText = `${prefix}${Math.round(runRate).toLocaleString()}`;
-            document.getElementById('kpiRitmoDiario').innerText = `${prefix}${ritmoDiario.toFixed(2)}`;
-            document.getElementById('kpiMetaRestante').innerText = `${prefix}${gapRestante.toLocaleString()}`;
-
-            const boxSemaforo = document.getElementById('kpiSemaforoText');
-            boxSemaforo.style.color = semaforo.bg;
-            boxSemaforo.innerHTML = `<i class="fa-solid ${semaforo.icon}"></i> ${semaforo.text}`;
-
-            renderTablaVendedores(data, prefix, diasHabiles, data.diasTranscurridos, data.diasTotales);
-            renderTablaLineas(data, prefix);
-            renderChartRunRate(data, runRate);
-        }
-
-        function renderTablaVendedores(data, prefix, diasRestantes, diasTrans, diasTotales) {
-            const tbody = document.getElementById('tablaVendedoresBody');
-            tbody.innerHTML = '';
-            data.vendedores.forEach(v => {
-                const pct = (v.real / v.meta) * 100;
-                const gap = Math.max(0, v.meta - v.real);
-                const sem = getSemaforoUI(pct);
-                const ritmo = diasRestantes > 0 ? (gap / diasRestantes) : 0;
-
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${v.nombre}</strong></td>
-                        <td>${v.zona}</td>
-                        <td>${prefix}${v.meta.toLocaleString()}</td>
-                        <td style="color:${COLOR_PRIMARY}; font-weight:700;">${prefix}${v.real.toLocaleString()}</td>
-                        <td>${prefix}${gap.toLocaleString()}</td>
-                        <td>${prefix}${ritmo.toFixed(2)}</td>
-                        <td><span class="badge ${sem.badgeClass}">${pct.toFixed(1)}%</span></td>
-                    </tr>
-                `;
-            });
-        }
-
-        function renderTablaLineas(data, prefix) {
-            const tbody = document.getElementById('tablaLineasBody');
-            tbody.innerHTML = '';
-            data.lineas.forEach(l => {
-                const pct = (l.real / l.meta) * 100;
-                const sem = getSemaforoUI(pct);
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${l.nombre}</strong></td>
-                        <td>${prefix}${l.real.toLocaleString()}</td>
-                        <td><span class="badge ${sem.badgeClass}">${pct.toFixed(1)}%</span></td>
-                    </tr>
-                `;
-            });
-        }
-
-        function renderChartRunRate(data, runRateEstimado) {
-            const ctx = document.getElementById('chartRunRate').getContext('2d');
-            if (chartRunRateInstance) chartRunRateInstance.destroy();
-
-            chartRunRateInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['D3', 'D6', 'D9', 'D12', 'D15', 'Hoy', 'Proy. Final'],
-                    datasets: [
-                        { label: 'Real', data: [3100, 6200, 9500, 12800, 15600, data.ventaReal, null], borderColor: COLOR_PRIMARY, backgroundColor: 'rgba(211, 0, 0, 0.1)', fill: true, tension: 0.2, borderWidth: 3 },
-                        { label: 'Proyección', data: [null, null, null, null, null, data.ventaReal, runRateEstimado], borderColor: '#3498DB', borderDash: [5, 5], borderWidth: 2 },
-                        { label: 'Meta', data: Array(7).fill(data.metaTotal), borderColor: COLOR_SUCCESS, borderDash: [2, 2], borderWidth: 2, pointRadius: 0 }
-                    ]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { grid: { color: '#E2E8F0' } }, x: { grid: { display: false } } } }
-            });
-        }
-
-        function initChartConsumo() {
-            const ctx = document.getElementById('chartConsumo6Meses').getContext('2d');
-            chartConsumoInstance = new Chart(ctx, {
-                type: 'bar',
-                data: { labels: ['Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago'], datasets: [{ data: [110, 135, 120, 150, 140, 120], backgroundColor: COLOR_TEXT, borderRadius: 4 }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { grid: { display: false } } } }
-            });
-        }
-    </script>
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('activo'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('activo'));
+  document.getElementById(id).classList.add('activo');
+  btn.classList.add('activo');
+}
+</script>
 </body>
 </html>
