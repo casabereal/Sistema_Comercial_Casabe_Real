@@ -6,214 +6,435 @@
 <title>Casabe Real — Pedidos (SCCR v2.5.0)</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{
-  --rojo:#C8181E;--rojo-d:#A01015;--rojo-xs:#FEF2F2;
-  --blanco:#FFFFFF;--fondo:#F3F4F6;--borde:#E5E7EB;
-  --gris:#6B7280;--negro:#111827;
-  --verde:#059669;--verde-xs:#ECFDF5;
-  --naranja:#D97706;--naranja-xs:#FFFBEB;
-  --wa:#25D366;
-  --r:14px;--r-sm:9px;
-  --sh:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
-  --sh-md:0 4px 16px rgba(0,0,0,.10);
+:root {
+  --rojo:   #C8181E;
+  --rojo-d: #A01015;
+  --rojo-xs:#FEF2F2;
+  --naranja:#D97706;
+  --naranja-xs:#FFFBEB;
+  --blanco: #FFFFFF;
+  --fondo:  #F5F7FA;
+  --borde:  #E5E7EB;
+  --texto:  #1F2937;
+  --sub:    #6B7280;
+  --verde:  #10B981;
+  --verde-xs:#ECFDF5;
+  --amarillo:#F59E0B;
+  --wa:     #25D366;
+  --r: 14px;
+  --r-sm: 8px;
+  --sh: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+  --sh-md: 0 4px 16px rgba(0,0,0,0.10);
 }
-body{font-family:"Inter",sans-serif;background:var(--fondo);color:var(--negro);min-height:100vh;display:flex;flex-direction:column}
 
-/* ═══ HEADER ═══ */
-.hd{background:var(--rojo);padding:14px 18px 13px;display:flex;align-items:center;gap:11px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.18)}
-.hd img{width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25));flex-shrink:0}
-.hd-txt h1{font-size:15px;font-weight:700;color:#fff;letter-spacing:-.2px;line-height:1.2}
-.hd-txt p{font-size:10.5px;color:rgba(255,255,255,.7);margin-top:1px}
-.hd-vend{margin-left:auto;display:flex;align-items:center;gap:6px;flex-shrink:0}
-.hd-vend-name{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);border-radius:20px;padding:5px 11px;font-size:11px;font-weight:600;color:#fff;white-space:nowrap}
-.btn-logout{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:6px 8px;cursor:pointer;color:rgba(255,255,255,.8);font-size:12px;transition:background .2s;white-space:nowrap;font-family:"Inter",sans-serif;font-weight:500}
-.btn-logout:hover{background:rgba(255,255,255,.22)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 
-/* ═══ NAV ═══ */
-.nav{background:var(--blanco);border-bottom:2px solid var(--borde);display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.nav::-webkit-scrollbar{display:none}
-.nav a{flex-shrink:0;padding:11px 16px;font-size:12.5px;font-weight:600;color:var(--gris);text-decoration:none;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:color .2s,border-color .2s}
-.nav a.active{color:var(--rojo);border-bottom-color:var(--rojo)}
-.nav a:hover{color:var(--rojo)}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--fondo);
+  color:var(--texto);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
 
-/* ═══ LOADING ═══ */
-#scr-loading{display:flex;align-items:center;justify-content:center;min-height:60vh;flex-direction:column;gap:12px}
-.ld-spinner{width:32px;height:32px;border:3px solid var(--borde);border-top-color:var(--rojo);border-radius:50%;animation:spin .7s linear infinite}
-#scr-loading p{font-size:13px;color:var(--gris)}
+/* ── HEADER ── */
+.hd{
+  background:var(--rojo);
+  color:var(--blanco);
+  padding:14px 18px 13px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;top:0;z-index:200;
+  box-shadow:0 2px 8px rgba(0,0,0,0.18);
+}
+.hd-left{display:flex;align-items:center;gap:11px}
+.hd-left img{
+  width:42px;height:42px;object-fit:contain;
+  filter:drop-shadow(0 2px 6px rgba(0,0,0,0.25));
+}
+.hd-sys{font-size:.78rem;font-weight:700;letter-spacing:.4px;text-transform:uppercase;opacity:.92}
+.hd-right{display:flex;align-items:center;gap:10px}
+.hd-pill{
+  background:rgba(255,255,255,.15);
+  backdrop-filter:blur(4px);
+  border:1px solid rgba(255,255,255,.25);
+  border-radius:50px;
+  padding:5px 13px;
+  font-size:.72rem;font-weight:600;line-height:1.3;text-align:right;
+}
+.hd-pill .rol{font-size:.62rem;opacity:.82;font-weight:400}
+.btn-salir{
+  background:transparent;
+  border:1px solid rgba(255,255,255,.45);
+  color:var(--blanco);
+  padding:6px 13px;
+  border-radius:50px;
+  font-size:.72rem;font-weight:600;
+  cursor:pointer;
+  transition:background .2s;
+}
+.btn-salir:hover{background:rgba(255,255,255,.15)}
 
-/* ═══ APP ═══ */
-#scr-app{display:none;flex-direction:column;flex:1}
+/* ── NAV HORIZONTAL ── */
+.nav-bar{
+  background:var(--blanco);
+  border-bottom:1px solid var(--borde);
+  display:flex;overflow-x:auto;white-space:nowrap;
+  padding:0 18px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.05);
+}
+.nav-bar::-webkit-scrollbar{height:2px}
+.nav-bar::-webkit-scrollbar-thumb{background:#ddd;border-radius:2px}
+.nav-bar a{
+  display:inline-block;
+  padding:11px 14px;
+  font-size:.72rem;font-weight:500;
+  color:var(--sub);
+  text-decoration:none;
+  border-bottom:3px solid transparent;
+  transition:all .2s;
+}
+.nav-bar a:hover{color:var(--rojo);background:var(--rojo-xs)}
+.nav-bar a.activo{color:var(--rojo);font-weight:700;border-bottom-color:var(--rojo)}
 
-/* Steps */
-.steps-bar{background:#fff;border-bottom:1px solid var(--borde);padding:11px 20px}
-.steps{display:flex;align-items:center;max-width:480px;margin:0 auto}
-.step{display:flex;flex-direction:column;align-items:center;flex:1}
-.step-c{width:27px;height:27px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:2px solid var(--borde);background:#fff;color:var(--gris);transition:all .25s;z-index:1}
-.step.active .step-c{background:var(--rojo);border-color:var(--rojo);color:#fff;box-shadow:0 0 0 3px rgba(200,24,30,.15)}
-.step.done .step-c{background:var(--verde);border-color:var(--verde);color:#fff}
-.step-lbl{font-size:10px;color:var(--gris);margin-top:4px;font-weight:500;text-align:center;white-space:nowrap}
-.step.active .step-lbl{color:var(--rojo);font-weight:700}
-.step.done .step-lbl{color:var(--verde)}
-.step-ln{flex:1;height:2px;background:var(--borde);margin-top:-14px;transition:background .25s}
-.step-ln.done{background:var(--verde)}
+/* ── MAIN CONTAINER ── */
+main{flex:1;padding:24px 20px;max-width:640px;width:100%;margin:0 auto}
 
-/* Main */
-.main{padding:13px 13px 90px;max-width:520px;margin:0 auto;width:100%}
-.card{background:#fff;border-radius:var(--r);box-shadow:var(--sh);margin-bottom:11px;overflow:hidden}
-.card-hd{padding:12px 15px;border-bottom:1px solid var(--borde);display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700}
-.ic{width:25px;height:25px;border-radius:6px;background:var(--rojo-xs);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
-.card-bd{padding:14px 15px}
+/* ── PAGE HEADER ── */
+.page-hd{
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:12px;margin-bottom:20px;
+}
+.page-hd h1{font-size:1.45rem;font-weight:700;color:var(--texto)}
+.page-hd h1 span{color:var(--rojo)}
+
+/* ── BOTONES GENERALES ── */
+.btn{
+  padding:8px 15px;border:none;border-radius:var(--r-sm);
+  font-size:.73rem;font-weight:700;cursor:pointer;
+  display:inline-flex;align-items:center;gap:7px;
+  transition:all .2s;font-family:'Inter',sans-serif;
+  text-decoration:none;
+}
+.btn-primary{background:var(--rojo);color:var(--blanco)}
+.btn-primary:hover{background:var(--rojo-d)}
+.btn-ghost{background:var(--blanco);border:1px solid var(--borde);color:var(--texto)}
+.btn-ghost:hover{background:var(--fondo)}
+
+/* ── CARDS ── */
+.card{
+  background:var(--blanco);border:1px solid var(--borde);border-radius:var(--r);
+  box-shadow:var(--sh);overflow:hidden;margin-bottom:14px;
+}
+.card-hd{
+  padding:12px 16px;border-bottom:1px solid var(--borde);
+  display:flex;align-items:center;gap:8px;
+  font-size:.82rem;font-weight:700;color:var(--texto);
+}
+.card-ic{
+  width:26px;height:26px;border-radius:6px;
+  background:var(--rojo-xs);display:flex;align-items:center;
+  justify-content:center;font-size:13px;flex-shrink:0;
+}
+.card-bd{padding:16px}
+
+/* ── CAMPO DE FORMULARIO ── */
 .cf{margin-bottom:13px}
 .cf:last-child{margin-bottom:0}
-.cf label{display:block;font-size:11.5px;font-weight:600;color:var(--negro);margin-bottom:5px}
-.cf input,.cf select,.cf textarea{width:100%;padding:11px 13px;border:1.5px solid var(--borde);border-radius:var(--r-sm);font-size:14px;font-family:"Inter",sans-serif;color:var(--negro);background:#fff;outline:none;transition:border .2s,box-shadow .2s;-webkit-appearance:none;appearance:none}
-.cf input:focus,.cf select:focus,.cf textarea:focus{border-color:var(--rojo);box-shadow:0 0 0 3px rgba(200,24,30,.12)}
+.cf label{display:block;font-size:.63rem;font-weight:700;color:var(--sub);text-transform:uppercase;margin-bottom:5px}
+.cf input,.cf select,.cf textarea{
+  width:100%;padding:10px 13px;
+  border:1px solid var(--borde);border-radius:var(--r-sm);
+  font-size:.82rem;font-family:'Inter',sans-serif;
+  color:var(--texto);background:var(--blanco);
+  outline:none;transition:border .2s,box-shadow .2s;
+  -webkit-appearance:none;appearance:none;
+}
+.cf input:focus,.cf select:focus,.cf textarea:focus{
+  border-color:var(--rojo);box-shadow:0 0 0 3px rgba(200,24,30,.10);
+}
 .cf input::placeholder,.cf textarea::placeholder{color:#C8CDD6}
-.cf select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:34px;cursor:pointer}
-.cf .hint{font-size:11px;color:var(--gris);margin-top:4px}
+.cf select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 13px center;
+  padding-right:34px;cursor:pointer;
+}
+.cf .hint{font-size:.63rem;color:var(--sub);margin-top:4px}
+.req{color:var(--rojo)}
 
-/* Client autocomplete */
-.autocomplete-wrap{position:relative}
-.autocomplete-drop{position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--rojo);border-top:none;border-radius:0 0 var(--r-sm) var(--r-sm);max-height:180px;overflow-y:auto;z-index:50;box-shadow:var(--sh-md);display:none}
-.autocomplete-drop.show{display:block}
-.ac-item{padding:10px 13px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--borde)}
+/* ── AUTOCOMPLETE ── */
+.ac-wrap{position:relative}
+.ac-drop{
+  position:absolute;top:100%;left:0;right:0;
+  background:var(--blanco);border:1px solid var(--rojo);
+  border-top:none;border-radius:0 0 var(--r-sm) var(--r-sm);
+  max-height:190px;overflow-y:auto;z-index:50;
+  box-shadow:var(--sh-md);display:none;
+}
+.ac-drop.show{display:block}
+.ac-item{
+  padding:9px 13px;font-size:.78rem;cursor:pointer;
+  border-bottom:1px solid var(--borde);
+}
 .ac-item:last-child{border-bottom:none}
 .ac-item:hover{background:var(--rojo-xs)}
-.ac-item strong{display:block;color:var(--negro);font-weight:600}
-.ac-item span{font-size:11px;color:var(--gris)}
+.ac-item strong{display:block;color:var(--texto);font-weight:600}
+.ac-item span{font-size:.65rem;color:var(--sub)}
 
-.toggle{display:flex;background:var(--fondo);border-radius:var(--r-sm);padding:3px;gap:3px;margin-bottom:13px}
-.tg-btn{flex:1;padding:9px 8px;border:none;border-radius:6px;font-size:12.5px;font-weight:600;font-family:"Inter",sans-serif;cursor:pointer;transition:all .2s;background:transparent;color:var(--gris)}
-.tg-btn.on{background:#fff;color:var(--rojo);box-shadow:var(--sh)}
-.rif-area{border:2px dashed var(--borde);border-radius:var(--r-sm);padding:18px 14px;text-align:center;cursor:pointer;position:relative;transition:all .2s}
+/* ── TOGGLE TIPO CLIENTE ── */
+.toggle{
+  display:flex;background:var(--fondo);border:1px solid var(--borde);
+  padding:3px;border-radius:var(--r-sm);margin-bottom:14px;
+}
+.tg-btn{
+  flex:1;padding:8px;border:none;border-radius:5px;
+  font-size:.72rem;font-weight:700;font-family:'Inter',sans-serif;
+  cursor:pointer;transition:all .2s;background:transparent;color:var(--sub);
+}
+.tg-btn.activo{background:var(--blanco);color:var(--rojo);box-shadow:var(--sh)}
+
+/* ── RIF ── */
+.rif-area{
+  border:2px dashed var(--borde);border-radius:var(--r-sm);
+  padding:18px 14px;text-align:center;cursor:pointer;
+  position:relative;transition:all .2s;
+}
 .rif-area:hover{border-color:var(--rojo);background:var(--rojo-xs)}
 .rif-area input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
 .rif-ico{font-size:26px;margin-bottom:6px}
-.rif-area p{font-size:12.5px;color:var(--gris);font-weight:500}
-.rif-area small{font-size:11px;color:#B0B7C3}
-.rif-ok{display:none;align-items:center;gap:10px;background:var(--verde-xs);border:1px solid #A7F3D0;border-radius:var(--r-sm);padding:11px 13px;margin-top:8px}
+.rif-area p{font-size:.78rem;color:var(--sub);font-weight:500}
+.rif-area small{font-size:.65rem;color:#B0B7C3}
+.rif-ok{
+  display:none;align-items:center;gap:10px;
+  background:var(--verde-xs);border:1px solid #A7F3D0;
+  border-radius:var(--r-sm);padding:10px 13px;margin-top:8px;
+}
 .rif-ok.show{display:flex}
-.rif-ok p{font-size:12.5px;font-weight:600;color:var(--verde);flex:1}
-.rif-ok button{background:none;border:none;font-size:17px;cursor:pointer;color:var(--gris)}
-.prod-row{background:var(--fondo);border:1.5px solid var(--borde);border-radius:var(--r-sm);padding:12px 13px;margin-bottom:9px;transition:border .2s}
+.rif-ok p{font-size:.78rem;font-weight:600;color:var(--verde);flex:1}
+.rif-ok button{background:none;border:none;font-size:17px;cursor:pointer;color:var(--sub)}
+
+/* ── FILA DE PRODUCTO ── */
+.prod-row{
+  background:var(--fondo);border:1px solid var(--borde);
+  border-radius:var(--r-sm);padding:12px 13px;margin-bottom:9px;
+  transition:border .2s;
+}
 .prod-row:focus-within{border-color:var(--rojo)}
 .prod-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
-.prod-num{font-size:10.5px;font-weight:700;color:var(--rojo);text-transform:uppercase;letter-spacing:.6px}
-.btn-rm{background:none;border:none;font-size:18px;cursor:pointer;color:var(--gris);padding:2px 5px;line-height:1;transition:color .2s}
+.prod-num{font-size:.63rem;font-weight:700;color:var(--rojo);text-transform:uppercase;letter-spacing:.6px}
+.btn-rm{background:none;border:none;font-size:17px;cursor:pointer;color:var(--sub);padding:2px 5px;line-height:1;transition:color .2s}
 .btn-rm:hover{color:var(--rojo)}
 .prod-grid{display:grid;grid-template-columns:1fr 90px;gap:9px;align-items:end}
-.qty-lbl{font-size:11.5px;font-weight:600;display:block;margin-bottom:5px}
-.qty-inp{width:100%;padding:10px 8px;border:1.5px solid var(--borde);border-radius:var(--r-sm);font-size:15px;font-family:"Inter",sans-serif;font-weight:700;text-align:center;color:var(--negro);outline:none;transition:border .2s;-webkit-appearance:none}
-.qty-inp:focus{border-color:var(--rojo);box-shadow:0 0 0 3px rgba(200,24,30,.12)}
-.prod-sub{display:flex;justify-content:space-between;align-items:center;margin-top:7px;padding:7px 9px;background:#fff;border-radius:6px}
-.prod-sub span{font-size:11.5px;color:var(--gris)}
-.prod-sub strong{font-size:13px;font-weight:700;color:var(--negro)}
-.btn-add{width:100%;padding:10px;border:2px dashed var(--rojo);border-radius:var(--r-sm);background:var(--rojo-xs);color:var(--rojo);font-size:12.5px;font-weight:700;font-family:"Inter",sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:background .2s;margin-top:2px}
+.qty-lbl{font-size:.63rem;font-weight:700;color:var(--sub);text-transform:uppercase;display:block;margin-bottom:5px}
+.qty-inp{
+  width:100%;padding:10px 8px;
+  border:1px solid var(--borde);border-radius:var(--r-sm);
+  font-size:.95rem;font-family:'Inter',sans-serif;font-weight:700;
+  text-align:center;color:var(--texto);outline:none;
+  transition:border .2s;-webkit-appearance:none;
+}
+.qty-inp:focus{border-color:var(--rojo);box-shadow:0 0 0 3px rgba(200,24,30,.10)}
+.prod-sub{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:7px;padding:6px 9px;background:var(--blanco);border-radius:6px;
+}
+.prod-sub span{font-size:.68rem;color:var(--sub)}
+.prod-sub strong{font-size:.8rem;font-weight:700;color:var(--texto)}
+
+/* ── BTN AGREGAR PRODUCTO ── */
+.btn-add{
+  width:100%;padding:10px;
+  border:2px dashed var(--rojo);border-radius:var(--r-sm);
+  background:var(--rojo-xs);color:var(--rojo);
+  font-size:.78rem;font-weight:700;font-family:'Inter',sans-serif;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;
+  transition:background .2s;margin-top:4px;
+}
 .btn-add:hover{background:#FAD7D8}
-.total-blk{background:var(--negro);border-radius:var(--r);padding:14px 15px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.total-blk .lbl{color:rgba(255,255,255,.6);font-size:12px;font-weight:500}
-.total-blk .monto{color:#fff;font-size:28px;font-weight:800;letter-spacing:-1.2px}
-.total-blk .cj{color:rgba(255,255,255,.4);font-size:11px;margin-top:2px}
-.cp-badge{background:var(--naranja-xs);border:1px solid #FDE68A;border-radius:var(--r-sm);padding:10px 13px;display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.cp-tt{font-size:12.5px;font-weight:700;color:var(--naranja)}
-.cp-st{font-size:11px;color:var(--naranja);opacity:.75;margin-top:1px}
-.btn-main{width:100%;padding:14px;border:none;border-radius:var(--r-sm);font-size:15px;font-weight:700;font-family:"Inter",sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:background .2s,transform .1s}
+
+/* ── TOTAL ── */
+.total-blk{
+  background:var(--texto);border-radius:var(--r);
+  padding:14px 16px;display:flex;justify-content:space-between;
+  align-items:center;margin-bottom:12px;
+}
+.total-blk .lbl{color:rgba(255,255,255,.6);font-size:.72rem;font-weight:500}
+.total-blk .monto{color:#fff;font-size:1.8rem;font-weight:800;letter-spacing:-1px}
+.total-blk .cj{color:rgba(255,255,255,.4);font-size:.65rem;margin-top:2px}
+
+/* ── CONDICIÓN DE PAGO ── */
+.cp-badge{
+  background:var(--naranja-xs);border:1px solid #FDE68A;
+  border-radius:var(--r-sm);padding:10px 13px;
+  display:flex;align-items:center;gap:10px;margin-bottom:12px;
+}
+.cp-tt{font-size:.78rem;font-weight:700;color:var(--naranja)}
+.cp-st{font-size:.65rem;color:var(--naranja);opacity:.8;margin-top:2px}
+
+/* ── BOTONES PRINCIPALES ── */
+.btn-main{
+  width:100%;padding:13px;border:none;border-radius:var(--r-sm);
+  font-size:.9rem;font-weight:700;font-family:'Inter',sans-serif;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;
+  transition:background .2s,transform .1s;
+}
 .btn-main:active{transform:scale(.99)}
 .btn-rojo{background:var(--rojo);color:#fff}
 .btn-rojo:hover{background:var(--rojo-d)}
 .btn-rojo:disabled{background:#D1D5DB;cursor:not-allowed;transform:none}
 .btn-wa{background:var(--wa);color:#fff}
 .btn-wa:hover{background:#1AAB53}
-.btn-outline{background:none;border:1.5px solid var(--borde);color:var(--gris);padding:12px}
-.btn-outline:hover{border-color:var(--negro);color:var(--negro)}
-.gap{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+.btn-outline{
+  background:none;border:1px solid var(--borde);
+  color:var(--sub);padding:11px;
+}
+.btn-outline:hover{border-color:var(--texto);color:var(--texto)}
+.btns-gap{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+
+/* ── PANELS ── */
 #pnl-form{display:block}
 #pnl-resumen{display:none}
-#pnl-ok{display:none;text-align:center;padding:40px 16px}
+#pnl-ok{display:none;text-align:center;padding:48px 16px}
+
+/* ── RESUMEN ── */
 .res-hd{background:var(--rojo);padding:20px 16px;text-align:center}
 .res-hd .em{font-size:36px;margin-bottom:6px}
-.res-hd h2{color:#fff;font-size:17px;font-weight:700}
-.res-hd p{color:rgba(255,255,255,.75);font-size:12px;margin-top:3px}
+.res-hd h2{color:#fff;font-size:1.05rem;font-weight:700}
+.res-hd p{color:rgba(255,255,255,.75);font-size:.72rem;margin-top:3px}
 .res-bd{padding:15px}
-.res-row{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--borde);gap:12px}
+.res-row{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  padding:8px 0;border-bottom:1px solid var(--borde);gap:12px;
+}
 .res-row:last-of-type{border:none}
-.res-k{font-size:11.5px;color:var(--gris);font-weight:500;flex-shrink:0}
-.res-v{font-size:13px;font-weight:600;color:var(--negro);text-align:right}
+.res-k{font-size:.68rem;color:var(--sub);font-weight:600;flex-shrink:0;text-transform:uppercase}
+.res-v{font-size:.82rem;font-weight:600;color:var(--texto);text-align:right}
 .res-prods{width:100%}
-.res-pi{display:flex;justify-content:space-between;padding:5px 0;font-size:12.5px}
-.res-pi span:first-child{color:var(--negro);font-weight:500}
+.res-pi{display:flex;justify-content:space-between;padding:4px 0;font-size:.78rem}
+.res-pi span:first-child{color:var(--texto);font-weight:500}
 .res-pi span:last-child{font-weight:700}
-.res-tot{background:var(--negro);border-radius:var(--r-sm);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin:12px 0 0}
-.res-tot span{color:rgba(255,255,255,.6);font-size:12px}
-.res-tot strong{color:#fff;font-size:22px;font-weight:800;letter-spacing:-.8px}
+.res-tot{
+  background:var(--texto);border-radius:var(--r-sm);
+  padding:11px 14px;display:flex;justify-content:space-between;
+  align-items:center;margin:12px 0 0;
+}
+.res-tot span{color:rgba(255,255,255,.6);font-size:.72rem}
+.res-tot strong{color:#fff;font-size:1.3rem;font-weight:800;letter-spacing:-.5px}
+
+/* ── ÉXITO ── */
 .ok-em{font-size:56px;margin-bottom:12px}
-.ok-tt{font-size:21px;font-weight:800;margin-bottom:6px}
-.ok-num{font-size:32px;font-weight:800;color:var(--rojo);margin:14px 0 6px;letter-spacing:-1px}
-.ok-sub{font-size:13px;color:var(--gris);margin-bottom:22px}
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--negro);color:#fff;padding:11px 20px;border-radius:24px;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.22);z-index:999;transition:transform .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;pointer-events:none}
-.toast.show{transform:translateX(-50%) translateY(0)}
-.spinner{width:18px;height:18px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
+.ok-tt{font-size:1.3rem;font-weight:800;margin-bottom:6px}
+.ok-num{font-size:2rem;font-weight:800;color:var(--rojo);margin:14px 0 6px;letter-spacing:-1px}
+.ok-sub{font-size:.82rem;color:var(--sub);margin-bottom:24px}
+
+/* ── STEPS ── */
+.steps-bar{
+  background:var(--blanco);border-bottom:1px solid var(--borde);
+  padding:11px 20px;
+}
+.steps{display:flex;align-items:center;max-width:480px;margin:0 auto}
+.step{display:flex;flex-direction:column;align-items:center;flex:1}
+.step-c{
+  width:27px;height:27px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;
+  border:2px solid var(--borde);background:var(--blanco);color:var(--sub);
+  transition:all .25s;z-index:1;
+}
+.step.activo .step-c{background:var(--rojo);border-color:var(--rojo);color:#fff;box-shadow:0 0 0 3px rgba(200,24,30,.15)}
+.step.done   .step-c{background:var(--verde);border-color:var(--verde);color:#fff}
+.step-lbl{font-size:.6rem;color:var(--sub);margin-top:4px;font-weight:500;text-align:center;white-space:nowrap}
+.step.activo .step-lbl{color:var(--rojo);font-weight:700}
+.step.done   .step-lbl{color:var(--verde)}
+.step-ln{flex:1;height:2px;background:var(--borde);margin-top:-14px;transition:background .25s}
+.step-ln.done{background:var(--verde)}
+
+/* ── SPINNER / TOAST ── */
+.spinner{
+  width:18px;height:18px;
+  border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;
+  border-radius:50%;animation:spin .7s linear infinite;display:none;
+}
 .spinner.show{display:block}
 @keyframes spin{to{transform:rotate(360deg)}}
-.req{color:var(--rojo)}
 
-/* Loading skeleton for products */
-.skeleton{background:linear-gradient(90deg,var(--borde) 25%,#f0f0f0 50%,var(--borde) 75%);background-size:200% 100%;animation:shimmer 1.2s infinite;border-radius:6px;height:44px;margin-bottom:9px}
-@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.toast{
+  position:fixed;bottom:22px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--texto);color:#fff;
+  padding:10px 20px;border-radius:24px;
+  font-size:.78rem;font-weight:600;
+  box-shadow:0 8px 24px rgba(0,0,0,.22);
+  z-index:999;transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+  white-space:nowrap;pointer-events:none;
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
 
-/* Nota campo */
-.nota-wrap{margin-bottom:13px}
-.nota-wrap label{display:block;font-size:11.5px;font-weight:600;color:var(--negro);margin-bottom:5px}
-.nota-wrap textarea{resize:vertical;min-height:72px;font-size:13px}
+/* ── NOTA / TEXTAREA ── */
+.cf textarea{resize:vertical;min-height:72px;font-size:.82rem}
 
-@media(max-width:400px){
-  .main{padding:11px 11px 80px}
-  .hd{padding:12px 14px}
-  .hd img{width:38px;height:38px}
+/* ── ESTADO ── */
+.estado-msg{text-align:center;padding:32px 20px;color:var(--sub);font-size:.82rem}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--blanco);border-top:1px solid var(--borde);
+  text-align:center;padding:11px;font-size:.63rem;color:var(--sub);
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  main{padding:16px 12px}
+  .page-hd h1{font-size:1.1rem}
 }
 </style>
 </head>
 <body>
 
-<!-- ═══ HEADER ═══ -->
+<!-- ── HEADER ── -->
 <header class="hd">
-  <img src="assets/logo-casabe-real.png" alt="Casabe Real">
-  <div class="hd-txt">
-    <h1>Casabe Real · SCCR v2.5.0</h1>
-    <p id="hd-subtitulo">Módulo de Pedidos</p>
+  <div class="hd-left">
+    <img src="assets/logo-casabe-real.png" alt="Logo Casabe Real"
+         onerror="this.style.display='none'">
+    <span class="hd-sys">Sistema Comercial Casabe Real</span>
   </div>
-  <div class="hd-vend">
-    <div class="hd-vend-name" id="hd-nombre">—</div>
-    <button class="btn-logout" onclick="cerrarSesion()" title="Cerrar sesión">✕</button>
+  <div class="hd-right">
+    <div class="hd-pill">
+      <div id="hd-nombre">Cargando…</div>
+      <div class="rol" id="hd-rol">—</div>
+    </div>
+    <button class="btn-salir" onclick="cerrarSesion()">🚪 Salir</button>
   </div>
 </header>
 
-<!-- ═══ NAV ═══ -->
-<nav class="nav" id="main-nav">
-  <a href="inicio.html">🏠 Inicio</a>
-  <a href="clientes.html">👥 Clientes</a>
-  <a href="metas.html">🎯 Meta</a>
-  <a href="propuesta.html">💡 Propuesta</a>
-  <a href="pedidos.html" class="active">📦 Pedidos</a>
-  <a href="reportes.html">📋 Reportes</a>
-  <a href="embudo.html">🔻 Embudo</a>
-  <a href="bi_ia.html">🤖 BI + IA</a>
+<!-- ── NAV HORIZONTAL ── -->
+<nav class="nav-bar" id="nav-bar">
+  <a href="inicio.html">Inicio</a>
+  <a href="clientes.html">Clientes</a>
+  <a href="meta.html">Meta</a>
+  <a href="propuesta.html">Propuesta</a>
+  <a href="pedidos.html">Pedidos</a>
+  <a href="reportes.html">Reporte de Gestión</a>
+  <a href="embudo.html">Embudo</a>
+  <a href="bi_ia.html">BI + IA</a>
+  <a href="cargas.html">Cargas</a>
+  <a href="historico.html">Histórico</a>
 </nav>
 
-<!-- ═══ LOADING ═══ -->
-<div id="scr-loading">
-  <div class="ld-spinner"></div>
-  <p>Cargando módulo…</p>
-</div>
+<main>
 
-<!-- ═══ APP ═══ -->
-<div id="scr-app">
+  <!-- PAGE HEADER -->
+  <div class="page-hd">
+    <h1>Módulo de <span>Pedidos</span></h1>
+    <button class="btn btn-ghost" onclick="resetPedido()" title="Nuevo pedido">+ Nuevo Pedido</button>
+  </div>
 
-  <!-- Steps -->
-  <div class="steps-bar">
+  <!-- ── STEPS BAR ── -->
+  <div class="steps-bar" style="margin: 0 -20px 20px;border-radius:0">
     <div class="steps">
-      <div class="step active" id="s1"><div class="step-c" id="sc1">1</div><div class="step-lbl">Cliente</div></div>
+      <div class="step activo" id="s1"><div class="step-c" id="sc1">1</div><div class="step-lbl">Cliente</div></div>
       <div class="step-ln" id="ln1"></div>
       <div class="step" id="s2"><div class="step-c" id="sc2">2</div><div class="step-lbl">Productos</div></div>
       <div class="step-ln" id="ln2"></div>
@@ -221,315 +442,307 @@ body{font-family:"Inter",sans-serif;background:var(--fondo);color:var(--negro);m
     </div>
   </div>
 
-  <!-- Main -->
-  <div class="main">
+  <!-- ══════════════ PANEL FORMULARIO ══════════════ -->
+  <div id="pnl-form">
 
-    <!-- ── Panel Formulario ── -->
-    <div id="pnl-form">
+    <!-- Datos del cliente -->
+    <div class="card">
+      <div class="card-hd"><div class="card-ic">🏪</div>Datos del Cliente</div>
+      <div class="card-bd">
 
-      <!-- Datos del cliente -->
-      <div class="card">
-        <div class="card-hd"><div class="ic">🏪</div>Datos del Cliente</div>
-        <div class="card-bd">
+        <!-- Toggle tipo -->
+        <label style="font-size:.63rem;font-weight:700;color:var(--sub);text-transform:uppercase;display:block;margin-bottom:7px">
+          Tipo de Cliente <span class="req">*</span>
+        </label>
+        <div class="toggle">
+          <button class="tg-btn activo" id="tb-act" onclick="setTipo('activo')">✅ Cliente Activo</button>
+          <button class="tg-btn"        id="tb-new" onclick="setTipo('nuevo')">🆕 Cliente Nuevo</button>
+        </div>
 
-          <!-- Tipo de cliente -->
-          <label style="font-size:11.5px;font-weight:600;display:block;margin-bottom:7px">
-            Tipo de Cliente <span class="req">*</span>
+        <!-- Autocomplete (solo cliente activo) -->
+        <div id="blq-busqueda">
+          <div class="cf">
+            <label>Buscar Cliente <span class="req">*</span></label>
+            <div class="ac-wrap">
+              <input type="text" id="buscar-cliente"
+                     placeholder="Escribe nombre o RIF del cliente…"
+                     autocomplete="off"
+                     oninput="filtrarClientes(this.value)"
+                     onfocus="filtrarClientes(this.value)">
+              <div class="ac-drop" id="ac-drop"></div>
+            </div>
+            <div class="hint">Busca en tu cartera de clientes activos</div>
+          </div>
+        </div>
+
+        <div class="cf">
+          <label>Razón Social <span class="req">*</span></label>
+          <input type="text" id="razon" placeholder="Ej: Panadería Las Delicias C.A." autocomplete="off">
+        </div>
+        <div class="cf">
+          <label>Nombre del Establecimiento <span class="req">*</span></label>
+          <input type="text" id="establ" placeholder="Ej: Panadería Las Delicias" autocomplete="off">
+        </div>
+        <div class="cf">
+          <label>Persona de Contacto (Compras)</label>
+          <input type="text" id="contacto" placeholder="Nombre del encargado de compras">
+        </div>
+        <div class="cf">
+          <label>Teléfono de Contacto</label>
+          <input type="tel" id="telefono" placeholder="Ej: 0412-1234567" inputmode="tel">
+        </div>
+
+        <!-- RIF (solo cliente nuevo) -->
+        <div id="blq-rif" style="display:none">
+          <label style="font-size:.63rem;font-weight:700;color:var(--sub);text-transform:uppercase;display:block;margin-bottom:6px">
+            Imagen del RIF <span class="req">*</span>
           </label>
-          <div class="toggle">
-            <button class="tg-btn on" id="tb-act" onclick="setTipo('activo')">✅ Cliente Activo</button>
-            <button class="tg-btn" id="tb-new" onclick="setTipo('nuevo')">🆕 Cliente Nuevo</button>
+          <div class="rif-area" onclick="document.getElementById('rif-inp').click()">
+            <input type="file" id="rif-inp" accept="image/*,application/pdf" onchange="onRif(this)">
+            <div class="rif-ico">📄</div>
+            <p>Toca para cargar el RIF</p>
+            <small>JPG, PNG o PDF · Máx. 5 MB</small>
           </div>
-
-          <!-- Búsqueda cliente activo -->
-          <div id="blq-busqueda">
-            <div class="cf">
-              <label>Buscar Cliente <span class="req">*</span></label>
-              <div class="autocomplete-wrap">
-                <input type="text" id="buscar-cliente" placeholder="Escribe nombre o RIF del cliente…"
-                       autocomplete="off" oninput="filtrarClientes(this.value)" onfocus="filtrarClientes(this.value)">
-                <div class="autocomplete-drop" id="ac-drop"></div>
-              </div>
-              <div class="hint">Busca en tu cartera de clientes activos</div>
-            </div>
-          </div>
-
-          <!-- Razón social (siempre visible, prellenado si selecciona activo) -->
-          <div class="cf">
-            <label>Razón Social <span class="req">*</span></label>
-            <input type="text" id="razon" placeholder="Ej: Panadería Las Delicias C.A." autocomplete="off">
-          </div>
-          <div class="cf">
-            <label>Nombre del Establecimiento <span class="req">*</span></label>
-            <input type="text" id="establ" placeholder="Ej: Panadería Las Delicias" autocomplete="off">
-          </div>
-          <div class="cf">
-            <label>Persona de Contacto (Compras)</label>
-            <input type="text" id="contacto" placeholder="Nombre del encargado de compras">
-          </div>
-          <div class="cf">
-            <label>Teléfono de Contacto</label>
-            <input type="tel" id="telefono" placeholder="Ej: 0412-1234567" inputmode="tel">
-          </div>
-
-          <!-- RIF (solo cliente nuevo) -->
-          <div id="blq-rif" style="display:none">
-            <label style="font-size:11.5px;font-weight:600;display:block;margin-bottom:6px">
-              Imagen del RIF <span class="req">*</span>
-            </label>
-            <div class="rif-area" onclick="document.getElementById('rif-inp').click()">
-              <input type="file" id="rif-inp" accept="image/*,application/pdf" onchange="onRif(this)">
-              <div class="rif-ico">📄</div>
-              <p>Toca para cargar el RIF</p>
-              <small>JPG, PNG o PDF · Máx. 5 MB</small>
-            </div>
-            <div class="rif-ok" id="rif-ok">
-              <span style="font-size:20px">✅</span>
-              <p id="rif-nm">archivo.jpg</p>
-              <button onclick="rmRif()">✕</button>
-            </div>
+          <div class="rif-ok" id="rif-ok">
+            <span style="font-size:20px">✅</span>
+            <p id="rif-nm">archivo.jpg</p>
+            <button onclick="rmRif()">✕</button>
           </div>
         </div>
+
       </div>
+    </div><!-- /card cliente -->
 
-      <!-- Productos -->
-      <div class="card">
-        <div class="card-hd"><div class="ic">📦</div>Productos del Pedido</div>
-        <div class="card-bd">
-          <div id="prod-list"></div>
-          <button class="btn-add" onclick="addProd()">
-            <span style="font-size:17px;line-height:1">+</span>&nbsp;Agregar otro producto
-          </button>
-        </div>
+    <!-- Productos -->
+    <div class="card">
+      <div class="card-hd"><div class="card-ic">📦</div>Productos del Pedido</div>
+      <div class="card-bd">
+        <div id="prod-list"></div>
+        <button class="btn-add" onclick="addProd()">
+          <span style="font-size:17px;line-height:1">+</span>&nbsp;Agregar otro producto
+        </button>
       </div>
-
-      <!-- Nota interna -->
-      <div class="card">
-        <div class="card-hd"><div class="ic">📝</div>Nota del Pedido</div>
-        <div class="card-bd">
-          <div class="nota-wrap">
-            <label>Observaciones (opcional)</label>
-            <textarea id="nota-pedido" placeholder="Ej: Entregar en almacén trasero, llamar antes…"></textarea>
-          </div>
-        </div>
-      </div>
-
-      <!-- Total -->
-      <div class="total-blk">
-        <div>
-          <div class="lbl">Total del Pedido</div>
-          <div class="monto" id="total-txt">$0</div>
-          <div class="cj" id="cajas-txt">0 cajas</div>
-        </div>
-        <div style="font-size:32px;opacity:.15">🛒</div>
-      </div>
-
-      <!-- Condición de pago -->
-      <div class="cp-badge">
-        <span style="font-size:20px">⏰</span>
-        <div>
-          <div class="cp-tt">Condición de Pago: 5 días</div>
-          <div class="cp-st">Crédito estándar Casabe Real</div>
-        </div>
-      </div>
-
-      <button class="btn-main btn-rojo" onclick="goResumen()">
-        Ver Resumen del Pedido →
-      </button>
-    </div><!-- /pnl-form -->
-
-    <!-- ── Panel Resumen ── -->
-    <div id="pnl-resumen">
-      <div class="card">
-        <div class="res-hd">
-          <div class="em">📋</div>
-          <h2>Resumen del Pedido</h2>
-          <p>Revisa los datos antes de confirmar</p>
-        </div>
-        <div class="res-bd">
-          <div class="res-row"><span class="res-k">Fecha</span><span class="res-v" id="r-fecha">—</span></div>
-          <div class="res-row"><span class="res-k">Vendedor</span><span class="res-v" id="r-vend">—</span></div>
-          <div class="res-row"><span class="res-k">Razón Social</span><span class="res-v" id="r-razon">—</span></div>
-          <div class="res-row"><span class="res-k">Establecimiento</span><span class="res-v" id="r-establ">—</span></div>
-          <div class="res-row"><span class="res-k">Contacto</span><span class="res-v" id="r-cont">—</span></div>
-          <div class="res-row"><span class="res-k">Teléfono</span><span class="res-v" id="r-tel">—</span></div>
-          <div class="res-row"><span class="res-k">Tipo</span><span class="res-v" id="r-tipo">—</span></div>
-          <div class="res-row" id="r-nota-row" style="display:none"><span class="res-k">Nota</span><span class="res-v" id="r-nota">—</span></div>
-          <div class="res-row" style="flex-direction:column;gap:6px">
-            <span class="res-k">Productos</span>
-            <div class="res-prods" id="r-prods"></div>
-          </div>
-          <div class="res-tot"><span>Total</span><strong id="r-total">$0</strong></div>
-          <div class="res-row" style="margin-top:11px">
-            <span class="res-k">Condición de Pago</span>
-            <span class="res-v">Crédito 5 días</span>
-          </div>
-          <div class="gap">
-            <button class="btn-main btn-rojo" id="btn-gen" onclick="genPedido()">
-              <span id="gen-txt">✅ Generar Pedido</span>
-              <div class="spinner" id="spin-gen"></div>
-            </button>
-            <button class="btn-main btn-wa" onclick="waShare()">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-              Compartir por WhatsApp
-            </button>
-            <button class="btn-main btn-outline" onclick="goForm()">← Editar Pedido</button>
-          </div>
-        </div>
-      </div>
-    </div><!-- /pnl-resumen -->
-
-    <!-- ── Panel Éxito ── -->
-    <div id="pnl-ok">
-      <div class="ok-em">🎉</div>
-      <div class="ok-tt">¡Pedido Generado!</div>
-      <div style="font-size:13px;color:var(--gris);margin-bottom:4px">N° de Pedido</div>
-      <div class="ok-num" id="ok-num">CR-0001</div>
-      <div class="ok-sub">Registrado exitosamente en el sistema.</div>
-      <button class="btn-main btn-rojo" style="max-width:220px;margin:0 auto" onclick="nuevo()">
-        + Nuevo Pedido
-      </button>
     </div>
 
-  </div><!-- /main -->
-</div><!-- /scr-app -->
+    <!-- Nota -->
+    <div class="card">
+      <div class="card-hd"><div class="card-ic">📝</div>Nota del Pedido</div>
+      <div class="card-bd">
+        <div class="cf">
+          <label>Observaciones (opcional)</label>
+          <textarea id="nota-pedido" placeholder="Ej: Entregar en almacén trasero, llamar antes de llegar…"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total -->
+    <div class="total-blk">
+      <div>
+        <div class="lbl">Total del Pedido</div>
+        <div class="monto" id="total-txt">$0</div>
+        <div class="cj"   id="cajas-txt">0 cajas</div>
+      </div>
+      <div style="font-size:2.2rem;opacity:.12">🛒</div>
+    </div>
+
+    <!-- Condición de pago -->
+    <div class="cp-badge">
+      <span style="font-size:20px">⏰</span>
+      <div>
+        <div class="cp-tt">Condición de Pago: 5 días</div>
+        <div class="cp-st">Crédito estándar Casabe Real</div>
+      </div>
+    </div>
+
+    <button class="btn-main btn-rojo" onclick="goResumen()">
+      Ver Resumen del Pedido →
+    </button>
+
+  </div><!-- /pnl-form -->
+
+  <!-- ══════════════ PANEL RESUMEN ══════════════ -->
+  <div id="pnl-resumen">
+    <div class="card">
+      <div class="res-hd">
+        <div class="em">📋</div>
+        <h2>Resumen del Pedido</h2>
+        <p>Revisa los datos antes de confirmar</p>
+      </div>
+      <div class="res-bd">
+        <div class="res-row"><span class="res-k">Fecha</span>         <span class="res-v" id="r-fecha">—</span></div>
+        <div class="res-row"><span class="res-k">Vendedor</span>       <span class="res-v" id="r-vend">—</span></div>
+        <div class="res-row"><span class="res-k">Razón Social</span>   <span class="res-v" id="r-razon">—</span></div>
+        <div class="res-row"><span class="res-k">Establecimiento</span><span class="res-v" id="r-establ">—</span></div>
+        <div class="res-row"><span class="res-k">Contacto</span>       <span class="res-v" id="r-cont">—</span></div>
+        <div class="res-row"><span class="res-k">Teléfono</span>       <span class="res-v" id="r-tel">—</span></div>
+        <div class="res-row"><span class="res-k">Tipo</span>           <span class="res-v" id="r-tipo">—</span></div>
+        <div class="res-row" id="r-nota-row" style="display:none">
+          <span class="res-k">Nota</span><span class="res-v" id="r-nota">—</span>
+        </div>
+        <div class="res-row" style="flex-direction:column;gap:6px">
+          <span class="res-k">Productos</span>
+          <div class="res-prods" id="r-prods"></div>
+        </div>
+        <div class="res-tot"><span>Total</span><strong id="r-total">$0</strong></div>
+        <div class="res-row" style="margin-top:11px">
+          <span class="res-k">Condición de Pago</span>
+          <span class="res-v">Crédito 5 días</span>
+        </div>
+        <div class="btns-gap">
+          <button class="btn-main btn-rojo" id="btn-gen" onclick="genPedido()">
+            <span id="gen-txt">✅ Confirmar y Generar Pedido</span>
+            <div class="spinner" id="spin-gen"></div>
+          </button>
+          <button class="btn-main btn-wa" onclick="waShare()">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            Compartir por WhatsApp
+          </button>
+          <button class="btn-main btn-outline" onclick="goForm()">← Editar Pedido</button>
+        </div>
+      </div>
+    </div>
+  </div><!-- /pnl-resumen -->
+
+  <!-- ══════════════ PANEL ÉXITO ══════════════ -->
+  <div id="pnl-ok">
+    <div class="ok-em">🎉</div>
+    <div class="ok-tt">¡Pedido Generado!</div>
+    <div style="font-size:.72rem;color:var(--sub);margin-bottom:4px">N° de Pedido</div>
+    <div class="ok-num" id="ok-num">CR-0001</div>
+    <div class="ok-sub">Registrado exitosamente en el sistema.</div>
+    <button class="btn-main btn-rojo" style="max-width:220px;margin:0 auto" onclick="nuevo()">
+      + Nuevo Pedido
+    </button>
+  </div>
+
+</main>
+
+<footer>
+  &copy; 2026 Sistema Comercial Casabe Real (SCCR v2.5.0) — Todos los derechos reservados.
+</footer>
 
 <div class="toast" id="toast"></div>
 
+<!-- ─────────────────────── SCRIPTS ─────────────────────── -->
+<script src="assets/sccr-auth.js"></script>
 <script>
-// ═══ CONFIG ════════════════════════════════════════
-const API = 'https://script.google.com/macros/s/AKfycbysSUeGA965zGGIF1Zpcbji1SNmkM_kKNoXmFwud6P7kHv0cTlKNJopVF3T93QKhqPs9A/exec';
+// ══════════════════════════════════════════════════════════
+//  CONFIGURACIÓN
+// ══════════════════════════════════════════════════════════
+const API_URL = 'https://script.google.com/macros/s/AKfycbysSUeGA965zGGIF1Zpcbji1SNmkM_kKNoXmFwud6P7kHv0cTlKNJopVF3T93QKhqPs9A/exec';
 
-// ═══ ESTADO GLOBAL ═════════════════════════════════
-let SESSION   = null;
-let PRODUCTOS = [];       // cargados desde API
-let CLIENTES  = [];       // cargados desde API (cartera del vendedor)
+// ══════════════════════════════════════════════════════════
+//  ESTADO GLOBAL
+// ══════════════════════════════════════════════════════════
+let sesion    = null;
+let PRODUCTOS = [];
+let CLIENTES  = [];
 let tipo      = 'activo';
 let rifFile   = null;
 let cnt       = 0;
-let clienteSeleccionadoId = null;
+let clienteSelId = null;
 
-// ═══ SESIÓN ════════════════════════════════════════
-function cerrarSesion(){
-  if(!confirm('¿Estás seguro de cerrar sesión?')) return;
-  sessionStorage.removeItem('sccr');
-  window.location.href = 'index.html';
-}
+// ══════════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', async () => {
 
-// ═══ INICIALIZACIÓN ════════════════════════════════
-window.addEventListener('DOMContentLoaded', async () => {
-  // Verificar sesión
-  try {
-    const raw = sessionStorage.getItem('sccr');
-    if(!raw){ window.location.href = 'index.html'; return; }
-    SESSION = JSON.parse(raw);
-    if(!SESSION || !SESSION.user){ window.location.href = 'index.html'; return; }
-  } catch(e){
-    window.location.href = 'index.html'; return;
-  }
+  // ── Auth ──
+  sesion = SCCR.getSesion();
+  if (!sesion) { window.location.href = 'index.html'; return; }
 
-  // Mostrar nombre en header
-  document.getElementById('hd-nombre').textContent = SESSION.nombre || SESSION.user;
+  // ── Header ──
+  document.getElementById('hd-nombre').textContent = sesion.nombre || sesion.user;
+  document.getElementById('hd-rol').textContent    =
+    sesion.rol.charAt(0).toUpperCase() + sesion.rol.slice(1);
 
-  // Ajustar menú por rol (ocultar links restringidos si es vendedor)
-  aplicarNavPorRol();
+  // ── Nav activo ──
+  const path = window.location.pathname;
+  document.querySelectorAll('.nav-bar a').forEach(a => {
+    if (path.endsWith(a.getAttribute('href'))) a.classList.add('activo');
+  });
 
-  // Cargar datos en paralelo
-  try {
-    await Promise.all([cargarProductos(), cargarClientes()]);
-  } catch(e){
-    console.warn('Error cargando datos:', e);
-  }
+  // ── Menú por rol ──
+  SCCR.aplicarMenuPorRol(sesion);
 
-  // Mostrar app
-  document.getElementById('scr-loading').style.display = 'none';
-  document.getElementById('scr-app').style.display = 'flex';
+  // ── Cargar datos ──
+  await Promise.all([cargarProductos(), cargarClientes()]);
 
-  // Inicializar pedido
+  // ── Inicializar ──
   resetPedido();
   setStep(1);
 
-  // Cerrar autocomplete al hacer click fuera
+  // ── Cerrar autocomplete al hacer clic fuera ──
   document.addEventListener('click', e => {
-    if(!e.target.closest('.autocomplete-wrap')){
+    if (!e.target.closest('.ac-wrap')) {
       document.getElementById('ac-drop').classList.remove('show');
     }
   });
 });
 
-function aplicarNavPorRol(){
-  if(!SESSION) return;
-  const nav = document.getElementById('main-nav');
-  // Vendedor no ve BI+IA, Cargas, Histórico — estos links se ocultan si no están en su menú
-  const restringidos = ['bi_ia.html','cargas.html','historico.html'];
-  if(SESSION.rol === 'vendedor'){
-    nav.querySelectorAll('a').forEach(a => {
-      const href = a.getAttribute('href') || '';
-      if(restringidos.some(r => href.includes(r))) a.style.display = 'none';
-    });
+// ── Cerrar sesión (bridge estándar SCCR) ──
+function cerrarSesion() {
+  if (confirm('¿Estás seguro de cerrar sesión?')) {
+    sessionStorage.removeItem('sccr');
+    window.location.href = 'index.html';
   }
 }
 
-// ═══ CARGA DE PRODUCTOS DESDE API ══════════════════
-async function cargarProductos(){
+// ══════════════════════════════════════════════════════════
+//  CARGA DE DATOS DESDE API
+// ══════════════════════════════════════════════════════════
+async function cargarProductos() {
   try {
-    const r = await fetch(`${API}?action=getProductos`);
-    const d = await r.json();
-    if(d.ok && Array.isArray(d.data) && d.data.length > 0){
-      // Formato esperado: [{id, nombre, descripcion, precio}, ...]
-      PRODUCTOS = d.data.map(p => ({
-        id: p.id || p.codigo || String(p.nombre).toLowerCase().replace(/\s+/g,'_'),
+    const res  = await fetch(`${API_URL}?action=getProductos`);
+    const json = await res.json();
+    if (json.ok && Array.isArray(json.data) && json.data.length > 0) {
+      PRODUCTOS = json.data.map(p => ({
+        id: p.id || p.codigo || p.nombre.toLowerCase().replace(/\s+/g,'_'),
         n:  p.nombre,
         d:  p.descripcion || '',
         p:  parseFloat(p.precio) || 0
       }));
     } else {
-      // Fallback: productos base de Casabe Real
-      PRODUCTOS = [
-        {id:'pasapalo',    n:'Casabe Real tipo Pasapalo',   d:'Caja de 90 paquetes', p:220},
-        {id:'restaurante', n:'Casabe Real tipo Restaurante', d:'Caja de 40 paquetes', p:260},
-        {id:'torta',       n:'Casabe Real tipo Torta',       d:'Caja de 40 paquetes', p:200}
-      ];
+      throw new Error('sin datos');
     }
-  } catch(e){
+  } catch {
+    // Fallback: tres productos base Casabe Real
     PRODUCTOS = [
-      {id:'pasapalo',    n:'Casabe Real tipo Pasapalo',   d:'Caja de 90 paquetes', p:220},
-      {id:'restaurante', n:'Casabe Real tipo Restaurante', d:'Caja de 40 paquetes', p:260},
-      {id:'torta',       n:'Casabe Real tipo Torta',       d:'Caja de 40 paquetes', p:200}
+      { id:'pasapalo',    n:'Casabe Real tipo Pasapalo',   d:'Caja de 90 paquetes', p:220 },
+      { id:'restaurante', n:'Casabe Real tipo Restaurante', d:'Caja de 40 paquetes', p:260 },
+      { id:'torta',       n:'Casabe Real tipo Torta',       d:'Caja de 40 paquetes', p:200 }
     ];
   }
 }
 
-// ═══ CARGA DE CLIENTES DESDE API ═══════════════════
-async function cargarClientes(){
+async function cargarClientes() {
   try {
-    // Para vendedor filtramos por vendedor_id; gerente/admin ve todos
-    const filtro = (SESSION.rol === 'vendedor' && SESSION.vendedor_id)
-      ? `&vendedor_id=${encodeURIComponent(SESSION.vendedor_id)}`
+    const filtro = (sesion.rol === 'vendedor' && sesion.vendedor_id)
+      ? `&vendedor_id=${encodeURIComponent(sesion.vendedor_id)}`
       : '';
-    const r = await fetch(`${API}?action=getClientes${filtro}`);
-    const d = await r.json();
-    if(d.ok && Array.isArray(d.data)){
-      CLIENTES = d.data;
-    }
-  } catch(e){
+    const res  = await fetch(`${API_URL}?action=getClientes${filtro}`);
+    const json = await res.json();
+    if (json.ok && Array.isArray(json.data)) CLIENTES = json.data;
+  } catch {
     CLIENTES = [];
   }
 }
 
-// ═══ AUTOCOMPLETE DE CLIENTES ══════════════════════
-function filtrarClientes(q){
+// ══════════════════════════════════════════════════════════
+//  AUTOCOMPLETE DE CLIENTES
+// ══════════════════════════════════════════════════════════
+function filtrarClientes(q) {
   const drop = document.getElementById('ac-drop');
-  if(!q || q.length < 2){ drop.classList.remove('show'); return; }
+  if (!q || q.length < 2) { drop.classList.remove('show'); return; }
 
-  const term = q.toLowerCase();
+  const term    = q.toLowerCase();
   const matches = CLIENTES.filter(c =>
     (c.razon_social || c.nombre || '').toLowerCase().includes(term) ||
     (c.establecimiento || '').toLowerCase().includes(term) ||
     (c.rif || '').toLowerCase().includes(term)
   ).slice(0, 8);
 
-  if(!matches.length){ drop.classList.remove('show'); return; }
+  if (!matches.length) { drop.classList.remove('show'); return; }
 
   drop.innerHTML = matches.map(c => `
     <div class="ac-item" onclick="seleccionarCliente('${c.id || c.cliente_id}')">
@@ -539,10 +752,10 @@ function filtrarClientes(q){
   drop.classList.add('show');
 }
 
-function seleccionarCliente(id){
+function seleccionarCliente(id) {
   const c = CLIENTES.find(x => String(x.id || x.cliente_id) === String(id));
-  if(!c) return;
-  clienteSeleccionadoId = id;
+  if (!c) return;
+  clienteSelId = id;
   document.getElementById('buscar-cliente').value = c.razon_social || c.nombre || '';
   document.getElementById('razon').value           = c.razon_social || c.nombre || '';
   document.getElementById('establ').value          = c.establecimiento || '';
@@ -552,60 +765,62 @@ function seleccionarCliente(id){
   toast('✅ Cliente seleccionado');
 }
 
-// ═══ TIPO CLIENTE ═══════════════════════════════════
-function setTipo(t){
+// ══════════════════════════════════════════════════════════
+//  TIPO DE CLIENTE
+// ══════════════════════════════════════════════════════════
+function setTipo(t) {
   tipo = t;
-  clienteSeleccionadoId = null;
-  document.getElementById('tb-act').classList.toggle('on', t==='activo');
-  document.getElementById('tb-new').classList.toggle('on', t==='nuevo');
-  document.getElementById('blq-rif').style.display      = t==='nuevo' ? 'block' : 'none';
-  document.getElementById('blq-busqueda').style.display = t==='activo' ? 'block' : 'none';
-  // Limpiar campos si cambia de tipo
+  clienteSelId = null;
+  document.getElementById('tb-act').classList.toggle('activo', t === 'activo');
+  document.getElementById('tb-new').classList.toggle('activo', t === 'nuevo');
+  document.getElementById('blq-rif').style.display      = t === 'nuevo'  ? 'block' : 'none';
+  document.getElementById('blq-busqueda').style.display = t === 'activo' ? 'block' : 'none';
   document.getElementById('razon').value    = '';
   document.getElementById('establ').value   = '';
   document.getElementById('contacto').value = '';
   document.getElementById('telefono').value = '';
-  if(t==='activo') document.getElementById('buscar-cliente').value = '';
+  if (t === 'activo') document.getElementById('buscar-cliente').value = '';
   rmRif();
 }
 
-function onRif(i){
-  if(i.files && i.files[0]){
+function onRif(i) {
+  if (i.files && i.files[0]) {
     rifFile = i.files[0];
     document.getElementById('rif-nm').textContent = rifFile.name;
     document.getElementById('rif-ok').classList.add('show');
-    i.closest('.rif-area').style.display='none';
+    i.closest('.rif-area').style.display = 'none';
   }
 }
-function rmRif(){
+function rmRif() {
   rifFile = null;
   const inp = document.getElementById('rif-inp');
-  if(inp) inp.value = '';
-  const ok = document.getElementById('rif-ok');
-  if(ok) ok.classList.remove('show');
+  if (inp) inp.value = '';
+  document.getElementById('rif-ok').classList.remove('show');
   const area = document.querySelector('.rif-area');
-  if(area) area.style.display = '';
+  if (area) area.style.display = '';
 }
 
-// ═══ PRODUCTOS ══════════════════════════════════════
-function prodOpts(){
+// ══════════════════════════════════════════════════════════
+//  PRODUCTOS
+// ══════════════════════════════════════════════════════════
+function prodOpts() {
   return PRODUCTOS.map(p =>
     `<option value="${p.id}">${p.n} · $${p.p.toLocaleString('es-VE')}</option>`
   ).join('');
 }
 
-function addProd(){
+function addProd() {
   cnt++;
   const n = cnt;
   const d = document.createElement('div');
-  d.className='prod-row'; d.id='pr'+n;
-  d.innerHTML=`
+  d.className = 'prod-row'; d.id = 'pr' + n;
+  d.innerHTML = `
     <div class="prod-top">
       <span class="prod-num">Producto ${n}</span>
-      ${n>1?`<button class="btn-rm" onclick="rmProd(${n})">✕</button>`:''}
+      ${n > 1 ? `<button class="btn-rm" onclick="rmProd(${n})">✕</button>` : ''}
     </div>
     <div class="cf" style="margin-bottom:9px">
-      <label style="font-size:11.5px;font-weight:600;display:block;margin-bottom:5px">
+      <label style="font-size:.63rem;font-weight:700;color:var(--sub);text-transform:uppercase;display:block;margin-bottom:5px">
         Producto <span class="req">*</span>
       </label>
       <select id="sel${n}" onchange="updD(${n})">${prodOpts()}</select>
@@ -626,195 +841,203 @@ function addProd(){
   updD(n); calcTotal();
 }
 
-function rmProd(n){ document.getElementById('pr'+n)?.remove(); calcTotal(); }
+function rmProd(n) { document.getElementById('pr' + n)?.remove(); calcTotal(); }
 
-function updD(n){
-  const s = document.getElementById('sel'+n);
-  const q = parseInt(document.getElementById('qty'+n)?.value) || 0;
+function updD(n) {
+  const s = document.getElementById('sel' + n);
+  const q = parseInt(document.getElementById('qty' + n)?.value) || 0;
   const p = PRODUCTOS.find(x => x.id === s?.value);
-  if(!p) return;
-  document.getElementById('dsc'+n).textContent = p.d;
-  document.getElementById('sub'+n).textContent = '$'+(p.p*q).toLocaleString('es-VE');
+  if (!p) return;
+  document.getElementById('dsc' + n).textContent = p.d;
+  document.getElementById('sub' + n).textContent = '$' + (p.p * q).toLocaleString('es-VE');
   calcTotal();
 }
 
-function calcTotal(){
-  let tot=0, cj=0;
-  document.querySelectorAll('[id^="sel"]').forEach(s=>{
-    const n = s.id.replace('sel','');
-    const q = parseInt(document.getElementById('qty'+n)?.value)||0;
-    const p = PRODUCTOS.find(x=>x.id===s.value);
-    if(p){ tot+=p.p*q; cj+=q; }
+function calcTotal() {
+  let tot = 0, cj = 0;
+  document.querySelectorAll('[id^="sel"]').forEach(s => {
+    const n = s.id.replace('sel', '');
+    const q = parseInt(document.getElementById('qty' + n)?.value) || 0;
+    const p = PRODUCTOS.find(x => x.id === s.value);
+    if (p) { tot += p.p * q; cj += q; }
   });
-  document.getElementById('total-txt').textContent = '$'+tot.toLocaleString('es-VE');
-  document.getElementById('cajas-txt').textContent = cj+(cj===1?' caja':' cajas');
+  document.getElementById('total-txt').textContent = '$' + tot.toLocaleString('es-VE');
+  document.getElementById('cajas-txt').textContent = cj + (cj === 1 ? ' caja' : ' cajas');
 }
 
-function getProds(){
-  const r=[];
-  document.querySelectorAll('[id^="sel"]').forEach(s=>{
-    const n = s.id.replace('sel','');
-    const q = parseInt(document.getElementById('qty'+n)?.value)||0;
-    const p = PRODUCTOS.find(x=>x.id===s.value);
-    if(p && q>0) r.push({...p, cajas:q, sub:p.p*q});
+function getProds() {
+  const r = [];
+  document.querySelectorAll('[id^="sel"]').forEach(s => {
+    const n = s.id.replace('sel', '');
+    const q = parseInt(document.getElementById('qty' + n)?.value) || 0;
+    const p = PRODUCTOS.find(x => x.id === s.value);
+    if (p && q > 0) r.push({ ...p, cajas: q, sub: p.p * q });
   });
   return r;
 }
 
-// ═══ STEPS ══════════════════════════════════════════
-function setStep(paso){
-  [1,2,3].forEach(i=>{
-    const s = document.getElementById('s'+i);
-    const c = document.getElementById('sc'+i);
-    s.classList.remove('active','done');
-    if(i < paso){ s.classList.add('done'); c.textContent='✓'; }
-    else if(i === paso){ s.classList.add('active'); c.textContent=i; }
-    else c.textContent=i;
+// ══════════════════════════════════════════════════════════
+//  STEPS
+// ══════════════════════════════════════════════════════════
+function setStep(paso) {
+  [1, 2, 3].forEach(i => {
+    const s = document.getElementById('s' + i);
+    const c = document.getElementById('sc' + i);
+    s.classList.remove('activo', 'done');
+    if (i < paso)      { s.classList.add('done');   c.textContent = '✓'; }
+    else if (i === paso){ s.classList.add('activo'); c.textContent = i;   }
+    else                { c.textContent = i; }
   });
-  [1,2].forEach(i=>document.getElementById('ln'+i)?.classList.toggle('done', i<paso));
+  [1, 2].forEach(i =>
+    document.getElementById('ln' + i)?.classList.toggle('done', i < paso)
+  );
 }
 
-// ═══ RESUMEN ════════════════════════════════════════
-function goResumen(){
+// ══════════════════════════════════════════════════════════
+//  RESUMEN
+// ══════════════════════════════════════════════════════════
+function goResumen() {
   const razon = document.getElementById('razon').value.trim();
   const establ = document.getElementById('establ').value.trim();
-  if(!razon){ toast('⚠️ Ingresa la Razón Social'); return; }
-  if(!establ){ toast('⚠️ Ingresa el nombre del establecimiento'); return; }
-  if(tipo==='nuevo' && !rifFile){ toast('⚠️ Debes cargar la imagen del RIF'); return; }
+  if (!razon)  { toast('⚠️ Ingresa la Razón Social'); return; }
+  if (!establ) { toast('⚠️ Ingresa el nombre del establecimiento'); return; }
+  if (tipo === 'nuevo' && !rifFile) { toast('⚠️ Debes cargar la imagen del RIF'); return; }
   const prods = getProds();
-  if(!prods.length){ toast('⚠️ Agrega al menos un producto'); return; }
+  if (!prods.length) { toast('⚠️ Agrega al menos un producto'); return; }
 
-  const hoy = new Date();
-  const fecha = hoy.toLocaleDateString('es-VE',{day:'2-digit',month:'long',year:'numeric'});
-  const nota = document.getElementById('nota-pedido').value.trim();
+  const fecha = new Date().toLocaleDateString('es-VE', { day:'2-digit', month:'long', year:'numeric' });
+  const nota  = document.getElementById('nota-pedido').value.trim();
 
   document.getElementById('r-fecha').textContent  = fecha;
-  document.getElementById('r-vend').textContent   = SESSION.nombre;
+  document.getElementById('r-vend').textContent   = sesion.nombre;
   document.getElementById('r-razon').textContent  = razon;
   document.getElementById('r-establ').textContent = establ;
-  document.getElementById('r-cont').textContent   = document.getElementById('contacto').value||'—';
-  document.getElementById('r-tel').textContent    = document.getElementById('telefono').value||'—';
-  document.getElementById('r-tipo').textContent   = tipo==='activo'?'✅ Cliente Activo':'🆕 Cliente Nuevo';
+  document.getElementById('r-cont').textContent   = document.getElementById('contacto').value || '—';
+  document.getElementById('r-tel').textContent    = document.getElementById('telefono').value  || '—';
+  document.getElementById('r-tipo').textContent   = tipo === 'activo' ? '✅ Cliente Activo' : '🆕 Cliente Nuevo';
 
   const notaRow = document.getElementById('r-nota-row');
-  if(nota){
-    document.getElementById('r-nota').textContent = nota;
-    notaRow.style.display = 'flex';
-  } else {
-    notaRow.style.display = 'none';
-  }
+  if (nota) { document.getElementById('r-nota').textContent = nota; notaRow.style.display = 'flex'; }
+  else       { notaRow.style.display = 'none'; }
 
-  const tot = prods.reduce((a,p)=>a+p.sub,0);
-  document.getElementById('r-total').textContent = '$'+tot.toLocaleString('es-VE');
-  document.getElementById('r-prods').innerHTML = prods.map(p=>`
+  const tot = prods.reduce((a, p) => a + p.sub, 0);
+  document.getElementById('r-total').textContent = '$' + tot.toLocaleString('es-VE');
+  document.getElementById('r-prods').innerHTML   = prods.map(p => `
     <div class="res-pi">
-      <span>${p.cajas}× ${p.n.replace('Casabe Real tipo ','')}</span>
+      <span>${p.cajas}× ${p.n.replace('Casabe Real tipo ', '')}</span>
       <span>$${p.sub.toLocaleString('es-VE')}</span>
     </div>`).join('');
 
   document.getElementById('pnl-form').style.display    = 'none';
   document.getElementById('pnl-resumen').style.display = 'block';
-  setStep(3); scrollTo({top:0,behavior:'smooth'});
+  setStep(3); scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function goForm(){
+function goForm() {
   document.getElementById('pnl-resumen').style.display = 'none';
   document.getElementById('pnl-form').style.display    = 'block';
-  setStep(2); scrollTo({top:0,behavior:'smooth'});
+  setStep(2); scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// ═══ GENERAR PEDIDO ═════════════════════════════════
-async function genPedido(){
+// ══════════════════════════════════════════════════════════
+//  GENERAR PEDIDO
+// ══════════════════════════════════════════════════════════
+async function genPedido() {
   const btn = document.getElementById('btn-gen');
   const txt = document.getElementById('gen-txt');
   const sp  = document.getElementById('spin-gen');
-  btn.disabled=true; txt.style.display='none'; sp.classList.add('show');
+  btn.disabled = true; txt.style.display = 'none'; sp.classList.add('show');
 
   const prods = getProds();
-  const tot   = prods.reduce((a,p)=>a+p.sub,0);
-  const nota  = document.getElementById('nota-pedido').value.trim();
+  const tot   = prods.reduce((a, p) => a + p.sub, 0);
 
   const payload = {
-    action:         'nuevoPedido',
-    fecha:          new Date().toISOString(),
-    vendedor:       SESSION.nombre,
-    userVendedor:   SESSION.user,
-    vendedor_id:    SESSION.vendedor_id || SESSION.user,
-    razonSocial:    document.getElementById('razon').value.trim(),
-    establecimiento:document.getElementById('establ').value.trim(),
-    contacto:       document.getElementById('contacto').value.trim(),
-    telefono:       document.getElementById('telefono').value.trim(),
-    tipoCliente:    tipo,
-    clienteId:      clienteSeleccionadoId || null,
-    nota:           nota,
-    productos:      prods.map(p=>({nombre:p.n, cajas:p.cajas, precio:p.p, subtotal:p.sub})),
-    totalUSD:       tot,
-    condicionPago:  '5 días'
+    action:          'nuevoPedido',
+    fecha:           new Date().toISOString(),
+    vendedor:        sesion.nombre,
+    userVendedor:    sesion.user,
+    vendedor_id:     sesion.vendedor_id || sesion.user,
+    razonSocial:     document.getElementById('razon').value.trim(),
+    establecimiento: document.getElementById('establ').value.trim(),
+    contacto:        document.getElementById('contacto').value.trim(),
+    telefono:        document.getElementById('telefono').value.trim(),
+    tipoCliente:     tipo,
+    clienteId:       clienteSelId || null,
+    nota:            document.getElementById('nota-pedido').value.trim(),
+    productos:       prods.map(p => ({ nombre: p.n, cajas: p.cajas, precio: p.p, subtotal: p.sub })),
+    totalUSD:        tot,
+    condicionPago:   '5 días'
   };
 
   try {
-    const r   = await fetch(API, {method:'POST', body:JSON.stringify(payload)});
-    const d   = await r.json();
-    const num = d.numeroPedido || d.id || ('CR-'+String(Math.floor(Math.random()*9000)+1000));
-    document.getElementById('ok-num').textContent = num;
+    const res  = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+    const json = await res.json();
+    const num  = json.numeroPedido || json.id || ('CR-' + String(Math.floor(Math.random() * 9000) + 1000));
+    document.getElementById('ok-num').textContent        = num;
     document.getElementById('pnl-resumen').style.display = 'none';
     document.getElementById('pnl-ok').style.display      = 'block';
-    scrollTo({top:0,behavior:'smooth'});
-  } catch(e){
+    scrollTo({ top: 0, behavior: 'smooth' });
+  } catch {
     toast('❌ Error al enviar. Intenta de nuevo.');
-    btn.disabled=false; txt.style.display=''; sp.classList.remove('show');
+    btn.disabled = false; txt.style.display = ''; sp.classList.remove('show');
   }
 }
 
-// ═══ WHATSAPP ═══════════════════════════════════════
-function waShare(){
+// ══════════════════════════════════════════════════════════
+//  WHATSAPP
+// ══════════════════════════════════════════════════════════
+function waShare() {
   const prods = getProds();
-  const tot   = prods.reduce((a,p)=>a+p.sub,0);
+  const tot   = prods.reduce((a, p) => a + p.sub, 0);
   const fecha = new Date().toLocaleDateString('es-VE');
-  let m = `🧾 *PEDIDO CASABE REAL*\n📅 ${fecha}\n👤 ${SESSION.nombre}\n\n`;
+  const nota  = document.getElementById('nota-pedido').value.trim();
+  let m = `🧾 *PEDIDO CASABE REAL*\n📅 ${fecha}\n👤 ${sesion.nombre}\n\n`;
   m += `🏪 *Cliente*\n• ${document.getElementById('razon').value}\n`;
   m += `• ${document.getElementById('establ').value}\n`;
   const ct = document.getElementById('contacto').value;
   const tf = document.getElementById('telefono').value;
-  if(ct) m += `• Contacto: ${ct}\n`;
-  if(tf) m += `• Telf: ${tf}\n`;
-  m += `• ${tipo==='activo'?'Cliente Activo':'Cliente Nuevo'}\n\n`;
+  if (ct) m += `• Contacto: ${ct}\n`;
+  if (tf) m += `• Telf: ${tf}\n`;
+  m += `• ${tipo === 'activo' ? 'Cliente Activo' : 'Cliente Nuevo'}\n\n`;
   m += `📦 *Productos*\n`;
-  prods.forEach(p => m += `• ${p.n.replace('Casabe Real tipo ','')} · ${p.cajas} caja${p.cajas>1?'s':''} → $${p.sub.toLocaleString('es-VE')}\n`);
-  const nota = document.getElementById('nota-pedido').value.trim();
-  if(nota) m += `\n📝 *Nota:* ${nota}\n`;
+  prods.forEach(p => m += `• ${p.n.replace('Casabe Real tipo ', '')} · ${p.cajas} caja${p.cajas > 1 ? 's' : ''} → $${p.sub.toLocaleString('es-VE')}\n`);
+  if (nota) m += `\n📝 *Nota:* ${nota}\n`;
   m += `\n💰 *Total: $${tot.toLocaleString('es-VE')}*\n⏱️ Crédito 5 días`;
-  open('https://wa.me/?text='+encodeURIComponent(m),'_blank');
+  open('https://wa.me/?text=' + encodeURIComponent(m), '_blank');
 }
 
-// ═══ NUEVO PEDIDO ════════════════════════════════════
-function nuevo(){
+// ══════════════════════════════════════════════════════════
+//  RESETEAR / NUEVO PEDIDO
+// ══════════════════════════════════════════════════════════
+function nuevo() {
   resetPedido();
-  document.getElementById('pnl-ok').style.display      = 'none';
-  document.getElementById('pnl-form').style.display    = 'block';
-  setStep(1); scrollTo({top:0,behavior:'smooth'});
+  document.getElementById('pnl-ok').style.display   = 'none';
+  document.getElementById('pnl-form').style.display = 'block';
+  setStep(1); scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function resetPedido(){
-  document.getElementById('razon').value    = '';
-  document.getElementById('establ').value   = '';
-  document.getElementById('contacto').value = '';
-  document.getElementById('telefono').value = '';
-  document.getElementById('nota-pedido').value = '';
+function resetPedido() {
+  document.getElementById('razon').value        = '';
+  document.getElementById('establ').value       = '';
+  document.getElementById('contacto').value     = '';
+  document.getElementById('telefono').value     = '';
+  document.getElementById('nota-pedido').value  = '';
   const bc = document.getElementById('buscar-cliente');
-  if(bc) bc.value = '';
-  clienteSeleccionadoId = null;
+  if (bc) bc.value = '';
+  clienteSelId = null;
   setTipo('activo');
   rmRif();
   document.getElementById('prod-list').innerHTML = '';
   cnt = 0; addProd(); calcTotal();
 }
 
-// ═══ TOAST ══════════════════════════════════════════
-function toast(msg){
+// ══════════════════════════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════════════════════════
+function toast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 2800);
+  setTimeout(() => t.classList.remove('show'), 2800);
 }
 </script>
 </body>
