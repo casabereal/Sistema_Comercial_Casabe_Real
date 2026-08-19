@@ -86,7 +86,7 @@
             opacity: 0.9;
         }
 
-        /* 2. SIDEBAR / MENÚ WEB HORIZONTAL */
+        /* 2. NAVEGACIÓN HORIZONTAL */
         .sidebar-menu {
             background-color: var(--white);
             border-bottom: 1px solid var(--border-color);
@@ -128,7 +128,7 @@
             border-bottom-color: var(--primary-red);
         }
 
-        /* 3. ESPACIO CENTRAL */
+        /* 3. CONTENEDOR PRINCIPAL */
         .main-container {
             flex: 1;
             padding: 22px 18px;
@@ -170,7 +170,7 @@
             margin-bottom: 16px;
         }
 
-        /* Formulario Estilos */
+        /* FORMULARIO */
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -240,11 +240,110 @@
             margin-top: 10px;
         }
 
-        .btn-submit:hover {
+        .btn-submit:hover:not(:disabled) {
             background-color: #b00000;
         }
 
-        /* 4. FOOTER DE CIERRE */
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* TOAST / NOTIFICACIÓN */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background-color: var(--text-dark);
+            color: var(--white);
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-family: 'Open Sans', sans-serif;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            max-width: 320px;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.success {
+            background-color: #1a7a4a;
+        }
+
+        .toast.error {
+            background-color: var(--primary-red);
+        }
+
+        /* SPINNER INLINE */
+        .spinner {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid rgba(255,255,255,0.4);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* CAMPO CON AUTOCOMPLETE */
+        .autocomplete-wrapper {
+            position: relative;
+        }
+
+        .autocomplete-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            max-height: 180px;
+            overflow-y: auto;
+            z-index: 200;
+            display: none;
+        }
+
+        .autocomplete-list.open {
+            display: block;
+        }
+
+        .autocomplete-item {
+            padding: 7px 10px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .autocomplete-item:hover,
+        .autocomplete-item.selected {
+            background-color: var(--light-bg);
+            color: var(--primary-red);
+        }
+
+        /* CAMPO CONDICIONAL — motivo no venta */
+        .field-hint {
+            font-size: 0.65rem;
+            color: #888;
+            margin-top: 2px;
+            font-style: italic;
+        }
+
+        /* 4. FOOTER */
         footer {
             background-color: var(--white);
             border-top: 1px solid var(--border-color);
@@ -255,6 +354,7 @@
             color: #777;
         }
 
+        /* RESPONSIVE */
         @media (max-width: 768px) {
             header {
                 padding: 0 10px;
@@ -285,40 +385,51 @@
 </head>
 <body>
 
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- HEADER                                                  -->
+    <!-- ═══════════════════════════════════════════════════════ -->
     <header>
         <div class="header-left">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABDUAAAPgCAYAAAAiJEfzAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAABTLpJREFUeNrsvc+PFde5770PDrzmartRfTyD6+9ollQIcScZQbzDCDHLdnHtzIeBQPIrkZeXCuhJn4SvcOTAa2dO8EI50MMgIkR7oZValeQgwwfwC2c6XoRon4ImportVGvhQAAMAzB9K4T6QAAAAASUVORK5CYII=" alt="Logo Casabe Real">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABDUAAAPgCAYAAAAiJEfzAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAABTLpJREFUeNrsvc+PFce5770PDrzmartRfTyD6+9ollQIcScZQbzDCDHLdnHtzIeBQPIrkZeXCuhJn4SvcOTAa2dO8EI50MMgIkR7oZValeQgwwfwC2c6XoRon4ImportVGvhQAAMAzB9K4T6QAAAAASUVORK5CYII=" alt="Logo Casabe Real">
             <span class="header-title">SISTEMA COMERCIAL CASABE REAL</span>
         </div>
         <div class="header-right">
-            <div class="user-name">Carlos Mendoza</div>
-            <div class="user-role">CEO / Administrador</div>
+            <div class="user-name" id="headerNombre">—</div>
+            <div class="user-role" id="headerRol">—</div>
         </div>
     </header>
 
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- NAVEGACIÓN                                              -->
+    <!-- ═══════════════════════════════════════════════════════ -->
     <nav class="sidebar-menu">
-        <a href="inicio.html" class="menu-item">INICIO</a>
-        <a href="clientes.html" class="menu-item">CLIENTES</a>
-        <a href="meta.html" class="menu-item">META</a>
-        <a href="propuesta.html" class="menu-item">PROPUESTA</a>
-        <a href="pedido.html" class="menu-item">PEDIDO</a>
-        <a href="reporte.html" class="menu-item active">REPORTE</a>
-        <a href="embudo.html" class="menu-item">EMBUDO</a>
-        <a href="dashboard.html" class="menu-item">DASHBOARD</a>
-        <a href="bi-ia.html" class="menu-item">BI+IA</a>
-        <a href="cargas.html" class="menu-item">CARGAS</a>
-        <a href="historico.html" class="menu-item">HISTORICO</a>
+        <a href="inicio.html"     class="menu-item">INICIO</a>
+        <a href="clientes.html"   class="menu-item">CLIENTES</a>
+        <a href="meta.html"       class="menu-item">META</a>
+        <a href="propuesta.html"  class="menu-item">PROPUESTA</a>
+        <a href="pedido.html"     class="menu-item">PEDIDO</a>
+        <a href="reporte.html"    class="menu-item active">REPORTE</a>
+        <a href="embudo.html"     class="menu-item">EMBUDO</a>
+        <a href="dashboard.html"  class="menu-item">DASHBOARD</a>
+        <a href="bi-ia.html"      class="menu-item">BI+IA</a>
+        <a href="cargas.html"     class="menu-item">CARGAS</a>
+        <a href="historico.html"  class="menu-item">HISTORICO</a>
     </nav>
 
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- CONTENIDO PRINCIPAL                                     -->
+    <!-- ═══════════════════════════════════════════════════════ -->
     <main class="main-container">
         <div class="section-header">
             <h1>Módulo de <span class="highlight">Reporte de Gestión</span></h1>
         </div>
+
         <div class="content-card">
             <p>Registra la actividad operativa en campo para garantizar la trazabilidad de la relación comercial y alimentar automáticamente el embudo de ventas.</p>
-            
-            <form id="reporteForm" onsubmit="enviarReporte(event)">
+
+            <form id="reporteForm" onsubmit="enviarReporte(event)" autocomplete="off">
                 <div class="form-grid">
+
                     <!-- Tipo de Cliente -->
                     <div class="form-group">
                         <label for="tipoCliente">Tipo de Cliente</label>
@@ -329,10 +440,15 @@
                         </select>
                     </div>
 
-                    <!-- Cliente / Razón Social -->
+                    <!-- Cliente / Razón Social con autocomplete -->
                     <div class="form-group">
                         <label for="razonSocial">Cliente / Razón Social</label>
-                        <input type="text" id="razonSocial" placeholder="Seleccione del rutero o texto libre" required>
+                        <div class="autocomplete-wrapper">
+                            <input type="text" id="razonSocial"
+                                placeholder="Escriba para buscar o ingrese texto libre"
+                                required autocomplete="off">
+                            <div class="autocomplete-list" id="autocompleteList"></div>
+                        </div>
                     </div>
 
                     <!-- Contacto Efectivo -->
@@ -390,9 +506,9 @@
                         </select>
                     </div>
 
-                    <!-- Motivo de No Venta -->
-                    <div class="form-group">
-                        <label for="motivoNoVenta">Motivo de No Venta (Obligatorio si no hay pedido)</label>
+                    <!-- Motivo de No Venta (condicional) -->
+                    <div class="form-group" id="motivoContainer">
+                        <label for="motivoNoVenta">Motivo de No Venta</label>
                         <select id="motivoNoVenta">
                             <option value="">Seleccione...</option>
                             <option value="Precio">Precio</option>
@@ -401,77 +517,253 @@
                             <option value="Competencia">Competencia</option>
                             <option value="Otro">Otro</option>
                         </select>
+                        <span class="field-hint" id="motivoHint">Obligatorio cuando no hay pedido</span>
                     </div>
 
                     <!-- Datos Capturados -->
                     <div class="form-group full-width">
                         <label>Datos Capturados</label>
                         <div class="checkbox-group">
-                            <label class="checkbox-label"><input type="checkbox" name="datosCapturados" value="Nombre Decisor"> Nombre Decisor</label>
-                            <label class="checkbox-label"><input type="checkbox" name="datosCapturados" value="Teléfono/WhatsApp"> Teléfono/WhatsApp</label>
-                            <label class="checkbox-label"><input type="checkbox" name="datosCapturados" value="Correo"> Correo</label>
-                            <label class="checkbox-label"><input type="checkbox" name="datosCapturados" value="Dirección Despacho"> Dirección Despacho</label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="datosCapturados" value="Nombre Decisor"> Nombre Decisor
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="datosCapturados" value="Teléfono/WhatsApp"> Teléfono/WhatsApp
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="datosCapturados" value="Correo"> Correo
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="datosCapturados" value="Dirección Despacho"> Dirección Despacho
+                            </label>
                         </div>
                     </div>
 
                     <!-- Observaciones -->
                     <div class="form-group full-width">
                         <label for="observaciones">Observaciones</label>
-                        <textarea id="observaciones" rows="3" placeholder="Minuta de acuerdos, objeciones o compromisos para la Bitácora 360° y la Memoria IA."></textarea>
+                        <textarea id="observaciones" rows="3"
+                            placeholder="Minuta de acuerdos, objeciones o compromisos para la Bitácora 360° y la Memoria IA."></textarea>
                     </div>
                 </div>
 
-                <button type="submit" class="btn-submit">Enviar</button>
+                <button type="submit" class="btn-submit" id="btnSubmit">Enviar Reporte</button>
             </form>
         </div>
     </main>
 
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- FOOTER                                                  -->
+    <!-- ═══════════════════════════════════════════════════════ -->
     <footer>
         <p>&copy; 2026 Sistema Comercial Casabe Real (SCCR). Todos los derechos reservados.</p>
     </footer>
 
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- SCRIPT                                                  -->
+    <!-- ═══════════════════════════════════════════════════════ -->
     <script>
-        const APPS_SCRIPT_URL = "TU_APPS_SCRIPT_URL_AQUI";
+    // ──────────────────────────────────────────────────────────
+    //  CONFIGURACIÓN — pegar aquí la URL del Apps Script
+    // ──────────────────────────────────────────────────────────
+    const APPS_SCRIPT_URL = "TU_APPS_SCRIPT_URL_AQUI";
 
-        function enviarReporte(event) {
-            event.preventDefault();
+    // ──────────────────────────────────────────────────────────
+    //  SESIÓN — leer usuario desde localStorage
+    // ──────────────────────────────────────────────────────────
+    let SESSION = null;
 
-            const datosCapturadosArr = [];
-            document.querySelectorAll('input[name="datosCapturados"]:checked').forEach(cb => {
-                datosCapturadosArr.push(cb.value);
-            });
-
-            const payload = {
-                action: 'registroReporte', // Ajustar según implementación en Apps Script si es necesario
-                tipoCliente: document.getElementById('tipoCliente').value,
-                razonSocial: document.getElementById('razonSocial').value,
-                contactoEfectivo: document.getElementById('contactoEfectivo').value,
-                datosCapturados: datosCapturadosArr.join(', '),
-                gestionCita: document.getElementById('gestionCita').value,
-                resultadoCita: document.getElementById('resultadoCita').value,
-                propuestaComercial: document.getElementById('propuestaComercial').value,
-                estatusCierre: document.getElementById('estatusCierre').value,
-                motivoNoVenta: document.getElementById('motivoNoVenta').value,
-                observaciones: document.getElementById('observaciones').value,
-                fecha: new Date().toISOString()
-            };
-
-            // Enlace con Apps Script (ejemplo fetch POST)
-            fetch(APPS_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-            .then(() => {
-                alert('¡Reporte enviado y almacenado correctamente!');
-                document.getElementById('reporteForm').reset();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Hubo un error al enviar el reporte.');
-            });
+    function cargarSesion() {
+        try {
+            SESSION = JSON.parse(localStorage.getItem('sccr_session') || 'null');
+        } catch (e) {
+            SESSION = null;
         }
+
+        if (!SESSION) {
+            // Sin sesión → redirigir al login
+            window.location.href = 'index.html';
+            return;
+        }
+
+        // Mostrar nombre y rol en el header
+        document.getElementById('headerNombre').textContent = SESSION.nombre || SESSION.user || '—';
+        const rolLabel = {
+            admin:   'CEO / Administrador',
+            gerente: 'Gerente',
+            vendedor: 'Vendedor'
+        };
+        document.getElementById('headerRol').textContent = rolLabel[SESSION.rol] || SESSION.rol || '—';
+    }
+
+    // ──────────────────────────────────────────────────────────
+    //  TOAST
+    // ──────────────────────────────────────────────────────────
+    function showToast(msg, type = 'success') {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.className = 'toast ' + type + ' show';
+        clearTimeout(t._timer);
+        t._timer = setTimeout(() => { t.className = 'toast'; }, 4000);
+    }
+
+    // ──────────────────────────────────────────────────────────
+    //  AUTOCOMPLETE DE CLIENTES
+    // ──────────────────────────────────────────────────────────
+    let clientesCache = [];
+
+    async function cargarClientes() {
+        try {
+            const params = new URLSearchParams({ action: 'getClientes' });
+            // Si es vendedor, filtrar por su cartera
+            if (SESSION && SESSION.rol === 'vendedor' && SESSION.user) {
+                params.append('vendedor', SESSION.user);
+            }
+            const res  = await fetch(`${APPS_SCRIPT_URL}?${params}`);
+            const data = await res.json();
+            if (data.ok && Array.isArray(data.data)) {
+                clientesCache = data.data;
+            }
+        } catch (e) {
+            // Si falla la carga de clientes, el campo sigue funcionando como texto libre
+            console.warn('No se pudieron cargar clientes para autocomplete:', e);
+        }
+    }
+
+    function iniciarAutocomplete() {
+        const input = document.getElementById('razonSocial');
+        const lista = document.getElementById('autocompleteList');
+
+        input.addEventListener('input', () => {
+            const q = input.value.toLowerCase().trim();
+            lista.innerHTML = '';
+            if (q.length < 2 || clientesCache.length === 0) {
+                lista.classList.remove('open');
+                return;
+            }
+            const filtrados = clientesCache
+                .filter(c => (c.razon_social || '').toLowerCase().includes(q))
+                .slice(0, 10);
+
+            if (filtrados.length === 0) {
+                lista.classList.remove('open');
+                return;
+            }
+
+            filtrados.forEach(c => {
+                const item = document.createElement('div');
+                item.className = 'autocomplete-item';
+                item.textContent = c.razon_social + (c.establecimiento ? ' — ' + c.establecimiento : '');
+                item.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    input.value = c.razon_social;
+                    lista.classList.remove('open');
+                    // Autocompletar tipo de cliente si es recurrente
+                    if (c.estado === 'activo') {
+                        document.getElementById('tipoCliente').value = 'Cliente Recurrente';
+                    }
+                });
+                lista.appendChild(item);
+            });
+            lista.classList.add('open');
+        });
+
+        // Cerrar al perder foco
+        input.addEventListener('blur', () => {
+            setTimeout(() => lista.classList.remove('open'), 200);
+        });
+    }
+
+    // ──────────────────────────────────────────────────────────
+    //  LÓGICA CONDICIONAL — Motivo de No Venta
+    // ──────────────────────────────────────────────────────────
+    function iniciarCondicionales() {
+        const estatus = document.getElementById('estatusCierre');
+        const motivoSel = document.getElementById('motivoNoVenta');
+
+        estatus.addEventListener('change', () => {
+            const sinPedido = ['Sin Pedido', 'Rechazado'].includes(estatus.value);
+            motivoSel.required = sinPedido;
+            document.getElementById('motivoHint').style.color = sinPedido ? 'var(--primary-red)' : '#888';
+        });
+    }
+
+    // ──────────────────────────────────────────────────────────
+    //  ENVÍO DEL FORMULARIO → Apps Script (action: registroReporte)
+    // ──────────────────────────────────────────────────────────
+    async function enviarReporte(event) {
+        event.preventDefault();
+
+        const btn = document.getElementById('btnSubmit');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner"></span>Enviando...';
+
+        // Recolectar checkboxes
+        const datosCapturadosArr = [];
+        document.querySelectorAll('input[name="datosCapturados"]:checked').forEach(cb => {
+            datosCapturadosArr.push(cb.value);
+        });
+
+        // Validación condicional de motivo
+        const estatus = document.getElementById('estatusCierre').value;
+        const motivo  = document.getElementById('motivoNoVenta').value;
+        if (['Sin Pedido', 'Rechazado'].includes(estatus) && !motivo) {
+            showToast('Por favor seleccione el Motivo de No Venta.', 'error');
+            btn.disabled = false;
+            btn.innerHTML = 'Enviar Reporte';
+            return;
+        }
+
+        // Construir payload — campos mapeados a HEADERS.reportes del Script
+        const payload = {
+            action:            'registroReporte',
+            fecha:             new Date().toISOString(),
+            vendedor:          SESSION ? (SESSION.nombre || SESSION.user) : '',
+            user_vendedor:     SESSION ? SESSION.user : '',
+            tipo_cliente:      document.getElementById('tipoCliente').value,
+            razon_social:      document.getElementById('razonSocial').value,
+            contacto_efectivo: document.getElementById('contactoEfectivo').value,
+            datos_capturados:  datosCapturadosArr.join(', '),
+            gestion_cita:      document.getElementById('gestionCita').value,
+            resultado_cita:    document.getElementById('resultadoCita').value,
+            propuesta_comercial: document.getElementById('propuestaComercial').value,
+            estatus_cierre:    estatus,
+            motivo_no_venta:   motivo,
+            observaciones:     document.getElementById('observaciones').value
+        };
+
+        try {
+            await fetch(APPS_SCRIPT_URL, {
+                method:  'POST',
+                mode:    'no-cors',   // Apps Script requiere no-cors
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify(payload)
+            });
+            // Con mode:no-cors no podemos leer la respuesta, se asume éxito si no hay excepción
+            showToast('✓ Reporte enviado y almacenado correctamente.', 'success');
+            document.getElementById('reporteForm').reset();
+        } catch (error) {
+            console.error('Error al enviar reporte:', error);
+            showToast('Error al enviar el reporte. Verifique su conexión.', 'error');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = 'Enviar Reporte';
+        }
+    }
+
+    // ──────────────────────────────────────────────────────────
+    //  INIT
+    // ──────────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+        cargarSesion();
+        iniciarCondicionales();
+        iniciarAutocomplete();
+        cargarClientes(); // carga async, no bloquea el form
+    });
     </script>
+
 </body>
 </html>
