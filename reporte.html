@@ -393,9 +393,20 @@
             <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABDUAAAPgCAYAAAAiJEfzAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAABTLpJREFUeNrsvc+PFce5770PDrzmartRfTyD6+9ollQIcScZQbzDCDHLdnHtzIeBQPIrkZeXCuhJn4SvcOTAa2dO8EI50MMgIkR7oZValeQgwwfwC2c6XoRon4ImportVGvhQAAMAzB9K4T6QAAAAASUVORK5CYII=" alt="Logo Casabe Real">
             <span class="header-title">SISTEMA COMERCIAL CASABE REAL</span>
         </div>
-        <div class="header-right">
-            <div class="user-name" id="headerNombre">—</div>
-            <div class="user-role" id="headerRol">—</div>
+        <div style="display:flex;align-items:center;gap:10px">
+            <div class="header-right">
+                <div class="user-name" id="headerNombre">—</div>
+                <div class="user-role" id="headerRol">—</div>
+            </div>
+            <button onclick="cerrarSesion()" style="
+                background:transparent;border:1px solid rgba(255,255,255,.45);
+                color:#fff;padding:5px 12px;border-radius:50px;
+                font-size:.7rem;font-weight:600;cursor:pointer;
+                font-family:'Open Sans',sans-serif;transition:background .2s;"
+                onmouseover="this.style.background='rgba(255,255,255,.15)'"
+                onmouseout="this.style.background='transparent'">
+                🚪 Salir
+            </button>
         </div>
     </header>
 
@@ -565,26 +576,22 @@
     <!-- ═══════════════════════════════════════════════════════ -->
     <!-- SCRIPT                                                  -->
     <!-- ═══════════════════════════════════════════════════════ -->
+    <script src="assets/sccr-auth.js"></script>
     <script>
     // ──────────────────────────────────────────────────────────
-    //  CONFIGURACIÓN — pegar aquí la URL del Apps Script
+    //  CONFIGURACIÓN — misma URL que pedido.html
     // ──────────────────────────────────────────────────────────
-    const APPS_SCRIPT_URL = "TU_APPS_SCRIPT_URL_AQUI";
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbysSUeGA965zGGIF1Zpcbji1SNmkM_kKNoXmFwud6P7kHv0cTlKNJopVF3T93QKhqPs9A/exec';
 
     // ──────────────────────────────────────────────────────────
-    //  SESIÓN — leer usuario desde localStorage
+    //  SESIÓN — usa el mismo bridge SCCR que pedido.html
     // ──────────────────────────────────────────────────────────
     let SESSION = null;
 
     function cargarSesion() {
-        try {
-            SESSION = JSON.parse(localStorage.getItem('sccr_session') || 'null');
-        } catch (e) {
-            SESSION = null;
-        }
+        SESSION = SCCR.getSesion();   // lee sessionStorage['sccr']
 
         if (!SESSION) {
-            // Sin sesión → redirigir al login
             window.location.href = 'index.html';
             return;
         }
@@ -592,11 +599,14 @@
         // Mostrar nombre y rol en el header
         document.getElementById('headerNombre').textContent = SESSION.nombre || SESSION.user || '—';
         const rolLabel = {
-            admin:   'CEO / Administrador',
-            gerente: 'Gerente',
+            admin:    'CEO / Administrador',
+            gerente:  'Gerente',
             vendedor: 'Vendedor'
         };
         document.getElementById('headerRol').textContent = rolLabel[SESSION.rol] || SESSION.rol || '—';
+
+        // Aplicar visibilidad de menú según rol (igual que pedido.html)
+        SCCR.aplicarMenuPorRol(SESSION);
     }
 
     // ──────────────────────────────────────────────────────────
@@ -610,6 +620,14 @@
         t._timer = setTimeout(() => { t.className = 'toast'; }, 4000);
     }
 
+    // ── Cerrar sesión (igual que pedido.html) ──
+    function cerrarSesion() {
+        if (confirm('¿Estás seguro de cerrar sesión?')) {
+            sessionStorage.removeItem('sccr');
+            window.location.href = 'index.html';
+        }
+    }
+
     // ──────────────────────────────────────────────────────────
     //  AUTOCOMPLETE DE CLIENTES
     // ──────────────────────────────────────────────────────────
@@ -617,18 +635,15 @@
 
     async function cargarClientes() {
         try {
-            const params = new URLSearchParams({ action: 'getClientes' });
-            // Si es vendedor, filtrar por su cartera
-            if (SESSION && SESSION.rol === 'vendedor' && SESSION.user) {
-                params.append('vendedor', SESSION.user);
-            }
-            const res  = await fetch(`${APPS_SCRIPT_URL}?${params}`);
+            const filtro = (SESSION.rol === 'vendedor' && SESSION.vendedor_id)
+                ? `&vendedor_id=${encodeURIComponent(SESSION.vendedor_id)}`
+                : '';
+            const res  = await fetch(`${APPS_SCRIPT_URL}?action=getClientes${filtro}`);
             const data = await res.json();
             if (data.ok && Array.isArray(data.data)) {
                 clientesCache = data.data;
             }
         } catch (e) {
-            // Si falla la carga de clientes, el campo sigue funcionando como texto libre
             console.warn('No se pudieron cargar clientes para autocomplete:', e);
         }
     }
@@ -759,6 +774,14 @@
     // ──────────────────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', () => {
         cargarSesion();
+        if (!SESSION) return; // cargarSesion ya redirigió
+
+        // Marcar nav activo dinámicamente (igual que pedido.html)
+        const path = window.location.pathname;
+        document.querySelectorAll('.sidebar-menu a').forEach(a => {
+            if (path.endsWith(a.getAttribute('href'))) a.classList.add('active');
+        });
+
         iniciarCondicionales();
         iniciarAutocomplete();
         cargarClientes(); // carga async, no bloquea el form
