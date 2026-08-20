@@ -1122,22 +1122,472 @@ function toast(msg,ms=2800){
 </script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function(){
-  if(typeof SCCR !== 'undefined'){
-    const sesion=SCCR.initSCCR();
-    if(sesion){
-      document.getElementById('user-name-display').textContent=sesion.nombre || '—';
-      const rol=(sesion.rol||'').toLowerCase();
-      document.getElementById('user-role-display').textContent =
-        rol==='admin' ? 'Administrador' :
-        rol==='gerente' ? 'Gerente de Ventas' : 'Asesor Comercial';
-      if(rol==='admin'||rol==='gerente'){
-        document.querySelectorAll('.admin-only').forEach(e=>e.style.display='inline-block');
+
+/* =========================================================
+   DATOS DE PRODUCTOS
+   ========================================================= */
+
+const PROD_SIM = {
+  restaurante: {
+    nombre: 'Tipo Restaurante',
+    precio_caja: 260,
+    uds_paq: 30,
+    paq_caja: 40,
+    uds_caja: 1200
+  },
+
+  pasapalo: {
+    nombre: 'Tipo Pasapalo',
+    precio_caja: 220,
+    uds_paq: 30,
+    paq_caja: 105,
+    uds_caja: 3150
+  },
+
+  torta: {
+    nombre: 'Tipo Torta',
+    precio_caja: 200,
+    uds_paq: 20,
+    paq_caja: 16,
+    uds_caja: 320
+  }
+};
+
+
+/* =========================================================
+   DATOS DEL SIMULADOR
+   ========================================================= */
+
+let simData = {};
+
+
+/* =========================================================
+   FORMATO DE NUMEROS
+   ========================================================= */
+
+function fmt(n) {
+  return Number(n || 0).toLocaleString('es-VE', {
+    maximumFractionDigits: 2
+  });
+}
+
+
+/* =========================================================
+   SIMULADOR DE PRE-PEDIDO
+   ========================================================= */
+
+function calcSim() {
+
+  const prod = document.getElementById('sim-prod')?.value;
+
+  const servicios =
+    parseInt(document.getElementById('sim-servicios')?.value) || 0;
+
+  const uds_serv =
+    parseInt(document.getElementById('sim-unidades')?.value) || 0;
+
+  const dias =
+    parseInt(document.getElementById('sim-dias')?.value) || 0;
+
+
+  /* Verificar producto */
+
+  if (!PROD_SIM[prod]) {
+    return;
+  }
+
+
+  const cfg = PROD_SIM[prod];
+
+
+  /* Limpiar resultados si faltan datos */
+
+  if (!servicios || !uds_serv || !dias) {
+
+    document.getElementById('sr-unidades').textContent = '—';
+    document.getElementById('sr-paq').textContent = '—';
+    document.getElementById('sr-cajas').textContent = '—';
+    document.getElementById('sr-precio').textContent = '—';
+    document.getElementById('sr-total').textContent = '—';
+    document.getElementById('sr-sugerido').textContent = '—';
+
+    simData = {};
+
+    actualizarFormulario();
+
+    return;
+  }
+
+
+  /* =======================================================
+     CALCULOS
+     ======================================================= */
+
+  /* Unidades necesarias al mes */
+
+  const unidadesTotales =
+    servicios * uds_serv * dias;
+
+
+  /* Paquetes necesarios.
+     Se redondea hacia arriba porque no se puede comprar
+     una fracción de paquete. */
+
+  const paquetesExactos =
+    unidadesTotales / cfg.uds_paq;
+
+  const paquetesComprar =
+    Math.ceil(paquetesExactos);
+
+
+  /* Cajas necesarias para cubrir los paquetes */
+
+  const cajasExactas =
+    paquetesComprar / cfg.paq_caja;
+
+  const cajasComprar =
+    Math.ceil(cajasExactas);
+
+
+  /* Total base del pre-pedido */
+
+  const precioCaja =
+    cfg.precio_caja;
+
+  const totalBase =
+    cajasComprar * precioCaja;
+
+
+  /* =======================================================
+     GUARDAR DATOS DEL SIMULADOR
+     ======================================================= */
+
+  simData = {
+
+    producto: cfg.nombre,
+
+    productoCodigo: prod,
+
+    serviciosDia: servicios,
+
+    unidadesServicio: uds_serv,
+
+    diasOperacion: dias,
+
+    unidadesTotales: unidadesTotales,
+
+    paquetesExactos: paquetesExactos,
+
+    paquetesComprar: paquetesComprar,
+
+    cajasExactas: cajasExactas,
+
+    cajasComprar: cajasComprar,
+
+    precioCaja: precioCaja,
+
+    totalBase: totalBase
+
+  };
+
+
+  /* =======================================================
+     MOSTRAR RESULTADOS
+     ======================================================= */
+
+  document.getElementById('sr-unidades').textContent =
+    fmt(unidadesTotales) + ' uds';
+
+  document.getElementById('sr-paq').textContent =
+    fmt(paquetesExactos) +
+    ' (' + fmt(paquetesComprar) + ' compra)';
+
+  document.getElementById('sr-cajas').textContent =
+    fmt(cajasExactas) +
+    ' (' + cajasComprar + ' compra)';
+
+  document.getElementById('sr-precio').textContent =
+    '$' + fmt(precioCaja);
+
+  document.getElementById('sr-total').textContent =
+    '$' + fmt(totalBase);
+
+  document.getElementById('sr-sugerido').textContent =
+    cajasComprar + (cajasComprar === 1 ? ' caja' : ' cajas');
+
+
+  /* =======================================================
+     PASAR DATOS AL FORMULARIO
+     ======================================================= */
+
+  actualizarFormulario();
+}
+
+
+/* =========================================================
+   ACTUALIZAR FORMULARIO DE PRE-PEDIDO
+   ========================================================= */
+
+function actualizarFormulario() {
+
+  const producto = document.getElementById('f-producto');
+  const cantidad = document.getElementById('f-cantidad');
+  const precio   = document.getElementById('f-precio');
+  const total    = document.getElementById('f-total');
+  const ajuste   = document.getElementById('f-ajuste');
+
+
+  if (!producto || !cantidad || !precio || !total) {
+    return;
+  }
+
+
+  /* Si todavía no hay simulación */
+
+  if (!simData || !simData.producto) {
+
+    producto.value = '';
+    cantidad.value = '';
+    precio.value = '';
+    total.value = '';
+    
+    if (ajuste) {
+      ajuste.value = '';
+    }
+
+    return;
+  }
+
+
+  producto.value =
+    simData.producto;
+
+  cantidad.value =
+    simData.cajasComprar + ' cajas';
+
+  precio.value =
+    '$' + fmt(simData.precioCaja);
+
+  /* El total mostrado inicialmente es el precio base */
+
+  total.value =
+    '$' + fmt(simData.totalBase);
+
+
+  if (ajuste) {
+    ajuste.value =
+      'Precio base';
+  }
+}
+
+
+/* =========================================================
+   CONDICION DE PAGO
+   ========================================================= */
+
+function actualizarPago() {
+
+  const pago =
+    document.getElementById('f-pago')?.value;
+
+  const total =
+    document.getElementById('f-total');
+
+  const ajuste =
+    document.getElementById('f-ajuste');
+
+
+  if (!total || !simData || !simData.totalBase) {
+    return;
+  }
+
+
+  const totalBase =
+    Number(simData.totalBase);
+
+
+  let porcentaje = 0;
+  let descripcion = 'Precio base';
+
+
+  switch (pago) {
+
+    case 'Contado':
+
+      porcentaje = -0.03;
+      descripcion = 'Descuento 3%';
+
+      break;
+
+
+    case '5 días':
+
+      porcentaje = 0;
+      descripcion = 'Precio base';
+
+      break;
+
+
+    case '15 días':
+
+      porcentaje = 0.10;
+      descripcion = 'Recargo 10%';
+
+      break;
+
+
+    case '30 días':
+
+      porcentaje = 0.15;
+      descripcion = 'Recargo 15%';
+
+      break;
+  }
+
+
+  const totalFinal =
+    totalBase * (1 + porcentaje);
+
+
+  total.value =
+    '$' + fmt(totalFinal);
+
+
+  if (ajuste) {
+    ajuste.value =
+      descripcion;
+  }
+
+
+  /* Guardar también el total final */
+
+  simData.condicionPago = pago;
+
+  simData.porcentajePago = porcentaje;
+
+  simData.totalFinal = totalFinal;
+}
+
+
+/* =========================================================
+   INICIALIZACION
+   ========================================================= */
+
+document.addEventListener('DOMContentLoaded', function() {
+
+  /* Inicializar formulario */
+
+  actualizarFormulario();
+
+
+  /* Inicializar condición de pago */
+
+  const pago =
+    document.getElementById('f-pago');
+
+  if (pago) {
+    pago.addEventListener('change', actualizarPago);
+  }
+
+
+  /* Inicializar simulador */
+
+  const simProd =
+    document.getElementById('sim-prod');
+
+  const simServicios =
+    document.getElementById('sim-servicios');
+
+  const simUnidades =
+    document.getElementById('sim-unidades');
+
+  const simDias =
+    document.getElementById('sim-dias');
+
+
+  if (simProd) {
+    simProd.addEventListener('change', calcSim);
+  }
+
+  if (simServicios) {
+    simServicios.addEventListener('input', calcSim);
+  }
+
+  if (simUnidades) {
+    simUnidades.addEventListener('input', calcSim);
+  }
+
+  if (simDias) {
+    simDias.addEventListener('input', calcSim);
+  }
+
+
+  /* =======================================================
+     SESION SCCR
+     ======================================================= */
+
+  if (typeof SCCR !== 'undefined') {
+
+    const sesion =
+      SCCR.initSCCR();
+
+    if (sesion) {
+
+      const nombre =
+        document.getElementById('user-name-display');
+
+      const rolDisplay =
+        document.getElementById('user-role-display');
+
+
+      if (nombre) {
+        nombre.textContent =
+          sesion.nombre || '—';
+      }
+
+
+      const rol =
+        (sesion.rol || '').toLowerCase();
+
+
+      if (rolDisplay) {
+
+        rolDisplay.textContent =
+          rol === 'admin'
+            ? 'Administrador'
+            : rol === 'gerente'
+              ? 'Gerente de Ventas'
+              : 'Asesor Comercial';
+      }
+
+
+      if (rol === 'admin' || rol === 'gerente') {
+
+        document
+          .querySelectorAll('.admin-only')
+          .forEach(function(e) {
+
+            e.style.display =
+              'inline-block';
+
+          });
       }
     }
   }
+
 });
-function cerrarSesion(){ if(typeof SCCR!=='undefined') SCCR.cerrarSesion(); }
+
+
+/* =========================================================
+   CERRAR SESION
+   ========================================================= */
+
+function cerrarSesion() {
+
+  if (typeof SCCR !== 'undefined') {
+    SCCR.cerrarSesion();
+  }
+
+}
+
 </script>
-</body>
-</html>
