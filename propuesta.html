@@ -866,27 +866,6 @@ function toast(msg,ms=2800){
 }
 </script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-  if(typeof SCCR !== 'undefined'){
-    const sesion=SCCR.initSCCR();
-    if(sesion){
-      document.getElementById('user-name-display').textContent=sesion.nombre || '—';
-      const rol=(sesion.rol||'').toLowerCase();
-      document.getElementById('user-role-display').textContent =
-        rol==='admin' ? 'Administrador' :
-        rol==='gerente' ? 'Gerente de Ventas' : 'Asesor Comercial';
-      if(rol==='admin'||rol==='gerente'){
-        document.querySelectorAll('.admin-only').forEach(e=>e.style.display='inline-block');
-      }
-    }
-  }
-});
-function cerrarSesion(){ if(typeof SCCR!=='undefined') SCCR.cerrarSesion(); }
-</script>
-</body>
-</html>
-
 
 /* =========================================================
    DATOS DE PRODUCTOS
