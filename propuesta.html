@@ -196,10 +196,6 @@ img{max-width:100%;display:block}
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--negro);color:#fff;padding:11px 22px;border-radius:24px;font-size:13px;font-weight:600;z-index:999;transition:transform .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.22)}
 .toast.on{transform:translateX(-50%) translateY(0)}
 @media(max-width:580px){.sec{padding:48px 16px}.crow{grid-template-columns:1fr}.ck{border-right:none;border-bottom:1px solid var(--borde)}}
-</style>
-</head>
-<body>
-  
 /* ── HEADER SCCR IMPORTADO DESDE CLIENTES ── */
 /* ── HEADER ──────────────────────────────────────────────── */
 header{
@@ -233,6 +229,7 @@ header{
 .menu-item:hover{background:var(--sidebar-hover);color:var(--rojo)}
 .menu-item.active{font-family:'League Spartan',sans-serif;font-weight:700;color:var(--rojo);border-bottom-color:var(--rojo)}
 .admin-only{display:none}
+
 
 </style>
 </head>
@@ -489,169 +486,44 @@ header{
   </div>
 </section>
 
-<!-- =========================================================
-     FORMULARIO PROPUESTA / PRE-PEDIDO
-     ========================================================= -->
-
+<!-- FORMULARIO PROPUESTA (solo logueado) -->
 <section class="sec sec-form" id="sec-propuesta" style="display:none">
-<div class="inner">
-<div class="sec-hd c">
-<div class="sec-tag">
-Generar Pre-Pedido
-</div>
-<h2 class="sec-h">
-Personalice la propuesta comercial
-</h2>
-<p class="sec-sub">
-Complete la información del cliente. 
-El producto, cantidad, precio y total vienen del simulador.
-La condición de pago ajustará automáticamente el total a pagar.
-</p>
-</div>
-<div class="form-card">
-<!-- DATOS DEL CLIENTE -->
-<div class="ff">
-<label>
-Razón Social <span class="req">*</span>
-</label>
-<input 
-type="text"
-id="f-razon"
-placeholder="Ej: Restaurante El Sabor C.A.">
-</div>
-<div class="ff">
-<label>
-Nombre del Establecimiento <span class="req">*</span>
-</label>
-<input 
-type="text"
-id="f-establ"
-placeholder="Ej: El Sabor Criollo">
-</div>
-<div class="ff">
-<label>
-Persona de Contacto <span class="req">*</span>
-</label>
-<input 
-type="text"
-id="f-contacto"
-placeholder="Nombre del encargado">
-</div>
-<div class="ff">
-<label>
-Teléfono WhatsApp Cliente <span class="req">*</span>
-</label>
-<input 
-type="tel"
-id="f-telf"
-placeholder="04121234567"
-inputmode="tel">
-</div>
-<!-- DATOS GENERADOS POR SIMULADOR -->
-<div class="ff">
-<label>
-Producto seleccionado
-</label>
-<input 
-type="text"
-id="f-producto"
-readonly
-placeholder="Generado por simulador">
-</div>
-<div class="ff">
-<label>
-Cantidad de cajas
-</label>
-<input 
-type="text"
-id="f-cantidad"
-readonly>
-</div>
-<div class="ff">
-<label>
-Precio base por caja USD
-</label>
-<input 
-type="text"
-id="f-precio"
-readonly>
-</div>
-<!-- CONDICION DE PAGO -->
-<div class="ff">
-<label>
-Condición de Pago
-</label>
-<select id="f-pago" onchange="actualizarPago()">
-<option value="Contado">
-Contado - Descuento 3%
-</option>
-<option value="5 días">
-5 días - Precio normal
-</option>
-<option value="15 días">
-15 días - Recargo 10%
-</option>
-<option value="30 días">
-30 días - Recargo 15%
-</option>
-</select>
-</div>
-<!-- TOTAL CALCULADO -->
-<div class="ff">
-<label>
-Total Pre-Pedido USD
-</label>
-<input 
-type="text"
-id="f-total"
-readonly>
-</div>
-<div class="ff">
-<label>
-Ajuste por condición de pago
-</label>
-<input 
-type="text"
-id="f-ajuste"
-readonly>
-</div>
-<div class="ff">
-<label>
-Observaciones
-</label>
-<textarea 
-id="f-obs"
-placeholder="Notas adicionales del cliente..."></textarea>
-</div>
-<div class="form-btns">
-<button 
-class="btn-wa"
-onclick="enviarWA()">
-Enviar por WhatsApp
-</button>
-<button 
-class="btn-gs"
-id="btn-gs"
-onclick="guardarProp()">
-<span id="gs-txt">
-💾 Guardar Pre-Pedido
-</span>
-<span 
-class="sp"
-id="gs-sp">
-</span>
-</button>
-</div>
-<div 
-class="ok-box"
-id="ok-box">
-✅ Pre-pedido guardado correctamente en el sistema.
-</div>
-</div>
-</div>
+  <div class="inner">
+    <div class="sec-hd c">
+      <div class="sec-tag">Generar Propuesta</div>
+      <h2 class="sec-h">Personalice y env&iacute;e</h2>
+      <p class="sec-sub">Complete los datos del cliente para generar la propuesta personalizada.</p>
+    </div>
+    <div class="form-card">
+      <div class="ff"><label>Raz&oacute;n Social <span class="req">*</span></label><input type="text" id="f-razon" placeholder="Ej: Restaurante El Sabor C.A."></div>
+      <div class="ff"><label>Nombre del Establecimiento <span class="req">*</span></label><input type="text" id="f-establ" placeholder="Ej: El Sabor Criollo"></div>
+      <div class="ff"><label>Tel&eacute;fono WhatsApp del Cliente <span class="req">*</span></label><input type="tel" id="f-telf" placeholder="04121234567" inputmode="tel"></div>
+      <div class="ff"><label>Producto de Inter&eacute;s</label>
+        <select id="f-prod">
+          <option value="Tipo Restaurante ($260/caja)">Tipo Restaurante &mdash; $260/caja</option>
+          <option value="Tipo Pasapalo ($220/caja)">Tipo Pasapalo &mdash; $220/caja</option>
+          <option value="Tipo Torta ($200/caja)">Tipo Torta &mdash; $200/caja</option>
+          <option value="Combinaci&oacute;n de productos">Combinaci&oacute;n de productos</option>
+        </select>
+      </div>
+      <div class="ff"><label>Cantidad de cajas <span class="req">*</span></label><input type="cajas" id="f-cantidad" placeholder="1" inputmode="cantidad"></div>
+      <div class="ff"><label>Observaciones</label><textarea id="f-obs" placeholder="Notas adicionales para el cliente..."></textarea></div>
+      <div class="form-btns">
+        <button class="btn-wa" onclick="enviarWA()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+          Enviar por WhatsApp
+        </button>
+        <button class="btn-gs" id="btn-gs" onclick="guardarProp()">
+          <span id="gs-txt">&#128190; Guardar en el Sistema</span>
+          <span class="sp" id="gs-sp"></span>
+        </button>
+      </div>
+      <div class="ok-box" id="ok-box">&#9989; Propuesta guardada y registrada en el sistema.</div>
+    </div>
+  </div>
 </section>
 
-  <!-- CONTACTO -->
+<!-- CONTACTO -->
 <section class="sec sec-ctc" id="contacto">
   <div class="inner">
     <div class="sec-hd c">
@@ -850,60 +722,41 @@ const PROD_SIM = {
   torta:       {uds_paq: 8, paq_caja:40, precio_caja:200},
   pasapalo:    {uds_paq:35, paq_caja:90, precio_caja:220},
 };
-function calcSim(){
-  const prod = document.getElementById('sim-prod').value;
-  const servicios = parseInt(document.getElementById('sim-servicios').value)||0;
+
+function calcSim() {
+  const prod     = document.getElementById('sim-prod').value;
+  const servicios= parseInt(document.getElementById('sim-servicios').value)||0;
   const uds_serv = parseInt(document.getElementById('sim-unidades').value)||0;
-  const dias = parseInt(document.getElementById('sim-dias').value)||0;
-  const vacio = ()=>{
-    [
-      'sr-unidades',
-      'sr-paq',
-      'sr-cajas',
-      'sr-precio',
-      'sr-total'
-    ].forEach(id=>{
-      document.getElementById(id).textContent='—';
-    });
-    document.getElementById('sr-gan').textContent='—';
+  const dias     = parseInt(document.getElementById('sim-dias').value)||0;
+  const precio   = parseFloat(document.getElementById('sim-precio').value)||0;
+  const vacio=()=>{
+    ['sr-serv','sr-paq','sr-cajas','sr-inv','sr-ing'].forEach(id=>document.getElementById(id).textContent='—');
+    document.getElementById('sr-gan').textContent='$—';
+    document.getElementById('sr-roi').textContent='ROI: —%';
     simData={};
   };
-  if(!servicios || !uds_serv || !dias){
-    vacio();
-    return;
-  }
-  const cfg = PROD_SIM[prod];
+  if(!servicios||!uds_serv||!dias||!precio){vacio();return;}
+  const cfg          = PROD_SIM[prod];
   const serviciosMes = servicios * dias;
-  const unidadesTot = serviciosMes * uds_serv;
-  const paquetesMes = Math.ceil(
-    unidadesTot / cfg.uds_paq
-  );
-  const cajasExactas =
-    unidadesTot / (cfg.uds_paq * cfg.paq_caja);
-  const cajasComprar =
-    Math.ceil(cajasExactas);
-  const total =
-    cajasComprar * cfg.precio_caja;
-  simData={
-    producto:cfg.nombre,
-    unidades:unidadesTot,
-    paquetes:paquetesMes,
-    cajas:cajasComprar,
-    precioCaja:cfg.precio_caja,
-    total:total
-  };
-  document.getElementById('sr-unidades').textContent =
-  fmt(unidadesTot)+' unidades';
-  document.getElementById('sr-paq').textContent =
-  fmt(paquetesMes)+' paquetes';
-  document.getElementById('sr-cajas').textContent =
-  cajasExactas.toFixed(1)+' cajas';
-  document.getElementById('sr-precio').textContent =
-  '$'+fmt(cfg.precio_caja);
-  document.getElementById('sr-total').textContent =
-  '$'+fmt(total);
-  document.getElementById('sr-gan').textContent =
-  cajasComprar+' cajas';
+  const unidadesTot  = serviciosMes * uds_serv;
+  const paquetesMes  = Math.ceil(unidadesTot / cfg.uds_paq);
+  const cajasExactas = paquetesMes / cfg.paq_caja;
+  const cajasComprar = Math.ceil(cajasExactas);
+  const inversion    = cajasComprar * cfg.precio_caja;
+  const ingresos     = serviciosMes * precio;
+  const ganancia     = ingresos - inversion;
+  const roi          = inversion>0 ? Math.round((ganancia/inversion)*100) : 0;
+  simData = {serviciosMes,unidadesTot,paquetesMes,cajasExactas,cajasComprar,inversion,ingresos,ganancia,roi,prod};
+  document.getElementById('sr-serv').textContent  = fmt(serviciosMes)+' servicios';
+  document.getElementById('sr-paq').textContent   = fmt(paquetesMes)+' paquetes';
+  const cajaTxt = cajasExactas%1===0
+    ? cajasExactas+(cajasExactas===1?' caja':' cajas')
+    : cajasExactas.toFixed(1)+' cajas (compra '+cajasComprar+')';
+  document.getElementById('sr-cajas').textContent = cajaTxt;
+  document.getElementById('sr-inv').textContent   = '$'+fmt(inversion);
+  document.getElementById('sr-ing').textContent   = '$'+fmt(ingresos);
+  document.getElementById('sr-gan').textContent   = '$'+fmt(ganancia);
+  document.getElementById('sr-roi').textContent   = 'ROI: '+roi+'%';
 }
 
 // ── WHATSAPP ─────────────────────────────────────────────────
@@ -920,8 +773,11 @@ function enviarWA() {
 📅 ${fecha}
 
 Estimado/a *${establ}*,
+
 Es un placer presentarle nuestra propuesta.
+
 📦 *Producto:* ${prod}
+
 `;
   if(simData.ganancia!==undefined){
     m+=`📊 *Simulación de Rentabilidad:*
@@ -946,76 +802,47 @@ Es un placer presentarle nuestra propuesta.
 • Precio en USD (Bs. a tasa del día)
 • Crédito 5 días
 • Pedido mínimo: 1 caja
+
 `;
   if(obs) m+=`📝 ${obs}
+
 `;
   m+=`📱 Casabe Real: 0412.290.58.33
 👤 ${vend}
+
 ¡Quedamos atentos!`;
   window.open(`https://wa.me/${telf}?text=${encodeURIComponent(m)}`,'_blank');
 }
 
 // ── GUARDAR ───────────────────────────────────────────────────
-<!-- =========================================================
-     FORMULARIO PROPUESTA / PRE-PEDIDO
-     ========================================================= -->
-<!-- FORMULARIO PROPUESTA (solo logueado) -->
-<section class="sec sec-form" id="sec-propuesta" style="display:none">
-<div class="inner">
-<div class="sec-hd c">
-<div class="sec-tag">Generar Pre-Pedido</div>
-<h2 class="sec-h">
-Personalice el pedido del cliente
-</h2>
-<p class="sec-sub">
-Complete la información comercial para registrar el pre-pedido.
-</p>
-</div>
-<div class="form-card">
-<div class="ff">
-<label>Cliente <span class="req">*</span></label>
-<input id="f-razon" type="text">
-</div>
-<div class="ff">
-<label>Nombre del Establecimiento <span class="req">*</span></label>
-<input id="f-establ" type="text">
-</div>
-<div class="ff">
-<label>Contacto WhatsApp <span class="req">*</span></label>
-<input id="f-telf" type="tel">
-</div>
-<div class="ff">
-<label>Condición de Pago</label>
-<select id="f-pago">
-<option value="50% anticipo / 50% contra entrega">
-50% anticipo / 50% contra entrega
-</option>
-<option value="Pago contado">
-Pago contado
-</option>
-</select>
-</div>
-<div class="ff">
-<label>Observaciones</label>
-<textarea id="f-obs"></textarea>
-</div>
-<div class="form-btns">
-<button class="btn-wa" onclick="enviarWA()">
-Enviar por WhatsApp
-</button>
-<button class="btn-gs" id="btn-gs" onclick="guardarProp()">
-<span id="gs-txt">
-💾 Guardar Pre-Pedido
-</span>
-<span class="sp" id="gs-sp"></span>
-</button>
-</div>
-<div class="ok-box" id="ok-box">
-✅ Pre-pedido guardado correctamente.
-</div>
-</div>
-</div>
-</section>
+async function guardarProp() {
+  const razon=document.getElementById('f-razon').value.trim();
+  const establ=document.getElementById('f-establ').value.trim();
+  if(!razon||!establ){toast('⚠️ Completa los campos obligatorios');return;}
+  if(!SES){toast('⚠️ Debes estar logueado para guardar');return;}
+  const btn=document.getElementById('btn-gs');
+  const sp=document.getElementById('gs-sp');
+  btn.disabled=true; sp.classList.add('on');
+  const payload={
+    action:'guardarPropuesta', fecha:new Date().toISOString(),
+    vendedor:SES.user, razonSocial:razon, establecimiento:establ,
+    telefono:document.getElementById('f-telf').value.trim(),
+    productoInteres:document.getElementById('f-prod').value,
+    simulacion:simData,
+    observaciones:document.getElementById('f-obs').value.trim(),
+    estado:'enviada',
+  };
+  try{
+    const r=await fetch(API,{method:'POST',body:JSON.stringify(payload),redirect:'follow'});
+    const d=await r.json();
+    if(d.ok){document.getElementById('ok-box').classList.add('show');toast('✅ Propuesta guardada');}
+    else toast('❌ '+(d.msg||'Error al guardar'));
+  }catch(e){
+    document.getElementById('ok-box').classList.add('show');
+    toast('✅ Guardado en modo demo');
+  }
+  btn.disabled=false; sp.classList.remove('on');
+}
 
 // ── INIT ──────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded',()=>{
@@ -1040,6 +867,26 @@ function toast(msg,ms=2800){
 </script>
 
 <script>
+document.addEventListener('DOMContentLoaded', function(){
+  if(typeof SCCR !== 'undefined'){
+    const sesion=SCCR.initSCCR();
+    if(sesion){
+      document.getElementById('user-name-display').textContent=sesion.nombre || '—';
+      const rol=(sesion.rol||'').toLowerCase();
+      document.getElementById('user-role-display').textContent =
+        rol==='admin' ? 'Administrador' :
+        rol==='gerente' ? 'Gerente de Ventas' : 'Asesor Comercial';
+      if(rol==='admin'||rol==='gerente'){
+        document.querySelectorAll('.admin-only').forEach(e=>e.style.display='inline-block');
+      }
+    }
+  }
+});
+function cerrarSesion(){ if(typeof SCCR!=='undefined') SCCR.cerrarSesion(); }
+</script>
+</body>
+</html>
+
 
 /* =========================================================
    DATOS DE PRODUCTOS
