@@ -196,6 +196,10 @@ img{max-width:100%;display:block}
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--negro);color:#fff;padding:11px 22px;border-radius:24px;font-size:13px;font-weight:600;z-index:999;transition:transform .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.22)}
 .toast.on{transform:translateX(-50%) translateY(0)}
 @media(max-width:580px){.sec{padding:48px 16px}.crow{grid-template-columns:1fr}.ck{border-right:none;border-bottom:1px solid var(--borde)}}
+</style>
+</head>
+<body>
+  
 /* ── HEADER SCCR IMPORTADO DESDE CLIENTES ── */
 /* ── HEADER ──────────────────────────────────────────────── */
 header{
@@ -229,7 +233,6 @@ header{
 .menu-item:hover{background:var(--sidebar-hover);color:var(--rojo)}
 .menu-item.active{font-family:'League Spartan',sans-serif;font-weight:700;color:var(--rojo);border-bottom-color:var(--rojo)}
 .admin-only{display:none}
-
 
 </style>
 </head>
@@ -413,125 +416,40 @@ header{
 <section class="sec sec-sim" id="simulador">
   <div class="inner">
     <div class="sec-hd">
-      <div class="sec-tag">Simulador de Pedido</div>
-      <h2 class="sec-h">Calcule su abastecimiento mensual</h2>
-      <p class="sec-sub">
-        Ingrese el consumo estimado y genere automáticamente su pre-pedido de Casabe Real.
-      </p>
+      <div class="sec-tag">Simulador de Rentabilidad</div>
+      <h2 class="sec-h">Calcule su ganancia en tiempo real</h2>
+      <p class="sec-sub">Ingrese los datos de su operaci&oacute;n y vea cu&aacute;nto puede ganar este mes.</p>
     </div>
     <div class="sim-grid">
-      <!-- PANEL DE DATOS -->
       <div class="sim-panel">
         <label class="sim-lbl">Producto Casabe Real</label>
         <select class="sim-sel" id="sim-prod" onchange="calcSim()">
-          <option value="restaurante">
-            Tipo Restaurante ($260/caja · 1.200 uds)
-          </option>
-          <option value="pasapalo">
-            Tipo Pasapalo ($220/caja · 3.150 uds)
-          </option>
-          <option value="torta">
-            Tipo Torta ($200/caja · 320 uds)
-          </option>
+          <option value="restaurante">Tipo Restaurante ($260/caja &middot; 1.200 uds)</option>
+          <option value="pasapalo">Tipo Pasapalo ($220/caja &middot; 3.150 uds)</option>
+          <option value="torta">Tipo Torta ($200/caja &middot; 320 uds)</option>
         </select>
-        <label class="sim-lbl">
-          Servicios estimados por día
-        </label>
-        <input 
-          class="sim-inp" 
-          type="number" 
-          id="sim-servicios"
-          placeholder="Ej: 80"
-          min="1"
-          inputmode="numeric"
-          oninput="calcSim()"
-        >
-        <label class="sim-lbl">
-          Unidades de Casabe por servicio
-        </label>
-        <input 
-          class="sim-inp" 
-          type="number" 
-          id="sim-unidades"
-          placeholder="Ej: 2"
-          min="1"
-          inputmode="numeric"
-          oninput="calcSim()"
-        >
-        <label class="sim-lbl">
-          Días de operación al mes
-        </label>
-        <input 
-          class="sim-inp" 
-          type="number" 
-          id="sim-dias"
-          placeholder="Ej: 26"
-          min="1"
-          max="31"
-          inputmode="numeric"
-          oninput="calcSim()"
-        >
+        <label class="sim-lbl">Servicios estimados por d&iacute;a</label>
+        <input class="sim-inp" type="number" id="sim-servicios" placeholder="Ej: 80" min="1" inputmode="numeric" oninput="calcSim()">
+        <label class="sim-lbl">Unidades de casabe por servicio</label>
+        <input class="sim-inp" type="number" id="sim-unidades" placeholder="Ej: 2" min="1" inputmode="numeric" oninput="calcSim()">
+        <label class="sim-lbl">D&iacute;as de trabajo al mes</label>
+        <input class="sim-inp" type="number" id="sim-dias" placeholder="Ej: 26" min="1" max="31" inputmode="numeric" oninput="calcSim()">
+        <label class="sim-lbl">Precio del servicio al comensal (USD)</label>
+        <input class="sim-inp" type="number" id="sim-precio" placeholder="Ej: 2.50" min="0.1" step="0.10" inputmode="decimal" oninput="calcSim()">
       </div>
-      <!-- RESULTADO PRE-PEDIDO -->
       <div class="sim-res">
-        <div class="sim-res-ttl">
-          Pre-Pedido Mensual
-        </div>
-        <div class="sr">
-          <span class="sr-k">
-            Unidades requeridas
-          </span>
-          <span class="sr-v" id="sr-unidades">
-            —
-          </span>
-        </div>
-        <div class="sr">
-          <span class="sr-k">
-            Paquetes requeridos
-          </span>
-          <span class="sr-v" id="sr-paq">
-            —
-          </span>
-        </div>
-        <div class="sr">
-          <span class="sr-k">
-            Cajas requeridas
-          </span>
-          <span class="sr-v" id="sr-cajas">
-            —
-          </span>
-        </div>
-        <div class="sr">
-          <span class="sr-k">
-            Precio por caja
-          </span>
-          <span class="sr-v" id="sr-precio">
-            —
-          </span>
-        </div>
-        <div class="sr">
-          <span class="sr-k">
-            Total Pre-Pedido
-          </span>
-          <span class="sr-v" id="sr-total">
-            —
-          </span>
-        </div>
+        <div class="sim-res-ttl">Proyecci&oacute;n Mensual</div>
+        <div class="sr"><span class="sr-k">Servicios / mes</span><span class="sr-v" id="sr-serv">—</span></div>
+        <div class="sr"><span class="sr-k">Paquetes requeridos / mes</span><span class="sr-v" id="sr-paq">—</span></div>
+        <div class="sr"><span class="sr-k">Cajas requeridas / mes</span><span class="sr-v" id="sr-cajas">—</span></div>
+        <div class="sr"><span class="sr-k">Inversi&oacute;n mensual</span><span class="sr-v" id="sr-inv">—</span></div>
+        <div class="sr"><span class="sr-k">Ingresos por casabe</span><span class="sr-v" id="sr-ing">—</span></div>
         <div class="sim-box">
-          <div class="sim-box-lbl">
-            Pedido sugerido
-          </div>
-          <div class="sim-box-val" id="sr-sugerido">
-            —
-          </div>
-          <div class="sim-box-roi">
-            Listo para generar propuesta
-          </div>
+          <div class="sim-box-lbl">Ganancia Estimada / Mes</div>
+          <div class="sim-box-val" id="sr-gan">$—</div>
+          <div class="sim-box-roi" id="sr-roi">ROI: —%</div>
         </div>
-        <div class="sim-nota">
-          * El cálculo representa una estimación de abastecimiento mensual.
-          Las cantidades finales pueden ajustarse según la operación del cliente.
-        </div>
+        <div class="sim-nota">* Estimaci&oacute;n basada en los datos ingresados. Resultados pueden variar seg&uacute;n la operaci&oacute;n.</div>
       </div>
     </div>
   </div>
