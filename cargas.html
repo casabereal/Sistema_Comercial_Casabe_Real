@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <script src="assets/sccr-auth.js"></script>
 <style>
   :root {
@@ -32,23 +33,38 @@
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:"Inter",sans-serif;background:var(--fondo);color:var(--negro);min-height:100vh;display:flex;flex-direction:column}
 
-  /* ── HEADER ─────────────────────────────────────────────── */
-  .hd{background:var(--rojo);padding:14px 18px 13px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
-  .hd-left{display:flex;align-items:center;gap:11px}
-  .hd-left img{width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}
-  .hd-title{color:#fff;font-size:.8rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;line-height:1.2}
-  .hd-right{display:flex;align-items:center;gap:10px}
-  .hd-pill{background:rgba(255,255,255,.15);border-radius:50px;padding:5px 13px;font-size:.72rem;color:#fff;font-weight:600}
-  .btn-out{background:transparent;border:1.5px solid rgba(255,255,255,.55);color:#fff;padding:6px 14px;border-radius:50px;font-size:.72rem;font-weight:600;cursor:pointer;transition:.2s}
-  .btn-out:hover{background:rgba(255,255,255,.15)}
+  /* ── HEADER / NAV — mismo layout y funcionamiento de clientes.html ── */
+  header{
+    background-color:#D30000;
+    color:#fff;
+    height:60px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 18px;
+    box-shadow:0 2px 4px rgba(0,0,0,.1);
+    position:sticky;
+    top:0;
+    z-index:1000;
+  }
+  .header-left{display:flex;align-items:center;gap:11px}
+  .header-left img{width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25));display:block}
+  .header-title{font-family:'League Spartan',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+  .header-right{display:flex;align-items:center;gap:12px}
+  .header-user-info{font-size:.7rem;text-align:right;line-height:1.3}
+  .header-user-info .user-name{font-weight:600}
+  .header-user-info .user-role{font-size:.65rem;opacity:.9}
+  .btn-logout{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:5px 10px;cursor:pointer;color:rgba(255,255,255,.9);font-size:.7rem;transition:background .2s;white-space:nowrap;font-family:'Open Sans',sans-serif;font-weight:600}
+  .btn-logout:hover{background:rgba(255,255,255,.22)}
 
-  /* ── NAV ────────────────────────────────────────────────── */
-  .nav-bar{background:#fff;border-bottom:1px solid var(--borde);padding:0 18px;display:flex;overflow-x:auto;white-space:nowrap}
+  /* ── NAV ─────────────────────────────────────────────────── */
+  .nav-bar{background:#fff;border-bottom:1px solid #E0E0E0;padding:0 18px;display:flex;overflow-x:auto;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.05)}
   .nav-bar::-webkit-scrollbar{height:3px}
   .nav-bar::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px}
-  .nav-item{display:inline-block;padding:12px 14px;font-size:.7rem;font-weight:500;color:var(--gris);text-decoration:none;border-bottom:3px solid transparent;transition:.2s}
-  .nav-item:hover{color:var(--rojo);background:var(--rojo-xs)}
-  .nav-item.active{color:var(--rojo);border-bottom-color:var(--rojo);font-weight:700}
+  .menu-item{display:inline-block;padding:12px 14px;font-size:.7rem;color:#333;text-decoration:none;transition:all .2s;border-bottom:3px solid transparent}
+  .menu-item:hover{background:#F1F3F5;color:#D30000}
+  .menu-item.active{font-family:'League Spartan',sans-serif;font-weight:700;color:#D30000;border-bottom-color:#D30000}
+  .admin-only{display:none}
 
   /* ── LAYOUT ─────────────────────────────────────────────── */
   .main{flex:1;padding:24px 18px;max-width:1200px;margin:0 auto;width:100%}
@@ -128,37 +144,43 @@
 
   @media(max-width:600px){
     .form-grid{grid-template-columns:1fr}
-    .hd-title{font-size:.68rem}
+  }
+  @media(max-width:768px){
+    header{padding:0 10px;height:50px}
+    .header-title{font-size:.7rem}
   }
 </style>
 </head>
 <body>
 
-<!-- ── HEADER ───────────────────────────────────────────────── -->
-<header class="hd">
-  <div class="hd-left">
+<!-- ── HEADER ────────────────────────────────────────────────── -->
+<header>
+  <div class="header-left">
     <img src="assets/logo-casabe-real.png" alt="Casabe Real" onerror="this.style.display='none'">
-    <span class="hd-title">Sistema Comercial<br>Casabe Real</span>
+    <span class="header-title">Sistema Comercial Casabe Real</span>
   </div>
-  <div class="hd-right">
-    <span class="hd-pill" id="user-name-display">—</span>
-    <button class="btn-out" onclick="cerrarSesion()">Salir</button>
+  <div class="header-right">
+    <div class="header-user-info">
+      <div class="user-name" id="user-name-display">Cargando...</div>
+      <div class="user-role" id="user-role-display">Portal Comercial</div>
+    </div>
+    <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
   </div>
 </header>
 
-<!-- ── NAV ──────────────────────────────────────────────────── -->
+<!-- ── NAV ───────────────────────────────────────────────────── -->
 <nav class="nav-bar">
-  <a href="inicio.html"    class="nav-item">INICIO</a>
-  <a href="clientes.html"  class="nav-item">CLIENTES</a>
-  <a href="meta.html"      class="nav-item">META</a>
-  <a href="propuesta.html" class="nav-item">PROPUESTA</a>
-  <a href="pedido.html"    class="nav-item">PEDIDO</a>
-  <a href="reporte.html"   class="nav-item">REPORTE</a>
-  <a href="embudo.html"    class="nav-item">EMBUDO</a>
-  <a href="dashboard.html" class="nav-item">DASHBOARD</a>
-  <a href="bi-ia.html"     class="nav-item">BI + IA</a>
-  <a href="cargas.html"    class="nav-item active">CARGAS</a>
-  <a href="historico.html" class="nav-item">HISTÓRICO</a>
+  <a href="inicio.html"    class="menu-item">INICIO</a>
+  <a href="clientes.html"  class="menu-item">CLIENTES</a>
+  <a href="meta.html"      class="menu-item">META</a>
+  <a href="propuesta.html" class="menu-item">PROPUESTA</a>
+  <a href="pedido.html"    class="menu-item">PEDIDO</a>
+  <a href="reporte.html"   class="menu-item">REPORTE</a>
+  <a href="embudo.html"    class="menu-item">EMBUDO</a>
+  <a href="dashboard.html" class="menu-item">DASHBOARD</a>
+  <a href="bi-ia.html"     class="menu-item admin-only">BI+IA</a>
+  <a href="cargas.html"    class="menu-item admin-only active">CARGAS</a>
+  <a href="historico.html" class="menu-item admin-only">HISTÓRICO</a>
 </nav>
 
 <!-- ── MAIN ─────────────────────────────────────────────────── -->
@@ -460,7 +482,18 @@ window.addEventListener('DOMContentLoaded', () => {
   const sesion = SCCR.initSCCR(['admin', 'gerente']);
   if (!sesion) return;
 
+  const rol = (sesion.rol || '').toLowerCase();
+
+  // Header — mismo funcionamiento de clientes.html
   document.getElementById('user-name-display').textContent = sesion.nombre || '—';
+  document.getElementById('user-role-display').textContent =
+    rol === 'admin' ? 'Administrador' :
+    rol === 'gerente' ? 'Gerente de Ventas' : 'Asesor Comercial';
+
+  // Menú administrativo — Cargas requiere admin o gerente
+  if (rol === 'admin' || rol === 'gerente') {
+    document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
+  }
 
   cargarUsuarios();
   cargarVendedores();
