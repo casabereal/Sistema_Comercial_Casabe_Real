@@ -1,840 +1,706 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SCCR - Embudo Comercial</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        :root {
-            --primary-red: #D30000;
-            --white: #FFFFFF;
-            --light-bg: #F8F9FA;
-            --text-dark: #333333;
-            --border-color: #E0E0E0;
-            --sidebar-hover: #F1F3F5;
-            
-            --rojo-casabe: #D30000;
-            --rojo-hover: #b51319;
-            --fondo-general: #F8F9FA;
-            --card-bg: #FFFFFF;
-            --texto-principal: #333333;
-            --texto-secundario: #666666;
-            --borde-color: #E0E0E0;
-            --verde-exito: #2ECC71;
-            --amarillo-alerta: #F39C12;
-            --rojo-critico: #E74C3C;
-            --sombra-suave: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            --radio-borde: 8px;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SCCR — Embudo Comercial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<script src="assets/sccr-auth.js"></script>
+<style>
+/* ── TOKENS (idénticos a clientes.html) ─────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --rojo:#D30000;
+  --rojo-d:#A01015;
+  --rojo-xs:#FEF2F2;
+  --white:#FFFFFF;
+  --light-bg:#F8F9FA;
+  --border-color:#E0E0E0;
+  --text-dark:#333333;
+  --gris:#6B7280;
+  --sidebar-hover:#F1F3F5;
+  --verde:#059669;
+  --verde-xs:#ECFDF5;
+  --naranja:#D97706;
+  --naranja-xs:#FFFBEB;
+  --azul:#2563EB;
+  --azul-xs:#EFF6FF;
+  --alerta:#E74C3C;
+  --r:6px;
+  --sh:0 2px 4px rgba(0,0,0,0.05);
+}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+body{
+  font-family:'Open Sans',sans-serif;
+  background:var(--light-bg);
+  color:var(--text-dark);
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+  font-size:0.75rem;
+}
 
-        body {
-            font-family: 'Open Sans', sans-serif;
-            background-color: var(--light-bg);
-            color: var(--text-dark);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            font-size: 0.75rem;
-        }
+/* ── HEADER ──────────────────────────────────────────────────── */
+header{
+  background-color:var(--rojo);
+  color:var(--white);
+  height:60px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 18px;
+  box-shadow:0 2px 4px rgba(0,0,0,0.1);
+  position:sticky;
+  top:0;
+  z-index:1000;
+}
+.header-left{display:flex;align-items:center;gap:11px}
+.header-left img{width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25));display:block}
+.header-title{font-family:'League Spartan',sans-serif;font-size:0.95rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.header-right{display:flex;align-items:center;gap:12px}
+.header-user-info{font-size:0.7rem;text-align:right;line-height:1.3}
+.header-user-info .user-name{font-weight:600}
+.header-user-info .user-role{font-size:0.65rem;opacity:.9}
+.btn-logout{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:5px 10px;cursor:pointer;color:rgba(255,255,255,.9);font-size:0.7rem;transition:background .2s;white-space:nowrap;font-family:'Open Sans',sans-serif;font-weight:600}
+.btn-logout:hover{background:rgba(255,255,255,.22)}
 
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'League Spartan', sans-serif;
-            color: var(--text-dark);
-        }
+/* ── NAV ─────────────────────────────────────────────────────── */
+.nav-bar{background:var(--white);border-bottom:1px solid var(--border-color);padding:0 18px;display:flex;overflow-x:auto;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.nav-bar::-webkit-scrollbar{height:3px}
+.nav-bar::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px}
+.menu-item{display:inline-block;padding:12px 14px;font-size:0.7rem;color:var(--text-dark);text-decoration:none;transition:all .2s;border-bottom:3px solid transparent}
+.menu-item:hover{background:var(--sidebar-hover);color:var(--rojo)}
+.menu-item.active{font-family:'League Spartan',sans-serif;font-weight:700;color:var(--rojo);border-bottom-color:var(--rojo)}
+.admin-only{display:none}
 
-        /* 1. HEADER */
-        header {
-            background-color: var(--primary-red);
-            color: var(--white);
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 18px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+/* ── MAIN ────────────────────────────────────────────────────── */
+.main-container{flex:1;padding:22px 18px 32px;max-width:1400px;width:100%;margin:0 auto}
+.section-header{margin-bottom:18px}
+.breadcrumb{font-size:0.68rem;color:var(--gris);margin-bottom:4px}
+.breadcrumb span{color:var(--rojo);font-weight:600}
+.section-header h1{font-family:'League Spartan',sans-serif;font-size:1.5rem;font-weight:700;color:var(--text-dark);margin-bottom:4px}
+.section-header .highlight{color:var(--rojo)}
+.section-sub{font-size:0.7rem;color:var(--gris);font-weight:600}
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-        }
+/* ── KPIs ────────────────────────────────────────────────────── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:22px}
+.kpi-card{
+  background:var(--white);padding:18px;border-radius:var(--r);
+  box-shadow:var(--sh);border:1px solid var(--border-color);
+  position:relative;overflow:hidden;
+}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;bottom:0;width:4px;background:var(--rojo);border-radius:4px 0 0 4px}
+.kpi-title{font-size:0.65rem;color:var(--gris);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
+.kpi-value{font-size:1.6rem;font-weight:800;color:var(--text-dark);font-family:'League Spartan',sans-serif;margin-bottom:4px}
+.kpi-sub{font-size:0.65rem;font-weight:600;color:var(--gris)}
+.kpi-sub.verde{color:var(--verde)}
+.kpi-sub.naranja{color:var(--naranja)}
+.kpi-sub.rojo{color:var(--alerta)}
 
-        .header-left img {
-            width: 42px;
-            height: 42px;
-            object-fit: contain;
-            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
-            display: block;
-        }
+/* ── TOOLBAR ─────────────────────────────────────────────────── */
+.toolbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.toolbar-left{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.search-input{padding:7px 12px;border:1px solid var(--border-color);border-radius:var(--r);font-size:0.72rem;outline:none;font-family:'Open Sans',sans-serif;min-width:200px}
+.search-input:focus{border-color:var(--rojo)}
 
-        .header-title {
-            font-family: 'League Spartan', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
+.btn{padding:7px 14px;border-radius:var(--r);font-weight:600;font-size:0.72rem;cursor:pointer;font-family:'Open Sans',sans-serif;transition:all .2s;border:none;display:inline-flex;align-items:center;gap:5px}
+.btn-primary{background:var(--rojo);color:#fff}
+.btn-primary:hover{background:var(--rojo-d)}
+.btn-outline{background:var(--white);color:var(--rojo);border:1px solid var(--rojo)}
+.btn-outline:hover{background:var(--rojo-xs)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
 
-        .header-right {
-            font-family: 'Open Sans', sans-serif;
-            font-size: 0.7rem;
-            text-align: right;
-            line-height: 1.3;
-        }
+/* ── KANBAN ──────────────────────────────────────────────────── */
+.kanban-wrapper{overflow-x:auto;padding-bottom:12px}
+.kanban-board{
+  display:grid;
+  grid-template-columns:repeat(6,minmax(200px,1fr));
+  gap:10px;
+  min-width:1200px;
+}
+.kanban-col{
+  background:#F1F3F5;
+  border-radius:var(--r);
+  border:1px solid var(--border-color);
+  display:flex;
+  flex-direction:column;
+  max-height:72vh;
+}
+.kanban-col-header{
+  padding:10px 12px;
+  background:var(--white);
+  border-radius:var(--r) var(--r) 0 0;
+  border-bottom:2px solid var(--border-color);
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+}
+.col-title-row{display:flex;justify-content:space-between;align-items:center}
+.col-title{font-family:'League Spartan',sans-serif;font-size:0.75rem;font-weight:700;color:var(--text-dark)}
+.badge-count{
+  background:var(--rojo);color:#fff;
+  font-size:0.62rem;font-weight:700;
+  padding:2px 7px;border-radius:12px;
+}
+.col-usd{font-size:0.63rem;font-weight:600;color:var(--gris)}
+.col-desc{font-size:0.62rem;color:var(--gris)}
 
-        .header-right .user-name {
-            font-weight: 600;
-        }
+.kanban-cards{
+  padding:8px;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+  flex:1;
+}
 
-        .header-right .user-role {
-            font-size: 0.65rem;
-            opacity: 0.9;
-        }
+/* ── TARJETA OPORTUNIDAD ─────────────────────────────────────── */
+.opp-card{
+  background:var(--white);
+  border:1px solid var(--border-color);
+  border-left:3px solid var(--rojo);
+  border-radius:var(--r);
+  padding:9px 11px;
+  cursor:pointer;
+  transition:transform .15s,box-shadow .15s;
+  box-shadow:var(--sh);
+}
+.opp-card:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,.08)}
+.opp-name{font-size:0.73rem;font-weight:700;color:var(--text-dark);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.opp-meta{display:flex;justify-content:space-between;font-size:0.63rem;color:var(--gris);margin-bottom:6px}
+.opp-footer{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border-color);padding-top:5px;margin-top:2px}
+.opp-usd{font-size:0.72rem;font-weight:700;color:var(--rojo)}
+.opp-tag{background:var(--light-bg);border:1px solid var(--border-color);border-radius:4px;font-size:0.6rem;padding:2px 5px;color:var(--gris)}
 
-        /* 2. SIDEBAR / MENÚ WEB HORIZONTAL */
-        .sidebar-menu {
-            background-color: var(--white);
-            border-bottom: 1px solid var(--border-color);
-            padding: 0 18px;
-            display: flex;
-            overflow-x: auto;
-            white-space: nowrap;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-            position: sticky;
-            top: 60px;
-            z-index: 999;
-        }
+/* Estado vacío dentro de columna */
+.col-empty{text-align:center;padding:18px 8px;color:var(--gris);font-size:0.68rem}
 
-        .sidebar-menu::-webkit-scrollbar {
-            height: 3px;
-        }
+/* ── ESTADO GENERAL ──────────────────────────────────────────── */
+.empty-state{text-align:center;padding:48px 20px;color:var(--gris)}
+.empty-state .icon{font-size:2.5rem;margin-bottom:10px}
+.empty-state p{font-size:0.78rem}
 
-        .sidebar-menu::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 3px;
-        }
+/* ── MODAL GESTIÓN ───────────────────────────────────────────── */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.48);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:2000;
+  padding:20px;
+}
+.modal-overlay.open{display:flex}
+.modal-box{
+  background:var(--white);
+  width:100%;max-width:520px;
+  border-radius:var(--r);
+  box-shadow:0 16px 40px rgba(0,0,0,.2);
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  animation:fadeUp .25s ease;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+.modal-header{
+  padding:14px 18px;background:var(--light-bg);
+  border-bottom:1px solid var(--border-color);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.modal-header h3{font-family:'League Spartan',sans-serif;font-size:1rem;color:var(--rojo)}
+.modal-close{background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--gris);line-height:1}
+.modal-body{padding:18px;display:flex;flex-direction:column;gap:12px;max-height:60vh;overflow-y:auto}
+.modal-footer{
+  padding:12px 18px;background:var(--light-bg);
+  border-top:1px solid var(--border-color);
+  display:flex;justify-content:flex-end;gap:8px;
+}
 
-        .menu-item {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 12px 14px;
-            color: var(--text-dark);
-            text-decoration: none;
-            font-family: 'League Spartan', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            border-bottom: 3px solid transparent;
-            transition: all 0.2s ease;
-        }
+/* formulario dentro del modal */
+.cf{display:flex;flex-direction:column;gap:4px}
+.cf label{font-size:0.68rem;font-weight:700;color:var(--gris);text-transform:uppercase;letter-spacing:.3px}
+.cf input,.cf select,.cf textarea{
+  padding:8px 10px;border:1px solid var(--border-color);border-radius:var(--r);
+  font-family:'Open Sans',sans-serif;font-size:0.75rem;color:var(--text-dark);
+  outline:none;transition:border .2s;
+}
+.cf input:focus,.cf select:focus,.cf textarea:focus{border-color:var(--rojo)}
+.cf textarea{resize:vertical;min-height:60px}
 
-        .menu-item:hover {
-            background-color: var(--sidebar-hover);
-            color: var(--primary-red);
-        }
+/* spinner en botón */
+.spinner{display:inline-block;width:11px;height:11px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:4px}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-        .menu-item.active {
-            color: var(--primary-red);
-            border-bottom-color: var(--primary-red);
-        }
+/* toast */
+.toast{
+  position:fixed;bottom:22px;right:22px;
+  background:var(--text-dark);color:#fff;
+  padding:10px 18px;border-radius:6px;font-size:0.73rem;
+  box-shadow:0 6px 18px rgba(0,0,0,.2);
+  z-index:9999;opacity:0;transform:translateY(10px);
+  transition:opacity .3s,transform .3s;pointer-events:none;
+  max-width:300px;
+}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.ok{background:var(--verde)}
+.toast.err{background:var(--alerta)}
 
-        /* 3. CONTENEDOR PRINCIPAL */
-        .main-content {
-            flex-grow: 1;
-            padding: 24px 18px;
-            max-width: 1400px;
-            width: 100%;
-            margin: 0 auto;
-        }
+/* ── FOOTER ──────────────────────────────────────────────────── */
+footer{text-align:center;padding:14px 18px;font-size:0.65rem;color:var(--gris);border-top:1px solid var(--border-color);background:var(--white);margin-top:auto}
+footer strong{color:var(--text-dark)}
 
-        /* BREADCRUMB */
-        .breadcrumb {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.7rem;
-            color: var(--texto-secundario);
-            margin-bottom: 15px;
-        }
-
-        .breadcrumb a {
-            color: var(--rojo-casabe);
-            text-decoration: none;
-        }
-
-        .breadcrumb span {
-            color: var(--texto-principal);
-            font-weight: 600;
-        }
-
-        /* HEADER DE VISTA */
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .page-header h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 12px;
-        }
-
-        .btn-primary {
-            background-color: var(--rojo-casabe);
-            color: #FFF;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 0.75rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: background 0.2s;
-            font-family: 'Open Sans', sans-serif;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--rojo-hover);
-        }
-
-        /* KPI BAR (GRID DE 12 COLUMNAS) */
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .kpi-card {
-            grid-column: span 3;
-            background-color: var(--card-bg);
-            padding: 16px;
-            border-radius: var(--radio-borde);
-            box-shadow: var(--sombra-suave);
-            border-left: 4px solid var(--rojo-casabe);
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            border-top: 1px solid var(--borde-color);
-            border-right: 1px solid var(--borde-color);
-            border-bottom: 1px solid var(--borde-color);
-        }
-
-        .kpi-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.06);
-            border-color: var(--rojo-hover);
-        }
-
-        @media (max-width: 1200px) {
-            .kpi-card { grid-column: span 6; }
-        }
-        @media (max-width: 768px) {
-            .kpi-card { grid-column: span 12; }
-        }
-
-        .kpi-title {
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: var(--texto-secundario);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
-        }
-
-        .kpi-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--texto-principal);
-            font-family: 'League Spartan', sans-serif;
-        }
-
-        .kpi-sub {
-            font-size: 0.65rem;
-            color: var(--texto-secundario);
-            margin-top: 4px;
-        }
-
-        /* PIPELINE / KANBAN EMBUDO (5 ETAPAS) */
-        .funnel-container {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 12px;
-            overflow-x: auto;
-            padding-bottom: 20px;
-        }
-
-        @media (max-width: 1400px) {
-            .funnel-container {
-                min-width: 1100px;
-            }
-        }
-
-        .funnel-column {
-            background-color: #F1F3F5;
-            border-radius: var(--radio-borde);
-            display: flex;
-            flex-direction: column;
-            max-height: 70vh;
-            border: 1px solid var(--borde-color);
-        }
-
-        .funnel-col-header {
-            padding: 12px;
-            background-color: var(--card-bg);
-            border-top-left-radius: var(--radio-borde);
-            border-top-right-radius: var(--radio-borde);
-            border-bottom: 2px solid var(--borde-color);
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .funnel-col-header:hover {
-            background-color: #FAFAFA;
-        }
-
-        .funnel-col-title {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--texto-principal);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .badge-count {
-            background-color: var(--rojo-casabe);
-            color: #FFF;
-            font-size: 0.65rem;
-            padding: 2px 6px;
-            border-radius: 12px;
-            font-weight: 600;
-        }
-
-        .funnel-col-desc {
-            font-size: 0.65rem;
-            color: var(--texto-secundario);
-            line-height: 1.2;
-        }
-
-        .funnel-cards-container {
-            padding: 10px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            flex-grow: 1;
-        }
-
-        /* TARJETA INDIVIDUAL DE CLIENTE / OPORTUNIDAD */
-        .funnel-card {
-            background-color: var(--card-bg);
-            padding: 10px;
-            border-radius: 6px;
-            box-shadow: var(--sombra-suave);
-            cursor: pointer;
-            border-left: 3px solid var(--rojo-casabe);
-            border-top: 1px solid var(--borde-color);
-            border-right: 1px solid var(--borde-color);
-            border-bottom: 1px solid var(--borde-color);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .funnel-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
-        }
-
-        .card-client-name {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--texto-principal);
-            margin-bottom: 3px;
-        }
-
-        .card-client-meta {
-            font-size: 0.65rem;
-            color: var(--texto-secundario);
-            margin-bottom: 6px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid var(--borde-color);
-            padding-top: 6px;
-            font-size: 0.65rem;
-        }
-
-        .card-amount {
-            font-weight: 700;
-            color: var(--rojo-casabe);
-        }
-
-        .card-tag {
-            background-color: #F8F9FA;
-            color: var(--texto-secundario);
-            padding: 2px 5px;
-            border-radius: 4px;
-            font-size: 0.6rem;
-            border: 1px solid var(--borde-color);
-        }
-
-        /* VENTANAS MODALES */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            padding: 20px;
-        }
-
-        .modal-container {
-            background-color: var(--card-bg);
-            width: 100%;
-            max-width: 800px;
-            border-radius: var(--radio-borde);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            animation: modalFadeIn 0.3s ease;
-        }
-
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(-15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .modal-header {
-            padding: 16px 20px;
-            background-color: #F8F9FA;
-            border-bottom: 1px solid var(--borde-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-header h3 {
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--texto-principal);
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 1rem;
-            cursor: pointer;
-            color: var(--texto-secundario);
-        }
-
-        .modal-body {
-            padding: 20px;
-            overflow-y: auto;
-            max-height: 60vh;
-        }
-
-        .modal-footer {
-            padding: 12px 20px;
-            background-color: #F8F9FA;
-            border-top: 1px solid var(--borde-color);
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-
-        /* TABLA DENTRO DEL MODAL */
-        .modal-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.7rem;
-        }
-
-        .modal-table th, .modal-table td {
-            padding: 10px 12px;
-            text-align: left;
-            border-bottom: 1px solid var(--borde-color);
-        }
-
-        .modal-table th {
-            background-color: #F1F3F5;
-            color: var(--texto-principal);
-            font-weight: 600;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: var(--texto-principal);
-            margin-bottom: 5px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid var(--borde-color);
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-family: 'Open Sans', sans-serif;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--rojo-casabe);
-        }
-    </style>
+@media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.kpi-grid{grid-template-columns:1fr}}
+@media(max-width:768px){
+  header{padding:0 10px;height:50px}
+  .header-title{font-size:0.7rem}
+  .main-container{padding:15px 10px}
+  .section-header h1{font-size:1.1rem}
+}
+</style>
 </head>
 <body>
 
-    <header>
-        <div class="header-left">
-            <img src="assets/logo-casabe-real.png" alt="Logo Casabe Real">
-            <span class="header-title">SISTEMA COMERCIAL CASABE REAL</span>
-        </div>
-        <div class="header-right">
-            <div class="user-name">Carlos Mendoza</div>
-            <div class="user-role">CEO / Administrador</div>
-        </div>
-    </header>
-
-    <nav class="sidebar-menu">
-        <a href="inicio.html" class="menu-item">INICIO</a>
-        <a href="clientes.html" class="menu-item">CLIENTES</a>
-        <a href="meta.html" class="menu-item">META</a>
-        <a href="propuesta.html" class="menu-item">PROPUESTA</a>
-        <a href="pedido.html" class="menu-item">PEDIDO</a>
-        <a href="reporte.html" class="menu-item">REPORTE</a>
-        <a href="embudo.html" class="menu-item active">EMBUDO</a>
-        <a href="dashboard.html" class="menu-item">DASHBOARD</a>
-        <a href="bi-ia.html" class="menu-item">BI+IA</a>
-        <a href="cargas.html" class="menu-item">CARGAS</a>
-        <a href="historico.html" class="menu-item">HISTORICO</a>
-    </nav>
-
-    <main class="main-content">
-        <div class="breadcrumb">
-            <a href="dashboard.html">Inicio</a>
-            <i class="fa-solid fa-chevron-right" style="font-size: 10px;"></i>
-            <span>Embudo Comercial (Pipeline)</span>
-        </div>
-
-        <div class="page-header">
-            <h1>Embudo <span style="color:var(--rojo-casabe)">Comercial</span></h1>
-            <div class="header-actions">
-                <button class="btn-primary" onclick="sincronizarEmbudo()">
-                    <i class="fa-solid fa-rotate"></i> Sincronizar Pipeline
-                </button>
-            </div>
-        </div>
-
-        <div class="kpi-grid">
-            <div class="kpi-card" onclick="abrirDesglose('Total Oportunidades', 'Todas las cuentas activas en el embudo comercial')">
-                <div class="kpi-title">Total Oportunidades</div>
-                <div class="kpi-value">119</div>
-                <div class="kpi-sub"><i class="fa-solid fa-arrow-up text-success"></i> +12% vs mes anterior</div>
-            </div>
-            <div class="kpi-card" onclick="abrirDesglose('Tasa de Conversión Global', 'Porcentaje de cuentas avanzadas a fidelización')">
-                <div class="kpi-title">Tasa de Conversión</div>
-                <div class="kpi-value">35.3%</div>
-                <div class="kpi-sub"><i class="fa-solid fa-chart-line"></i> Meta: >30.0%</div>
-            </div>
-            <div class="kpi-card" onclick="abrirDesglose('Propuestas Activas', 'Prospectos con propuesta comercial emitida y pendiente de cierre')">
-                <div class="kpi-title">Propuestas Activas</div>
-                <div class="kpi-value">24</div>
-                <div class="kpi-sub">Valor estimado: $45,800</div>
-            </div>
-            <div class="kpi-card" onclick="abrirDesglose('Clientes Fidelizados (5+ Pedidos)', 'Cuentas con alta recurrencia de compra consolidada')">
-                <div class="kpi-title">Fidelizados</div>
-                <div class="kpi-value">42</div>
-                <div class="kpi-sub">Retención activa del 94%</div>
-            </div>
-        </div>
-
-        <div class="funnel-container">
-            <div class="funnel-column">
-                <div class="funnel-col-header" onclick="abrirDesglose('1. Prospección', 'Nuevos leads, registros de base fría y contactos iniciales asignados')">
-                    <div class="funnel-col-title">
-                        <span>1. Prospección</span>
-                        <span class="badge-count">45</span>
-                    </div>
-                    <span class="funnel-col-desc">Leads y contactos nuevos</span>
-                </div>
-                <div class="funnel-cards-container" id="col-1">
-                    <div class="funnel-card" onclick="abrirDetalleCliente('Supermercados Central C.A.')">
-                        <div class="card-client-name">Supermercados Central C.A.</div>
-                        <div class="card-client-meta"><span>Asesor: Carlos M.</span><span>RIF: J-30112</span></div>
-                        <div class="card-footer">
-                            <span class="card-amount">$1,200</span>
-                            <span class="card-tag">Zona Norte</span>
-                        </div>
-                    </div>
-                    <div class="funnel-card" onclick="abrirDetalleCliente('Inversiones El Bodegón 24')">
-                        <div class="card-client-name">Inversiones El Bodegón 24</div>
-                        <div class="card-client-meta"><span>Asesor: Ana P.</span><span>RIF: J-40991</span></div>
-                        <div class="card-footer">
-                            <span class="card-amount">$850</span>
-                            <span class="card-tag">Zona Este</span>
-                        </div>
-                    </div>
-                    <div class="funnel-card" onclick="abrirDetalleCliente('Comercializadora Los Andes')">
-                        <div class="card-client-name">Comercializadora Los Andes</div>
-                        <div class="card-client-meta"><span>Asesor: Luis R.</span><span>RIF: J-50123</span></div>
-                        <div class="card-footer">
-                            <span class="card-amount">$1,500</span>
-                            <span class="card-tag">Zona Sur</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="funnel-column">
-                <div class="funnel-col-header" onclick="abrirDesglose('2. Contacto', 'Primer contacto telefónico o visita de presentación ejecutada')">
-                    <div class="funnel-col-title">
-                        <span>2. Contacto</span>
-                        <span class="badge-count">32</span>
-                    </div>
-                    <span class="funnel-col-desc">Visitas y llamadas realizadas</span>
-                </div>
-                <div class="funnel-cards-container" id="col-2">
-                    <div class="funnel-card" onclick="abrirDetalleCliente('Distribuidora Alimentos Delicias')">
-                        <div class="card-client-name">Distribuidora Alimentos Delicias</div>
-                        <div class="card-client-meta"><span>Asesor: Carlos M.</span><span>RIF: J-29831</span></div>
-                        <div class="card-footer">
-                            <span class="card-amount">$2,100</span>
-                            <span class="card-tag">Pasapalo</span>
-                        </div>
-                    </div>
-                    <div class="funnel-card" onclick="abrirDetalleCliente('Automercado La Gran Parada')">
-                        <div class="card-client-name">Automercado La Gran Parada</div>
-                        <div class="card-client-meta"><span>Asesor: Ana P.</span><span>RIF: J-31882</span></div>
-                        <div class="card-footer">
-                            <span class="card-amount">$1,800</span>
-                            <span class="card-tag">Restaurante</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="funnel-column">
-                <div class="funnel-col-header" onclick="abrirDesglose('3. Presentación', 'Propuesta comercial emitida y simulador de rentabilidad presentado')">
-                    <div class="funnel-col-title">
-                        <span>3. Presentación</span>
-                        <span class="badge-count">24</span>
-                    </div>
-                    <span class="funnel-col-desc">Propuestas comerciales activas</span>
-                </div>
-                <div class="funnel-cards-container" id="col-3">
-                    <div class="funnel-card" onclick="abrirDetalleCliente('Hipermercado Metro Plaza')">
-                        <div class="card-client-name">Hipermercado Metro Plaza</div>
-                        <div class="card-client-meta"><span>Asesor: Carlos M.</span><span>RIF: J-00291</span></div>
-                        <div class="card-footer">
-                            <span class="card-amount">$4,500</span>
-                            <span class="card-tag">Torta</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="funnel-column">
-                <div class="funnel-col-header" onclick="abrirDesglose('4. Activación', 'Clientes con 1 a 4 pedidos facturados en proceso de adopción')">
-                    <div class="funnel-col-title">
-                        <span>4. Activación</span>
-                        <span class="badge-count">18</span>
-                    </div>
-                    <span class="funnel-col-desc">1 a 4 pedidos completados</span>
-                </div>
-                <div class="funnel-cards-container" id="col-4">
-                    <div class="funnel-card" onclick="abrirDetalleCliente('Ferretería y Víveres Don Pepe')">
-                        <div class="card-client-name">Ferretería y Víveres Don Pepe</div>
-                        <div class="card-client-meta"><span>Asesor: Luis R.</span><span>RIF: J-12093</span></div>
-                        <div class="card-footer">
-                            <span class="card-amount">$950</span>
-                            <span class="card-tag">Pedido #3</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="funnel-column">
-                <div class="funnel-col-header" onclick="abrirDesglose('5. Fidelización', 'Cuentas consolidadas con 5 o más pedidos recurrentes')">
-                    <div class="funnel-col-title">
-                        <span>5. Fidelización</span>
-                        <span class="badge-count">42</span>
-                    </div>
-                    <span class="funnel-col-desc">5+ pedidos recurrentes</span>
-                </div>
-                <div class="funnel-cards-container" id="col-5">
-                    <div class="funnel-card" onclick="abrirDetalleCliente('Cadenas de Minimarkets Express')">
-                        <div class="card-client-name">Cadenas de Minimarkets Express</div>
-                        <div class="card-client-meta"><span>Asesor: Carlos M.</span><span>RIF: J-20019</span></div>
-                        <div class="card-footer">
-                            <span class="card-amount">$7,200</span>
-                            <span class="card-tag">VIP / Frecuente</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <div class="modal-overlay" id="modalDesglose">
-        <div class="modal-container">
-            <div class="modal-header">
-                <h3 id="modalDesgloseTitulo">Desglose Comercial</h3>
-                <button class="modal-close" onclick="cerrarDesglose()"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="modal-body">
-                <p id="modalDesgloseSub" style="font-size: 0.7rem; color: var(--texto-secundario); margin-bottom: 15px;"></p>
-                <table class="modal-table">
-                    <thead>
-                        <tr>
-                            <th>Cliente / Razón Social</th>
-                            <th>RIF</th>
-                            <th>Asesor Asignado</th>
-                            <th>Valor / Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tablaDesgloseCuerpo">
-                        </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-primary" onclick="cerrarDesglose()" style="background:#6c757d;">Cerrar</button>
-            </div>
-        </div>
+<!-- ── HEADER ────────────────────────────────────────────────── -->
+<header>
+  <div class="header-left">
+    <img src="assets/logo-casabe-real.png" alt="Casabe Real" onerror="this.style.display='none'">
+    <span class="header-title">Sistema Comercial Casabe Real</span>
+  </div>
+  <div class="header-right">
+    <div class="header-user-info">
+      <div class="user-name"  id="user-name-display">Cargando...</div>
+      <div class="user-role"  id="user-role-display">Portal Comercial</div>
     </div>
+    <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
+  </div>
+</header>
 
-    <div class="modal-overlay" id="modalDetalle">
-        <div class="modal-container">
-            <div class="modal-header">
-                <h3 id="modalClienteNombre">Gestión de Cuenta</h3>
-                <button class="modal-close" onclick="cerrarModal()"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>Nombre de la Cuenta / Cliente</label>
-                    <input type="text" id="inpNombreCliente" class="form-control" readonly>
-                </div>
-                <div class="form-group">
-                    <label>Mover a Etapa del Embudo</label>
-                    <select id="selectEtapaDestino" class="form-control">
-                        <option value="1">1. Prospección</option>
-                        <option value="2">2. Contacto</option>
-                        <option value="3">3. Presentación</option>
-                        <option value="4">4. Activación</option>
-                        <option value="5">5. Fidelización</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Notas de Actualización / Minuta Comercial</label>
-                    <textarea class="form-control" rows="3" placeholder="Ingrese el motivo o estatus del cambio..."></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-primary" onclick="guardarCambiosEtapa()">Guardar y Sincronizar</button>
-                <button class="btn-primary" onclick="cerrarModal()" style="background:#6c757d;">Cancelar</button>
-            </div>
-        </div>
+<!-- ── NAV ───────────────────────────────────────────────────── -->
+<nav class="nav-bar">
+  <a href="inicio.html"    class="menu-item">INICIO</a>
+  <a href="clientes.html"  class="menu-item">CLIENTES</a>
+  <a href="meta.html"      class="menu-item">META</a>
+  <a href="propuesta.html" class="menu-item">PROPUESTA</a>
+  <a href="pedido.html"    class="menu-item">PEDIDO</a>
+  <a href="reporte.html"   class="menu-item">REPORTE</a>
+  <a href="embudo.html"    class="menu-item active">EMBUDO</a>
+  <a href="dashboard.html" class="menu-item">DASHBOARD</a>
+  <a href="bi-ia.html"     class="menu-item admin-only">BI+IA</a>
+  <a href="cargas.html"    class="menu-item admin-only">CARGAS</a>
+  <a href="historico.html" class="menu-item admin-only">HISTÓRICO</a>
+</nav>
+
+<!-- ── MAIN ──────────────────────────────────────────────────── -->
+<main class="main-container">
+
+  <div class="section-header">
+    <div class="breadcrumb">Sistema / <span>Embudo Comercial</span></div>
+    <h1>Embudo <span class="highlight">Comercial (Pipeline)</span></h1>
+    <p class="section-sub" id="section-sub">Cargando...</p>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-title">Total Oportunidades</div>
+      <div class="kpi-value" id="kpi-total">—</div>
+      <div class="kpi-sub" id="kpi-total-sub">Activas en el pipeline</div>
     </div>
+    <div class="kpi-card">
+      <div class="kpi-title">Valor Estimado</div>
+      <div class="kpi-value" id="kpi-valor">—</div>
+      <div class="kpi-sub naranja" id="kpi-valor-sub">USD en el embudo</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-title">En Negociación / Pedido</div>
+      <div class="kpi-value" id="kpi-cierre">—</div>
+      <div class="kpi-sub verde" id="kpi-cierre-sub">Próximos a cerrar</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-title">Tasa de Conversión</div>
+      <div class="kpi-value" id="kpi-tasa">—</div>
+      <div class="kpi-sub" id="kpi-tasa-sub">Prospección → Fidelización</div>
+    </div>
+  </div>
 
-    <script>
-        function abrirDesglose(titulo, descripcion) {
-            document.getElementById('modalDesgloseTitulo').innerText = "Desglose: " + titulo;
-            document.getElementById('modalDesgloseSub').innerText = descripcion;
-            
-            const tbody = document.getElementById('tablaDesgloseCuerpo');
-            tbody.innerHTML = "";
-            
-            // Datos de prueba simulados para el desglose detallado por Clientes y Vendedores
-            const datosSimulados = [
-                { cliente: "Supermercados Central C.A.", rif: "J-30112", vendedor: "Carlos Mendoza", indicador: "$1,200 (Activo)" },
-                { cliente: "Inversiones El Bodegón 24", rif: "J-40991", vendedor: "Ana Pérez", indicador: "$850 (En proceso)" },
-                { cliente: "Comercializadora Los Andes", rif: "J-50123", vendedor: "Luis Rodríguez", indicador: "$1,500 (Pendiente cita)" }
-            ];
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <input type="text" class="search-input" id="searchInput"
+             placeholder="Buscar oportunidad o cliente…" oninput="filtrarPorTexto()">
+    </div>
+    <div style="font-size:0.68rem;color:var(--gris);font-style:italic">
+      El pipeline se actualiza automáticamente desde Reportes, Propuestas y Pedidos
+    </div>
+  </div>
 
-            datosSimulados.forEach(item => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>${item.cliente}</strong></td>
-                    <td>${item.rif}</td>
-                    <td>${item.vendedor}</td>
-                    <td><span style=\"font-weight:600; color:var(--rojo-casabe);\">${item.indicador}</span></td>
-                `;
-                tbody.appendChild(tr);
-            });
+  <!-- KANBAN BOARD -->
+  <div class="kanban-wrapper">
+    <div class="kanban-board" id="kanbanBoard">
+      <!-- Las columnas se renderizan dinámicamente -->
+      <div style="grid-column:1/-1;text-align:center;padding:36px;color:var(--gris)">Cargando pipeline…</div>
+    </div>
+  </div>
 
-            document.getElementById('modalDesglose').style.display = 'flex';
-        }
+</main>
 
-        function cerrarDesglose() {
-            document.getElementById('modalDesglose').style.display = 'none';
-        }
+<!-- ── FOOTER ──────────────────────────────────────────────────── -->
+<footer>
+  &copy; 2026 <strong>Sistema Comercial Casabe Real (SCCR)</strong>. Todos los derechos reservados. &nbsp;|&nbsp; v2.5.0 &nbsp;|&nbsp; 0412.290.58.33
+</footer>
 
-        function abrirDetalleCliente(nombreCliente) {
-            document.getElementById('modalClienteNombre').innerText = "Gestión: " + nombreCliente;
-            document.getElementById('inpNombreCliente').value = nombreCliente;
-            document.getElementById('modalDetalle').style.display = 'flex';
-        }
+<!-- ── MODAL: GESTIONAR OPORTUNIDAD ──────────────────────────── -->
+<div class="modal-overlay" id="modalGestion">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="modalTitulo">Gestionar Oportunidad</h3>
+      <button class="modal-close" onclick="cerrarModal()">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="mId">
+      <!-- Cliente (solo lectura) -->
+      <div style="background:var(--light-bg);border:1px solid var(--border-color);border-radius:var(--r);padding:12px">
+        <div style="font-size:0.63rem;color:var(--gris);font-weight:700;text-transform:uppercase;margin-bottom:4px">Cliente</div>
+        <div id="mNombreDisplay" style="font-family:'League Spartan',sans-serif;font-size:1rem;font-weight:700;color:var(--text-dark)">—</div>
+        <div id="mMetaDisplay"   style="font-size:0.65rem;color:var(--gris);margin-top:3px">—</div>
+      </div>
+      <!-- Campos editables -->
+      <div class="cf">
+        <label>Mover a Etapa <span style="color:var(--rojo)">*</span></label>
+        <select id="mEtapa">
+          <!-- Se llena dinámicamente con ETAPAS_EMBUDO del Script -->
+        </select>
+      </div>
+      <div class="cf">
+        <label>Próxima Acción</label>
+        <input type="text" id="mAccion" placeholder="Ej: Llamar el lunes para confirmar cita">
+      </div>
+      <div class="cf">
+        <label>Nota de Actualización</label>
+        <textarea id="mObs" placeholder="Minuta o comentario sobre el cambio de etapa..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="cerrarModal()">Cancelar</button>
+      <button class="btn btn-primary" id="btnGuardar" onclick="guardarOportunidad()">Guardar</button>
+    </div>
+  </div>
+</div>
 
-        function cerrarModal() {
-            document.getElementById('modalDetalle').style.display = 'none';
-        }
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 
-        function guardarCambiosEtapa() {
-            alert("Cambio de etapa registrado y sincronizado exitosamente con el sistema SCCR.");
-            cerrarModal();
-        }
+<!-- ─────────────────────────── SCRIPT ───────────────────────── -->
+<script>
+// ════════════════════════════════════════════════════════════
+//  CONFIGURACIÓN
+// ════════════════════════════════════════════════════════════
+const API = 'https://script.google.com/macros/s/AKfycbyWRB5745Ors7n8RYqTqyBfb7LXIX3W9x-LFxfnnJf4Bv7fyoS51KeqKgChaldfmLqjSw/exec';
 
-        async function sincronizarEmbudo() {
-            const btn = document.querySelector('.header-actions button');
-            btn.innerHTML = '<i class=\"fa-solid fa-spinner fa-spin\"></i> Sincronizando...';
-            
-            setTimeout(() => {
-                btn.innerHTML = '<i class=\"fa-solid fa-rotate\"></i> Sincronizar Pipeline';
-                alert("Pipeline de 5 etapas actualizado correctamente con los datos de Clientes, Reportes y Pedidos.");
-            }, 1000);
-        }
-    </script>
+// Etapas del Script (ETAPAS_EMBUDO en SCRIPT.gs)
+// Si el GET devuelve las etapas, se usan esas; sino este fallback
+const ETAPAS_FALLBACK = ['Prospección','Contacto','Presentación','Activación','Fidelización'];
+
+// Descripciones de cada etapa para el header de la columna
+const ETAPA_DESC = {
+  'Prospección':  'Clientes potenciales identificados',
+  'Contacto':     'Contacto efectivo realizado (Reporte)',
+  'Presentación': 'Propuesta comercial emitida',
+  'Activación':   '1 a 4 pedidos confirmados',
+  'Fidelización': '5 o más pedidos recurrentes',
+};
+
+// ════════════════════════════════════════════════════════════
+//  ESTADO GLOBAL
+// ════════════════════════════════════════════════════════════
+let sesion       = null;
+let esDirectivo  = false;
+let todasOppDB   = [];   // datos brutos del API
+let oppFiltradas = [];   // subconjunto visible
+let etapas       = [];   // etapas recibidas del API
+
+// ════════════════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  sesion = SCCR.initSCCR();
+  if (!sesion) return;
+
+  const rol = sesion.rol.toLowerCase();
+  esDirectivo = (rol === 'admin' || rol === 'gerente');
+
+  // Header
+  document.getElementById('user-name-display').textContent = sesion.nombre || '—';
+  document.getElementById('user-role-display').textContent =
+    rol === 'admin'   ? 'Administrador' :
+    rol === 'gerente' ? 'Gerente de Ventas' : 'Asesor Comercial';
+
+  // Menú admin-only
+  if (esDirectivo) {
+    document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
+  }
+
+  // Subtítulo según rol
+  document.getElementById('section-sub').textContent = esDirectivo
+    ? 'Vista consolidada — todos los vendedores'
+    : `Tu pipeline asignado — ${sesion.nombre}`;
+
+  cargarEmbudo();
+});
+
+function cerrarSesion() { SCCR.cerrarSesion(); }
+
+// ════════════════════════════════════════════════════════════
+//  CARGA PRINCIPAL
+// ════════════════════════════════════════════════════════════
+async function cargarEmbudo() {
+  try {
+    let url = API + '?action=embudo';
+    // Vendedor ve solo sus oportunidades; directivos ven todas
+    if (!esDirectivo && sesion.vendedor_id) {
+      url += '&vendedor=' + encodeURIComponent(sesion.vendedor_id);
+    }
+
+    const r = await fetch(url, { redirect: 'follow' });
+    const d = await r.json();
+
+    if (!d.ok) throw new Error(d.msg || 'Error al cargar embudo');
+
+    todasOppDB   = Array.isArray(d.data) ? d.data : [];
+    etapas       = Array.isArray(d.etapas) ? d.etapas : ETAPAS_FALLBACK;
+
+    // Poblar select de etapa en el modal
+    poblarSelectEtapas();
+
+    oppFiltradas = [...todasOppDB];
+    actualizarKPIs();
+    renderKanban(oppFiltradas);
+
+  } catch (e) {
+    document.getElementById('kanbanBoard').innerHTML =
+      `<div style="grid-column:1/-1;text-align:center;padding:36px;color:var(--gris)">
+         Error de conexión al cargar el pipeline. Intenta de nuevo.
+       </div>`;
+    console.error(e);
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+//  KPIs
+// ════════════════════════════════════════════════════════════
+function actualizarKPIs() {
+  const total  = todasOppDB.length;
+  const valor  = todasOppDB.reduce((s, o) => s + (parseFloat(o.valor_estimado_usd) || 0), 0);
+  const cierre = todasOppDB.filter(o => ['Negociación','Pedido'].includes(o.etapa)).length;
+  const activos = todasOppDB.filter(o => o.etapa === 'Fidelización').length;
+  const tasa   = total > 0 ? Math.round((activos / total) * 100) : 0;
+
+  document.getElementById('kpi-total').textContent     = total;
+  document.getElementById('kpi-total-sub').textContent = total === 1 ? 'Activa en el pipeline' : 'Activas en el pipeline';
+
+  document.getElementById('kpi-valor').textContent     = '$' + fmt(valor);
+  document.getElementById('kpi-valor-sub').textContent = 'USD en el embudo';
+
+  document.getElementById('kpi-cierre').textContent    = cierre;
+  document.getElementById('kpi-cierre-sub').textContent= cierre === 1 ? 'Próxima a cerrar' : 'Próximas a cerrar';
+
+  document.getElementById('kpi-tasa').textContent      = tasa + '%';
+  document.getElementById('kpi-tasa-sub').textContent  = `${activos} clientes activos / ${total} opp.`;
+}
+
+// ════════════════════════════════════════════════════════════
+//  RENDER KANBAN
+// ════════════════════════════════════════════════════════════
+function renderKanban(datos) {
+  const board = document.getElementById('kanbanBoard');
+
+  if (!datos.length && todasOppDB.length === 0) {
+    board.innerHTML = `
+      <div style="grid-column:1/-1">
+        <div class="empty-state">
+          <div class="icon">📊</div>
+          <p>El pipeline está vacío. Los clientes aparecen aquí automáticamente al registrar Reportes, Propuestas o Pedidos.</p>
+        </div>
+      </div>`;
+    return;
+  }
+
+  // Agrupar por etapa
+  const porEtapa = {};
+  etapas.forEach(e => { porEtapa[e] = []; });
+  datos.forEach(o => {
+    const e = o.etapa || etapas[0];
+    if (porEtapa[e]) porEtapa[e].push(o);
+    else porEtapa[etapas[0]].push(o); // etapa desconocida → primera columna
+  });
+
+  board.innerHTML = etapas.map(etapa => {
+    const opps  = porEtapa[etapa] || [];
+    const usdEt = opps.reduce((s, o) => s + (parseFloat(o.valor_estimado_usd) || 0), 0);
+
+    const cards = opps.length
+      ? opps.map(o => cardHtml(o)).join('')
+      : `<div class="col-empty">Sin oportunidades</div>`;
+
+    return `
+      <div class="kanban-col">
+        <div class="kanban-col-header">
+          <div class="col-title-row">
+            <span class="col-title">${etapa}</span>
+            <span class="badge-count">${opps.length}</span>
+          </div>
+          <span class="col-usd">${usdEt > 0 ? '$' + fmt(usdEt) : '—'}</span>
+          <span class="col-desc">${ETAPA_DESC[etapa] || ''}</span>
+        </div>
+        <div class="kanban-cards" id="col-${etapa.replace(/\s/g,'-')}">
+          ${cards}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function cardHtml(o) {
+  const nombre  = o.razon_social || o.nombre || '—';
+  const vendedor = o.vendedor || '—';
+  const usd     = parseFloat(o.valor_estimado_usd) || 0;
+
+  // Truncar nombre si es muy largo
+  const nombreShort = nombre.length > 30 ? nombre.slice(0, 28) + '…' : nombre;
+
+  // Serializar el objeto para el onclick
+  const dataStr = encodeURIComponent(JSON.stringify(o));
+
+  return `
+    <div class="opp-card" onclick="abrirModalEditar('${dataStr}')">
+      <div class="opp-name" title="${nombre}">${nombreShort}</div>
+      <div class="opp-meta">
+        <span>${esDirectivo ? vendedor : (o.proxima_accion ? '📌 ' + truncar(o.proxima_accion, 22) : '—')}</span>
+      </div>
+      <div class="opp-footer">
+        <span class="opp-usd">${usd > 0 ? '$' + fmt(usd) : '—'}</span>
+        <span class="opp-tag">${o.id_oportunidad || ''}</span>
+      </div>
+    </div>`;
+}
+
+// ════════════════════════════════════════════════════════════
+//  FILTRO POR TEXTO
+// ════════════════════════════════════════════════════════════
+function filtrarPorTexto() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  if (!q) {
+    oppFiltradas = [...todasOppDB];
+  } else {
+    oppFiltradas = todasOppDB.filter(o =>
+      (o.razon_social    || '').toLowerCase().includes(q) ||
+      (o.nombre          || '').toLowerCase().includes(q) ||
+      (o.establecimiento || '').toLowerCase().includes(q) ||
+      (o.contacto        || '').toLowerCase().includes(q) ||
+      (o.vendedor        || '').toLowerCase().includes(q)
+    );
+  }
+  renderKanban(oppFiltradas);
+}
+
+// (Nueva oportunidad deshabilitada — el pipeline es automático)
+
+// ════════════════════════════════════════════════════════════
+//  MODAL — EDITAR OPORTUNIDAD
+// ════════════════════════════════════════════════════════════
+function abrirModalEditar(dataStr) {
+  const o = JSON.parse(decodeURIComponent(dataStr));
+  document.getElementById('modalTitulo').textContent   = 'Gestionar Oportunidad';
+  document.getElementById('mId').value                 = o.id_oportunidad || '';
+  document.getElementById('mNombreDisplay').textContent= o.razon_social || o.nombre || '—';
+  document.getElementById('mMetaDisplay').textContent  =
+    (o.vendedor ? 'Asesor: ' + o.vendedor : '') +
+    (o.fecha_actualizacion ? '  ·  Actualizado: ' + o.fecha_actualizacion : '');
+  document.getElementById('mEtapa').value              = o.etapa || etapas[0];
+  document.getElementById('mAccion').value             = o.proxima_accion || '';
+  document.getElementById('mObs').value                = '';
+  document.getElementById('modalGestion').classList.add('open');
+}
+
+function cerrarModal() {
+  document.getElementById('modalGestion').classList.remove('open');
+}
+
+function poblarSelectEtapas() {
+  const sel = document.getElementById('mEtapa');
+  sel.innerHTML = etapas.map(e => `<option value="${e}">${e}</option>`).join('');
+}
+
+// ════════════════════════════════════════════════════════════
+//  GUARDAR OPORTUNIDAD (nueva o actualizar etapa)
+// ════════════════════════════════════════════════════════════
+async function guardarOportunidad() {
+  const id    = document.getElementById('mId').value;
+  const etapa = document.getElementById('mEtapa').value;
+  if (!id) { showToast('No hay oportunidad seleccionada.', 'err'); return; }
+
+  const btn = document.getElementById('btnGuardar');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Guardando…';
+
+  const payload = {
+    action:         'actualizarEtapa',
+    id:             id,
+    etapa:          etapa,
+    proxima_accion: document.getElementById('mAccion').value.trim(),
+    observaciones:  document.getElementById('mObs').value.trim(),
+  };
+
+  try {
+    await fetch(API, {
+      method:  'POST',
+      mode:    'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload),
+    });
+
+    // Actualizar en memoria
+    const idx = todasOppDB.findIndex(o => o.id_oportunidad === id);
+    if (idx !== -1) {
+      todasOppDB[idx].etapa          = etapa;
+      todasOppDB[idx].proxima_accion = payload.proxima_accion;
+    }
+
+    showToast('✓ Etapa actualizada correctamente.', 'ok');
+    cerrarModal();
+    oppFiltradas = [...todasOppDB];
+    actualizarKPIs();
+    renderKanban(oppFiltradas);
+
+  } catch (e) {
+    console.error(e);
+    showToast('Error al guardar. Verifica tu conexión.', 'err');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = 'Guardar';
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+//  HELPERS
+// ════════════════════════════════════════════════════════════
+function fmt(n) {
+  if (n === undefined || n === null || isNaN(n)) return '—';
+  return Number(n).toLocaleString('es-VE');
+}
+function truncar(str, max) {
+  if (!str) return '';
+  return str.length > max ? str.slice(0, max) + '…' : str;
+}
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className   = 'toast ' + (type || '') + ' show';
+  clearTimeout(t._t);
+  t._t = setTimeout(() => { t.className = 'toast'; }, 3500);
+}
+</script>
+
 </body>
 </html>
