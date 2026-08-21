@@ -128,7 +128,15 @@
     .kpi-val{font-size:1.5rem}
   }
 </style>
-</head>
+<style>
+body{font-family:'Open Sans',sans-serif;background:var(--light-bg);color:var(--text-dark);font-size:.75rem}
+.hd{background:var(--rojo);height:60px;padding:0 18px;box-shadow:0 2px 4px rgba(0,0,0,.1)}
+.hd-left{gap:11px}.hd-left img{width:42px;height:42px}.hd-title{font-family:'League Spartan',sans-serif;font-size:.95rem;font-weight:700}.hd-right{gap:12px}.hd-pill{background:transparent;padding:0;border-radius:0;font-size:.7rem}.btn-out{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:5px 10px;font-size:.7rem}
+.nav-bar{padding:0 18px;box-shadow:0 1px 3px rgba(0,0,0,.05)}.nav-item{padding:12px 14px;font-size:.7rem;color:var(--text-dark);border-bottom:3px solid transparent}.nav-item.active{font-family:'League Spartan',sans-serif;color:var(--rojo);border-bottom-color:var(--rojo)}
+.main{padding:22px 18px 32px;max-width:1400px}.page-header{margin-bottom:18px}.page-header h1{font-family:'League Spartan',sans-serif;font-size:1.5rem}.page-header p{font-size:.7rem;font-weight:600}
+.kpi-section{border-radius:6px}.kpi-section-hdr{padding:14px 18px;background:var(--light-bg)}.kpi-section-ttl{font-family:'League Spartan',sans-serif}.kpi-grid{gap:15px;padding:18px}.kpi-card{border-radius:6px}.kpi-card::before{background:var(--rojo)}.kpi-val{font-family:'League Spartan',sans-serif}
+.content-card{border-radius:6px}.card-box{border-radius:6px}.btn-primary{background:var(--rojo)}footer{font-size:.65rem;padding:14px 18px}
+</style></head>
 <body>
 
 <!-- ── HEADER ───────────────────────────────────────────────── -->
@@ -165,6 +173,7 @@
     <h1>Inteligencia de Negocio + IA</h1>
     <p>KPIs estratégicos en tiempo real y análisis contextual impulsado por el Agente IA de Casabe Real.</p>
   </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap"><div id="data-status" style="font-size:.68rem;color:var(--gris)">Estado: <strong>conectando...</strong></div><button class="btn btn-outline" onclick="cargarTodo()">↻ Actualizar datos</button></div>
 
   <!-- MÓDULO 1 — EMBUDO COMERCIAL -->
   <div class="kpi-section">
@@ -210,7 +219,7 @@
       <div class="kpi-card">
         <div class="kpi-row">
           <span class="kpi-lbl">Tasa de Recurrencia</span>
-          <span class="badge ok">14 días prom.</span>
+          <span class="badge ok">Base real</span>
         </div>
         <div class="kpi-val" id="kpi-recurrencia">—%</div>
         <div class="kpi-formula">Clientes con recompra en los últimos 30 días</div>
@@ -218,7 +227,7 @@
       <div class="kpi-card">
         <div class="kpi-row">
           <span class="kpi-lbl">Clientes en Riesgo</span>
-          <span class="badge err" id="badge-riesgo">Crítico</span>
+          <span class="badge err" id="badge-riesgo">Calculado</span>
         </div>
         <div class="kpi-val" id="kpi-riesgo">—</div>
         <div class="kpi-formula">Días sin comprar vs. frecuencia promedio del cliente</div>
@@ -226,7 +235,7 @@
       <div class="kpi-card">
         <div class="kpi-row">
           <span class="kpi-lbl">Ticket Promedio Mes</span>
-          <span class="badge ok">Estable</span>
+          <span class="badge ok">Base real</span>
         </div>
         <div class="kpi-val" id="kpi-ticket">$—</div>
         <div class="kpi-formula">Total USD mes ÷ número de pedidos</div>
@@ -234,7 +243,7 @@
       <div class="kpi-card">
         <div class="kpi-row">
           <span class="kpi-lbl">Valor de Vida (LTV Est.)</span>
-          <span class="badge ok">Alto Valor</span>
+          <span class="badge ok">Estimado</span>
         </div>
         <div class="kpi-val" id="kpi-ltv">$—</div>
         <div class="kpi-formula">Ticket promedio × frecuencia mensual × 12 meses</div>
@@ -260,7 +269,7 @@
       <div class="kpi-card">
         <div class="kpi-row">
           <span class="kpi-lbl">Tasa de Abandono</span>
-          <span class="badge warn" id="badge-abandono">Monitorear</span>
+          <span class="badge warn" id="badge-abandono">Calculado</span>
         </div>
         <div class="kpi-val" id="kpi-abandono">—%</div>
         <div class="kpi-formula">Oportunidades perdidas ÷ total oportunidades</div>
@@ -268,7 +277,7 @@
       <div class="kpi-card">
         <div class="kpi-row">
           <span class="kpi-lbl">Cumplimiento Meta Mes</span>
-          <span class="badge ok" id="badge-cumpl">En seguimiento</span>
+          <span class="badge ok" id="badge-cumpl">Calculado</span>
         </div>
         <div class="kpi-val" id="kpi-cumpl">—%</div>
         <div class="kpi-formula">Ventas reales ÷ meta asignada × 100</div>
@@ -301,22 +310,11 @@
         <label>Registrar Novedad Comercial</label>
         <textarea id="novedadInput" rows="3" placeholder="Ej: Ajuste de precios 5% en Pasapalo desde el lunes..."></textarea>
       </div>
-      <button class="btn-novedad" onclick="agregarNovedad()">➕ Agregar a Memoria IA</button>
+      <button class="btn-novedad" onclick="agregarNovedad()">➕ Agregar a Memoria IA</button><div id="novedadesFeed" style="display:flex;flex-direction:column;gap:7px;margin-bottom:12px"><div class="loading">Sin novedades registradas en esta sesión.</div></div>
 
       <label style="font-size:.72rem;font-weight:600;color:var(--gris);display:block;margin-bottom:8px">Feed de Alertas Activas</label>
       <div class="alert-list" id="alertFeed">
-        <div class="alert-item err">
-          <span>Clientes que superaron frecuencia sin recompra.</span>
-          <span>⚠️</span>
-        </div>
-        <div class="alert-item warn">
-          <span>Incremento en costos de despacho zona Norte.</span>
-          <span>ℹ️</span>
-        </div>
-        <div class="alert-item ok">
-          <span>Meta semanal superada — Canal Restaurante 104%.</span>
-          <span>✅</span>
-        </div>
+        <div class="loading">Analizando datos reales...</div>
       </div>
     </div>
   </div>
@@ -326,167 +324,30 @@
 <footer>&copy; 2026 Sistema Comercial Casabe Real (SCCR v2.5.0) — 0412.290.58.33</footer>
 
 <script>
-// ── URL Apps Script ───────────────────────────────────────────
-const API = 'https://script.google.com/macros/s/AKfycbysSUeGA965zGGIF1Zpcbji1SNmkM_kKNoXmFwud6P7kHv0cTlKNJopVF3T93QKhqPs9A/exec';
+const API='https://script.google.com/macros/s/AKfycbyWRB5745Ors7n8RYqTqyBfb7LXIX3W9x-LFxfnnJf4Bv7fyoS51KeqKgChaldfmLqjSw/exec';
+let sesion=null, db={dashboard:null,embudo:[],clientes:[],ventas:[],propuestas:[]}, novedades=[];
 
-// Memoria de novedades para el contexto del Agente IA
-const novedades = [];
+document.addEventListener('DOMContentLoaded',()=>{try{sesion=SCCR.initSCCR(['admin','gerente']);if(!sesion)return;document.getElementById('user-name-display').textContent=sesion.nombre||'—';const rol=(sesion.rol||'').toLowerCase();document.getElementById('user-role-display').textContent=rol==='admin'?'Administrador':'Gerente de Ventas';document.querySelectorAll('.admin-only').forEach(el=>el.style.display='inline-block');const sub=document.querySelector('.page-header p');if(sub)sub.textContent='Vista consolidada — indicadores calculados desde Google Sheets, sin datos simulados.';cargarTodo()}catch(e){setStatus('No se pudo iniciar la sesión.','err')}});
+function cerrarSesion(){SCCR.cerrarSesion()}
+function toggleKPI(id){const g=document.getElementById(id),c=document.getElementById('chv-'+id);const x=g.classList.toggle('collapsed');c.textContent=x?'▶':'▼'}
+async function getJSON(url){const r=await fetch(url,{redirect:'follow'});if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json();if(!d.ok)throw new Error(d.msg||'API error');return d}
+async function cargarTodo(){setStatus('conectando...','');try{const [dash,emb,cli,ven,prop]=await Promise.all(['action=dashboard','action=embudo','action=clientes','action=ventas&limite=500','action=propuestas'].map(q=>getJSON(API+'?'+q)));db.dashboard=dash.data||{};db.embudo=emb.data||[];db.clientes=cli.data||[];db.ventas=ven.data||[];db.propuestas=prop.data||[];pintarKPIs();pintarVentas();pintarAlertas();setStatus('conectado · '+new Date().toLocaleTimeString('es-VE'),'ok')}catch(e){setStatus('error de conexión: '+e.message,'err');document.getElementById('alertFeed').innerHTML='<div class="alert-item err"><span>No fue posible cargar todos los módulos desde Apps Script.</span><span>⚠️</span></div>'}}
+function setStatus(t,c){const el=document.getElementById('data-status');if(!el)return;el.innerHTML='Estado: <strong style="color:'+(c==='ok'?'var(--verde)':c==='err'?'var(--alerta)':'var(--gris)')+'">'+esc(t)+'</strong>'}
+function pintarKPIs(){const d=db.dashboard||{},ops=db.embudo||[],cli=db.clientes||[],ven=db.ventas||[];const activas=ops.filter(o=>String(o.estado).toLowerCase()==='activo'),ganadas=ops.filter(o=>String(o.etapa).toLowerCase()==='cliente activo'||String(o.estado).toLowerCase()==='ganado'),perdidas=ops.filter(o=>String(o.estado).toLowerCase()==='perdido');const base=ganadas.length+perdidas.length,win=base?Math.round(ganadas.length/base*100):null,abandono=base?Math.round(perdidas.length/base*100):null;const probs={'Prospecto':.1,'Contacto':.2,'Presentación':.4,'Negociación':.6,'Pedido':.8,'Cliente Activo':1};const ponderado=activas.reduce((s,o)=>s+(Number(o.valor_estimado_usd)||0)*(probs[o.etapa]||.1),0);let product={},total=0;ven.forEach(p=>{const re=/([0-9]+)\s*x\s*([^|($]+?)(?:\s*\(\$|\||$)/gi;let m;while((m=re.exec(String(p.productos_detalle||'')))){const q=Number(m[1])||0,n=m[2].trim();product[n]=(product[n]||0)+q;total+=q}});const lider=Object.entries(product).sort((a,b)=>b[1]-a[1])[0],mix=lider&&total?Math.round(lider[1]/total*100):null;const ac=cli.filter(c=>String(c.estado||'activo').toLowerCase()==='activo'),rec=ac.filter(c=>diasDesde(c.ultima_compra)<=30).length,riesgo=ac.filter(c=>{const dias=diasDesde(c.ultima_compra),f=Number(c.frecuencia)||0;return dias>30||(f>0&&dias>f*1.5)}).length;const fs=ac.map(c=>Number(c.frecuencia)).filter(n=>n>0),freq=fs.length?fs.reduce((a,b)=>a+b,0)/fs.length:null,ltv=freq&&d.ticketPromedio?d.ticketPromedio*(30/freq)*12:null;
+setText('kpi-embudo-valor',money(ponderado));setText('kpi-activas',activas.length);setText('kpi-winrate',win===null?'—':win+'%');setBadge('badge-winrate',win===null?'Sin base':win>=30?'≥30%':'<30%',win===null?'info':win>=30?'ok':'warn');setText('kpi-mix',mix===null?'—':mix+'%');setText('badge-mix',lider?lider[0]:'Sin producto');setText('kpi-recurrencia',ac.length?Math.round(rec/ac.length*100)+'%':'—');setText('kpi-riesgo',ac.length?riesgo:'—');setBadge('badge-riesgo',riesgo?'Atención':'Sin riesgo',riesgo?'err':'ok');setText('kpi-ticket',d.ticketPromedio?money(d.ticketPromedio):'$—');setText('kpi-ltv',ltv?money(ltv):'$—');setText('kpi-conv',ganadas.length?(activas.length/ganadas.length).toFixed(1)+' : 1':'—');setText('kpi-abandono',abandono===null?'—':abandono+'%');setBadge('badge-abandono',abandono===null?'Sin base':abandono>30?'Alto':'Calculado',abandono===null?'info':abandono>30?'err':'warn');setText('kpi-cumpl',d.cumplimientoPct==null?'—':Number(d.cumplimientoPct).toLocaleString('es-VE')+'%');setBadge('badge-cumpl',d.cumplimientoPct==null?'Sin meta':d.cumplimientoPct>=90?'Objetivo':d.cumplimientoPct>=70?'Calculado':'Por debajo',d.cumplimientoPct==null?'info':d.cumplimientoPct>=90?'ok':d.cumplimientoPct>=70?'warn':'err');setText('kpi-ventas-mes',money(d.ventasMes||0))}
+function pintarVentas(){const d=db.dashboard||{},rows=[['Ventas USD',d.ventasHoy,d.ventasSemana,d.ventasMes,d.ventasAnio],['Cajas',d.cajasHoy,d.cajasSemana,d.cajasMes,'—'],['Pedidos',d.pedidosHoy,'—',d.pedidosMes,'—']];const body=document.getElementById('ventasBody');if(body)body.innerHTML=rows.map(r=>'<tr>'+r.map((x,i)=>'<td>'+(i?(r[0]==='Ventas USD'?money(x):fmt(x)):'<strong>'+x+'</strong>')+'</td>').join('')+'</tr>').join('')}
+function pintarAlertas(){const d=db.dashboard||{},cli=db.clientes||[],ops=db.embudo||[],prop=db.propuestas||[],a=[],riesgo=cli.filter(c=>diasDesde(c.ultima_compra)>30).length,pp=prop.filter(p=>String(p.estado_propuesta).toLowerCase()==='pendiente').length,perd=ops.filter(o=>String(o.estado).toLowerCase()==='perdido').length;if(riesgo)a.push(['err',riesgo+' clientes superan 30 días sin compra.','⚠️']);if(pp)a.push(['warn',pp+' propuestas pendientes de respuesta.','📄']);if(perd)a.push(['warn',perd+' oportunidades registradas como perdidas.','↘']);if(d.cumplimientoPct!=null&&d.cumplimientoPct>=100)a.push(['ok','Meta mensual superada: '+d.cumplimientoPct+'%.','✓']);if(!a.length)a.push(['ok','Sin alertas derivadas de los datos cargados.','✓']);document.getElementById('alertFeed').innerHTML=a.map(x=>'<div class="alert-item '+x[0]+'"><span>'+esc(x[1])+'</span><span>'+x[2]+'</span></div>').join('')}
+function agregarNovedad(){const ta=document.getElementById('novedadInput'),t=ta.value.trim();if(!t)return;novedades.unshift(t);ta.value='';renderNovedades()}
+function renderNovedades(){document.getElementById('novedadesFeed').innerHTML=novedades.length?novedades.map(n=>'<div class="alert-item warn"><span>'+esc(n)+'</span><span>📌</span></div>').join(''):'<div class="loading">Sin novedades registradas en esta sesión.</div>'}
+async function enviar(){const input=document.getElementById('userInput'),btn=document.getElementById('btnSend'),q=input.value.trim();if(!q)return;agregarMsg('user',q);input.value='';btn.disabled=true;const th=agregarMsg('ai thinking','Analizando datos reales…');try{const contexto=JSON.stringify({dashboard:db.dashboard,embudo:db.embudo,clientes:db.clientes,ventas:db.ventas,propuestas:db.propuestas,novedades});const d=await getJSON(API+'?action=ia&pregunta='+encodeURIComponent(q)+'&contexto='+encodeURIComponent(contexto));th.remove();agregarMsg('ai',d.data?.respuesta||d.msg||'No se obtuvo respuesta.')}catch(e){th.remove();agregarMsg('ai','El Agente IA requiere que el backend tenga configurada la API de IA. Los KPIs permanecen conectados a la base real.')}finally{btn.disabled=false}}
+function agregarMsg(tipo,texto){const d=document.createElement('div');d.className='msg '+tipo;d.textContent=texto;const box=document.getElementById('chatMsgs');box.appendChild(d);box.scrollTop=box.scrollHeight;return d}
+function diasDesde(v){if(!v)return 999;let d;if(typeof v==='string'&&v.includes('/')){const p=v.split('/');d=new Date(Number(p[2]),Number(p[1])-1,Number(p[0]))}else d=new Date(v);return isNaN(d)?999:Math.max(0,Math.floor((Date.now()-d.getTime())/86400000))}
+function money(n){return n===null||n===undefined||n===''||isNaN(Number(n))?'$—':'$'+Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function fmt(n){return n===null||n===undefined||n===''?'—':Number(n).toLocaleString('es-VE')}
+function setText(id,v){const e=document.getElementById(id);if(e)e.textContent=v}
+function setBadge(id,t,c){const e=document.getElementById(id);if(e){e.textContent=t;e.className='badge '+c}}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 
-// ── INIT ──────────────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', () => {
-  const sesion = SCCR.initSCCR(['admin', 'gerente']);
-  if (!sesion) return;
-  cargarKPIs();
-});
-
-function cerrarSesion() { SCCR.cerrarSesion(); }
-
-// ── TOGGLE KPI SECTIONS ───────────────────────────────────────
-function toggleKPI(id) {
-  const grid = document.getElementById(id);
-  const chv  = document.getElementById('chv-' + id);
-  const col  = grid.classList.toggle('collapsed');
-  chv.textContent = col ? '▶' : '▼';
-}
-
-// ── CARGAR KPIs DESDE EL API ──────────────────────────────────
-async function cargarKPIs() {
-  try {
-    const r = await fetch(API + '?action=dashboard');
-    const d = await r.json();
-    if (!d.ok) return;
-    const data = d.data;
-
-    // Módulo 3 — Eficiencia
-    document.getElementById('kpi-cumpl').textContent =
-      data.cumplimientoPct !== null ? data.cumplimientoPct + '%' : 'Sin meta';
-    document.getElementById('kpi-ticket').textContent =
-      '$' + (data.ticketPromedio || 0).toLocaleString('es-VE', {minimumFractionDigits:2});
-
-    // Módulo 2 — CRM (valores estimados desde dashboard)
-    document.getElementById('kpi-ltv').textContent =
-      '$' + ((data.ticketPromedio || 0) * 2 * 12).toLocaleString('es-VE', {minimumFractionDigits:2});
-
-    colorearCumplimiento(data.cumplimientoPct);
-  } catch(e) {
-    // Si falla el API, los KPIs muestran '—' (ya están por defecto)
-  }
-
-  // Cargar KPIs de embudo
-  try {
-    const re = await fetch(API + '?action=embudo');
-    const de = await re.json();
-    if (!de.ok) return;
-    const ops = de.data || [];
-    const activas  = ops.filter(o => o.estado === 'activo').length;
-    const ganadas  = ops.filter(o => o.etapa === 'Cliente Activo').length;
-    const perdidas = ops.filter(o => o.estado === 'perdido').length;
-
-    const winRate = activas > 0 ? Math.round((ganadas / activas) * 100) : 0;
-    document.getElementById('kpi-winrate').textContent = winRate + '%';
-
-    const ponderado = ops
-      .filter(o => o.estado === 'activo')
-      .reduce((s, o) => {
-        const prob = {
-          'Prospecto':0.1,'Contacto':0.2,'Presentación':0.4,
-          'Negociación':0.6,'Pedido':0.8,'Cliente Activo':1
-        }[o.etapa] || 0.1;
-        return s + (parseFloat(o.valor_estimado_usd||0) * prob);
-      }, 0);
-    document.getElementById('kpi-embudo-valor').textContent =
-      '$' + Math.round(ponderado).toLocaleString('es-VE');
-
-    const tasa = activas > 0 ? Math.round((perdidas/activas)*100) : 0;
-    document.getElementById('kpi-abandono').textContent = tasa + '%';
-    document.getElementById('kpi-conv').textContent     =
-      ganadas > 0 ? (activas/ganadas).toFixed(1) + ' : 1' : '—';
-  } catch(e) {}
-}
-
-function colorearCumplimiento(pct) {
-  const badge = document.getElementById('badge-cumpl');
-  if (pct === null) return;
-  if (pct >= 90) { badge.textContent = '✅ Objetivo'; badge.className = 'badge ok'; }
-  else if (pct >= 70) { badge.textContent = '⚠️ En seguimiento'; badge.className = 'badge warn'; }
-  else { badge.textContent = '🚨 Por debajo'; badge.className = 'badge err'; }
-}
-
-// ── AGENTE IA — CHAT REAL VIA ANTHROPIC API ───────────────────
-async function enviar() {
-  const input = document.getElementById('userInput');
-  const msgs  = document.getElementById('chatMsgs');
-  const btn   = document.getElementById('btnSend');
-  const texto = input.value.trim();
-  if (!texto) return;
-
-  // Mensaje usuario
-  agregarMsg('user', texto);
-  input.value = '';
-  btn.disabled = true;
-
-  // Indicador de escritura
-  const pensando = agregarMsg('ai thinking', '⏳ Analizando datos comerciales…');
-
-  // Contexto del sistema para el Agente IA
-  const contextoSistema = `Eres el Agente IA Comercial del Sistema SCCR de Casabe Real, empresa venezolana artesanal de casabe.
-La empresa vende 3 productos: Tipo Pasapalo, Tipo Restaurante y Tipo Torta — todos con crédito a 5 días.
-Clientes objetivo: restaurantes, bares y hoteles.
-Tu rol: analizar el desempeño comercial, detectar oportunidades y riesgos, y dar recomendaciones concretas y accionables.
-Responde siempre en español, de forma directa y ejecutiva. Máximo 3 párrafos.
-${novedades.length ? 'Novedades comerciales actuales:\n' + novedades.map((n,i)=>`${i+1}. ${n}`).join('\n') : ''}`;
-
-  try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1000,
-        system: contextoSistema,
-        messages: [{ role: 'user', content: texto }]
-      })
-    });
-
-    const data = await resp.json();
-    const respuesta = data.content?.[0]?.text || 'No pude procesar la respuesta.';
-
-    pensando.remove();
-    agregarMsg('ai', respuesta);
-  } catch(e) {
-    pensando.remove();
-    agregarMsg('ai', 'Error al conectar con el Agente IA. Verifica la conexión.');
-  }
-
-  btn.disabled = false;
-  msgs.scrollTop = msgs.scrollHeight;
-}
-
-function agregarMsg(tipo, texto) {
-  const msgs = document.getElementById('chatMsgs');
-  const div  = document.createElement('div');
-  div.className = 'msg ' + tipo;
-  div.textContent = texto;
-  msgs.appendChild(div);
-  msgs.scrollTop = msgs.scrollHeight;
-  return div;
-}
-
-// ── NOVEDADES ─────────────────────────────────────────────────
-function agregarNovedad() {
-  const ta   = document.getElementById('novedadInput');
-  const feed = document.getElementById('alertFeed');
-  const texto = ta.value.trim();
-  if (!texto) return;
-
-  novedades.push(texto);
-
-  const item = document.createElement('div');
-  item.className = 'alert-item warn';
-  item.innerHTML = `<span>${texto}</span><span>📌</span>`;
-  feed.prepend(item);
-  ta.value = '';
-}
 </script>
 </body>
 </html>
