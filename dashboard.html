@@ -1,770 +1,888 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SCCR v2.5.0 — Dashboard Ejecutivo</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        :root {
-            --primary-red: #D30000;
-            --white: #FFFFFF;
-            --light-bg: #F8F9FA;
-            --text-dark: #333333;
-            --border-color: #E0E0E0;
-            --sidebar-hover: #F1F3F5;
-            --success: #2ECC71;
-            --warning: #F39C12;
-            --danger: #E74C3C;
-            --shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SCCR v2.5.1 — Dashboard Ejecutivo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="assets/sccr-auth.js"></script>
+<style>
+/* ── TOKENS — idénticos a clientes.html ──────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --rojo:#D30000;
+  --rojo-d:#A01015;
+  --rojo-xs:#FEF2F2;
+  --white:#FFFFFF;
+  --light-bg:#F8F9FA;
+  --border-color:#E0E0E0;
+  --text-dark:#333333;
+  --gris:#6B7280;
+  --sidebar-hover:#F1F3F5;
+  --verde:#059669;
+  --verde-xs:#ECFDF5;
+  --naranja:#D97706;
+  --naranja-xs:#FFFBEB;
+  --azul:#2563EB;
+  --azul-xs:#EFF6FF;
+  --alerta:#E74C3C;
+  --r:6px;
+  --sh:0 2px 4px rgba(0,0,0,0.05);
+}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+body{
+  font-family:'Open Sans',sans-serif;
+  background:var(--light-bg);
+  color:var(--text-dark);
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+  font-size:0.75rem;
+}
 
-        body {
-            font-family: 'Open Sans', sans-serif;
-            background-color: var(--light-bg);
-            color: var(--text-dark);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            font-size: 0.75rem; /* Reducción del tamaño base de texto en un 25% */
-        }
+/* ── HEADER ──────────────────────────────────────────────────── */
+header{
+  background-color:var(--rojo);color:var(--white);height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 18px;box-shadow:0 2px 4px rgba(0,0,0,0.1);
+  position:sticky;top:0;z-index:1000;
+}
+.header-left{display:flex;align-items:center;gap:11px}
+.header-left img{width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25));display:block}
+.header-title{font-family:'League Spartan',sans-serif;font-size:0.95rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.header-right{display:flex;align-items:center;gap:12px}
+.header-user-info{font-size:0.7rem;text-align:right;line-height:1.3}
+.header-user-info .user-name{font-weight:600}
+.header-user-info .user-role{font-size:0.65rem;opacity:.9}
+.btn-logout{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:5px 10px;cursor:pointer;color:rgba(255,255,255,.9);font-size:0.7rem;transition:background .2s;white-space:nowrap;font-family:'Open Sans',sans-serif;font-weight:600}
+.btn-logout:hover{background:rgba(255,255,255,.22)}
 
-        /* 1. HEADER */
-        header {
-            background-color: var(--primary-red);
-            color: var(--white);
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 18px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+/* ── NAV ─────────────────────────────────────────────────────── */
+.nav-bar{background:var(--white);border-bottom:1px solid var(--border-color);padding:0 18px;display:flex;overflow-x:auto;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.nav-bar::-webkit-scrollbar{height:3px}
+.nav-bar::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px}
+.menu-item{display:inline-block;padding:12px 14px;font-size:0.7rem;color:var(--text-dark);text-decoration:none;transition:all .2s;border-bottom:3px solid transparent}
+.menu-item:hover{background:var(--sidebar-hover);color:var(--rojo)}
+.menu-item.active{font-family:'League Spartan',sans-serif;font-weight:700;color:var(--rojo);border-bottom-color:var(--rojo)}
+.admin-only{display:none}
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-        }
+/* ── MAIN ────────────────────────────────────────────────────── */
+.main-container{flex:1;padding:22px 18px 32px;max-width:1400px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.section-header{margin-bottom:0}
+.breadcrumb{font-size:0.68rem;color:var(--gris);margin-bottom:4px}
+.breadcrumb span{color:var(--rojo);font-weight:600}
+.section-header h1{font-family:'League Spartan',sans-serif;font-size:1.5rem;font-weight:700;color:var(--text-dark);margin-bottom:4px}
+.section-header .highlight{color:var(--rojo)}
+.section-sub{font-size:0.7rem;color:var(--gris);font-weight:600}
 
-        .header-left img {
-            width: 42px;
-            height: 42px;
-            object-fit: contain;
-            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
-            display: block;
-        }
+/* ── FILA 1 — 6 KPIs ─────────────────────────────────────────── */
+.fila-kpi{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
 
-        .header-title {
-            font-family: 'League Spartan', sans-serif;
-            font-size: 0.95rem; /* Reducción del 25% */
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
+.kpi-card{
+  background:var(--white);padding:14px;border-radius:var(--r);
+  box-shadow:var(--sh);border:1px solid var(--border-color);
+  border-left:4px solid var(--rojo);
+  display:flex;flex-direction:column;gap:4px;
+  transition:transform .2s;
+}
+.kpi-card:hover{transform:translateY(-2px)}
+.kpi-card.verde-accent{border-left-color:var(--verde)}
+.kpi-card.naranja-accent{border-left-color:var(--naranja)}
 
-        .header-right {
-            font-family: 'Open Sans', sans-serif;
-            font-size: 0.7rem; /* Reducción del 25% */
-            text-align: right;
-            line-height: 1.3;
-        }
+.kpi-label{font-size:0.63rem;color:var(--gris);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.kpi-value{font-family:'League Spartan',sans-serif;font-size:1.35rem;font-weight:700;color:var(--text-dark)}
+.kpi-foot{font-size:0.63rem;display:flex;align-items:center;gap:4px;color:var(--gris)}
+.up{color:var(--verde);font-weight:700}
+.dn{color:var(--alerta);font-weight:700}
 
-        .header-right .user-name {
-            font-weight: 600;
-        }
+/* barra de progreso en KPI cumplimiento */
+.prog-bg{width:100%;background:var(--light-bg);height:5px;border-radius:3px;margin-top:4px;overflow:hidden}
+.prog-fill{height:100%;border-radius:3px;background:var(--verde);transition:width .6s ease}
+.prog-fill.warn{background:var(--naranja)}
+.prog-fill.danger{background:var(--alerta)}
 
-        .header-right .user-role {
-            font-size: 0.65rem; /* Reducción del 25% */
-            opacity: 0.9;
-        }
+/* ── CARD BOX ────────────────────────────────────────────────── */
+.card-box{
+  background:var(--white);border-radius:var(--r);padding:18px;
+  box-shadow:var(--sh);border:1px solid var(--border-color);
+  display:flex;flex-direction:column;gap:14px;
+}
+.card-title{
+  font-family:'League Spartan',sans-serif;font-size:1rem;font-weight:700;
+  color:var(--text-dark);display:flex;justify-content:space-between;align-items:center;
+}
+.card-title span{font-family:'Open Sans',sans-serif;font-size:0.63rem;font-weight:400;color:var(--gris)}
 
-        /* 2. SIDEBAR / MENÚ WEB HORIZONTAL */
-        .sidebar-menu {
-            background-color: var(--white);
-            border-bottom: 1px solid var(--border-color);
-            padding: 0 18px;
-            display: flex;
-            overflow-x: auto;
-            white-space: nowrap;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
+/* ── GRIDS ───────────────────────────────────────────────────── */
+.grid-2col{display:grid;grid-template-columns:2fr 1fr;gap:18px}
+.grid-even{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 
-        .sidebar-menu::-webkit-scrollbar {
-            height: 3px;
-        }
-        .sidebar-menu::-webkit-scrollbar-thumb {
-            background: #ccc;
-            border-radius: 2px;
-        }
+/* ── TABLAS ──────────────────────────────────────────────────── */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:0.72rem}
+th{background:var(--light-bg);color:var(--gris);font-weight:600;font-size:0.63rem;text-transform:uppercase;letter-spacing:.3px;padding:8px 10px;border-bottom:1px solid var(--border-color);text-align:left}
+td{padding:9px 10px;border-bottom:1px solid var(--border-color);color:var(--text-dark)}
+tr:hover td{background:var(--sidebar-hover)}
 
-        .menu-item {
-            display: inline-block;
-            padding: 12px 14px;
-            font-family: 'Open Sans', sans-serif;
-            font-size: 0.7rem; /* Reducción del 25% */
-            color: var(--text-dark);
-            text-decoration: none;
-            transition: all 0.2s ease;
-            border-bottom: 3px solid transparent;
-        }
+.badge{display:inline-block;padding:2px 7px;border-radius:20px;font-size:0.63rem;font-weight:600}
+.badge.verde{background:var(--verde-xs);color:#15803D}
+.badge.amarillo{background:var(--naranja-xs);color:#B45309}
+.badge.rojo{background:var(--rojo-xs);color:#DC2626}
+.badge.azul{background:var(--azul-xs);color:var(--azul)}
+.badge.gris{background:var(--light-bg);color:var(--gris)}
 
-        .menu-item:hover {
-            background-color: var(--sidebar-hover);
-            color: var(--primary-red);
-        }
+/* ── PRONÓSTICO ──────────────────────────────────────────────── */
+.pron-block{
+  background:var(--light-bg);padding:10px 14px;border-radius:var(--r);
+  border-left:3px solid var(--rojo);
+}
+.pron-label{font-size:0.63rem;color:var(--gris);text-transform:uppercase;font-weight:600;margin-bottom:3px}
+.pron-val{font-family:'League Spartan',sans-serif;font-size:1.15rem;font-weight:700;color:var(--text-dark)}
+.pron-sub{font-size:0.65rem;font-weight:600}
 
-        .menu-item.active {
-            font-family: 'League Spartan', sans-serif;
-            font-weight: 700;
-            color: var(--primary-red);
-            border-bottom-color: var(--primary-red);
-        }
+/* ── BLOQUE IA ───────────────────────────────────────────────── */
+.fila-ia{
+  background:linear-gradient(135deg,#1E293B 0%,#0F172A 100%);
+  color:#fff;border-radius:var(--r);padding:20px;
+  box-shadow:var(--sh);display:flex;flex-direction:column;gap:14px;
+}
+.ia-title{
+  font-family:'League Spartan',sans-serif;font-size:1rem;font-weight:700;
+  color:#fff;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:10px;
+  display:flex;align-items:center;gap:8px;
+}
+.ia-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.ia-block{
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  border-radius:var(--r);padding:12px;display:flex;flex-direction:column;gap:6px;
+}
+.ia-block h4{font-family:'League Spartan',sans-serif;font-size:0.82rem;color:#F8FAFC}
+.ia-block p{font-size:0.68rem;color:#94A3B8;line-height:1.4}
+.ia-loading{text-align:center;color:#94A3B8;font-size:0.72rem;padding:16px 0}
 
-        /* 3. ESPACIO CENTRAL / DASHBOARD CONTAINER */
-        .main-container {
-            flex: 1;
-            padding: 22px 18px;
-            max-width: 1400px;
-            width: 100%;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+/* spinner */
+.spinner-sm{display:inline-block;width:10px;height:10px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;margin-right:5px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-        .section-header {
-            margin-bottom: 6px;
-        }
+/* toast */
+.toast{position:fixed;bottom:22px;right:22px;background:var(--text-dark);color:#fff;padding:10px 18px;border-radius:6px;font-size:0.72rem;box-shadow:0 4px 14px rgba(0,0,0,.2);z-index:9999;opacity:0;transform:translateY(8px);transition:opacity .3s,transform .3s;pointer-events:none;max-width:280px}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.ok{background:var(--verde)}
+.toast.err{background:var(--alerta)}
 
-        .section-header h1 {
-            font-family: 'League Spartan', sans-serif;
-            font-size: 1.5rem; /* Reducción del 25% */
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 2px;
-        }
+/* ── LAST UPDATE ─────────────────────────────────────────────── */
+.last-update{font-size:0.63rem;color:var(--gris);text-align:right}
 
-        .section-header .highlight {
-            font-family: 'League Spartan', sans-serif;
-            color: var(--primary-red);
-        }
+/* ── FOOTER ──────────────────────────────────────────────────── */
+footer{text-align:center;padding:14px 18px;font-size:0.65rem;color:var(--gris);border-top:1px solid var(--border-color);background:var(--white);margin-top:auto}
+footer strong{color:var(--text-dark)}
 
-        /* Fila 1: 6 Tarjetas KPI */
-        .fila-1 {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 14px;
-        }
-
-        .kpi-card {
-            background-color: var(--white);
-            border-radius: 6px;
-            padding: 14px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            border-left: 4px solid var(--primary-red);
-            transition: transform 0.2s;
-        }
-
-        .kpi-card:hover {
-            transform: translateY(-2px);
-        }
-
-        .kpi-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: #777;
-            font-size: 0.65rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .kpi-header i {
-            color: var(--primary-red);
-            font-size: 0.85rem;
-        }
-
-        .kpi-value {
-            font-family: 'League Spartan', sans-serif;
-            font-size: 1.35rem;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin: 8px 0 4px 0;
-        }
-
-        .kpi-footer {
-            font-size: 0.65rem;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .trend-up { color: var(--success); font-weight: 600; }
-        .trend-down { color: var(--danger); font-weight: 600; }
-
-        /* Estructura general de Secciones / Filas */
-        .grid-2col {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 18px;
-        }
-
-        .grid-2col-even {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 18px;
-        }
-
-        .card-box {
-            background-color: var(--white);
-            border-radius: 6px;
-            padding: 18px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-
-        .card-title {
-            font-family: 'League Spartan', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text-dark);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .card-title span {
-            font-family: 'Open Sans', sans-serif;
-            font-size: 0.65rem;
-            font-weight: 400;
-            color: #777;
-        }
-
-        /* Tablas de Rankings */
-        .table-responsive {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 0.72rem;
-        }
-
-        th {
-            background-color: var(--light-bg);
-            color: #555;
-            font-weight: 600;
-            padding: 8px 10px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        td {
-            padding: 10px;
-            border-bottom: 1px solid var(--border-color);
-            color: var(--text-dark);
-        }
-
-        tr:hover td {
-            background-color: var(--sidebar-hover);
-            cursor: pointer;
-        }
-
-        /* Semáforos */
-        .badge {
-            padding: 3px 6px;
-            border-radius: 4px;
-            font-size: 0.65rem;
-            font-weight: 600;
-            display: inline-block;
-        }
-        .badge-success { background-color: rgba(46, 204, 113, 0.15); color: var(--success); }
-        .badge-warning { background-color: rgba(243, 156, 18, 0.15); color: var(--warning); }
-        .badge-danger { background-color: rgba(231, 76, 60, 0.15); color: var(--danger); }
-
-        /* Fila 5: Centro de Inteligencia Comercial IA Ancho Completo */
-        .fila-5 {
-            background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
-            color: white;
-            border-radius: 6px;
-            padding: 20px;
-            box-shadow: var(--shadow);
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .fila-5 .card-title {
-            color: white;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 10px;
-        }
-
-        .ai-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 12px;
-        }
-
-        .ai-block {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 6px;
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .ai-block h4 {
-            font-family: 'League Spartan', sans-serif;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #F8FAFC;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .ai-block h4 i {
-            color: var(--primary-red);
-        }
-
-        .ai-block p {
-            font-family: 'Open Sans', sans-serif;
-            font-size: 0.68rem;
-            color: #94A3B8;
-            line-height: 1.4;
-        }
-
-        /* 4. FOOTER DE CIERRE */
-        footer {
-            background-color: var(--white);
-            border-top: 1px solid var(--border-color);
-            padding: 12px 18px;
-            text-align: center;
-            font-family: 'Open Sans', sans-serif;
-            font-size: 0.65rem; /* Reducción del 25% */
-            color: #777;
-            margin-top: auto;
-        }
-
-        /* Responsive Design adaptativo */
-        @media (max-width: 1200px) {
-            .fila-1 { grid-template-columns: repeat(3, 1fr); }
-            .ai-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-
-        @media (max-width: 768px) {
-            header {
-                padding: 0 10px;
-                height: 50px;
-            }
-            .header-left img {
-                width: 38px;
-                height: 38px;
-            }
-            .header-title {
-                font-size: 0.7rem;
-            }
-            .header-right {
-                font-size: 0.6rem;
-            }
-            .menu-item {
-                padding: 9px 10px;
-                font-size: 0.65rem;
-            }
-            .main-container {
-                padding: 15px 10px;
-            }
-            .section-header h1 {
-                font-size: 1.15rem;
-            }
-            .fila-1 { grid-template-columns: 1fr; }
-            .grid-2col, .grid-2col-even { grid-template-columns: 1fr; }
-            .ai-grid { grid-template-columns: 1fr; }
-        }
-    </style>
+/* ── RESPONSIVE ──────────────────────────────────────────────── */
+@media(max-width:1200px){
+  .fila-kpi{grid-template-columns:repeat(3,1fr)}
+  .ia-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:900px){
+  .grid-2col,.grid-even{grid-template-columns:1fr}
+  .fila-kpi{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:500px){
+  .fila-kpi{grid-template-columns:1fr}
+  .ia-grid{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+  header{padding:0 10px;height:50px}
+  .header-title{font-size:0.7rem}
+  .main-container{padding:15px 10px}
+  .section-header h1{font-size:1.1rem}
+}
+</style>
 </head>
 <body>
 
-    <header>
-        <div class="header-left">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABDUAAAPgCAYAAAAiJEfzAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAABTLpJREFUeNrsvc+PFde5770PDrzm7RfTyD6+9ollQIkScZQbzDCDHLdnHtzIeBQPIrkZeXCuhJn4SvcOTAa2dO8EI50MMgIkR7oZValeQgwwfwC2c6XoRon4IfvgOEaN4ezTpLHxu7/V9bQXi/qxqmpV7arat4+01dC9f1StWlW7nr96nu8zmQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFPN3DAEAAADA+JlOpyuBT92XPvrO1fQRwodLS0u3mAUAAOMDUQMAAABgzkyn032Th4WErN+J53Pe5rnZY5nRqMWHs0ee6HEx5/cXst4H8QQAoFsQNQAAAAAaMp1OfUFhxfn37smm4DDJ+TeMmwve/yV6fFT0nkWlpQsNbwIAEAZw9w10sACACADmAAAMB5v1Z258OAAAAYH8APAKAfEAAAAYDAEAHvE04JAH189aX/wIAPbV49A==" alt="Logo Casabe Real">
-            <span class="header-title">SISTEMA COMERCIAL CASABE REAL</span>
+<!-- ── HEADER ────────────────────────────────────────────────── -->
+<header>
+  <div class="header-left">
+    <img src="assets/logo-casabe-real.png" alt="Casabe Real" onerror="this.style.display='none'">
+    <span class="header-title">Sistema Comercial Casabe Real</span>
+  </div>
+  <div class="header-right">
+    <div class="header-user-info">
+      <div class="user-name" id="user-name-display">Cargando...</div>
+      <div class="user-role" id="user-role-display">Portal Comercial</div>
+    </div>
+    <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
+  </div>
+</header>
+
+<!-- ── NAV ───────────────────────────────────────────────────── -->
+<nav class="nav-bar">
+  <a href="inicio.html"    class="menu-item">INICIO</a>
+  <a href="clientes.html"  class="menu-item">CLIENTES</a>
+  <a href="meta.html"      class="menu-item">META</a>
+  <a href="propuesta.html" class="menu-item">PROPUESTA</a>
+  <a href="pedido.html"    class="menu-item">PEDIDO</a>
+  <a href="reporte.html"   class="menu-item">REPORTE</a>
+  <a href="embudo.html"    class="menu-item">EMBUDO</a>
+  <a href="dashboard.html" class="menu-item active">DASHBOARD</a>
+  <a href="bi-ia.html"     class="menu-item admin-only">BI+IA</a>
+  <a href="cargas.html"    class="menu-item admin-only">CARGAS</a>
+  <a href="historico.html" class="menu-item admin-only">HISTÓRICO</a>
+</nav>
+
+<!-- ── MAIN ──────────────────────────────────────────────────── -->
+<main class="main-container">
+
+  <!-- Cabecera -->
+  <div class="section-header">
+    <div class="breadcrumb">Sistema / <span>Dashboard Ejecutivo</span></div>
+    <h1>Dashboard <span class="highlight">Ejecutivo</span></h1>
+    <p class="section-sub" id="section-sub">Cargando...</p>
+  </div>
+
+  <!-- ── FILA 1: 6 KPIs ───────────────────────────────────── -->
+  <section class="fila-kpi">
+
+    <div class="kpi-card">
+      <div class="kpi-label">Ventas Hoy</div>
+      <div class="kpi-value" id="kpi-hoy">—</div>
+      <div class="kpi-foot"><span id="kpi-hoy-sub">USD facturado</span></div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-label">Ventas Semana</div>
+      <div class="kpi-value" id="kpi-sem">—</div>
+      <div class="kpi-foot"><span id="kpi-sem-sub">Semana actual</span></div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-label">Ventas Mes</div>
+      <div class="kpi-value" id="kpi-mes">—</div>
+      <div class="kpi-foot"><span id="kpi-mes-sub">Mes en curso</span></div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-label">Cajas del Mes</div>
+      <div class="kpi-value" id="kpi-cajas">—</div>
+      <div class="kpi-foot"><span id="kpi-cajas-sub">Unidades despachadas</span></div>
+    </div>
+
+    <div class="kpi-card verde-accent">
+      <div class="kpi-label">Pedidos del Mes</div>
+      <div class="kpi-value" id="kpi-pedidos">—</div>
+      <div class="kpi-foot"><span id="kpi-pedidos-sub">Órdenes confirmadas</span></div>
+    </div>
+
+    <div class="kpi-card naranja-accent">
+      <div class="kpi-label">% Cumplimiento Meta</div>
+      <div class="kpi-value" id="kpi-cumpl">—</div>
+      <div class="prog-bg">
+        <div class="prog-fill" id="prog-cumpl" style="width:0%"></div>
+      </div>
+      <div class="kpi-foot"><span id="kpi-cumpl-sub">vs meta del mes</span></div>
+    </div>
+
+  </section>
+
+  <!-- ── FILA 2: Evolución + Vendedores ───────────────────── -->
+  <section class="grid-2col">
+
+    <div class="card-box">
+      <div class="card-title">
+        Evolución de Ventas — Últimas 4 Semanas
+        <span>USD ($)</span>
+      </div>
+      <div style="height:240px;position:relative">
+        <canvas id="chartEvolucion"></canvas>
+      </div>
+    </div>
+
+    <div class="card-box">
+      <div class="card-title">
+        Ventas por Vendedor
+        <span>Mes en curso</span>
+      </div>
+      <div style="height:240px;position:relative">
+        <canvas id="chartVendedores"></canvas>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ── FILA 3: Rankings ──────────────────────────────────── -->
+  <section class="grid-even">
+
+    <!-- Ranking Vendedores -->
+    <div class="card-box">
+      <div class="card-title">
+        Ranking de Asesores Comerciales
+        <span>Facturación vs. meta — mes actual</span>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Asesor</th>
+              <th>Facturado</th>
+              <th>Cajas</th>
+              <th>% Meta</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyVendedores">
+            <tr><td colspan="5" style="text-align:center;padding:18px;color:var(--gris)">Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Ranking Clientes -->
+    <div class="card-box">
+      <div class="card-title">
+        Ranking de Clientes Clave
+        <span>Top cuentas por volumen — mes actual</span>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Cliente / Razón Social</th>
+              <th>Cajas</th>
+              <th>USD</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyClientes">
+            <tr><td colspan="5" style="text-align:center;padding:18px;color:var(--gris)">Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ── FILA 4: Embudo + Pronóstico ──────────────────────── -->
+  <section class="grid-even">
+
+    <div class="card-box">
+      <div class="card-title">
+        Embudo Comercial — 5 Etapas
+        <span>Clientes por etapa activa</span>
+      </div>
+      <div style="height:220px;position:relative">
+        <canvas id="chartEmbudo"></canvas>
+      </div>
+    </div>
+
+    <div class="card-box">
+      <div class="card-title">
+        Pronóstico de Ventas
+        <span>Run-Rate y GAP del mes</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;justify-content:center;flex:1">
+
+        <div class="pron-block" style="border-left-color:var(--rojo)">
+          <div class="pron-label">Proyección cierre (Run-Rate)</div>
+          <div class="pron-val" id="pron-runrate">—</div>
+          <div class="pron-sub" id="pron-runrate-sub" style="color:var(--gris)"></div>
         </div>
-        <div class="header-right">
-            <div class="user-name">Director Comercial</div>
-            <div class="user-role">CEO / Administrador</div>
-        </div>
-    </header>
 
-    <nav class="sidebar-menu">
-        <a href="inicio.html" class="menu-item">INICIO</a>
-        <a href="clientes.html" class="menu-item">CLIENTES</a>
-        <a href="meta.html" class="menu-item">META</a>
-        <a href="propuesta.html" class="menu-item">PROPUESTA</a>
-        <a href="pedido.html" class="menu-item">PEDIDO</a>
-        <a href="reporte.html" class="menu-item">REPORTE</a>
-        <a href="embudo.html" class="menu-item">EMBUDO</a>
-        <a href="dashboard.html" class="menu-item active">DASHBOARD</a>
-        <a href="bi-ia.html" class="menu-item">BI+IA</a>
-        <a href="cargas.html" class="menu-item">CARGAS</a>
-        <a href="historico.html" class="menu-item">HISTORICO</a>
-    </nav>
-
-    <main class="main-container">
-
-        <div class="section-header">
-            <h1>Módulo de <span class="highlight">Dashboard Ejecutivo</span></h1>
+        <div class="pron-block" style="border-left-color:var(--naranja)">
+          <div class="pron-label">Ritmo diario requerido</div>
+          <div class="pron-val" id="pron-ritmo">—</div>
+          <div class="pron-sub" style="color:var(--naranja)">Para cumplir la meta</div>
         </div>
 
-        <!-- Fila 1: 6 Tarjetas KPI -->
-        <section class="fila-1">
-            <div class="kpi-card">
-                <div class="kpi-header">
-                    <span>Ventas Hoy</span>
-                    <i class="fa-solid fa-calendar-day"></i>
-                </div>
-                <div class="kpi-value">$2,450</div>
-                <div class="kpi-footer">
-                    <span class="trend-up"><i class="fa-solid fa-arrow-up"></i> +12.4%</span> vs ayer
-                </div>
-            </div>
+        <div class="pron-block" style="border-left-color:var(--alerta)">
+          <div class="pron-label">Brecha comercial (GAP)</div>
+          <div class="pron-val" id="pron-gap">—</div>
+          <div class="pron-sub" id="pron-gap-sub" style="color:var(--alerta)">Faltante al cierre</div>
+        </div>
 
-            <div class="kpi-card">
-                <div class="kpi-header">
-                    <span>Ventas Semana</span>
-                    <i class="fa-solid fa-calendar-week"></i>
-                </div>
-                <div class="kpi-value">$14,820</div>
-                <div class="kpi-footer">
-                    <span class="trend-up"><i class="fa-solid fa-arrow-up"></i> +8.1%</span> vs sem. ant.
-                </div>
-            </div>
+        <div class="last-update" id="last-update"></div>
+      </div>
+    </div>
 
-            <div class="kpi-card">
-                <div class="kpi-header">
-                    <span>Ventas Mes</span>
-                    <i class="fa-solid fa-chart-pie"></i>
-                </div>
-                <div class="kpi-value">$58,400</div>
-                <div class="kpi-footer">
-                    <span class="trend-up"><i class="fa-solid fa-arrow-up"></i> +5.3%</span> vs mes ant.
-                </div>
-            </div>
+  </section>
 
-            <div class="kpi-card">
-                <div class="kpi-header">
-                    <span>Cajas Vendidas</span>
-                    <i class="fa-solid fa-box-open"></i>
-                </div>
-                <div class="kpi-value">3,420</div>
-                <div class="kpi-footer">
-                    <span class="trend-down"><i class="fa-solid fa-arrow-down"></i> -2.1%</span> vs período
-                </div>
-            </div>
+  <!-- ── FILA 5: Centro de Inteligencia IA ────────────────── -->
+  <section class="fila-ia">
+    <div class="ia-title">
+      🧠 Centro de Inteligencia Comercial (Análisis desde datos reales)
+    </div>
+    <div class="ia-grid" id="iaGrid">
+      <div class="ia-loading" style="grid-column:1/-1">
+        <span class="spinner-sm"></span> Analizando datos del pipeline…
+      </div>
+    </div>
+  </section>
 
-            <div class="kpi-card" style="border-left-color: var(--success);">
-                <div class="kpi-header">
-                    <span>Clientes Activos</span>
-                    <i class="fa-solid fa-users" style="color: var(--success);"></i>
-                </div>
-                <div class="kpi-value">128</div>
-                <div class="kpi-footer">
-                    <span class="trend-up"><i class="fa-solid fa-arrow-up"></i> +6 nuevas cuentas</span>
-                </div>
-            </div>
+</main>
 
-            <div class="kpi-card" style="border-left-color: var(--warning);">
-                <div class="kpi-header">
-                    <span>% Cumplimiento</span>
-                    <i class="fa-solid fa-bullseye" style="color: var(--warning);"></i>
-                </div>
-                <div class="kpi-value">84.2%</div>
-                <div class="kpi-footer">
-                    <span class="badge badge-warning">En Rango (75%-89%)</span>
-                </div>
-            </div>
-        </section>
+<!-- ── FOOTER ──────────────────────────────────────────────────── -->
+<footer>
+  &copy; 2026 <strong>Sistema Comercial Casabe Real (SCCR)</strong>. Todos los derechos reservados. &nbsp;|&nbsp; v2.5.1 &nbsp;|&nbsp; 0412.290.58.33
+</footer>
 
-        <!-- Fila 2: Gráficos de Evolución y Ventas por Vendedor -->
-        <section class="grid-2col">
-            <div class="card-box">
-                <div class="card-title">
-                    Evolución de Ventas (Tendencia Diaria / Semanal)
-                    <span>USD ($) y Cajas</span>
-                </div>
-                <div style="height: 250px; position: relative;">
-                    <canvas id="ventasEvolucionChart"></canvas>
-                </div>
-            </div>
-            <div class="card-box">
-                <div class="card-title">
-                    Ventas por Vendedor
-                    <span>Desempeño actual</span>
-                </div>
-                <div style="height: 250px; position: relative;">
-                    <canvas id="ventasVendedorChart"></canvas>
-                </div>
-            </div>
-        </section>
+<div class="toast" id="toast"></div>
 
-        <!-- Fila 3: Rankings de Vendedores y Clientes -->
-        <section class="grid-2col-even">
-            <div class="card-box">
-                <div class="card-title">
-                    Ranking de Vendedores
-                    <span>Top asesores comerciales</span>
-                </div>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Asesor</th>
-                                <th>Facturado</th>
-                                <th>Cajas</th>
-                                <th>% Meta</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Carlos Mendoza</strong></td>
-                                <td>$18,450</td>
-                                <td>1,120</td>
-                                <td><span class="badge badge-success">102%</span></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Mariana Rivas</strong></td>
-                                <td>$15,200</td>
-                                <td>940</td>
-                                <td><span class="badge badge-success">95%</span></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Alejandro Silva</strong></td>
-                                <td>$12,100</td>
-                                <td>780</td>
-                                <td><span class="badge badge-warning">81%</span></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Sofía Gómez</strong></td>
-                                <td>$12,650</td>
-                                <td>580</td>
-                                <td><span class="badge badge-danger">72%</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+<!-- ═════════════════════════════ SCRIPT ═══════════════════════ -->
+<script>
+// ════════════════════════════════════════════════════════════
+//  CONFIG
+// ════════════════════════════════════════════════════════════
+const API = 'https://script.google.com/macros/s/AKfycbyWRB5745Ors7n8RYqTqyBfb7LXIX3W9x-LFxfnnJf4Bv7fyoS51KeqKgChaldfmLqjSw/exec';
 
-            <div class="card-box">
-                <div class="card-title">
-                    Ranking de Clientes Clave
-                    <span>Top cuentas por volumen y recompra</span>
-                </div>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Cliente / Razón Social</th>
-                                <th>Volumen</th>
-                                <th>Semáforo</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Supermercados Central C.A.</strong></td>
-                                <td>450 Cajas</td>
-                                <td><span class="badge badge-success">Al día</span></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Distribidora Alimentos del Este</strong></td>
-                                <td>380 Cajas</td>
-                                <td><span class="badge badge-success">Al día</span></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Hipermercado Metrópolis</strong></td>
-                                <td>310 Cajas</td>
-                                <td><span class="badge badge-warning">Por vencer</span></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Comercializadora La Mayor</strong></td>
-                                <td>250 Cajas</td>
-                                <td><span class="badge badge-danger">En riesgo</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
+let sesion      = null;
+let esDirectivo = false;
+let chartEv     = null;
+let chartVend   = null;
+let chartEmb    = null;
 
-        <!-- Fila 4: Embudo Comercial y Pronóstico -->
-        <section class="grid-2col">
-            <div class="card-box">
-                <div class="card-title">
-                    Embudo Comercial (5 Etapas)
-                    <span>Progresión y tasas de conversión</span>
-                </div>
-                <div style="height: 230px; position: relative;">
-                    <canvas id="embudoChart"></canvas>
-                </div>
-            </div>
+// ════════════════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  sesion = SCCR.initSCCR();
+  if (!sesion) return;
 
-            <div class="card-box">
-                <div class="card-title">
-                    Pronóstico de Ventas (Run-Rate & GAP)
-                    <span>Análisis Predictivo</span>
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 10px; justify-content: center; height: 100%;">
-                    <div style="background: var(--light-bg); padding: 10px 14px; border-radius: 6px; border-left: 3px solid var(--primary-red);">
-                        <span style="font-size: 0.65rem; color: #777; text-transform: uppercase; font-weight: 600;">Proyección de Cierre (Run-Rate)</span>
-                        <div style="font-family: 'League Spartan', sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--text-dark);">$69,200 <span style="font-size: 0.7rem; color: var(--success); font-weight: 600;">(92% de la Meta)</span></div>
-                    </div>
-                    <div style="background: var(--light-bg); padding: 10px 14px; border-radius: 6px; border-left: 3px solid var(--warning);">
-                        <span style="font-size: 0.65rem; color: #777; text-transform: uppercase; font-weight: 600;">Ritmo Diario Requerido</span>
-                        <div style="font-family: 'League Spartan', sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--text-dark);">$1,280 / día <span style="font-size: 0.7rem; color: var(--warning);">para cumplir meta</span></div>
-                    </div>
-                    <div style="background: var(--light-bg); padding: 10px 14px; border-radius: 6px; border-left: 3px solid var(--danger);">
-                        <span style="font-size: 0.65rem; color: #777; text-transform: uppercase; font-weight: 600;">Brecha Comercial (GAP)</span>
-                        <div style="font-family: 'League Spartan', sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--text-dark);">$6,800 <span style="font-size: 0.7rem; color: var(--danger);">faltante al cierre</span></div>
-                    </div>
-                </div>
-            </div>
-        </section>
+  const rol = sesion.rol.toLowerCase();
+  esDirectivo = (rol === 'admin' || rol === 'gerente');
 
-        <!-- Fila 5: Centro de Inteligencia Comercial IA Ancho Completo -->
-        <section class="fila-5">
-            <div class="card-title">
-                <i class="fa-solid fa-brain" style="color: var(--primary-red);"></i> Centro de Inteligencia Comercial (Agente IA & Memoria SCCR)
-            </div>
-            <div class="ai-grid">
-                <div class="ai-block">
-                    <h4><i class="fa-solid fa-chart-line"></i> Resumen Ejecutivo</h4>
-                    <p>Operación estable con cumplimiento del 84.2%. El canal de pasapalos lidera la rotación de inventario con excelente margen bruto.</p>
-                </div>
-                <div class="ai-block">
-                    <h4><i class="fa-solid fa-triangle-exclamation"></i> Alertas</h4>
-                    <p>3 cuentas clave en zona de riesgo (&lt; 75% recompra) detectadas en la ruta norte. Se requiere intervención del supervisor.</p>
-                </div>
-                <div class="ai-block">
-                    <h4><i class="fa-solid fa-lightbulb"></i> Recomendaciones</h4>
-                    <p>Impulsar campaña de venta cruzada con línea Torta en clientes de la Etapa 4 (Activación) para elevar ticket promedio.</p>
-                </div>
-                <div class="ai-block">
-                    <h4><i class="fa-solid fa-handshake"></i> Oportunidades</h4>
-                    <p>18 propuestas comerciales pendientes por un valor acumulado de $11,400 listas para cierre en los próximos 3 días.</p>
-                </div>
-                <div class="ai-block">
-                    <h4><i class="fa-solid fa-shield-halved"></i> Riesgos</h4>
-                    <p>Concentración de cartera en Supermercados Central (35% del volumen total). Monitorear límite de crédito y rotación.</p>
-                </div>
-            </div>
-        </section>
+  document.getElementById('user-name-display').textContent = sesion.nombre || '—';
+  document.getElementById('user-role-display').textContent =
+    rol === 'admin'   ? 'Administrador'     :
+    rol === 'gerente' ? 'Gerente de Ventas' : 'Asesor Comercial';
 
-    </main>
+  document.getElementById('section-sub').textContent = esDirectivo
+    ? 'Vista consolidada — todos los vendedores'
+    : `Resumen de tu actividad comercial — ${sesion.nombre}`;
 
-    <footer>
-        <p>&copy; 2026 Sistema Comercial Casabe Real (SCCR). Todos los derechos reservados.</p>
-    </footer>
+  if (esDirectivo) {
+    document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
+  }
 
-    <script>
-        // Gráfico de Evolución de Ventas
-        const ctxEvolucion = document.getElementById('ventasEvolucionChart').getContext('2d');
-        new Chart(ctxEvolucion, {
-            type: 'line',
-            data: {
-                labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4'],
-                datasets: [{
-                    label: 'Ventas USD ($)',
-                    data: [12000, 15500, 14800, 16100],
-                    borderColor: '#D30000',
-                    backgroundColor: 'rgba(211, 0, 0, 0.05)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.3
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { grid: { color: '#E0E0E0' }, ticks: { font: { family: 'Open Sans', size: 10 } } },
-                    x: { grid: { display: false }, ticks: { font: { family: 'Open Sans', size: 10 } } }
-                }
-            }
+  cargarTodo();
+});
+
+function cerrarSesion() { SCCR.cerrarSesion(); }
+
+// ════════════════════════════════════════════════════════════
+//  CARGA PRINCIPAL — en paralelo
+// ════════════════════════════════════════════════════════════
+async function cargarTodo() {
+  // Correr todas las cargas en paralelo para mayor velocidad
+  await Promise.allSettled([
+    cargarDashboard(),
+    cargarEmbudo(),
+    cargarRankings(),
+  ]);
+}
+
+// ════════════════════════════════════════════════════════════
+//  1. DASHBOARD PRINCIPAL — action=dashboard
+//     Devuelve: ventasHoy, ventasSemana, ventasMes, cajasHoy,
+//     cajasSemana, cajasMes, pedidosHoy, pedidosMes,
+//     ticketPromedio, pronosticoMes, metaMes, cumplimientoPct,
+//     porVendedor{}, tendencia[]
+// ════════════════════════════════════════════════════════════
+async function cargarDashboard() {
+  try {
+    let url = API + '?action=dashboard';
+    // Vendedor ve solo su propia actividad
+    if (!esDirectivo && sesion.vendedor_id) {
+      url += '&vendedor=' + encodeURIComponent(sesion.vendedor_id);
+    }
+
+    const r = await fetch(url, { redirect: 'follow' });
+    const d = await r.json();
+    if (!d.ok) throw new Error(d.msg);
+
+    const D = d.data;
+
+    // ── KPIs ───────────────────────────────────────────────
+    set('kpi-hoy',    '$' + fmt(D.ventasHoy));
+    set('kpi-hoy-sub', D.pedidosHoy + ' pedido' + (D.pedidosHoy !== 1 ? 's' : '') + ' hoy');
+
+    set('kpi-sem',    '$' + fmt(D.ventasSemana));
+    set('kpi-sem-sub', fmt(D.cajasSemana) + ' cajas esta semana');
+
+    set('kpi-mes',    '$' + fmt(D.ventasMes));
+    set('kpi-mes-sub', 'Ticket prom. $' + fmt(D.ticketPromedio));
+
+    set('kpi-cajas',    fmt(D.cajasMes));
+    set('kpi-cajas-sub', D.cajasMes === 1 ? 'caja despachada' : 'cajas despachadas');
+
+    set('kpi-pedidos',    D.pedidosMes);
+    set('kpi-pedidos-sub', D.pedidosMes === 1 ? 'orden confirmada' : 'órdenes confirmadas');
+
+    // Cumplimiento
+    const pct    = D.cumplimientoPct !== null ? D.cumplimientoPct : 0;
+    const hayMeta = D.metaMes > 0;
+    set('kpi-cumpl',    hayMeta ? pct + '%' : 'Sin meta');
+    set('kpi-cumpl-sub', hayMeta ? `$${fmt(D.ventasMes)} / $${fmt(D.metaMes)}` : 'Configura tu meta en módulo META');
+    const fill = document.getElementById('prog-cumpl');
+    fill.style.width = Math.min(pct, 100) + '%';
+    fill.className   = 'prog-fill' + (pct >= 90 ? '' : pct >= 70 ? ' warn' : ' danger');
+
+    // ── GRÁFICO EVOLUCIÓN (tendencia 4 semanas) ────────────
+    const tend = Array.isArray(D.tendencia) ? D.tendencia : [];
+    const lbls = tend.map(s => s.semana + '\n' + s.desde + '-' + s.hasta);
+    const vals = tend.map(s => s.ventas || 0);
+    renderChartEvolucion(lbls, vals);
+
+    // ── GRÁFICO VENDEDORES (porVendedor) ───────────────────
+    const pv    = D.porVendedor || {};
+    const vends = Object.keys(pv).sort((a,b) => pv[b] - pv[a]).slice(0, 8);
+    renderChartVendedores(vends, vends.map(v => pv[v]));
+
+    // ── PRONÓSTICO ─────────────────────────────────────────
+    const runRate = D.pronosticoMes || 0;
+    const meta    = D.metaMes       || 0;
+    const gap     = Math.max(0, meta - D.ventasMes);
+    const hoy     = new Date();
+    const diasMes = new Date(hoy.getFullYear(), hoy.getMonth()+1, 0).getDate();
+    const diasRest= diasMes - hoy.getDate();
+    const ritmo   = diasRest > 0 && meta > 0 ? (gap / diasRest) : 0;
+
+    set('pron-runrate', '$' + fmt(runRate));
+    const pctRun = meta > 0 ? Math.round((runRate/meta)*100) : 0;
+    const subEl  = document.getElementById('pron-runrate-sub');
+    subEl.textContent  = meta > 0 ? pctRun + '% de la meta' : 'Sin meta configurada';
+    subEl.style.color  = pctRun >= 100 ? 'var(--verde)' : pctRun >= 80 ? 'var(--naranja)' : 'var(--alerta)';
+
+    set('pron-ritmo', ritmo > 0 ? '$' + fmt(Math.round(ritmo)) + ' / día' : '—');
+    set('pron-gap',   gap > 0 ? '$' + fmt(gap) : '✓ Meta superada');
+    document.getElementById('pron-gap-sub').textContent =
+      gap > 0 ? `Faltan ${diasRest} días hábiles` : '¡Felicitaciones!';
+    document.getElementById('pron-gap-sub').style.color =
+      gap > 0 ? 'var(--alerta)' : 'var(--verde)';
+
+    // ── ÚLTIMA ACTUALIZACIÓN ───────────────────────────────
+    const ua = D.ultimaActualizacion ? new Date(D.ultimaActualizacion) : new Date();
+    document.getElementById('last-update').textContent =
+      'Actualizado: ' + ua.toLocaleDateString('es-VE') + ' ' + ua.toLocaleTimeString('es-VE', {hour:'2-digit',minute:'2-digit'});
+
+    // ── BLOQUE IA ──────────────────────────────────────────
+    renderBloqueIA(D);
+
+  } catch(e) {
+    console.error('Dashboard error:', e);
+    showToast('Error al cargar el dashboard. Revisa la conexión.', 'err');
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+//  2. EMBUDO — action=embudo
+//     Devuelve: data[], etapas[]
+// ════════════════════════════════════════════════════════════
+async function cargarEmbudo() {
+  try {
+    let url = API + '?action=embudo';
+    if (!esDirectivo && sesion.vendedor_id) {
+      url += '&vendedor=' + encodeURIComponent(sesion.vendedor_id);
+    }
+    const r = await fetch(url, { redirect: 'follow' });
+    const d = await r.json();
+    if (!d.ok) return;
+
+    const etapas = d.etapas || ['Prospección','Contacto','Presentación','Activación','Fidelización'];
+    const data   = d.data   || [];
+
+    const conteo = etapas.map(e => data.filter(o => o.etapa === e).length);
+    renderChartEmbudo(etapas, conteo);
+
+  } catch(e) {
+    console.error('Embudo error:', e);
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+//  3. RANKINGS — action=ventas (mes actual)
+//     Para clientes: agrupa pedidos por razon_social
+//     Para vendedores: usa action=metas + porVendedor del dashboard
+// ════════════════════════════════════════════════════════════
+async function cargarRankings() {
+  try {
+    const hoy  = new Date();
+    const desde = hoy.getFullYear() + '-' + String(hoy.getMonth()+1).padStart(2,'0') + '-01';
+
+    let url = `${API}?action=ventas&desde=${desde}&limite=500`;
+    if (!esDirectivo && sesion.vendedor_id) {
+      url += '&vendedor=' + encodeURIComponent(sesion.vendedor_id);
+    }
+
+    const r = await fetch(url, { redirect: 'follow' });
+    const d = await r.json();
+    if (!d.ok || !Array.isArray(d.data)) return;
+
+    const pedidos = d.data;
+
+    // ── Ranking clientes ────────────────────────────────────
+    const mapaClientes = {};
+    pedidos.forEach(p => {
+      const k = p.razon_social || 'Sin nombre';
+      if (!mapaClientes[k]) mapaClientes[k] = { cajas: 0, usd: 0, ultima: '' };
+      mapaClientes[k].cajas += parseInt(p.total_cajas || 0);
+      mapaClientes[k].usd   += parseFloat(p.total_usd || 0);
+      if (!mapaClientes[k].ultima || p.fecha > mapaClientes[k].ultima) {
+        mapaClientes[k].ultima = p.fecha;
+      }
+    });
+
+    const topClientes = Object.entries(mapaClientes)
+      .sort((a,b) => b[1].cajas - a[1].cajas)
+      .slice(0, 8);
+
+    const tbody = document.getElementById('tbodyClientes');
+    if (!topClientes.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:18px;color:var(--gris)">Sin pedidos este mes.</td></tr>';
+    } else {
+      tbody.innerHTML = topClientes.map(([nombre, v], i) => {
+        const sem   = semaforo(v.ultima);
+        const semCls = sem === 'verde' ? 'verde' : sem === 'amarillo' ? 'amarillo' : 'rojo';
+        const semLbl = sem === 'verde' ? 'Al día' : sem === 'amarillo' ? 'Por vencer' : 'En riesgo';
+        return `<tr>
+          <td style="color:var(--gris);font-weight:700">${i+1}</td>
+          <td style="font-weight:700;color:var(--rojo);font-family:'League Spartan',sans-serif">${truncar(nombre,30)}</td>
+          <td>${fmt(v.cajas)}</td>
+          <td>$${fmt(Math.round(v.usd))}</td>
+          <td><span class="badge ${semCls}">${semLbl}</span></td>
+        </tr>`;
+      }).join('');
+    }
+
+    // ── Ranking vendedores (agrupa por vendedor en pedidos del mes) ──
+    const mapaVend = {};
+    pedidos.forEach(p => {
+      const k = p.vendedor || 'Sin asignar';
+      if (!mapaVend[k]) mapaVend[k] = { cajas: 0, usd: 0 };
+      mapaVend[k].cajas += parseInt(p.total_cajas || 0);
+      mapaVend[k].usd   += parseFloat(p.total_usd || 0);
+    });
+
+    // Intentar traer metas para calcular % cumplimiento
+    let metasMap = {};
+    try {
+      const rm = await fetch(`${API}?action=metas&mes=${hoy.getMonth()+1}&anio=${hoy.getFullYear()}`, { redirect:'follow' });
+      const dm = await rm.json();
+      if (dm.ok && Array.isArray(dm.data)) {
+        dm.data.forEach(m => {
+          metasMap[m.vendedor] = parseFloat(m.meta_monto_usd || 0);
         });
+      }
+    } catch(e) { /* metas no disponibles */ }
 
-        // Gráfico de Ventas por Vendedor
-        const ctxVendedor = document.getElementById('ventasVendedorChart').getContext('2d');
-        new Chart(ctxVendedor, {
-            type: 'bar',
-            data: {
-                labels: ['C. Mendoza', 'M. Rivas', 'A. Silva', 'S. Gómez'],
-                datasets: [{
-                    label: 'Facturado ($)',
-                    data: [18450, 15200, 12100, 12650],
-                    backgroundColor: ['#D30000', '#333333', '#777777', '#CCCCCC'],
-                    borderRadius: 4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { grid: { color: '#E0E0E0' }, ticks: { font: { family: 'Open Sans', size: 10 } } },
-                    x: { grid: { display: false }, ticks: { font: { family: 'Open Sans', size: 10 } } }
-                }
-            }
-        });
+    const topVend = Object.entries(mapaVend)
+      .sort((a,b) => b[1].usd - a[1].usd)
+      .slice(0, 8);
 
-        // Gráfico de Embudo Comercial (Horizontal Bar)
-        const ctxEmbudo = document.getElementById('embudoChart').getContext('2d');
-        new Chart(ctxEmbudo, {
-            type: 'bar',
-            data: {
-                labels: ['1. Prospección', '2. Contacto', '3. Presentación', '4. Activación', '5. Fidelización'],
-                datasets: [{
-                    label: 'Clientes en Etapa',
-                    data: [45, 32, 24, 18, 42],
-                    backgroundColor: '#D30000',
-                    borderRadius: 4
-                }]
-            },
-            options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: { grid: { color: '#E0E0E0' }, ticks: { font: { family: 'Open Sans', size: 10 } } },
-                    y: { grid: { display: false }, ticks: { font: { family: 'Open Sans', size: 10 } } }
-                }
-            }
-        });
-    </script>
+    const tbodyV = document.getElementById('tbodyVendedores');
+    if (!topVend.length) {
+      tbodyV.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:18px;color:var(--gris)">Sin ventas registradas este mes.</td></tr>';
+    } else {
+      tbodyV.innerHTML = topVend.map(([nombre, v], i) => {
+        const meta  = metasMap[nombre] || 0;
+        const pct   = meta > 0 ? Math.round((v.usd / meta) * 100) : null;
+        const bdgCls = pct === null ? 'gris' : pct >= 90 ? 'verde' : pct >= 70 ? 'amarillo' : 'rojo';
+        const bdgTxt = pct !== null ? pct + '%' : 'Sin meta';
+        return `<tr>
+          <td style="color:var(--gris);font-weight:700">${i+1}</td>
+          <td style="font-weight:700">${nombre}</td>
+          <td>$${fmt(Math.round(v.usd))}</td>
+          <td>${fmt(v.cajas)}</td>
+          <td><span class="badge ${bdgCls}">${bdgTxt}</span></td>
+        </tr>`;
+      }).join('');
+    }
+
+  } catch(e) {
+    console.error('Rankings error:', e);
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+//  GRÁFICOS — Chart.js 4
+// ════════════════════════════════════════════════════════════
+const CHART_OPTS = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: { legend: { display: false } },
+  scales: {
+    y: { grid:{ color:'#E0E0E0' }, ticks:{ font:{ family:'Open Sans', size:10 } } },
+    x: { grid:{ display:false }, ticks:{ font:{ family:'Open Sans', size:10 } } },
+  }
+};
+
+function renderChartEvolucion(labels, data) {
+  if (chartEv) chartEv.destroy();
+  const ctx = document.getElementById('chartEvolucion').getContext('2d');
+  chartEv = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Ventas USD',
+        data,
+        borderColor: '#D30000',
+        backgroundColor: 'rgba(211,0,0,0.06)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.3,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+      }]
+    },
+    options: { ...CHART_OPTS }
+  });
+}
+
+function renderChartVendedores(labels, data) {
+  if (chartVend) chartVend.destroy();
+  const ctx = document.getElementById('chartVendedores').getContext('2d');
+  const colores = labels.map((_, i) =>
+    ['#D30000','#333333','#6B7280','#AAAAAA','#C8181E','#555','#999','#CCC'][i] || '#D30000'
+  );
+  chartVend = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Facturado USD',
+        data,
+        backgroundColor: colores,
+        borderRadius: 4,
+      }]
+    },
+    options: { ...CHART_OPTS }
+  });
+}
+
+function renderChartEmbudo(labels, data) {
+  if (chartEmb) chartEmb.destroy();
+  const ctx = document.getElementById('chartEmbudo').getContext('2d');
+  chartEmb = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Clientes en etapa',
+        data,
+        backgroundColor: '#D30000',
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      ...CHART_OPTS,
+      indexAxis: 'y',
+      scales: {
+        x: { grid:{ color:'#E0E0E0' }, ticks:{ font:{ family:'Open Sans', size:10 } } },
+        y: { grid:{ display:false }, ticks:{ font:{ family:'Open Sans', size:10 } } },
+      }
+    }
+  });
+}
+
+// ════════════════════════════════════════════════════════════
+//  BLOQUE IA — análisis generado desde datos reales
+//  (sin llamada externa — lógica de negocio local)
+// ════════════════════════════════════════════════════════════
+function renderBloqueIA(D) {
+  const pct      = D.cumplimientoPct || 0;
+  const hayMeta  = D.metaMes > 0;
+  const hoy      = new Date();
+  const diasMes  = new Date(hoy.getFullYear(), hoy.getMonth()+1, 0).getDate();
+  const diasRest = diasMes - hoy.getDate();
+  const gap      = Math.max(0, (D.metaMes||0) - (D.ventasMes||0));
+
+  // Resumen ejecutivo
+  const resumen = hayMeta
+    ? `Cumplimiento del ${pct}% con $${fmt(D.ventasMes)} facturado este mes. ${
+        pct >= 100 ? 'Meta superada. Excelente desempeño.' :
+        pct >= 80  ? 'En buen ritmo para cerrar el mes.' :
+                    'Se requiere acelerar la gestión de cierre.'}`
+    : `$${fmt(D.ventasMes)} facturado este mes con ${D.pedidosMes} pedidos. Configura la meta mensual para activar el pronóstico.`;
+
+  // Alertas
+  const alertas = diasRest <= 5 && gap > 0
+    ? `Quedan ${diasRest} días para cerrar el mes con un GAP de $${fmt(gap)}. Priorizar clientes en etapa Activación y Presentación.`
+    : gap > 0
+    ? `Brecha de $${fmt(gap)} respecto a la meta. Ritmo requerido: $${fmt(Math.round(gap / Math.max(diasRest,1)))} / día.`
+    : '✓ Sin alertas críticas de cumplimiento este mes.';
+
+  // Recomendaciones
+  const recom = `Ticket promedio del mes: $${fmt(D.ticketPromedio)}. ${
+    D.ticketPromedio < 500
+      ? 'Impulsar venta cruzada con línea Torta para elevar el ticket en clientes de Activación.'
+      : 'Buen ticket promedio. Mantener cadencia de visitas y propuestas para fidelizar.'}`;
+
+  // Oportunidades (basado en pedidos de hoy vs semana)
+  const ratio = D.ventasSemana > 0 ? (D.ventasHoy / (D.ventasSemana / 7)) : 0;
+  const oport = ratio > 1.2
+    ? `Hoy está por encima del promedio semanal (${Math.round(ratio*100)}%). Buen momento para prospección en frío.`
+    : `Aprovecha los ${diasRest} días restantes. Con ${D.pedidosHoy} pedido${D.pedidosHoy!==1?'s':''} hoy, mantén el ritmo de visitas.`;
+
+  // Riesgos
+  const riesgo = `Semana actual: $${fmt(D.ventasSemana)} en ${D.cajasSemana} cajas. ${
+    D.ventasSemana < D.ventasMes / 4
+      ? 'Ritmo semanal por debajo del promedio mensual. Revisar cobertura de ruta.'
+      : 'Ritmo semanal dentro del rango esperado.'}`;
+
+  const bloques = [
+    { titulo: '📊 Resumen Ejecutivo',    texto: resumen  },
+    { titulo: '⚠️ Alertas',             texto: alertas  },
+    { titulo: '💡 Recomendaciones',      texto: recom    },
+    { titulo: '🤝 Oportunidades',        texto: oport    },
+    { titulo: '🛡️ Riesgos',             texto: riesgo   },
+  ];
+
+  document.getElementById('iaGrid').innerHTML = bloques.map(b => `
+    <div class="ia-block">
+      <h4>${b.titulo}</h4>
+      <p>${b.texto}</p>
+    </div>
+  `).join('');
+}
+
+// ════════════════════════════════════════════════════════════
+//  HELPERS
+// ════════════════════════════════════════════════════════════
+function fmt(n) {
+  if (n === undefined || n === null || isNaN(n)) return '—';
+  return Number(n).toLocaleString('es-VE');
+}
+
+function set(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+function truncar(str, max) {
+  if (!str) return '—';
+  return str.length > max ? str.slice(0, max) + '…' : str;
+}
+
+function semaforo(ultimaCompra) {
+  if (!ultimaCompra) return 'rojo';
+  const p = String(ultimaCompra).split('/');
+  const fecha = p.length === 3
+    ? new Date(+p[2], +p[1]-1, +p[0])
+    : new Date(ultimaCompra);
+  const dias = Math.floor((new Date() - fecha) / 86400000);
+  return dias <= 5 ? 'verde' : dias <= 15 ? 'amarillo' : 'rojo';
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className   = 'toast ' + (type||'') + ' show';
+  clearTimeout(t._t);
+  t._t = setTimeout(() => { t.className = 'toast'; }, 3500);
+}
+</script>
 </body>
 </html>
