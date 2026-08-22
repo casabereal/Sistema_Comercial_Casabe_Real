@@ -1,792 +1,427 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reportes de Gestión - Sistema Comercial Casabe Real (SCCR)</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-red: #D30000;
-            --white: #FFFFFF;
-            --light-bg: #F8F9FA;
-            --text-dark: #333333;
-            --border-color: #E0E0E0;
-            --sidebar-hover: #F1F3F5;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Open Sans', sans-serif;
-            background-color: var(--light-bg);
-            color: var(--text-dark);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            font-size: 0.75rem;
-        }
-
-        /* 1. HEADER */
-        header {
-            background-color: var(--primary-red);
-            color: var(--white);
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 18px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-        }
-
-        .header-left img {
-            width: 42px;
-            height: 42px;
-            object-fit: contain;
-            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
-            display: block;
-        }
-
-        .header-title {
-            font-family: 'League Spartan', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-
-        .header-right {
-            font-family: 'Open Sans', sans-serif;
-            font-size: 0.7rem;
-            text-align: right;
-            line-height: 1.3;
-        }
-
-        .header-right .user-name {
-            font-weight: 600;
-        }
-
-        .header-right .user-role {
-            font-size: 0.65rem;
-            opacity: 0.9;
-        }
-
-        /* 2. NAVEGACIÓN HORIZONTAL */
-        .sidebar-menu {
-            background-color: var(--white);
-            border-bottom: 1px solid var(--border-color);
-            padding: 0 18px;
-            display: flex;
-            overflow-x: auto;
-            white-space: nowrap;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        .sidebar-menu::-webkit-scrollbar {
-            height: 3px;
-        }
-        .sidebar-menu::-webkit-scrollbar-thumb {
-            background: #ccc;
-            border-radius: 2px;
-        }
-
-        .menu-item {
-            display: inline-block;
-            padding: 12px 14px;
-            font-family: 'Open Sans', sans-serif;
-            font-size: 0.7rem;
-            color: var(--text-dark);
-            text-decoration: none;
-            transition: all 0.2s ease;
-            border-bottom: 3px solid transparent;
-        }
-
-        .menu-item:hover {
-            background-color: var(--sidebar-hover);
-            color: var(--primary-red);
-        }
-
-        .menu-item.active {
-            font-family: 'League Spartan', sans-serif;
-            font-weight: 700;
-            color: var(--primary-red);
-            border-bottom-color: var(--primary-red);
-        }
-
-        /* 3. CONTENEDOR PRINCIPAL */
-        .main-container {
-            flex: 1;
-            padding: 22px 18px;
-            max-width: 1400px;
-            width: 100%;
-            margin: 0 auto;
-        }
-
-        .section-header {
-            margin-bottom: 18px;
-        }
-
-        .section-header h1 {
-            font-family: 'League Spartan', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 6px;
-        }
-
-        .section-header .highlight {
-            font-family: 'League Spartan', sans-serif;
-            color: var(--primary-red);
-        }
-
-        .content-card {
-            background-color: var(--white);
-            border-radius: 6px;
-            padding: 18px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border: 1px solid var(--border-color);
-        }
-
-        .content-card p {
-            font-family: 'Open Sans', sans-serif;
-            font-size: 0.75rem;
-            line-height: 1.6;
-            color: #555;
-            margin-bottom: 16px;
-        }
-
-        /* FORMULARIO */
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
-
-        label {
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-
-        select, input[type="text"], textarea {
-            padding: 8px 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-family: 'Open Sans', sans-serif;
-            font-size: 0.75rem;
-            background-color: #fff;
-            color: var(--text-dark);
-            width: 100%;
-        }
-
-        select:focus, input[type="text"]:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary-red);
-        }
-
-        .checkbox-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            padding: 6px 0;
-        }
-
-        .checkbox-label {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-weight: normal;
-            cursor: pointer;
-        }
-
-        .btn-submit {
-            background-color: var(--primary-red);
-            color: var(--white);
-            font-family: 'League Spartan', sans-serif;
-            font-weight: 700;
-            font-size: 0.85rem;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: background-color 0.2s ease;
-            display: inline-block;
-            margin-top: 10px;
-        }
-
-        .btn-submit:hover:not(:disabled) {
-            background-color: #b00000;
-        }
-
-        .btn-submit:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        /* TOAST / NOTIFICACIÓN */
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            background-color: var(--text-dark);
-            color: var(--white);
-            padding: 12px 20px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-family: 'Open Sans', sans-serif;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            z-index: 9999;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            max-width: 320px;
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .toast.success {
-            background-color: #1a7a4a;
-        }
-
-        .toast.error {
-            background-color: var(--primary-red);
-        }
-
-        /* SPINNER INLINE */
-        .spinner {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border: 2px solid rgba(255,255,255,0.4);
-            border-top-color: #fff;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-            margin-right: 6px;
-            vertical-align: middle;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* CAMPO CON AUTOCOMPLETE */
-        .autocomplete-wrapper {
-            position: relative;
-        }
-
-        .autocomplete-list {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: #fff;
-            border: 1px solid var(--border-color);
-            border-top: none;
-            border-radius: 0 0 4px 4px;
-            max-height: 180px;
-            overflow-y: auto;
-            z-index: 200;
-            display: none;
-        }
-
-        .autocomplete-list.open {
-            display: block;
-        }
-
-        .autocomplete-item {
-            padding: 7px 10px;
-            cursor: pointer;
-            font-size: 0.75rem;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .autocomplete-item:hover,
-        .autocomplete-item.selected {
-            background-color: var(--light-bg);
-            color: var(--primary-red);
-        }
-
-        /* CAMPO CONDICIONAL — motivo no venta */
-        .field-hint {
-            font-size: 0.65rem;
-            color: #888;
-            margin-top: 2px;
-            font-style: italic;
-        }
-
-        /* 4. FOOTER */
-        footer {
-            background-color: var(--white);
-            border-top: 1px solid var(--border-color);
-            padding: 12px 18px;
-            text-align: center;
-            font-family: 'Open Sans', sans-serif;
-            font-size: 0.65rem;
-            color: #777;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            header {
-                padding: 0 10px;
-                height: 50px;
-            }
-            .header-left img {
-                width: 38px;
-                height: 38px;
-            }
-            .header-title {
-                font-size: 0.7rem;
-            }
-            .header-right {
-                font-size: 0.6rem;
-            }
-            .menu-item {
-                padding: 9px 10px;
-                font-size: 0.65rem;
-            }
-            .main-container {
-                padding: 15px 10px;
-            }
-            .section-header h1 {
-                font-size: 1.15rem;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SCCR — Reporte de Gestión</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<script src="assets/sccr-auth.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --rojo:#D30000;--rojo-d:#A01015;--rojo-xs:#FEF2F2;
+  --white:#FFFFFF;--light-bg:#F8F9FA;--border-color:#E0E0E0;
+  --text-dark:#333333;--gris:#6B7280;--sidebar-hover:#F1F3F5;
+  --verde:#059669;--verde-xs:#ECFDF5;
+  --naranja:#D97706;--naranja-xs:#FFFBEB;
+  --azul:#2563EB;--azul-xs:#EFF6FF;
+  --alerta:#E74C3C;--r:6px;--sh:0 2px 4px rgba(0,0,0,0.05);
+}
+body{font-family:'Open Sans',sans-serif;background:var(--light-bg);color:var(--text-dark);display:flex;flex-direction:column;min-height:100vh;font-size:0.75rem;}
+header{background-color:var(--rojo);color:var(--white);height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;box-shadow:0 2px 4px rgba(0,0,0,0.1);position:sticky;top:0;z-index:1000;}
+.header-left{display:flex;align-items:center;gap:11px}
+.header-left img{width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25));display:block}
+.header-title{font-family:'League Spartan',sans-serif;font-size:0.95rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.header-right{display:flex;align-items:center;gap:12px}
+.header-user-info{font-size:0.7rem;text-align:right;line-height:1.3}
+.header-user-info .user-name{font-weight:600}
+.header-user-info .user-role{font-size:0.65rem;opacity:.9}
+.btn-logout{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:5px 10px;cursor:pointer;color:rgba(255,255,255,.9);font-size:0.7rem;transition:background .2s;white-space:nowrap;font-family:'Open Sans',sans-serif;font-weight:600}
+.btn-logout:hover{background:rgba(255,255,255,.22)}
+.nav-bar{background:var(--white);border-bottom:1px solid var(--border-color);padding:0 18px;display:flex;overflow-x:auto;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.nav-bar::-webkit-scrollbar{height:3px}
+.nav-bar::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px}
+.menu-item{display:inline-block;padding:12px 14px;font-size:0.7rem;color:var(--text-dark);text-decoration:none;transition:all .2s;border-bottom:3px solid transparent}
+.menu-item:hover{background:var(--sidebar-hover);color:var(--rojo)}
+.menu-item.active{font-family:'League Spartan',sans-serif;font-weight:700;color:var(--rojo);border-bottom-color:var(--rojo)}
+.admin-only{display:none}
+.main-container{flex:1;padding:22px 18px 32px;max-width:1400px;width:100%;margin:0 auto}
+.section-header{margin-bottom:18px}
+.breadcrumb{font-size:0.68rem;color:var(--gris);margin-bottom:4px}
+.breadcrumb span{color:var(--rojo);font-weight:600}
+.section-header h1{font-family:'League Spartan',sans-serif;font-size:1.5rem;font-weight:700;color:var(--text-dark);margin-bottom:4px}
+.section-header .highlight{color:var(--rojo)}
+.section-sub{font-size:0.7rem;color:var(--gris);font-weight:600}
+.content-card{background:var(--white);border-radius:var(--r);padding:20px 22px;box-shadow:var(--sh);border:1px solid var(--border-color);}
+.content-card-desc{font-size:0.73rem;color:var(--gris);line-height:1.6;margin-bottom:20px;border-left:3px solid var(--rojo);padding-left:10px;}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-bottom:18px;}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group.full-width{grid-column:1 / -1}
+.cf-label{font-size:0.68rem;font-weight:700;color:var(--gris);text-transform:uppercase;letter-spacing:.3px;}
+.cf-label .req{color:var(--rojo)}
+select,input[type="text"],textarea{padding:8px 10px;border:1px solid var(--border-color);border-radius:var(--r);font-family:'Open Sans',sans-serif;font-size:0.75rem;background:#fff;color:var(--text-dark);width:100%;transition:border .2s;outline:none;}
+select:focus,input[type="text"]:focus,textarea:focus{border-color:var(--rojo)}
+.checkbox-group{display:flex;flex-wrap:wrap;gap:14px;padding:5px 0}
+.checkbox-label{display:flex;align-items:center;gap:6px;font-weight:normal;cursor:pointer;font-size:0.75rem}
+.checkbox-label input[type="checkbox"]{accent-color:var(--rojo);width:14px;height:14px}
+.field-hint{font-size:0.63rem;color:var(--gris);font-style:italic;margin-top:2px}
+.autocomplete-wrapper{position:relative}
+.autocomplete-list{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--border-color);border-top:none;border-radius:0 0 var(--r) var(--r);max-height:180px;overflow-y:auto;z-index:200;display:none;box-shadow:0 4px 8px rgba(0,0,0,.08);}
+.autocomplete-list.open{display:block}
+.autocomplete-item{padding:8px 11px;cursor:pointer;font-size:0.74rem;border-bottom:1px solid #f0f0f0;transition:background .15s;}
+.autocomplete-item:hover{background:var(--sidebar-hover);color:var(--rojo)}
+.btn-submit{background:var(--rojo);color:var(--white);font-family:'League Spartan',sans-serif;font-weight:700;font-size:0.85rem;padding:10px 24px;border:none;border-radius:var(--r);cursor:pointer;text-transform:uppercase;transition:background .2s;display:inline-flex;align-items:center;gap:6px;margin-top:6px;}
+.btn-submit:hover:not(:disabled){background:var(--rojo-d)}
+.btn-submit:disabled{opacity:.55;cursor:not-allowed}
+.spinner{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .65s linear infinite;vertical-align:middle;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toast{position:fixed;bottom:22px;right:22px;background:var(--text-dark);color:#fff;padding:11px 18px;border-radius:6px;font-size:0.73rem;box-shadow:0 4px 14px rgba(0,0,0,.2);z-index:9999;opacity:0;transform:translateY(8px);transition:opacity .3s,transform .3s;pointer-events:none;max-width:300px;}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.ok{background:var(--verde)}
+.toast.err{background:var(--alerta)}
+footer{text-align:center;padding:14px 18px;font-size:0.65rem;color:var(--gris);border-top:1px solid var(--border-color);background:var(--white);margin-top:auto}
+footer strong{color:var(--text-dark)}
+@media(max-width:768px){
+  header{padding:0 10px;height:50px}
+  .header-title{font-size:0.7rem}
+  .main-container{padding:15px 10px}
+  .section-header h1{font-size:1.1rem}
+  .form-grid{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
 
-    <!-- ═══════════════════════════════════════════════════════ -->
-    <!-- HEADER                                                  -->
-    <!-- ═══════════════════════════════════════════════════════ -->
-    <header>
-        <div class="header-left">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABDUAAAPgCAYAAAAiJEfzAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAABTLpJREFUeNrsvc+PFce5770PDrzmartRfTyD6+9ollQIcScZQbzDCDHLdnHtzIeBQPIrkZeXCuhJn4SvcOTAa2dO8EI50MMgIkR7oZValeQgwwfwC2c6XoRon4ImportVGvhQAAMAzB9K4T6QAAAAASUVORK5CYII=" alt="Logo Casabe Real">
-            <span class="header-title">SISTEMA COMERCIAL CASABE REAL</span>
+<header>
+  <div class="header-left">
+    <img src="assets/logo-casabe-real.png" alt="Casabe Real" onerror="this.style.display='none'">
+    <span class="header-title">Sistema Comercial Casabe Real</span>
+  </div>
+  <div class="header-right">
+    <div class="header-user-info">
+      <div class="user-name" id="user-name-display">Cargando...</div>
+      <div class="user-role" id="user-role-display">Portal Comercial</div>
+    </div>
+    <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
+  </div>
+</header>
+
+<nav class="nav-bar">
+  <a href="inicio.html"    class="menu-item">INICIO</a>
+  <a href="clientes.html"  class="menu-item">CLIENTES</a>
+  <a href="meta.html"      class="menu-item">META</a>
+  <a href="propuesta.html" class="menu-item">PROPUESTA</a>
+  <a href="pedido.html"    class="menu-item">PEDIDO</a>
+  <a href="reporte.html"   class="menu-item active">REPORTE</a>
+  <a href="embudo.html"    class="menu-item">EMBUDO</a>
+  <a href="dashboard.html" class="menu-item">DASHBOARD</a>
+  <a href="bi-ia.html"     class="menu-item admin-only">BI+IA</a>
+  <a href="cargas.html"    class="menu-item admin-only">CARGAS</a>
+  <a href="historico.html" class="menu-item admin-only">HISTÓRICO</a>
+</nav>
+
+<main class="main-container">
+
+  <div class="section-header">
+    <div class="breadcrumb">Sistema / <span>Reporte de Gestión</span></div>
+    <h1>Módulo de <span class="highlight">Reporte de Gestión</span></h1>
+    <p class="section-sub" id="section-sub">Cargando...</p>
+  </div>
+
+  <div class="content-card">
+    <p class="content-card-desc">
+      Registra cada visita y gestión de campo. Cada reporte alimenta automáticamente el
+      embudo comercial y la bitácora del cliente cuando hay contacto efectivo.
+    </p>
+
+    <form id="reporteForm" onsubmit="enviarReporte(event)" autocomplete="off">
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label class="cf-label" for="tipoCliente">Tipo de Cliente <span class="req">*</span></label>
+          <select id="tipoCliente" required>
+            <option value="">Seleccione...</option>
+            <option value="Prospecto / Oportunidad">Prospecto / Oportunidad (Nuevo)</option>
+            <option value="Cliente Recurrente">Cliente Recurrente</option>
+          </select>
         </div>
-        <div style="display:flex;align-items:center;gap:10px">
-            <div class="header-right">
-                <div class="user-name" id="headerNombre">—</div>
-                <div class="user-role" id="headerRol">—</div>
-            </div>
-            <button onclick="cerrarSesion()" style="
-                background:transparent;border:1px solid rgba(255,255,255,.45);
-                color:#fff;padding:5px 12px;border-radius:50px;
-                font-size:.7rem;font-weight:600;cursor:pointer;
-                font-family:'Open Sans',sans-serif;transition:background .2s;"
-                onmouseover="this.style.background='rgba(255,255,255,.15)'"
-                onmouseout="this.style.background='transparent'">
-                🚪 Salir
-            </button>
-        </div>
-    </header>
 
-    <!-- ═══════════════════════════════════════════════════════ -->
-    <!-- NAVEGACIÓN                                              -->
-    <!-- ═══════════════════════════════════════════════════════ -->
-    <nav class="sidebar-menu">
-        <a href="inicio.html"     class="menu-item">INICIO</a>
-        <a href="clientes.html"   class="menu-item">CLIENTES</a>
-        <a href="meta.html"       class="menu-item">META</a>
-        <a href="propuesta.html"  class="menu-item">PROPUESTA</a>
-        <a href="pedido.html"     class="menu-item">PEDIDO</a>
-        <a href="reporte.html"    class="menu-item active">REPORTE</a>
-        <a href="embudo.html"     class="menu-item">EMBUDO</a>
-        <a href="dashboard.html"  class="menu-item">DASHBOARD</a>
-        <a href="bi-ia.html"      class="menu-item">BI+IA</a>
-        <a href="cargas.html"     class="menu-item">CARGAS</a>
-        <a href="historico.html"  class="menu-item">HISTORICO</a>
-    </nav>
-
-    <!-- ═══════════════════════════════════════════════════════ -->
-    <!-- CONTENIDO PRINCIPAL                                     -->
-    <!-- ═══════════════════════════════════════════════════════ -->
-    <main class="main-container">
-        <div class="section-header">
-            <h1>Módulo de <span class="highlight">Reporte de Gestión</span></h1>
+        <div class="form-group">
+          <label class="cf-label" for="razonSocial">Cliente / Razón Social <span class="req">*</span></label>
+          <div class="autocomplete-wrapper">
+            <input type="text" id="razonSocial"
+              placeholder="Escriba para buscar o ingrese texto libre"
+              required autocomplete="off">
+            <div class="autocomplete-list" id="autocompleteList"></div>
+          </div>
         </div>
 
-        <div class="content-card">
-            <p>Registra la actividad operativa en campo para garantizar la trazabilidad de la relación comercial y alimentar automáticamente el embudo de ventas.</p>
-
-            <form id="reporteForm" onsubmit="enviarReporte(event)" autocomplete="off">
-                <div class="form-grid">
-
-                    <!-- Tipo de Cliente -->
-                    <div class="form-group">
-                        <label for="tipoCliente">Tipo de Cliente</label>
-                        <select id="tipoCliente" required>
-                            <option value="">Seleccione...</option>
-                            <option value="Prospecto / Oportunidad">Prospecto / Oportunidad (Nuevo)</option>
-                            <option value="Cliente Recurrente">Cliente Recurrente</option>
-                        </select>
-                    </div>
-
-                    <!-- Cliente / Razón Social con autocomplete -->
-                    <div class="form-group">
-                        <label for="razonSocial">Cliente / Razón Social</label>
-                        <div class="autocomplete-wrapper">
-                            <input type="text" id="razonSocial"
-                                placeholder="Escriba para buscar o ingrese texto libre"
-                                required autocomplete="off">
-                            <div class="autocomplete-list" id="autocompleteList"></div>
-                        </div>
-                    </div>
-
-                    <!-- Contacto Efectivo -->
-                    <div class="form-group">
-                        <label for="contactoEfectivo">Contacto Efectivo</label>
-                        <select id="contactoEfectivo" required>
-                            <option value="">Seleccione...</option>
-                            <option value="Sí">Sí (Atendido por decisor: Chef, Compras, Gerente)</option>
-                            <option value="No">No (Cerrado, ausente, dirección errónea)</option>
-                        </select>
-                    </div>
-
-                    <!-- Gestión de Cita -->
-                    <div class="form-group">
-                        <label for="gestionCita">Gestión de Cita</label>
-                        <select id="gestionCita" required>
-                            <option value="">Seleccione...</option>
-                            <option value="Cita Hoy">Cita Hoy (Realizada)</option>
-                            <option value="Cita Futura">Cita Futura (Fecha Agendada)</option>
-                            <option value="Sin Cita">Sin Cita (Visita en frío)</option>
-                        </select>
-                    </div>
-
-                    <!-- Resultado Cita -->
-                    <div class="form-group">
-                        <label for="resultadoCita">Resultado Cita</label>
-                        <select id="resultadoCita" required>
-                            <option value="">Seleccione...</option>
-                            <option value="Interesado">Interesado</option>
-                            <option value="Reprogramada">Reprogramada</option>
-                            <option value="No Interesado">No Interesado (Activa Motivo)</option>
-                            <option value="Cierre Inmediato">Cierre Inmediato</option>
-                        </select>
-                    </div>
-
-                    <!-- Propuesta Comercial -->
-                    <div class="form-group">
-                        <label for="propuestaComercial">Propuesta Comercial</label>
-                        <select id="propuestaComercial" required>
-                            <option value="">Seleccione...</option>
-                            <option value="Sí">Propuesta Entregada (Sí)</option>
-                            <option value="No">Propuesta Entregada (No)</option>
-                        </select>
-                    </div>
-
-                    <!-- Estatus de Cierre -->
-                    <div class="form-group">
-                        <label for="estatusCierre">Estatus de Cierre</label>
-                        <select id="estatusCierre" required>
-                            <option value="">Seleccione...</option>
-                            <option value="Pedido 1era Vez">Pedido 1era Vez</option>
-                            <option value="Pedido Recurrente">Pedido Recurrente</option>
-                            <option value="Sin Pedido">Sin Pedido</option>
-                            <option value="Rechazado">Rechazado</option>
-                        </select>
-                    </div>
-
-                    <!-- Motivo de No Venta (condicional) -->
-                    <div class="form-group" id="motivoContainer">
-                        <label for="motivoNoVenta">Motivo de No Venta</label>
-                        <select id="motivoNoVenta">
-                            <option value="">Seleccione...</option>
-                            <option value="Precio">Precio</option>
-                            <option value="Inventario Propio">Inventario Propio</option>
-                            <option value="Condiciones Crédito">Condiciones Crédito</option>
-                            <option value="Competencia">Competencia</option>
-                            <option value="Otro">Otro</option>
-                        </select>
-                        <span class="field-hint" id="motivoHint">Obligatorio cuando no hay pedido</span>
-                    </div>
-
-                    <!-- Datos Capturados -->
-                    <div class="form-group full-width">
-                        <label>Datos Capturados</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="datosCapturados" value="Nombre Decisor"> Nombre Decisor
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="datosCapturados" value="Teléfono/WhatsApp"> Teléfono/WhatsApp
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="datosCapturados" value="Correo"> Correo
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="datosCapturados" value="Dirección Despacho"> Dirección Despacho
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Observaciones -->
-                    <div class="form-group full-width">
-                        <label for="observaciones">Observaciones</label>
-                        <textarea id="observaciones" rows="3"
-                            placeholder="Minuta de acuerdos, objeciones o compromisos para la Bitácora 360° y la Memoria IA."></textarea>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-submit" id="btnSubmit">Enviar Reporte</button>
-            </form>
+        <div class="form-group">
+          <label class="cf-label" for="contactoEfectivo">Contacto Efectivo <span class="req">*</span></label>
+          <select id="contactoEfectivo" required>
+            <option value="">Seleccione...</option>
+            <option value="Sí">Sí — Atendido por decisor (Chef, Compras, Gerente)</option>
+            <option value="No">No — Cerrado, ausente o dirección errónea</option>
+          </select>
         </div>
-    </main>
 
-    <!-- ═══════════════════════════════════════════════════════ -->
-    <!-- FOOTER                                                  -->
-    <!-- ═══════════════════════════════════════════════════════ -->
-    <footer>
-        <p>&copy; 2026 Sistema Comercial Casabe Real (SCCR). Todos los derechos reservados.</p>
-    </footer>
+        <div class="form-group">
+          <label class="cf-label" for="gestionCita">Gestión de Cita <span class="req">*</span></label>
+          <select id="gestionCita" required>
+            <option value="">Seleccione...</option>
+            <option value="Cita Hoy">Cita Hoy (Realizada)</option>
+            <option value="Cita Futura">Cita Futura (Fecha Agendada)</option>
+            <option value="Sin Cita">Sin Cita (Visita en frío)</option>
+          </select>
+        </div>
 
-    <!-- TOAST -->
-    <div class="toast" id="toast"></div>
+        <div class="form-group">
+          <label class="cf-label" for="resultadoCita">Resultado de la Cita <span class="req">*</span></label>
+          <select id="resultadoCita" required>
+            <option value="">Seleccione...</option>
+            <option value="Interesado">Interesado</option>
+            <option value="Reprogramada">Reprogramada</option>
+            <option value="No Interesado">No Interesado (Activa Motivo)</option>
+            <option value="Cierre Inmediato">Cierre Inmediato</option>
+          </select>
+        </div>
 
-    <!-- ═══════════════════════════════════════════════════════ -->
-    <!-- SCRIPT                                                  -->
-    <!-- ═══════════════════════════════════════════════════════ -->
-    <script src="assets/sccr-auth.js"></script>
-    <script>
-    // ──────────────────────────────────────────────────────────
-    //  CONFIGURACIÓN — misma URL que pedido.html
-    // ──────────────────────────────────────────────────────────
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbysSUeGA965zGGIF1Zpcbji1SNmkM_kKNoXmFwud6P7kHv0cTlKNJopVF3T93QKhqPs9A/exec';
+        <div class="form-group">
+          <label class="cf-label" for="propuestaComercial">Propuesta Entregada <span class="req">*</span></label>
+          <select id="propuestaComercial" required>
+            <option value="">Seleccione...</option>
+            <option value="Sí">Sí — Propuesta entregada</option>
+            <option value="No">No — Sin propuesta</option>
+          </select>
+        </div>
 
-    // ──────────────────────────────────────────────────────────
-    //  SESIÓN — usa el mismo bridge SCCR que pedido.html
-    // ──────────────────────────────────────────────────────────
-    let SESSION = null;
+        <div class="form-group">
+          <label class="cf-label" for="estatusCierre">Estatus de Cierre <span class="req">*</span></label>
+          <select id="estatusCierre" required>
+            <option value="">Seleccione...</option>
+            <option value="Pedido 1era Vez">Pedido 1era Vez</option>
+            <option value="Pedido Recurrente">Pedido Recurrente</option>
+            <option value="Sin Pedido">Sin Pedido</option>
+            <option value="Rechazado">Rechazado</option>
+          </select>
+        </div>
 
-    function cargarSesion() {
-        SESSION = SCCR.getSesion();   // lee sessionStorage['sccr']
+        <div class="form-group">
+          <label class="cf-label" for="motivoNoVenta">
+            Motivo de No Venta
+            <span class="req" id="motivoReqMark" style="display:none">*</span>
+          </label>
+          <select id="motivoNoVenta">
+            <option value="">Seleccione...</option>
+            <option value="Precio">Precio</option>
+            <option value="Inventario Propio">Inventario Propio</option>
+            <option value="Condiciones Crédito">Condiciones de Crédito</option>
+            <option value="Competencia">Competencia</option>
+            <option value="Otro">Otro</option>
+          </select>
+          <span class="field-hint" id="motivoHint">Obligatorio cuando no hay pedido</span>
+        </div>
 
-        if (!SESSION) {
-            window.location.href = 'index.html';
-            return;
+        <div class="form-group full-width">
+          <label class="cf-label">Datos Capturados en Visita</label>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" name="datosCapturados" value="Nombre Decisor"> Nombre Decisor
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="datosCapturados" value="Teléfono/WhatsApp"> Teléfono / WhatsApp
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="datosCapturados" value="Correo"> Correo
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="datosCapturados" value="Dirección Despacho"> Dirección Despacho
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group full-width">
+          <label class="cf-label" for="observaciones">Observaciones / Minuta</label>
+          <textarea id="observaciones" rows="3"
+            placeholder="Acuerdos, objeciones o compromisos. Se registra en la Bitácora 360° del cliente."></textarea>
+        </div>
+
+      </div>
+
+      <button type="submit" class="btn-submit" id="btnSubmit">
+        Enviar Reporte
+      </button>
+    </form>
+  </div>
+
+</main>
+
+<footer>
+  &copy; 2026 <strong>Sistema Comercial Casabe Real (SCCR)</strong>. Todos los derechos reservados. &nbsp;|&nbsp; v2.5.1 &nbsp;|&nbsp; 0412.290.58.33
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbyWRB5745Ors7n8RYqTqyBfb7LXIX3W9x-LFxfnnJf4Bv7fyoS51KeqKgChaldfmLqjSw/exec';
+
+let sesion        = null;
+let esDirectivo   = false;
+let clientesCache = [];
+
+document.addEventListener('DOMContentLoaded', () => {
+  sesion = SCCR.initSCCR();
+  if (!sesion) return;
+
+  const rol = sesion.rol.toLowerCase();
+  esDirectivo = (rol === 'admin' || rol === 'gerente');
+
+  document.getElementById('user-name-display').textContent = sesion.nombre || '—';
+  document.getElementById('user-role-display').textContent =
+    rol === 'admin'   ? 'Administrador'     :
+    rol === 'gerente' ? 'Gerente de Ventas' : 'Asesor Comercial';
+
+  document.getElementById('section-sub').textContent =
+    'Registrando gestión de campo — ' + (sesion.nombre || sesion.user);
+
+  if (esDirectivo) {
+    document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
+  }
+
+  iniciarCondicionales();
+  iniciarAutocomplete();
+  cargarClientesParaAutocomplete();
+});
+
+function cerrarSesion() { SCCR.cerrarSesion(); }
+
+// ── CONDICIONAL: Motivo de No Venta ──────────────────────────
+function iniciarCondicionales() {
+  const estatus = document.getElementById('estatusCierre');
+  const motivo  = document.getElementById('motivoNoVenta');
+  const hint    = document.getElementById('motivoHint');
+  const req     = document.getElementById('motivoReqMark');
+
+  estatus.addEventListener('change', () => {
+    const sinPedido = ['Sin Pedido', 'Rechazado'].includes(estatus.value);
+    motivo.required       = sinPedido;
+    hint.style.color      = sinPedido ? 'var(--alerta)' : 'var(--gris)';
+    req.style.display     = sinPedido ? 'inline' : 'none';
+  });
+}
+
+// ── AUTOCOMPLETE — action=clientes (acción correcta del Script) ─
+async function cargarClientesParaAutocomplete() {
+  try {
+    let url = API + '?action=clientes';
+    if (!esDirectivo && sesion.vendedor_id) {
+      url += '&vendedor=' + encodeURIComponent(sesion.vendedor_id);
+    }
+    const r = await fetch(url, { redirect: 'follow' });
+    const d = await r.json();
+    if (d.ok && Array.isArray(d.data)) clientesCache = d.data;
+  } catch (e) {
+    console.warn('Autocomplete: no se pudo cargar la cartera:', e);
+  }
+}
+
+function iniciarAutocomplete() {
+  const input = document.getElementById('razonSocial');
+  const lista = document.getElementById('autocompleteList');
+
+  input.addEventListener('input', () => {
+    const q = input.value.toLowerCase().trim();
+    lista.innerHTML = '';
+    if (q.length < 2 || !clientesCache.length) { lista.classList.remove('open'); return; }
+
+    const filtrados = clientesCache
+      .filter(c => (c.razon_social || '').toLowerCase().includes(q))
+      .slice(0, 10);
+
+    if (!filtrados.length) { lista.classList.remove('open'); return; }
+
+    filtrados.forEach(c => {
+      const item = document.createElement('div');
+      item.className   = 'autocomplete-item';
+      item.textContent = c.razon_social + (c.establecimiento ? ' — ' + c.establecimiento : '');
+      item.addEventListener('mousedown', e => {
+        e.preventDefault();
+        input.value = c.razon_social;
+        lista.classList.remove('open');
+        if (c.estado === 'activo') {
+          document.getElementById('tipoCliente').value = 'Cliente Recurrente';
         }
-
-        // Mostrar nombre y rol en el header
-        document.getElementById('headerNombre').textContent = SESSION.nombre || SESSION.user || '—';
-        const rolLabel = {
-            admin:    'CEO / Administrador',
-            gerente:  'Gerente',
-            vendedor: 'Vendedor'
-        };
-        document.getElementById('headerRol').textContent = rolLabel[SESSION.rol] || SESSION.rol || '—';
-
-        // Aplicar visibilidad de menú según rol (igual que pedido.html)
-        SCCR.aplicarMenuPorRol(SESSION);
-    }
-
-    // ──────────────────────────────────────────────────────────
-    //  TOAST
-    // ──────────────────────────────────────────────────────────
-    function showToast(msg, type = 'success') {
-        const t = document.getElementById('toast');
-        t.textContent = msg;
-        t.className = 'toast ' + type + ' show';
-        clearTimeout(t._timer);
-        t._timer = setTimeout(() => { t.className = 'toast'; }, 4000);
-    }
-
-    // ── Cerrar sesión (igual que pedido.html) ──
-    function cerrarSesion() {
-        if (confirm('¿Estás seguro de cerrar sesión?')) {
-            sessionStorage.removeItem('sccr');
-            window.location.href = 'index.html';
-        }
-    }
-
-    // ──────────────────────────────────────────────────────────
-    //  AUTOCOMPLETE DE CLIENTES
-    // ──────────────────────────────────────────────────────────
-    let clientesCache = [];
-
-    async function cargarClientes() {
-        try {
-            const filtro = (SESSION.rol === 'vendedor' && SESSION.vendedor_id)
-                ? `&vendedor_id=${encodeURIComponent(SESSION.vendedor_id)}`
-                : '';
-            const res  = await fetch(`${APPS_SCRIPT_URL}?action=getClientes${filtro}`);
-            const data = await res.json();
-            if (data.ok && Array.isArray(data.data)) {
-                clientesCache = data.data;
-            }
-        } catch (e) {
-            console.warn('No se pudieron cargar clientes para autocomplete:', e);
-        }
-    }
-
-    function iniciarAutocomplete() {
-        const input = document.getElementById('razonSocial');
-        const lista = document.getElementById('autocompleteList');
-
-        input.addEventListener('input', () => {
-            const q = input.value.toLowerCase().trim();
-            lista.innerHTML = '';
-            if (q.length < 2 || clientesCache.length === 0) {
-                lista.classList.remove('open');
-                return;
-            }
-            const filtrados = clientesCache
-                .filter(c => (c.razon_social || '').toLowerCase().includes(q))
-                .slice(0, 10);
-
-            if (filtrados.length === 0) {
-                lista.classList.remove('open');
-                return;
-            }
-
-            filtrados.forEach(c => {
-                const item = document.createElement('div');
-                item.className = 'autocomplete-item';
-                item.textContent = c.razon_social + (c.establecimiento ? ' — ' + c.establecimiento : '');
-                item.addEventListener('mousedown', (e) => {
-                    e.preventDefault();
-                    input.value = c.razon_social;
-                    lista.classList.remove('open');
-                    // Autocompletar tipo de cliente si es recurrente
-                    if (c.estado === 'activo') {
-                        document.getElementById('tipoCliente').value = 'Cliente Recurrente';
-                    }
-                });
-                lista.appendChild(item);
-            });
-            lista.classList.add('open');
-        });
-
-        // Cerrar al perder foco
-        input.addEventListener('blur', () => {
-            setTimeout(() => lista.classList.remove('open'), 200);
-        });
-    }
-
-    // ──────────────────────────────────────────────────────────
-    //  LÓGICA CONDICIONAL — Motivo de No Venta
-    // ──────────────────────────────────────────────────────────
-    function iniciarCondicionales() {
-        const estatus = document.getElementById('estatusCierre');
-        const motivoSel = document.getElementById('motivoNoVenta');
-
-        estatus.addEventListener('change', () => {
-            const sinPedido = ['Sin Pedido', 'Rechazado'].includes(estatus.value);
-            motivoSel.required = sinPedido;
-            document.getElementById('motivoHint').style.color = sinPedido ? 'var(--primary-red)' : '#888';
-        });
-    }
-
-    // ──────────────────────────────────────────────────────────
-    //  ENVÍO DEL FORMULARIO → Apps Script (action: registroReporte)
-    // ──────────────────────────────────────────────────────────
-    async function enviarReporte(event) {
-        event.preventDefault();
-
-        const btn = document.getElementById('btnSubmit');
-        btn.disabled = true;
-        btn.innerHTML = '<span class="spinner"></span>Enviando...';
-
-        // Recolectar checkboxes
-        const datosCapturadosArr = [];
-        document.querySelectorAll('input[name="datosCapturados"]:checked').forEach(cb => {
-            datosCapturadosArr.push(cb.value);
-        });
-
-        // Validación condicional de motivo
-        const estatus = document.getElementById('estatusCierre').value;
-        const motivo  = document.getElementById('motivoNoVenta').value;
-        if (['Sin Pedido', 'Rechazado'].includes(estatus) && !motivo) {
-            showToast('Por favor seleccione el Motivo de No Venta.', 'error');
-            btn.disabled = false;
-            btn.innerHTML = 'Enviar Reporte';
-            return;
-        }
-
-        // Construir payload — campos mapeados a HEADERS.reportes del Script
-        const payload = {
-            action:            'registroReporte',
-            fecha:             new Date().toISOString(),
-            vendedor:          SESSION ? (SESSION.nombre || SESSION.user) : '',
-            user_vendedor:     SESSION ? SESSION.user : '',
-            tipo_cliente:      document.getElementById('tipoCliente').value,
-            razon_social:      document.getElementById('razonSocial').value,
-            contacto_efectivo: document.getElementById('contactoEfectivo').value,
-            datos_capturados:  datosCapturadosArr.join(', '),
-            gestion_cita:      document.getElementById('gestionCita').value,
-            resultado_cita:    document.getElementById('resultadoCita').value,
-            propuesta_comercial: document.getElementById('propuestaComercial').value,
-            estatus_cierre:    estatus,
-            motivo_no_venta:   motivo,
-            observaciones:     document.getElementById('observaciones').value
-        };
-
-        try {
-            await fetch(APPS_SCRIPT_URL, {
-                method:  'POST',
-                mode:    'no-cors',   // Apps Script requiere no-cors
-                headers: { 'Content-Type': 'application/json' },
-                body:    JSON.stringify(payload)
-            });
-            // Con mode:no-cors no podemos leer la respuesta, se asume éxito si no hay excepción
-            showToast('✓ Reporte enviado y almacenado correctamente.', 'success');
-            document.getElementById('reporteForm').reset();
-        } catch (error) {
-            console.error('Error al enviar reporte:', error);
-            showToast('Error al enviar el reporte. Verifique su conexión.', 'error');
-        } finally {
-            btn.disabled = false;
-            btn.innerHTML = 'Enviar Reporte';
-        }
-    }
-
-    // ──────────────────────────────────────────────────────────
-    //  INIT
-    // ──────────────────────────────────────────────────────────
-    document.addEventListener('DOMContentLoaded', () => {
-        cargarSesion();
-        if (!SESSION) return; // cargarSesion ya redirigió
-
-        // Marcar nav activo dinámicamente (igual que pedido.html)
-        const path = window.location.pathname;
-        document.querySelectorAll('.sidebar-menu a').forEach(a => {
-            if (path.endsWith(a.getAttribute('href'))) a.classList.add('active');
-        });
-
-        iniciarCondicionales();
-        iniciarAutocomplete();
-        cargarClientes(); // carga async, no bloquea el form
+      });
+      lista.appendChild(item);
     });
-    </script>
+    lista.classList.add('open');
+  });
 
+  input.addEventListener('blur', () => {
+    setTimeout(() => lista.classList.remove('open'), 200);
+  });
+}
+
+// ── ENVÍO — action: registroReporte ──────────────────────────
+// Campos mapeados exactamente a HEADERS.reportes del SCRIPT.gs:
+// id_reporte | fecha | fecha_formateada | vendedor | user_vendedor |
+// tipo_cliente | razon_social | contacto_efectivo | datos_capturados |
+// gestion_cita | resultado_cita | propuesta_comercial |
+// estatus_cierre | motivo_no_venta | observaciones
+async function enviarReporte(event) {
+  event.preventDefault();
+
+  const datosCapturados = [];
+  document.querySelectorAll('input[name="datosCapturados"]:checked')
+    .forEach(cb => datosCapturados.push(cb.value));
+
+  const estatus = document.getElementById('estatusCierre').value;
+  const motivo  = document.getElementById('motivoNoVenta').value;
+
+  if (['Sin Pedido', 'Rechazado'].includes(estatus) && !motivo) {
+    showToast('Selecciona el Motivo de No Venta antes de enviar.', 'err');
+    return;
+  }
+
+  const btn = document.getElementById('btnSubmit');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Enviando...';
+
+  const payload = {
+    action:              'registroReporte',
+    fecha:               new Date().toISOString(),
+    vendedor:            sesion.nombre || sesion.user || '',
+    user_vendedor:       sesion.user   || '',
+    tipo_cliente:        document.getElementById('tipoCliente').value,
+    razon_social:        document.getElementById('razonSocial').value.trim(),
+    contacto_efectivo:   document.getElementById('contactoEfectivo').value,
+    datos_capturados:    datosCapturados.join(', '),
+    gestion_cita:        document.getElementById('gestionCita').value,
+    resultado_cita:      document.getElementById('resultadoCita').value,
+    propuesta_comercial: document.getElementById('propuestaComercial').value,
+    estatus_cierre:      estatus,
+    motivo_no_venta:     motivo,
+    observaciones:       document.getElementById('observaciones').value.trim(),
+  };
+
+  try {
+    await fetch(API, {
+      method:  'POST',
+      mode:    'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload),
+    });
+    showToast('Reporte enviado y registrado correctamente.', 'ok');
+    document.getElementById('reporteForm').reset();
+  } catch (e) {
+    console.error('Error al enviar reporte:', e);
+    showToast('Error al enviar. Verifica tu conexión e intenta de nuevo.', 'err');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = 'Enviar Reporte';
+  }
+}
+
+// ── TOAST ────────────────────────────────────────────────────
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className   = 'toast ' + (type || '') + ' show';
+  clearTimeout(t._t);
+  t._t = setTimeout(() => { t.className = 'toast'; }, 4000);
+}
+</script>
 </body>
 </html>
