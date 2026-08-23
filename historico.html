@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SCCR — Histórico Comercial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<script src="assets/sccr-auth.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --rojo:#D30000;--rojo-d:#A01015;--rojo-xs:#FEF2F2;--white:#FFF;
+  --light-bg:#F8F9FA;--border-color:#E0E0E0;--text-dark:#333;
+  --gris:#6B7280;--sidebar-hover:#F1F3F5;--verde:#059669;--verde-xs:#ECFDF5;
+  --naranja:#D97706;--naranja-xs:#FFFBEB;--azul:#2563EB;--azul-xs:#EFF6FF;
+  --alerta:#E74C3C;--r:6px;--sh:0 2px 4px rgba(0,0,0,.05)
+}
+body{font-family:'Open Sans',sans-serif;background:var(--light-bg);color:var(--text-dark);display:flex;flex-direction:column;min-height:100vh;font-size:.75rem}
+header{background:var(--rojo);color:#fff;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;box-shadow:0 2px 4px rgba(0,0,0,.1);position:sticky;top:0;z-index:1000}
+.header-left{display:flex;align-items:center;gap:11px}.header-left img{width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25));display:block}
+.header-title{font-family:'League Spartan',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.header-right{display:flex;align-items:center;gap:12px}.header-user-info{font-size:.7rem;text-align:right;line-height:1.3}.header-user-info .user-name{font-weight:600}.header-user-info .user-role{font-size:.65rem;opacity:.9}
+.btn-logout{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:5px 10px;cursor:pointer;color:rgba(255,255,255,.9);font-size:.7rem;transition:background .2s;white-space:nowrap;font-family:'Open Sans',sans-serif;font-weight:600}.btn-logout:hover{background:rgba(255,255,255,.22)}
+.nav-bar{background:#fff;border-bottom:1px solid var(--border-color);padding:0 18px;display:flex;overflow-x:auto;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.05)}.nav-bar::-webkit-scrollbar{height:3px}.nav-bar::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px}
+.menu-item{display:inline-block;padding:12px 14px;font-size:.7rem;color:var(--text-dark);text-decoration:none;transition:all .2s;border-bottom:3px solid transparent}.menu-item:hover{background:var(--sidebar-hover);color:var(--rojo)}.menu-item.active{font-family:'League Spartan',sans-serif;font-weight:700;color:var(--rojo);border-bottom-color:var(--rojo)}.admin-only{display:none}
+.main-container{flex:1;padding:22px 18px 32px;max-width:1500px;width:100%;margin:0 auto}.section-header{margin-bottom:18px}.breadcrumb{font-size:.68rem;color:var(--gris);margin-bottom:4px}.breadcrumb span{color:var(--rojo);font-weight:600}
+.section-header h1{font-family:'League Spartan',sans-serif;font-size:1.5rem;font-weight:700;color:var(--text-dark);margin-bottom:4px}.section-header .highlight{color:var(--rojo)}.section-sub{font-size:.7rem;color:var(--gris);font-weight:600}
+.filters-card,.card{background:#fff;border:1px solid var(--border-color);border-radius:var(--r);box-shadow:var(--sh)}
+.filters-card{padding:16px;margin-bottom:18px}.filter-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;align-items:end}.field label{display:block;font-size:.62rem;color:var(--gris);font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px}.field input,.field select{width:100%;height:34px;border:1px solid var(--border-color);border-radius:var(--r);padding:6px 9px;font:600 .7rem 'Open Sans',sans-serif;color:var(--text-dark);background:#fff;outline:none}.field input:focus,.field select:focus{border-color:var(--rojo)}
+.segment{display:flex;height:34px;border:1px solid var(--border-color);border-radius:var(--r);overflow:hidden;background:#fff}.segment button{border:0;background:#fff;color:var(--gris);padding:0 10px;font:700 .67rem 'Open Sans',sans-serif;cursor:pointer;flex:1}.segment button.active{background:var(--rojo);color:#fff}.filter-actions{display:flex;gap:7px}.btn{height:34px;padding:0 13px;border-radius:var(--r);font:700 .69rem 'Open Sans',sans-serif;cursor:pointer;border:1px solid var(--border-color);background:#fff;color:var(--text-dark)}.btn-primary{background:var(--rojo);color:#fff;border-color:var(--rojo)}.btn-primary:hover{background:var(--rojo-d)}.btn-outline{color:var(--rojo);border-color:var(--rojo)}.btn:disabled{opacity:.5;cursor:not-allowed}
+.filter-status{margin-top:10px;font-size:.66rem;color:var(--gris);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.status-ok{color:var(--verde);font-weight:700}.status-error{color:var(--alerta);font-weight:700}
+.kpi-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:12px;margin-bottom:18px}.kpi{background:#fff;border:1px solid var(--border-color);border-radius:var(--r);box-shadow:var(--sh);padding:13px 14px;position:relative;overflow:hidden;min-height:88px}.kpi:before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--rojo)}.kpi-title{font-size:.6rem;color:var(--gris);font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-bottom:6px}.kpi-value{font:800 1.25rem 'League Spartan',sans-serif;color:var(--text-dark);white-space:nowrap}.kpi-sub{font-size:.59rem;color:var(--gris);margin-top:3px}.up{color:var(--verde)!important}.down{color:var(--alerta)!important}.neutral{color:var(--gris)!important}
+.grid-main{display:grid;grid-template-columns:2fr 1fr;gap:15px;margin-bottom:15px}.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px}.card{padding:16px;min-width:0}.card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.card-title{font:700 .88rem 'League Spartan',sans-serif}.card-sub{font-size:.62rem;color:var(--gris);margin-top:2px}.chart-wrap{position:relative;height:310px}.chart-wrap.small{height:285px}.legend-note{font-size:.61rem;color:var(--gris)}
+.dynamic-controls{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.mini-select{height:29px;border:1px solid var(--border-color);border-radius:5px;padding:3px 7px;font:600 .63rem 'Open Sans',sans-serif;background:#fff}
+.table-wrap{overflow:auto;max-height:370px}table{width:100%;border-collapse:collapse}th,td{padding:9px 9px;text-align:left;border-bottom:1px solid var(--border-color);white-space:nowrap}th{background:var(--light-bg);font-size:.6rem;color:var(--gris);font-weight:700;text-transform:uppercase;letter-spacing:.25px;position:sticky;top:0;z-index:1}td{font-size:.67rem}tbody tr:hover td{background:var(--sidebar-hover)}.rank{font:700 .78rem 'League Spartan',sans-serif;color:var(--rojo)}.right{text-align:right}.pct{font-weight:700}.bar-cell{min-width:130px}.bar-bg{height:6px;background:#eee;border-radius:4px;overflow:hidden}.bar-fill{height:100%;background:var(--rojo);border-radius:4px}
+.insights{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.insight{border:1px solid var(--border-color);border-radius:5px;padding:11px;background:var(--light-bg)}.insight-label{font-size:.59rem;color:var(--gris);font-weight:700;text-transform:uppercase}.insight-value{font:700 .83rem 'League Spartan',sans-serif;margin-top:5px}.insight-text{font-size:.61rem;color:var(--gris);margin-top:3px;line-height:1.35}
+.empty{text-align:center;padding:35px 15px;color:var(--gris);font-size:.7rem}.loading{text-align:center;padding:35px;color:var(--gris)}
+footer{text-align:center;padding:14px 18px;font-size:.65rem;color:var(--gris);border-top:1px solid var(--border-color);background:#fff;margin-top:auto}footer strong{color:var(--text-dark)}
+@media(max-width:1200px){.kpi-grid{grid-template-columns:repeat(4,1fr)}.filter-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:900px){.grid-main,.grid-2{grid-template-columns:1fr}.insights{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){header{padding:0 10px;height:50px}.header-title{font-size:.7rem}.main-container{padding:15px 10px}.section-header h1{font-size:1.1rem}.filter-grid{grid-template-columns:1fr 1fr}.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.filter-grid{grid-template-columns:1fr}.kpi-grid,.insights{grid-template-columns:1fr}.header-user-info{display:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <img src="assets/logo-casabe-real.png" alt="Casabe Real" onerror="this.style.display='none'">
+    <span class="header-title">Sistema Comercial Casabe Real</span>
+  </div>
+  <div class="header-right">
+    <div class="header-user-info">
+      <div class="user-name" id="user-name-display">Cargando...</div>
+      <div class="user-role" id="user-role-display">Portal Comercial</div>
+    </div>
+    <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
+  </div>
+</header>
+
+<nav class="nav-bar">
+  <a href="inicio.html" class="menu-item">INICIO</a>
+  <a href="clientes.html" class="menu-item">CLIENTES</a>
+  <a href="meta.html" class="menu-item">META</a>
+  <a href="propuesta.html" class="menu-item">PROPUESTA</a>
+  <a href="pedido.html" class="menu-item">PEDIDO</a>
+  <a href="reporte.html" class="menu-item">REPORTE</a>
+  <a href="embudo.html" class="menu-item">EMBUDO</a>
+  <a href="dashboard.html" class="menu-item">DASHBOARD</a>
+  <a href="bi-ia.html" class="menu-item admin-only">BI+IA</a>
+  <a href="cargas.html" class="menu-item admin-only">CARGAS</a>
+  <a href="historico.html" class="menu-item active admin-only">HISTÓRICO</a>
+</nav>
+
+<main class="main-container">
+  <div class="section-header">
+    <div class="breadcrumb">Sistema / <span>Histórico</span></div>
+    <h1>Análisis <span class="highlight">Histórico Comercial</span></h1>
+    <p class="section-sub" id="section-sub">Vista consolidada — evolución de ventas, cajas, clientes y vendedores.</p>
+  </div>
+
+  <section class="filters-card">
+    <div class="filter-grid">
+      <div class="field"><label>Fecha desde</label><input type="date" id="dateFrom"></div>
+      <div class="field"><label>Fecha hasta</label><input type="date" id="dateTo"></div>
+      <div class="field"><label>Intervalo</label>
+        <select id="interval"><option value="dia">Día</option><option value="semana">Semana</option><option value="mes" selected>Mes</option></select>
+      </div>
+      <div class="field"><label>Unidad</label>
+        <div class="segment"><button id="unitUsd" class="active" onclick="setUnit('usd')">$</button><button id="unitBoxes" onclick="setUnit('cajas')">CAJAS</button></div>
+      </div>
+      <div class="field"><label>Cliente</label><select id="clientFilter"><option value="">Todos los clientes</option></select></div>
+      <div class="field"><label>Vendedor</label><select id="sellerFilter"><option value="">Todos los vendedores</option></select></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:10px;align-items:center;flex-wrap:wrap">
+      <div class="field" style="min-width:210px"><label>Modo de acumulación</label>
+        <div class="segment"><button id="modePartial" class="active" onclick="setMode('parcial')">PARCIAL</button><button id="modeAccum" onclick="setMode('acumulado')">ACUMULADO</button></div>
+      </div>
+      <div class="filter-actions" style="margin-top:14px">
+        <button class="btn btn-primary" id="applyBtn" onclick="applyFilters()">Aplicar filtros</button>
+        <button class="btn btn-outline" onclick="resetFilters()">Restablecer</button>
+      </div>
+    </div>
+    <div class="filter-status"><span id="dataStatus">Estado: <strong>cargando datos...</strong></span><span>Fuente: <strong>PEDIDOS_RAW</strong></span><span id="periodStatus"></span></div>
+  </section>
+
+  <section class="kpi-grid">
+    <div class="kpi"><div class="kpi-title">Ventas</div><div class="kpi-value" id="kpiSales">—</div><div class="kpi-sub" id="kpiSalesVar">vs. período anterior —</div></div>
+    <div class="kpi"><div class="kpi-title">Cajas</div><div class="kpi-value" id="kpiBoxes">—</div><div class="kpi-sub" id="kpiBoxesVar">vs. período anterior —</div></div>
+    <div class="kpi"><div class="kpi-title">Pedidos</div><div class="kpi-value" id="kpiOrders">—</div><div class="kpi-sub">pedidos registrados</div></div>
+    <div class="kpi"><div class="kpi-title">Clientes activos</div><div class="kpi-value" id="kpiClients">—</div><div class="kpi-sub">clientes con compra</div></div>
+    <div class="kpi"><div class="kpi-title">Ticket promedio</div><div class="kpi-value" id="kpiTicket">—</div><div class="kpi-sub">venta ÷ pedidos</div></div>
+    <div class="kpi"><div class="kpi-title">Venta / cliente</div><div class="kpi-value" id="kpiPerClient">—</div><div class="kpi-sub">venta ÷ clientes</div></div>
+    <div class="kpi"><div class="kpi-title">Cajas / pedido</div><div class="kpi-value" id="kpiBoxesOrder">—</div><div class="kpi-sub">cajas ÷ pedidos</div></div>
+    <div class="kpi"><div class="kpi-title">Concentración Top 10</div><div class="kpi-value" id="kpiTop10">—</div><div class="kpi-sub">participación en ventas</div></div>
+  </section>
+
+  <section class="card" style="margin-bottom:15px">
+    <div class="card-head">
+      <div><div class="card-title">Evolución histórica dinámica</div><div class="card-sub">Combina variables y cambia el intervalo sin salir de la pantalla.</div></div>
+      <div class="dynamic-controls">
+        <select class="mini-select" id="chartMetric1" onchange="renderCharts()">
+          <option value="usd">Ventas $</option><option value="cajas">Cajas</option><option value="pedidos">Pedidos</option><option value="clientes">Clientes</option><option value="ticket">Ticket promedio</option>
+        </select>
+        <select class="mini-select" id="chartMetric2" onchange="renderCharts()">
+          <option value="none">Sin segunda variable</option><option value="usd">Ventas $</option><option value="cajas">Cajas</option><option value="pedidos">Pedidos</option><option value="clientes">Clientes</option><option value="ticket">Ticket promedio</option>
+        </select>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
+  </section>
+
+  <section class="grid-main">
+    <div class="card">
+      <div class="card-head"><div><div class="card-title">Pareto de clientes</div><div class="card-sub">Barras ordenadas por ventas y línea de participación acumulada.</div></div><span class="legend-note" id="pareto80">—</span></div>
+      <div class="chart-wrap"><canvas id="paretoChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div><div class="card-title">Top 10 clientes</div><div class="card-sub">Ranking del período filtrado.</div></div></div>
+      <div class="table-wrap"><table><thead><tr><th>#</th><th>Cliente</th><th class="right">Venta</th><th class="right">Cajas</th><th class="right">%</th></tr></thead><tbody id="topClientsBody"></tbody></table></div>
+    </div>
+  </section>
+
+  <section class="grid-2">
+    <div class="card">
+      <div class="card-head"><div><div class="card-title">Vendedores</div><div class="card-sub">Desempeño comparativo por ventas, cajas y clientes.</div></div></div>
+      <div class="table-wrap"><table><thead><tr><th>#</th><th>Vendedor</th><th class="right">Venta</th><th class="right">Cajas</th><th class="right">Clientes</th></tr></thead><tbody id="sellersBody"></tbody></table></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div><div class="card-title">Comparación y variaciones</div><div class="card-sub">Período seleccionado frente al período anterior equivalente.</div></div></div>
+      <div class="insights">
+        <div class="insight"><div class="insight-label">Crecimiento ventas</div><div class="insight-value" id="insSales">—</div><div class="insight-text" id="insSalesText">—</div></div>
+        <div class="insight"><div class="insight-label">Crecimiento cajas</div><div class="insight-value" id="insBoxes">—</div><div class="insight-text" id="insBoxesText">—</div></div>
+        <div class="insight"><div class="insight-label">Mayor cliente</div><div class="insight-value" id="insClient">—</div><div class="insight-text" id="insClientText">—</div></div>
+        <div class="insight"><div class="insight-label">Mayor vendedor</div><div class="insight-value" id="insSeller">—</div><div class="insight-text" id="insSellerText">—</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-head"><div><div class="card-title">Clientes: crecimiento y caída</div><div class="card-sub">Comparación del período actual contra el período anterior equivalente.</div></div></div>
+    <div class="grid-2" style="margin:0">
+      <div>
+        <table><thead><tr><th colspan="4">Mayor crecimiento</th></tr><tr><th>Cliente</th><th class="right">Actual</th><th class="right">Anterior</th><th class="right">Δ %</th></tr></thead><tbody id="growthBody"></tbody></table>
+      </div>
+      <div>
+        <table><thead><tr><th colspan="4">Mayor caída</th></tr><tr><th>Cliente</th><th class="right">Actual</th><th class="right">Anterior</th><th class="right">Δ %</th></tr></thead><tbody id="declineBody"></tbody></table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>&copy; 2026 <strong>Sistema Comercial Casabe Real (SCCR)</strong>. Todos los derechos reservados. &nbsp;|&nbsp; v2.5.0 &nbsp;|&nbsp; 0412.290.58.33</footer>
+
+<script>
+const API='https://script.google.com/macros/s/AKfycbyWRB5745Ors7n8RYqTqyBfb7LXIX3W9x-LFxfnnJf4Bv7fyoS51KeqKgChaldfmLqjSw/exec';
+let sesion=null, esDirectivo=false, ventasDB=[], ventasFiltradas=[];
+let unidad='usd', modo='parcial', trendChart=null, paretoChart=null;
+
+document.addEventListener('DOMContentLoaded',()=>{
+  try{
+    sesion=SCCR.initSCCR(['admin','gerente']);
+    if(!sesion)return;
+    const rol=(sesion.rol||'').toLowerCase();
+    esDirectivo=rol==='admin'||rol==='gerente';
+    document.getElementById('user-name-display').textContent=sesion.nombre||'—';
+    document.getElementById('user-role-display').textContent=rol==='admin'?'Administrador':'Gerente de Ventas';
+    document.querySelectorAll('.admin-only').forEach(el=>el.style.display='inline-block');
+    document.getElementById('section-sub').textContent=esDirectivo?'Vista consolidada — todos los vendedores.':'Vista histórica de tu cartera asignada.';
+    setDefaultDates();
+    cargarVentas();
+  }catch(e){setStatus('No se pudo iniciar la sesión.','error')}
+});
+function cerrarSesion(){SCCR.cerrarSesion()}
+function setStatus(t,type=''){const el=document.getElementById('dataStatus');el.innerHTML='Estado: <strong class="'+(type==='error'?'status-error':'status-ok')+'">'+esc(t)+'</strong>'}
+function setUnit(v){unidad=v;document.getElementById('unitUsd').classList.toggle('active',v==='usd');document.getElementById('unitBoxes').classList.toggle('active',v==='cajas');renderAll()}
+function setMode(v){modo=v;document.getElementById('modePartial').classList.toggle('active',v==='parcial');document.getElementById('modeAccum').classList.toggle('active',v==='acumulado');renderAll()}
+function setDefaultDates(){
+  const now=new Date(), y=now.getFullYear(), m=String(now.getMonth()+1).padStart(2,'0');
+  document.getElementById('dateFrom').value=`${y}-${m}-01`;
+  document.getElementById('dateTo').value=`${y}-${m}-${String(now.getDate()).padStart(2,'0')}`;
+}
+async function cargarVentas(){
+  try{
+    setStatus('conectando con HISTÓRICO / PEDIDOS_RAW...');
+    let url=API+'?action=historico&limite=5000';
+    if(!esDirectivo&&sesion.vendedor_id)url+='&vendedor='+encodeURIComponent(sesion.vendedor_id);
+    const r=await fetch(url,{redirect:'follow'});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const d=await r.json();
+    if(!d.ok||!Array.isArray(d.data))throw new Error(d.msg||'No se recibieron ventas');
+    ventasDB=d.data.map(normalizarVenta).filter(v=>v.fechaObj);
+    cargarSelectores();
+    setStatus(`conectado · ${ventasDB.length.toLocaleString('es-VE')} registros`);
+    applyFilters();
+  }catch(e){
+    setStatus('error de conexión: '+e.message,'error');
+    document.getElementById('periodStatus').textContent='No fue posible cargar el histórico.';
+  }
+}
+function normalizarVenta(v){
+  const fecha=parseDate(v.fecha||v.fecha_formateada||v.fecha_pedido);
+  return {...v,fechaObj:fecha,fechaKey:fecha?dateKey(fecha):'',cliente:String(v.razon_social||v.establecimiento||v.cliente||'Sin cliente').trim()||'Sin cliente',vendedor:String(v.vendedor||v.vendedor_asignado||'Sin vendedor').trim()||'Sin vendedor',usd:num(v.total_usd||v.total||v.venta_usd),cajas:num(v.total_cajas||v.cajas),pedido:String(v.numero_pedido||v.pedido||'').trim()};
+}
+function parseDate(x){
+  if(!x)return null;if(x instanceof Date)return isNaN(x)?null:x;
+  if(typeof x==='number'){const d=new Date(x);return isNaN(d)?null:d}
+  const s=String(x).trim();
+  let m=s.match(/^(\\d{1,2})[\\/\\-](\\d{1,2})[\\/\\-](\\d{4})$/);
+  if(m){const d=new Date(+m[3],+m[2]-1,+m[1]);return isNaN(d)?null:d}
+  const d=new Date(s);return isNaN(d)?null:d;
+}
+function dateKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function num(x){if(x===null||x===undefined||x==='')return 0;if(typeof x==='number')return isFinite(x)?x:0;const s=String(x).replace(/[^0-9,.-]/g,'').replace(/\\.(?=.*\\.)/g,'').replace(',','.');const n=Number(s);return isFinite(n)?n:0}
+function cargarSelectores(){
+  const cs=[...new Set(ventasDB.map(v=>v.cliente))].sort((a,b)=>a.localeCompare(b,'es'));
+  const vs=[...new Set(ventasDB.map(v=>v.vendedor))].sort((a,b)=>a.localeCompare(b,'es'));
+  const c=document.getElementById('clientFilter'),s=document.getElementById('sellerFilter');
+  c.innerHTML='<option value="">Todos los clientes</option>'+cs.map(x=>`<option value="${escAttr(x)}">${esc(x)}</option>`).join('');
+  s.innerHTML='<option value="">Todos los vendedores</option>'+vs.map(x=>`<option value="${escAttr(x)}">${esc(x)}</option>`).join('');
+}
+function applyFilters(){
+  const from=document.getElementById('dateFrom').value,to=document.getElementById('dateTo').value,client=document.getElementById('clientFilter').value,seller=document.getElementById('sellerFilter').value;
+  const fd=from?new Date(from+'T00:00:00'):null,td=to?new Date(to+'T23:59:59'):null;
+  if(fd&&td&&fd>td){alert('La fecha inicial no puede ser mayor que la fecha final.');return}
+  ventasFiltradas=ventasDB.filter(v=>(!fd||v.fechaObj>=fd)&&(!td||v.fechaObj<=td)&&(!client||v.cliente===client)&&(!seller||v.vendedor===seller));
+  document.getElementById('periodStatus').textContent=`${from||'—'} → ${to||'—'} · ${ventasFiltradas.length.toLocaleString('es-VE')} pedidos`;
+  renderAll();
+}
+function resetFilters(){setDefaultDates();document.getElementById('clientFilter').value='';document.getElementById('sellerFilter').value='';document.getElementById('interval').value='mes';setUnit('usd');setMode('parcial');applyFilters()}
+function renderAll(){renderKPIs();renderCharts();renderPareto();renderTopClients();renderSellers();renderComparisons();renderGrowthDecline()}
+function aggregate(list){
+  const map=new Map();
+  list.forEach(v=>{const k=periodKey(v.fechaObj);if(!map.has(k))map.set(k,{key:k,date:v.fechaObj,usd:0,cajas:0,pedidos:0,clients:new Set()});const o=map.get(k);o.usd+=v.usd;o.cajas+=v.cajas;o.pedidos++;o.clients.add(v.cliente)});
+  return [...map.values()].sort((a,b)=>a.date-b.date).map(o=>({...o,clientes:o.clients.size,ticket:o.pedidos?o.usd/o.pedidos:0}));
+}
+function periodKey(d){
+  const int=document.getElementById('interval').value;
+  if(int==='dia')return dateKey(d);
+  if(int==='mes')return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+  const x=new Date(d);const day=(x.getDay()+6)%7;x.setDate(x.getDate()-day);return dateKey(x);
+}
+function labelPeriod(k){
+  const int=document.getElementById('interval').value;
+  if(int==='mes'){const [y,m]=k.split('-');return `${m}/${String(y).slice(2)}`}
+  if(int==='semana')return 'Sem '+k.slice(5);
+  const p=k.split('-');return `${p[2]}/${p[1]}`;
+}
+function renderKPIs(){
+  const t=ventasFiltradas.reduce((a,v)=>{a.usd+=v.usd;a.cajas+=v.cajas;a.pedidos++;a.clients.add(v.cliente);return a},{usd:0,cajas:0,pedidos:0,clients:new Set()});
+  const n=t.clients.size, ticket=t.pedidos?t.usd/t.pedidos:0, perClient=n?t.usd/n:0, boxOrder=t.pedidos?t.cajas/t.pedidos:0;
+  const groups=groupByClient(ventasFiltradas),top10=groups.slice(0,10),topShare=t.usd?top10.reduce((s,x)=>s+x.usd,0)/t.usd*100:0;
+  setText('kpiSales',fmtMoney(t.usd));setText('kpiBoxes',fmtNum(t.cajas));setText('kpiOrders',fmtNum(t.pedidos));setText('kpiClients',fmtNum(n));
+  setText('kpiTicket',fmtMoney(ticket));setText('kpiPerClient',fmtMoney(perClient));setText('kpiBoxesOrder',t.pedidos?fmtNum(boxOrder,2):'—');setText('kpiTop10',t.usd?topShare.toFixed(1)+'%':'—');
+  const prev=previousPeriodData(),pv=totals(prev);
+  setVariation('kpiSalesVar',t.usd,pv.usd);setVariation('kpiBoxesVar',t.cajas,pv.cajas);
+}
+function totals(list){return list.reduce((a,v)=>{a.usd+=v.usd;a.cajas+=v.cajas;a.pedidos++;a.clients.add(v.cliente);return a},{usd:0,cajas:0,pedidos:0,clients:new Set()})}
+function setVariation(id,current,prev){const el=document.getElementById(id);if(!prev){el.textContent='vs. período anterior —';el.className='kpi-sub neutral';return}const p=prev?((current-prev)/prev*100):0;el.textContent=`vs. período anterior ${p>=0?'▲':'▼'} ${Math.abs(p).toFixed(1)}%`;el.className='kpi-sub '+(p>0?'up':p<0?'down':'neutral')}
+function previousPeriodData(){
+  if(!ventasFiltradas.length)return [];
+  const from=new Date(Math.min(...ventasFiltradas.map(v=>v.fechaObj.getTime())));const to=new Date(Math.max(...ventasFiltradas.map(v=>v.fechaObj.getTime())));
+  const days=Math.round((to-from)/86400000)+1;const pto=new Date(from);pto.setDate(pto.getDate()-1);const pfrom=new Date(pto);pfrom.setDate(pfrom.getDate()-days+1);
+  return ventasDB.filter(v=>v.fechaObj>=pfrom&&v.fechaObj<=pto);
+}
+function renderCharts(){
+  const data=aggregate(ventasFiltradas),labels=data.map(o=>labelPeriod(o.key));
+  const m1=document.getElementById('chartMetric1').value,m2=document.getElementById('chartMetric2').value;
+  const datasets=[datasetFor(m1,data,false)];if(m2!=='none'&&m2!==m1)datasets.push(datasetFor(m2,data,true));
+  if(trendChart)trendChart.destroy();
+  trendChart=new Chart(document.getElementById('trendChart'),{type:'line',data:{labels,datasets},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{font:{size:10}}},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${formatMetric(c.parsed.y,c.dataset.metric)}`}}},scales:{x:{ticks:{font:{size:9}}},y:{beginAtZero:true,ticks:{font:{size:9},callback:v=>formatAxis(v,m1)}}}}});
+}
+function datasetFor(metric,data,second){
+  let vals=data.map(o=>modo==='acumulado'?null:o[metric]);
+  if(modo==='acumulado'){let s=0;vals=data.map(o=>{s+=o[metric]||0;return s})}
+  const label=metric==='usd'?'Ventas $':metric==='cajas'?'Cajas':metric==='pedidos'?'Pedidos':metric==='clientes'?'Clientes':'Ticket promedio';
+  return {label,data:vals,metric, tension:.25,fill:false,borderWidth:2,pointRadius:2,borderColor:second?'#2563EB':'#D30000',backgroundColor:second?'#2563EB':'#D30000'};
+}
+function formatMetric(v,m){return m==='usd'||m==='ticket'?fmtMoney(v):fmtNum(v)}
+function formatAxis(v,m){return m==='usd'||m==='ticket'?'$'+Number(v).toLocaleString('en-US',{maximumFractionDigits:0}):Number(v).toLocaleString('es-VE')}
+function renderPareto(){
+  const rows=groupByClient(ventasFiltradas).slice(0,25),total=rows.reduce((s,x)=>s+x.usd,0);let acc=0;const labels=rows.map(x=>shorten(x.name,18));const bars=rows.map(x=>x.usd);const line=rows.map(x=>{acc+=x.usd;return total?acc/total*100:0});
+  const eighty=rows.findIndex((x,i)=>line[i]>=80);document.getElementById('pareto80').textContent=total&&eighty>=0?`≈80% alcanzado con ${eighty+1} clientes`:'—';
+  if(paretoChart)paretoChart.destroy();
+  paretoChart=new Chart(document.getElementById('paretoChart'),{data:{labels,datasets:[{type:'bar',label:'Ventas $',data:bars,backgroundColor:'#D30000',borderRadius:3,yAxisID:'y'},{type:'line',label:'% acumulado',data:line,borderColor:'#2563EB',backgroundColor:'#2563EB',borderWidth:2,pointRadius:2,yAxisID:'y1',tension:.2}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{font:{size:9}}},tooltip:{callbacks:{label:c=>c.dataset.yAxisID==='y1'?`${c.dataset.label}: ${c.parsed.y.toFixed(1)}%`:`${c.dataset.label}: ${fmtMoney(c.parsed.y)}`}}},scales:{x:{ticks:{font:{size:8},maxRotation:55,minRotation:35}},y:{beginAtZero:true,ticks:{font:{size:8},callback:v=>'$'+Number(v).toLocaleString('en-US',{notation:'compact'})}},y1:{beginAtZero:true,max:100,position:'right',grid:{drawOnChartArea:false},ticks:{font:{size:8},callback:v=>v+'%'}}}}});
+}
+function groupByClient(list){const m=new Map();list.forEach(v=>{if(!m.has(v.cliente))m.set(v.cliente,{name:v.cliente,usd:0,cajas:0,pedidos:0,clients:new Set()});const o=m.get(v.cliente);o.usd+=v.usd;o.cajas+=v.cajas;o.pedidos++});return [...m.values()].sort((a,b)=>b.usd-a.usd)}
+function groupBySeller(list){const m=new Map();list.forEach(v=>{if(!m.has(v.vendedor))m.set(v.vendedor,{name:v.vendedor,usd:0,cajas:0,pedidos:0,clients:new Set()});const o=m.get(v.vendedor);o.usd+=v.usd;o.cajas+=v.cajas;o.pedidos++;o.clients.add(v.cliente)});return [...m.values()].sort((a,b)=>b.usd-a.usd)}
+function renderTopClients(){const total=ventasFiltradas.reduce((s,v)=>s+v.usd,0),rows=groupByClient(ventasFiltradas).slice(0,10);document.getElementById('topClientsBody').innerHTML=rows.length?rows.map((x,i)=>`<tr><td class="rank">${i+1}</td><td>${esc(shorten(x.name,32))}</td><td class="right">${fmtMoney(x.usd)}</td><td class="right">${fmtNum(x.cajas)}</td><td class="right pct">${total?(x.usd/total*100).toFixed(1)+'%':'—'}</td></tr>`).join(''):`<tr><td colspan="5"><div class="empty">Sin datos para el filtro seleccionado.</div></td></tr>`}
+function renderSellers(){const rows=groupBySeller(ventasFiltradas).slice(0,15);document.getElementById('sellersBody').innerHTML=rows.length?rows.map((x,i)=>`<tr><td class="rank">${i+1}</td><td>${esc(shorten(x.name,28))}</td><td class="right">${fmtMoney(x.usd)}</td><td class="right">${fmtNum(x.cajas)}</td><td class="right">${x.clients.size}</td></tr>`).join(''):`<tr><td colspan="5"><div class="empty">Sin datos para el filtro seleccionado.</div></td></tr>`}
+function renderComparisons(){
+  const prev=previousPeriodData(),a=totals(ventasFiltradas),b=totals(prev);
+  const salesVar=variation(a.usd,b.usd),boxVar=variation(a.cajas,b.cajas),cl=groupByClient(ventasFiltradas)[0],sv=groupBySeller(ventasFiltradas)[0];
+  setText('insSales',salesVar);setClassByValue('insSales',salesVar);setText('insSalesText',b.usd?`${fmtMoney(a.usd)} vs ${fmtMoney(b.usd)}`:'No hay período anterior disponible.');
+  setText('insBoxes',boxVar);setClassByValue('insBoxes',boxVar);setText('insBoxesText',b.cajas?`${fmtNum(a.cajas)} vs ${fmtNum(b.cajas)} cajas`:'No hay período anterior disponible.');
+  setText('insClient',cl?shorten(cl.name,22):'—');setText('insClientText',cl?`${fmtMoney(cl.usd)} · ${fmtNum(cl.cajas)} cajas`:'Sin datos');
+  setText('insSeller',sv?shorten(sv.name,22):'—');setText('insSellerText',sv?`${fmtMoney(sv.usd)} · ${sv.clients.size} clientes`:'Sin datos');
+}
+function renderGrowthDecline(){
+  const prev=previousPeriodData(),cur=groupByClient(ventasFiltradas),old=groupByClient(prev),om=new Map(old.map(x=>[x.name,x.usd]));
+  const rows=cur.map(x=>({name:x.name,current:x.usd,previous:om.get(x.name)||0,var:om.get(x.name)?(x.usd/om.get(x.name)-1)*100:100})).sort((a,b)=>b.var-a.var).slice(0,5);
+  const allNames=new Set([...cur.map(x=>x.name),...old.map(x=>x.name)]),cm=new Map(cur.map(x=>[x.name,x.usd]));
+  const falls=[...allNames].map(name=>({name,current:cm.get(name)||0,previous:om.get(name)||0,var:om.get(name)?((cm.get(name)||0)/om.get(name)-1)*100:-100})).filter(x=>x.previous>0&&x.current<x.previous).sort((a,b)=>a.var-b.var).slice(0,5);
+  document.getElementById('growthBody').innerHTML=rows.length?rows.map(x=>`<tr><td>${esc(shorten(x.name,28))}</td><td class="right">${fmtMoney(x.current)}</td><td class="right">${fmtMoney(x.previous)}</td><td class="right up">▲ ${x.var.toFixed(1)}%</td></tr>`).join(''):`<tr><td colspan="4"><div class="empty">Sin crecimiento comparable.</div></td></tr>`;
+  document.getElementById('declineBody').innerHTML=falls.length?falls.map(x=>`<tr><td>${esc(shorten(x.name,28))}</td><td class="right">${fmtMoney(x.current)}</td><td class="right">${fmtMoney(x.previous)}</td><td class="right down">▼ ${Math.abs(x.var).toFixed(1)}%</td></tr>`).join(''):`<tr><td colspan="4"><div class="empty">Sin caídas comparables.</div></td></tr>`;
+}
+function variation(a,b){if(!b)return'—';const p=(a-b)/b*100;return`${p>=0?'▲':'▼'} ${Math.abs(p).toFixed(1)}%`}
+function setClassByValue(id,text){const el=document.getElementById(id);el.classList.remove('up','down','neutral');el.classList.add(text.startsWith('▲')?'up':text.startsWith('▼')?'down':'neutral')}
+function setText(id,text){document.getElementById(id).textContent=text}
+function fmtMoney(n){return'$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2})}
+function fmtNum(n,d=0){return Number(n||0).toLocaleString('es-VE',{minimumFractionDigits:d,maximumFractionDigits:d})}
+function shorten(s,n){s=String(s||'');return s.length>n?s.slice(0,n-1)+'…':s}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function escAttr(s){return esc(s).replace(/`/g,'&#96;')}
+</script>
+</body>
+</html>
