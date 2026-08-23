@@ -507,30 +507,22 @@ header{
         </select>
       </div>
       <div class="ff"><label>Producto de Inter&eacute;s</label>
-        <select id="f-prod">
+        <select id="f-prod" onchange="calcularSubtotal()">
           <option value="Tipo Restaurante ($260/caja)">Tipo Restaurante &mdash; $260/caja</option>
           <option value="Tipo Pasapalo ($220/caja)">Tipo Pasapalo &mdash; $220/caja</option>
           <option value="Tipo Torta ($200/caja)">Tipo Torta &mdash; $200/caja</option>
           <option value="Combinaci&oacute;n de productos">Combinaci&oacute;n de productos</option>
         </select>
       </div>
-      <div class="ff"><label>Cantidad de Cajas <span class="req">*</span></label><input type="number" id="f-cantidad" placeholder="1" min="1" step="1" required></div>
-      <div class="ff"><label>Total USD</label><input type="number" id="f-total-usd" placeholder="0.00" min="0" step="0.01"></div>
+      <div class="ff"><label>Cantidad de Cajas <span class="req">*</span></label><input type="number" id="f-cantidad" placeholder="1" min="1" step="1" required oninput="calcularSubtotal()"></div>
+      <div class="ff"><label>Subtotal USD</label><input type="number" id="f-total-usd" placeholder="0.00" readonly style="background:#f3f4f6;cursor:default"></div>
       <div class="ff"><label>Condici&oacute;n de Pago <span class="req">*</span></label>
-        <select id="f-condicion" required>
+        <select id="f-condicion" required onchange="calcularSubtotal()">
           <option value="">Seleccione...</option>
-          <option value="Contado">Contado</option>
-          <option value="Crédito 5 días">Cr&eacute;dito 5 d&iacute;as</option>
-          <option value="Crédito 15 días">Cr&eacute;dito 15 d&iacute;as</option>
-          <option value="Crédito 30 días">Cr&eacute;dito 30 d&iacute;as</option>
-        </select>
-      </div>
-      <div class="ff"><label>Estado de la Propuesta</label>
-        <select id="f-estado">
-          <option value="enviada">Enviada</option>
-          <option value="en negociación">En Negociaci&oacute;n</option>
-          <option value="aceptada">Aceptada</option>
-          <option value="rechazada">Rechazada</option>
+          <option value="Contado">Contado (precio &minus;3%)</option>
+          <option value="Crédito 5 días">Cr&eacute;dito 5 d&iacute;as (precio real)</option>
+          <option value="Crédito 15 días">Cr&eacute;dito 15 d&iacute;as (precio +10%)</option>
+          <option value="Crédito 30 días">Cr&eacute;dito 30 d&iacute;as (precio +15%)</option>
         </select>
       </div>
       <div class="ff"><label>Observaciones</label><textarea id="f-obs" placeholder="Notas adicionales para el cliente..."></textarea></div>
@@ -841,31 +833,71 @@ Es un placer presentarle nuestra propuesta.
 }
 
 // ── GUARDAR ───────────────────────────────────────────────────
+// ── Subtotal automático: cajas × precio base ajustado por condición de pago ──
+function calcularSubtotal() {
+  const prod      = document.getElementById('f-prod').value;
+  const cajas     = parseFloat(document.getElementById('f-cantidad').value) || 0;
+  const condicion = document.getElementById('f-condicion').value;
+
+  // Precio base por producto
+  const precios = {
+    'Tipo Restaurante ($260/caja)': 260,
+    'Tipo Pasapalo ($220/caja)':    220,
+    'Tipo Torta ($200/caja)':       200,
+    'Combinación de productos':     0,   // precio libre, no calcula
+  };
+  const precioBase = precios[prod] ?? 0;
+  if (!precioBase || !cajas) { document.getElementById('f-total-usd').value = ''; return; }
+
+  // Factor según condición de pago
+  const factor = condicion === 'Contado'          ? 0.97
+               : condicion === 'Crédito 5 días'   ? 1.00
+               : condicion === 'Crédito 15 días'  ? 1.10
+               : condicion === 'Crédito 30 días'  ? 1.15
+               : 1.00;
+
+  const subtotal = (cajas * precioBase * factor).toFixed(2);
+  document.getElementById('f-total-usd').value = subtotal;
+}
+
 async function guardarProp() {
-  const razon=document.getElementById('f-razon').value.trim();
-  const establ=document.getElementById('f-establ').value.trim();
+  const sesion = SCCR.getSesion ? SCCR.getSesion() : SES;
+  const razon  = document.getElementById('f-razon').value.trim();
+  const establ = document.getElementById('f-establ').value.trim();
   if(!razon||!establ){toast('⚠️ Completa los campos obligatorios');return;}
-  if(!SES){toast('⚠️ Debes estar logueado para guardar');return;}
+  if(!sesion){toast('⚠️ Debes estar logueado para guardar');return;}
   const btn=document.getElementById('btn-gs');
   const sp=document.getElementById('gs-sp');
   btn.disabled=true; sp.classList.add('on');
+
+  // Payload alineado con HEADERS.propuestas del Script:
+  // numero_propuesta | fecha | fecha_formateada | vendedor | user_vendedor |
+  // razon_social | establecimiento | contacto | telefono |
+  // tipo_cliente | productos_detalle | total_cajas | total_usd |
+  // condicion_pago | estado_propuesta | observaciones
   const payload={
-    action:'guardarPropuesta', fecha:new Date().toISOString(),
-    vendedor:SES.user, razonSocial:razon, establecimiento:establ,
-    telefono:document.getElementById('f-telf').value.trim(),
-    productoInteres:document.getElementById('f-prod').value,
-    simulacion:simData,
-    observaciones:document.getElementById('f-obs').value.trim(),
-    estado:'enviada',
+    action:            'nuevaPropuesta',
+    fecha:             new Date().toISOString(),
+    vendedor:          sesion.nombre || sesion.user || '',
+    user_vendedor:     sesion.user   || '',
+    razon_social:      razon,
+    establecimiento:   establ,
+    contacto:          document.getElementById('f-contacto').value.trim(),
+    telefono:          document.getElementById('f-telf').value.trim(),
+    tipo_cliente:      document.getElementById('f-tipo').value,
+    productos_detalle: document.getElementById('f-prod').value,
+    total_cajas:       parseFloat(document.getElementById('f-cantidad').value)  || 0,
+    total_usd:         parseFloat(document.getElementById('f-total-usd').value) || 0,
+    condicion_pago:    document.getElementById('f-condicion').value,
+    estado_propuesta:  'enviada',
+    observaciones:     document.getElementById('f-obs').value.trim(),
   };
   try{
-    const r=await fetch(API,{method:'POST',body:JSON.stringify(payload),redirect:'follow'});
-    const d=await r.json();
-    if(d.ok){document.getElementById('ok-box').classList.add('show');toast('✅ Propuesta guardada');}
-    else toast('❌ '+(d.msg||'Error al guardar'));
-  }catch(e){
+    await fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     document.getElementById('ok-box').classList.add('show');
-    toast('✅ Guardado en modo demo');
+    toast('✅ Propuesta guardada');
+  }catch(e){
+    toast('❌ Error al guardar. Verifica tu conexión.');
   }
   btn.disabled=false; sp.classList.remove('on');
 }
