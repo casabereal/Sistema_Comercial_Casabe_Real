@@ -487,7 +487,7 @@ header{
 </section>
 
 <!-- FORMULARIO PROPUESTA (solo logueado) -->
-<section class="sec sec-form" id="sec-propuesta" style="display:none">
+<section class="sec sec-form" id="sec-propuesta">
   <div class="inner">
     <div class="sec-hd c">
       <div class="sec-tag">Generar Propuesta</div>
@@ -495,9 +495,17 @@ header{
       <p class="sec-sub">Complete los datos del cliente para generar la propuesta personalizada.</p>
     </div>
     <div class="form-card">
-      <div class="ff"><label>Raz&oacute;n Social <span class="req">*</span></label><input type="text" id="f-razon" placeholder="Ej: Restaurante El Sabor C.A."></div>
-      <div class="ff"><label>Nombre del Establecimiento <span class="req">*</span></label><input type="text" id="f-establ" placeholder="Ej: El Sabor Criollo"></div>
-      <div class="ff"><label>Tel&eacute;fono WhatsApp del Cliente <span class="req">*</span></label><input type="tel" id="f-telf" placeholder="04121234567" inputmode="tel"></div>
+      <div class="ff"><label>Raz&oacute;n Social <span class="req">*</span></label><input type="text" id="f-razon" placeholder="Ej: Restaurante El Sabor C.A." required></div>
+      <div class="ff"><label>Nombre del Establecimiento <span class="req">*</span></label><input type="text" id="f-establ" placeholder="Ej: El Sabor Criollo" required></div>
+      <div class="ff"><label>Contacto / Decisor</label><input type="text" id="f-contacto" placeholder="Ej: Chef Martínez, Gerente de Compras"></div>
+      <div class="ff"><label>Tel&eacute;fono / WhatsApp del Cliente</label><input type="tel" id="f-telf" placeholder="04121234567" inputmode="tel"></div>
+      <div class="ff"><label>Tipo de Cliente <span class="req">*</span></label>
+        <select id="f-tipo" required>
+          <option value="">Seleccione...</option>
+          <option value="Prospecto / Oportunidad">Prospecto / Oportunidad (Nuevo)</option>
+          <option value="Cliente Recurrente">Cliente Recurrente</option>
+        </select>
+      </div>
       <div class="ff"><label>Producto de Inter&eacute;s</label>
         <select id="f-prod">
           <option value="Tipo Restaurante ($260/caja)">Tipo Restaurante &mdash; $260/caja</option>
@@ -506,7 +514,25 @@ header{
           <option value="Combinaci&oacute;n de productos">Combinaci&oacute;n de productos</option>
         </select>
       </div>
-      <div class="ff"><label>Cantidad de cajas <span class="req">*</span></label><input type="cajas" id="f-cantidad" placeholder="1" inputmode="cantidad"></div>
+      <div class="ff"><label>Cantidad de Cajas <span class="req">*</span></label><input type="number" id="f-cantidad" placeholder="1" min="1" step="1" required></div>
+      <div class="ff"><label>Total USD</label><input type="number" id="f-total-usd" placeholder="0.00" min="0" step="0.01"></div>
+      <div class="ff"><label>Condici&oacute;n de Pago <span class="req">*</span></label>
+        <select id="f-condicion" required>
+          <option value="">Seleccione...</option>
+          <option value="Contado">Contado</option>
+          <option value="Crédito 5 días">Cr&eacute;dito 5 d&iacute;as</option>
+          <option value="Crédito 15 días">Cr&eacute;dito 15 d&iacute;as</option>
+          <option value="Crédito 30 días">Cr&eacute;dito 30 d&iacute;as</option>
+        </select>
+      </div>
+      <div class="ff"><label>Estado de la Propuesta</label>
+        <select id="f-estado">
+          <option value="enviada">Enviada</option>
+          <option value="en negociación">En Negociaci&oacute;n</option>
+          <option value="aceptada">Aceptada</option>
+          <option value="rechazada">Rechazada</option>
+        </select>
+      </div>
       <div class="ff"><label>Observaciones</label><textarea id="f-obs" placeholder="Notas adicionales para el cliente..."></textarea></div>
       <div class="form-btns">
         <button class="btn-wa" onclick="enviarWA()">
