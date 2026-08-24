@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SCCR — Centro de Costos y Producción</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<script src="assets/sccr-auth.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --rojo:#D30000;--rojo-d:#A01015;--rojo-xs:#FEF2F2;--white:#FFFFFF;
+  --light-bg:#F8F9FA;--border-color:#E0E0E0;--text-dark:#333333;--gris:#6B7280;
+  --sidebar-hover:#F1F3F5;--verde:#059669;--verde-xs:#ECFDF5;
+  --naranja:#D97706;--naranja-xs:#FFFBEB;--azul:#2563EB;--azul-xs:#EFF6FF;
+  --alerta:#E74C3C;--r:6px;--sh:0 2px 4px rgba(0,0,0,.05)
+}
+body{font-family:'Open Sans',sans-serif;background:var(--light-bg);color:var(--text-dark);display:flex;flex-direction:column;min-height:100vh;font-size:.75rem}
+header{background:var(--rojo);color:var(--white);height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;box-shadow:0 2px 4px rgba(0,0,0,.1);position:sticky;top:0;z-index:1000}
+.header-left{display:flex;align-items:center;gap:11px}.header-left img{width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25));display:block}
+.header-title{font-family:'League Spartan',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.header-right{display:flex;align-items:center;gap:12px}.header-user-info{font-size:.7rem;text-align:right;line-height:1.3}.header-user-info .user-name{font-weight:600}.header-user-info .user-role{font-size:.65rem;opacity:.9}
+.btn-logout{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:5px 10px;cursor:pointer;color:rgba(255,255,255,.9);font-size:.68rem;font-family:'Open Sans',sans-serif}
+.nav-bar{background:var(--white);border-bottom:1px solid var(--border-color);display:flex;gap:0;padding:0 18px;overflow-x:auto;position:sticky;top:60px;z-index:900;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.nav-item{font-size:.68rem;font-weight:700;color:var(--gris);text-decoration:none;padding:11px 12px;border-bottom:3px solid transparent;white-space:nowrap}
+.nav-item:hover,.nav-item.active{color:var(--rojo)}.nav-item.active{border-bottom-color:var(--rojo)}
+.main-container{width:100%;max-width:1450px;margin:0 auto;padding:22px 18px 30px}
+.section-header{margin-bottom:18px}.breadcrumb{font-size:.63rem;color:var(--gris);margin-bottom:5px}.breadcrumb span{color:var(--rojo);font-weight:700}
+.section-header h1{font-family:'League Spartan',sans-serif;font-size:1.55rem;font-weight:700;line-height:1.1}.highlight{color:var(--rojo)}
+.section-header p{font-size:.7rem;color:var(--gris);margin-top:6px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}.toolbar-left,.toolbar-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{font-family:'Open Sans',sans-serif;border:1px solid var(--border-color);background:#fff;color:var(--text-dark);border-radius:6px;padding:7px 11px;cursor:pointer;font-size:.68rem;font-weight:700}
+.btn-primary{background:var(--rojo);border-color:var(--rojo);color:#fff}.btn-outline{background:#fff;color:var(--rojo);border-color:var(--rojo)}
+.kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:15px}.kpi-card{background:var(--white);border:1px solid var(--border-color);border-radius:var(--r);padding:13px 14px;box-shadow:var(--sh)}
+.kpi-title{font-size:.63rem;color:var(--gris);font-weight:700;text-transform:uppercase;letter-spacing:.2px}.kpi-value{font-family:'League Spartan',sans-serif;font-size:1.35rem;font-weight:700;color:var(--text-dark);margin-top:5px}.kpi-sub{font-size:.59rem;color:var(--gris);margin-top:3px}
+.content-card{background:var(--white);border:1px solid var(--border-color);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:15px}.card-header{padding:13px 15px;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center;gap:10px}.card-header h2{font-family:'League Spartan',sans-serif;font-size:.95rem}.card-header p{font-size:.62rem;color:var(--gris);margin-top:3px}.card-body{padding:15px}
+.filters-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 14px;border-bottom:1px solid var(--border-color)}
+.field{display:flex;flex-direction:column;gap:4px;min-width:145px;flex:1}.field label{font-size:.61rem;color:var(--gris);font-weight:700;text-transform:uppercase}.field input,.field select,.field textarea{width:100%;font-family:'Open Sans',sans-serif;font-size:.68rem;border:1px solid var(--border-color);border-radius:6px;padding:8px 9px;background:#fff;color:var(--text-dark)}
+.field textarea{resize:vertical}.hidden{display:none!important}
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px}.mode-card{background:#fff;border:1px solid var(--border-color);border-radius:var(--r);padding:14px;cursor:pointer;box-shadow:var(--sh)}.mode-card.active{border-color:var(--rojo);box-shadow:0 0 0 1px var(--rojo)}
+.mode-title{display:flex;gap:10px;align-items:center}.mode-icon{width:34px;height:34px;border-radius:6px;background:var(--rojo-xs);display:grid;place-items:center;font-size:1rem}.mode-title h3{font-family:'League Spartan',sans-serif;font-size:.88rem}.mode-title p{font-size:.62rem;color:var(--gris);margin-top:2px}
+.notice{padding:9px 11px;border-radius:6px;font-size:.64rem;margin-bottom:11px}.notice-info{background:var(--azul-xs);color:#1e40af}.notice-warn{background:var(--naranja-xs);color:#92400e}
+.split{display:grid;grid-template-columns:1.4fr .6fr;gap:15px}.param-grid{display:grid;grid-template-columns:1fr;gap:2px}.param-row{display:grid;grid-template-columns:1fr 105px;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--border-color)}.param-name{font-size:.68rem;font-weight:700}.param-help{font-size:.58rem;color:var(--gris);margin-top:2px}.param-input{width:100%;padding:7px;border:1px solid var(--border-color);border-radius:6px;text-align:right;font-size:.68rem}
+.inventory-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.inv-row{border:1px solid var(--border-color);border-radius:6px;padding:10px}.inv-row label{font-size:.63rem;font-weight:700;display:block;margin-bottom:6px}.inv-row input{width:100%;border:1px solid var(--border-color);border-radius:5px;padding:7px;font-size:.68rem}
+table{width:100%;border-collapse:collapse}th,td{padding:10px 9px;text-align:left;border-bottom:1px solid var(--border-color)}th{background:var(--light-bg);font-size:.61rem;color:var(--gris);font-weight:600;text-transform:uppercase;letter-spacing:.25px;position:sticky;top:0;z-index:2}td{font-size:.68rem;color:var(--text-dark)}tr:hover td{background:var(--sidebar-hover)}td.num{text-align:right}.table-scroll{overflow-x:auto;max-height:520px}
+.badge{display:inline-block;padding:3px 8px;border-radius:20px;font-size:.61rem;font-weight:600}.badge.verde{background:var(--verde-xs);color:#15803D}.badge.amarillo{background:var(--naranja-xs);color:#B45309}.badge.rojo{background:var(--rojo-xs);color:#DC2626}.badge.azul{background:var(--azul-xs);color:var(--azul)}
+.empty-state{text-align:center;padding:36px 20px;color:var(--gris)}.empty-state .icon{font-size:2.2rem;margin-bottom:8px}.empty-state p{font-size:.75rem}.loading{text-align:center;padding:28px;color:var(--gris);font-size:.68rem}
+.toast{position:fixed;right:18px;bottom:18px;background:#333;color:#fff;border-radius:6px;padding:10px 13px;font-size:.67rem;z-index:3000;display:none;max-width:380px}.toast.show{display:block}.toast.ok{background:#065f46}.toast.err{background:#991b1b}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:2500;padding:18px}.modal-overlay.open{display:flex}.modal{background:#fff;width:min(580px,100%);border-radius:6px;box-shadow:0 10px 35px rgba(0,0,0,.2)}.modal-header,.modal-footer{padding:13px 15px;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center}.modal-footer{border-top:1px solid var(--border-color);border-bottom:0;justify-content:flex-end;gap:8px}.modal-header h3{font-family:'League Spartan',sans-serif;font-size:.95rem}.modal-body{padding:15px}.close-btn{background:none;border:0;font-size:20px;color:var(--gris);cursor:pointer}
+footer{text-align:center;padding:14px 18px;font-size:.65rem;color:var(--gris);border-top:1px solid var(--border-color);background:var(--white);margin-top:auto}
+@media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(3,1fr)}.split{grid-template-columns:1fr}}
+@media(max-width:900px){.inventory-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){header{padding:0 10px;height:50px}.nav-bar{top:50px}.header-title{font-size:.7rem}.header-user-info{display:none}.main-container{padding:15px 10px}.section-header h1{font-size:1.1rem}.mode-grid{grid-template-columns:1fr}}
+@media(max-width:500px){.kpi-grid,.inventory-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <img src="assets/logo-casabe-real.png" alt="Casabe Real">
+    <span class="header-title">Sistema Comercial<br>Casabe Real</span>
+  </div>
+  <div class="header-right">
+    <div class="header-user-info">
+      <div class="user-name" id="user-name-display">—</div>
+      <div class="user-role" id="user-role-display">—</div>
+    </div>
+    <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
+  </div>
+</header>
+
+<nav class="nav-bar">
+  <a href="inicio.html" class="nav-item">INICIO</a>
+  <a href="clientes.html" class="nav-item">CLIENTES</a>
+  <a href="meta.html" class="nav-item">META</a>
+  <a href="propuesta.html" class="nav-item">PROPUESTA</a>
+  <a href="pedido.html" class="nav-item">PEDIDO</a>
+  <a href="reporte.html" class="nav-item">REPORTE</a>
+  <a href="embudo.html" class="nav-item">EMBUDO</a>
+  <a href="dashboard.html" class="nav-item">DASHBOARD</a>
+  <a href="bi_ia.html" class="nav-item">BI + IA</a>
+  <a href="cargas.html" class="nav-item">CARGAS</a>
+  <a href="historico.html" class="nav-item">HISTÓRICO</a>
+  <a href="ccp.html" class="nav-item active">CCP</a>
+</nav>
+
+<main class="main-container">
+  <div class="section-header">
+    <div class="breadcrumb">Sistema / <span>CCP</span></div>
+    <h1>Centro de <span class="highlight">Costos y Producción</span></h1>
+    <p id="section-sub">Planificación de producción y cálculo de costos del período.</p>
+  </div>
+
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <span id="data-status" class="badge azul">Conectando...</span>
+    </div>
+    <div class="toolbar-right">
+      <button class="btn btn-outline" onclick="cargarTodo()">↻ Actualizar</button>
+      <button class="btn btn-primary" onclick="abrirConfirmacion()">💾 Guardar cálculo</button>
+    </div>
+  </div>
+
+  <div class="mode-grid">
+    <div id="mode-month" class="mode-card active" onclick="seleccionarModo('mensual')">
+      <div class="mode-title">
+        <div class="mode-icon">📅</div>
+        <div><h3>Producción mensual</h3><p>Modo normal ajustado a las cajas de la meta mensual.</p></div>
+      </div>
+    </div>
+    <div id="mode-range" class="mode-card" onclick="seleccionarModo('rango')">
+      <div class="mode-title">
+        <div class="mode-icon">↔</div>
+        <div><h3>Producción DESDE – HASTA</h3><p>Modo excepcional, independiente de la meta cuando corresponda.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-card">
+    <div class="card-header">
+      <div><h2 id="selector-title">Período mensual</h2><p id="selector-help">Las cajas provienen de METAS. Productos y parámetros se procesan dentro de CCP.</p></div>
+      <span id="mode-badge" class="badge azul">MENSUAL</span>
+    </div>
+
+    <div class="filters-bar" id="monthly-controls">
+      <div class="field"><label>Mes</label><input type="month" id="periodo"></div>
+      <div class="field"><label>Vendedor</label><select id="filtro-vendedor"><option value="">Todos los vendedores</option></select></div>
+      <div class="field"><label>Estado</label><select id="filtro-estado"><option value="">Todos</option><option value="activo">Activo</option><option value="planificado">Planificado</option></select></div>
+      <div><label style="visibility:hidden;display:block;font-size:.61rem">.</label><button class="btn btn-primary" onclick="calcular()">Calcular producción</button></div>
+    </div>
+
+    <div class="filters-bar hidden" id="range-controls">
+      <div style="width:100%">
+        <div class="notice notice-warn">Este período excepcional puede utilizarse cuando haya que producir antes de alcanzar la meta, se supere la meta mensual, no exista disponibilidad de flujo de caja, se necesite producción extraordinaria, se quiera planificar una producción específica o exista cualquier otra situación.</div>
+      </div>
+      <div class="field"><label>Desde</label><input type="date" id="desde"></div>
+      <div class="field"><label>Hasta</label><input type="date" id="hasta"></div>
+      <div class="field"><label>Razón de producción excepcional</label>
+        <select id="razon" onchange="toggleOtraRazon()">
+          <option value="">Seleccione una razón</option>
+          <option>Producir antes de alcanzar la meta</option>
+          <option>Superación de la meta mensual</option>
+          <option>No existe disponibilidad de flujo de caja para fabricar</option>
+          <option>Producción extraordinaria</option>
+          <option>Planificación de producción específica</option>
+          <option>Otra</option>
+        </select>
+      </div>
+      <div class="field hidden" id="otra-wrap"><label>Especifique</label><input id="otra-razon" maxlength="180"></div>
+      <div><label style="visibility:hidden;display:block;font-size:.61rem">.</label><button class="btn btn-primary" onclick="calcular()">Calcular producción</button></div>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card"><div class="kpi-title">Cajas</div><div class="kpi-value" id="k-cajas">—</div><div class="kpi-sub">Meta / solicitud</div></div>
+    <div class="kpi-card"><div class="kpi-title">Unidades</div><div class="kpi-value" id="k-unidades">—</div><div class="kpi-sub">Cajas × unidades/caja</div></div>
+    <div class="kpi-card"><div class="kpi-title">Producción</div><div class="kpi-value" id="k-produccion">—</div><div class="kpi-sub">Unidades requeridas</div></div>
+    <div class="kpi-card"><div class="kpi-title">Costo total</div><div class="kpi-value" id="k-costo">$—</div><div class="kpi-sub">Costo calculado</div></div>
+    <div class="kpi-card"><div class="kpi-title">Facturación</div><div class="kpi-value" id="k-facturacion">$—</div><div class="kpi-sub">A precio vigente</div></div>
+    <div class="kpi-card"><div class="kpi-title">Margen</div><div class="kpi-value" id="k-margen">—</div><div class="kpi-sub">Margen porcentual</div></div>
+  </div>
+
+  <div class="split">
+    <div class="content-card">
+      <div class="card-header"><div><h2>Detalle de producción</h2><p>Datos de METAS y PRODUCTOS + cálculos propios de CCP.</p></div></div>
+      <div class="table-scroll" id="result-wrap"><div class="empty-state"><div class="icon">🏭</div><p>Seleccione un período y ejecute el cálculo.</p></div></div>
+    </div>
+
+    <div class="content-card">
+      <div class="card-header"><div><h2>Parámetros de costos</h2><p>Propios del módulo y modificables manualmente.</p></div><button class="btn btn-primary" onclick="guardarParametros()">Guardar</button></div>
+      <div class="card-body">
+        <div class="notice notice-info">Estos valores son parámetros internos de CCP. No se toman de METAS ni de PRODUCTOS.</div>
+        <div id="parametros"><div class="loading">Cargando parámetros...</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-card">
+    <div class="card-header"><div><h2>Inventario para CCP</h2><p>Inventario disponible que CCP utilizará para determinar la producción requerida.</p></div><button class="btn btn-primary" onclick="guardarInventario()">Guardar</button></div>
+    <div class="card-body"><div id="inventario" class="inventory-grid"><div class="loading">Cargando productos...</div></div></div>
+  </div>
+
+  <div class="content-card">
+    <div class="card-header"><div><h2>Histórico CCP</h2><p>Producciones mensuales y producciones excepcionales DESDE – HASTA.</p></div><button class="btn btn-outline" onclick="cargarHistorico()">↻ Actualizar</button></div>
+    <div class="table-scroll" id="historico-wrap"><div class="loading">Cargando histórico...</div></div>
+  </div>
+</main>
+
+<footer>&copy; 2026 <strong>Sistema Comercial Casabe Real (SCCR)</strong>. Todos los derechos reservados. &nbsp;|&nbsp; v2.5.0 &nbsp;|&nbsp; 0412.290.58.33</footer>
+
+<div class="modal-overlay" id="confirm-overlay">
+  <div class="modal">
+    <div class="modal-header"><h3>Confirmar registro CCP</h3><button class="close-btn" onclick="cerrarConfirmacion()">×</button></div>
+    <div class="modal-body"><div class="notice notice-info" id="confirm-text">Se guardará el cálculo actual en el histórico CCP.</div></div>
+    <div class="modal-footer"><button class="btn" onclick="cerrarConfirmacion()">Cancelar</button><button class="btn btn-primary" onclick="confirmarGuardar()">Confirmar y guardar</button></div>
+  </div>
+</div>
+<div id="toast" class="toast"></div>
+
+<script>
+const API='https://script.google.com/macros/s/AKfycbyWRB5745Ors7n8RYqTqyBfb7LXIX3W9x-LFxfnnJf4Bv7fyoS51KeqKgChaldfmLqjSw/exec';
+let sesion=null, modo='mensual', db={metas:[],productos:[],parametros:[],inventario:[],historico:[]}, calculo=null;
+
+const PARAM_DEFS=[
+  {key:'materia_prima',label:'Materia prima',help:'Costo de materia prima.'},
+  {key:'etiqueta',label:'Etiqueta',help:'Costo unitario de etiqueta cuando el producto la utiliza.'},
+  {key:'caja_pequena',label:'Caja pequeña',help:'Costo de caja pequeña.'},
+  {key:'caja_galon',label:'Caja galón',help:'Costo de caja galón.'},
+  {key:'caja_45x32x32',label:'Caja 45 × 32 × 32',help:'Costo de caja 45 × 32 × 32.'},
+  {key:'caja_grande',label:'Caja grande',help:'Costo de caja grande.'}
+];
+
+document.addEventListener('DOMContentLoaded',()=>{
+  try{
+    sesion=SCCR.initSCCR(['admin','gerente']);
+    if(!sesion)return;
+    const rol=(sesion.rol||'').toLowerCase();
+    document.getElementById('user-name-display').textContent=sesion.nombre||'—';
+    document.getElementById('user-role-display').textContent=rol==='admin'?'Administrador':rol==='gerente'?'Gerente de Ventas':'—';
+    inicializarFechas();
+    cargarTodo();
+  }catch(e){setStatus('Error de sesión','err')}
+});
+
+function cerrarSesion(){SCCR.cerrarSesion()}
+function setStatus(t,cls){const e=document.getElementById('data-status');e.textContent=t;e.className='badge '+(cls||'azul')}
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function n(v){if(v===null||v===undefined||v==='')return 0;if(typeof v==='number')return isNaN(v)?0:v;let s=String(v).replace(/\$/g,'').replace(/\s/g,'');if(s.includes('.')&&s.includes(',')){s=s.lastIndexOf(',')>s.lastIndexOf('.')?s.replace(/\./g,'').replace(',','.'):s.replace(/,/g,'')}else if(s.includes(','))s=s.replace(',','.');const x=Number(s);return isNaN(x)?0:x}
+function money(v){return '$'+n(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function integer(v){return Math.round(n(v)).toLocaleString('es-VE')}
+function pct(v){return n(v).toLocaleString('es-VE',{minimumFractionDigits:2,maximumFractionDigits:2})+'%'}
+function fmt(v){return n(v).toLocaleString('es-VE',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function toast(m,type){const e=document.getElementById('toast');e.textContent=m;e.className='toast show '+(type||'');clearTimeout(window.__toast);window.__toast=setTimeout(()=>e.className='toast',4500)}
+function inicializarFechas(){const d=new Date();document.getElementById('periodo').value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');document.getElementById('desde').value=d.toISOString().slice(0,8)+'01';document.getElementById('hasta').value=d.toISOString().slice(0,10)}
+function seleccionarModo(m){modo=m;const mensual=m==='mensual';document.getElementById('mode-month').classList.toggle('active',mensual);document.getElementById('mode-range').classList.toggle('active',!mensual);document.getElementById('monthly-controls').classList.toggle('hidden',!mensual);document.getElementById('range-controls').classList.toggle('hidden',mensual);document.getElementById('selector-title').textContent=mensual?'Período mensual':'Período DESDE – HASTA';document.getElementById('selector-help').textContent=mensual?'Las cajas provienen de METAS. Productos y parámetros se procesan dentro de CCP.':'La producción excepcional puede ser independiente de METAS y requiere una razón.';document.getElementById('mode-badge').textContent=mensual?'MENSUAL':'DESDE – HASTA';document.getElementById('mode-badge').className='badge '+(mensual?'azul':'amarillo')}
+function toggleOtraRazon(){document.getElementById('otra-wrap').classList.toggle('hidden',document.getElementById('razon').value!=='Otra')}
+async function getJSON(url){const r=await fetch(url,{redirect:'follow'});if(!r.ok)throw Error('HTTP '+r.status);const d=await r.json();if(!d.ok)throw Error(d.msg||'API error');return d}
+async function postJSON(body){const r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body),redirect:'follow'});if(!r.ok)throw Error('HTTP '+r.status);const d=await r.json();if(!d.ok)throw Error(d.msg||'API error');return d}
+
+async function cargarTodo(){
+  setStatus('Conectando...','azul');
+  try{
+    const [ccp,productos,metas,hist]=await Promise.all([
+      getJSON(API+'?action=ccp'),
+      getJSON(API+'?action=productos'),
+      getJSON(API+'?action=metas'),
+      getJSON(API+'?action=ccpHistorico')
+    ]);
+    db.parametros=ccp.data?.parametros||ccp.parametros||[];
+    db.inventario=ccp.data?.inventario||ccp.inventario||[];
+    db.productos=productos.data||[];
+    db.metas=metas.data||[];
+    db.historico=hist.data||[];
+    pintarVendedores();pintarParametros();pintarInventario();pintarHistorico();
+    setStatus('Conectado','verde');
+    calcular();
+  }catch(e){
+    setStatus('Backend CCP pendiente','amarillo');
+    pintarParametros();
+    pintarInventario();
+    document.getElementById('historico-wrap').innerHTML='<div class="empty-state"><div class="icon">🗂</div><p>El módulo visual está listo. El histórico se habilitará al incorporar las acciones CCP al SCRIPT(2).GS.</p></div>';
+  }
+}
+
+function pintarVendedores(){
+  const vs=[...new Set(db.metas.map(x=>x.vendedor).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
+  document.getElementById('filtro-vendedor').innerHTML='<option value="">Todos los vendedores</option>'+vs.map(v=>'<option value="'+esc(v)+'">'+esc(v)+'</option>').join('');
+}
+function pintarParametros(){
+  const map={};db.parametros.forEach(p=>{const k=p.key||p.codigo||p.parametro||p.nombre;if(k)map[k]=n(p.valor)});
+  document.getElementById('parametros').innerHTML=PARAM_DEFS.map(p=>'<div class="param-row"><div><div class="param-name">'+esc(p.label)+'</div><div class="param-help">'+esc(p.help)+'</div></div><input class="param-input" type="number" min="0" step="0.01" data-param="'+p.key+'" value="'+(map[p.key]??0)+'"></div>').join('');
+}
+function pintarInventario(){
+  if(!db.productos.length){document.getElementById('inventario').innerHTML='<div class="empty-state"><div class="icon">📦</div><p>No hay productos disponibles.</p></div>';return}
+  const map={};db.inventario.forEach(x=>{map[x.id_producto||x.producto]=n(x.unidades??x.stock_unidades??x.stock)});
+  document.getElementById('inventario').innerHTML=db.productos.map(p=>{const k=p.id_producto||p.nombre;return '<div class="inv-row"><label>'+esc(p.nombre)+'</label><input type="number" min="0" step="1" data-inv="'+esc(k)+'" data-name="'+esc(p.nombre)+'" value="'+(map[k]??0)+'"></div>'}).join('');
+}
+function pintarHistorico(){
+  const rows=db.historico||[];
+  if(!rows.length){document.getElementById('historico-wrap').innerHTML='<div class="empty-state"><div class="icon">🗂</div><p>No existen registros históricos de CCP.</p></div>';return}
+  document.getElementById('historico-wrap').innerHTML='<table><thead><tr><th>Tipo</th><th>Período</th><th>Razón</th><th>Producto</th><th>Cajas</th><th>Unidades</th><th>Producción</th><th>Costo</th><th>Facturación</th><th>Margen</th></tr></thead><tbody>'+
+  rows.map(r=>'<tr><td><span class="badge '+(r.tipo==='RANGO'?'amarillo':'azul')+'">'+esc(r.tipo||'')+'</span></td><td>'+esc(r.periodo||((r.desde||'')+' – '+(r.hasta||'')))+'</td><td>'+esc(r.razon||r.razon_produccion||'—')+'</td><td>'+esc(r.producto||'')+'</td><td class="num">'+integer(r.cajas)+'</td><td class="num">'+integer(r.unidades)+'</td><td class="num">'+integer(r.produccion_requerida)+'</td><td class="num">'+money(r.costo_total)+'</td><td class="num">'+money(r.facturacion)+'</td><td class="num">'+pct(r.margen_pct)+'</td></tr>').join('')+'</tbody></table>';
+}
+
+async function calcular(){
+  try{
+    let url=API+'?action=ccp&modo='+modo;
+    if(modo==='mensual'){
+      const p=document.getElementById('periodo').value;if(!p){toast('Seleccione el mes.','err');return}
+      const [a,m]=p.split('-');url+='&mes='+m+'&anio='+a;
+      const v=document.getElementById('filtro-vendedor').value;if(v)url+='&vendedor='+encodeURIComponent(v);
+    }else{
+      const d=document.getElementById('desde').value,h=document.getElementById('hasta').value,r=document.getElementById('razon').value;
+      if(!d||!h||!r){toast('Complete DESDE, HASTA y la razón de producción excepcional.','err');return}
+      if(d>h){toast('DESDE no puede ser posterior a HASTA.','err');return}
+      const rf=r==='Otra'?document.getElementById('otra-razon').value.trim():r;if(!rf){toast('Especifique la razón.','err');return}
+      url+='&desde='+d+'&hasta='+h+'&razon='+encodeURIComponent(rf);
+    }
+    setStatus('Calculando...','azul');
+    const r=await getJSON(url);calculo=r.data||r;pintarCalculo();setStatus('Cálculo actualizado','verde');
+  }catch(e){setStatus('Sin cálculo','amarillo');toast('El cálculo requiere el action=ccp en SCRIPT(2).GS.','err')}
+}
+function pintarCalculo(){
+  const c=calculo||{},t=c.totales||{},rows=c.detalle||c.resultados||c.data||[];
+  document.getElementById('k-cajas').textContent=integer(t.cajas??c.cajas);document.getElementById('k-unidades').textContent=integer(t.unidades??c.unidades);document.getElementById('k-produccion').textContent=integer(t.produccion_requerida??c.produccion_requerida);document.getElementById('k-costo').textContent=money(t.costo_total??c.costo_total);document.getElementById('k-facturacion').textContent=money(t.facturacion??c.facturacion);document.getElementById('k-margen').textContent=pct(t.margen_pct??c.margen_pct);
+  if(!rows.length){document.getElementById('result-wrap').innerHTML='<div class="empty-state"><div class="icon">🏭</div><p>No existen datos para el período.</p></div>';return}
+  document.getElementById('result-wrap').innerHTML='<table><thead><tr><th>Vendedor</th><th>Producto</th><th>Cajas</th><th>Unid./Caja</th><th>Unidades</th><th>Inventario</th><th>Producción</th><th>Costo Unit.</th><th>Costo Total</th><th>Precio</th><th>Facturación</th><th>Margen</th></tr></thead><tbody>'+
+  rows.map(r=>'<tr><td>'+esc(r.vendedor||'—')+'</td><td><strong>'+esc(r.producto||r.nombre||'')+'</strong></td><td class="num">'+integer(r.cajas)+'</td><td class="num">'+integer(r.unidades_por_caja)+'</td><td class="num">'+integer(r.unidades)+'</td><td class="num">'+integer(r.inventario)+'</td><td class="num"><strong>'+integer(r.produccion_requerida)+'</strong></td><td class="num">'+money(r.costo_unitario)+'</td><td class="num">'+money(r.costo_total)+'</td><td class="num">'+money(r.precio)+'</td><td class="num">'+money(r.facturacion)+'</td><td class="num">'+pct(r.margen_pct)+'</td></tr>').join('')+'</tbody></table>';
+}
+async function guardarParametros(){
+  try{
+    const parametros=PARAM_DEFS.map(p=>({key:p.key,valor:n(document.querySelector('[data-param="'+p.key+'"]').value)}));
+    await postJSON({action:'ccpGuardarParametros',parametros});toast('Parámetros de CCP guardados.','ok');
+  }catch(e){toast('No se pudieron guardar los parámetros. Incorpore action=ccpGuardarParametros al SCRIPT(2).GS.','err')}
+}
+async function guardarInventario(){
+  try{
+    const inventario=[...document.querySelectorAll('[data-inv]')].map(e=>({id_producto:e.dataset.inv,producto:e.dataset.name,unidades:n(e.value)}));
+    await postJSON({action:'ccpGuardarInventario',inventario});toast('Inventario CCP guardado.','ok');calcular();
+  }catch(e){toast('No se pudo guardar el inventario. Incorpore action=ccpGuardarInventario al SCRIPT(2).GS.','err')}
+}
+function abrirConfirmacion(){
+  if(!calculo){toast('Primero ejecute un cálculo.','err');return}
+  const razon=modo==='mensual'?'Producción mensual ajustada a META':(document.getElementById('razon').value==='Otra'?document.getElementById('otra-razon').value.trim():document.getElementById('razon').value);
+  document.getElementById('confirm-text').innerHTML='Se registrará el cálculo como <strong>'+modo.toUpperCase()+'</strong>.<br>Razón: <strong>'+esc(razon)+'</strong>.<br>Costo total: <strong>'+money(calculo.totales?.costo_total??calculo.costo_total)+'</strong>.';
+  document.getElementById('confirm-overlay').classList.add('open');
+}
+function cerrarConfirmacion(){document.getElementById('confirm-overlay').classList.remove('open')}
+async function confirmarGuardar(){
+  try{
+    const razon=modo==='mensual'?'Producción mensual ajustada a META':(document.getElementById('razon').value==='Otra'?document.getElementById('otra-razon').value.trim():document.getElementById('razon').value);
+    await postJSON({action:'ccpGuardarCalculo',tipo:modo==='mensual'?'MENSUAL':'RANGO',periodo:modo==='mensual'?document.getElementById('periodo').value:'',desde:modo==='rango'?document.getElementById('desde').value:'',hasta:modo==='rango'?document.getElementById('hasta').value:'',razon,calculo});
+    cerrarConfirmacion();toast('Cálculo guardado en histórico CCP.','ok');cargarHistorico();
+  }catch(e){toast('No se pudo guardar. Incorpore action=ccpGuardarCalculo al SCRIPT(2).GS.','err')}
+}
+async function cargarHistorico(){try{const r=await getJSON(API+'?action=ccpHistorico');db.historico=r.data||[];pintarHistorico()}catch(e){document.getElementById('historico-wrap').innerHTML='<div class="empty-state"><div class="icon">🗂</div><p>Histórico CCP pendiente de conexión con SCRIPT(2).GS.</p></div>'}}
+</script>
+</body>
+</html>
