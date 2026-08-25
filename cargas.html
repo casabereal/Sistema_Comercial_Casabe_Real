@@ -421,88 +421,150 @@
   </div>
 
   <!-- ══════════════════════════════════════════════════════════
-       SECCIÓN 4 — ASIGNACIÓN DE METAS
-  ══════════════════════════════════════════════════════════ -->
-  <div class="card" id="sec-metas">
-    <h2 class="card-title">Asignación de Metas</h2>
+     SECCIÓN 4 — ASIGNACIÓN DE METAS
+══════════════════════════════════════════════════════════ -->
+<div class="card" id="sec-metas">
 
-    <!-- Encabezado: Vendedor + Fechas + Totalizadores -->
-    <div class="meta-header">
-      <div class="form-grid" style="margin-bottom:16px">
-        <div class="f">
-          <label>Vendedor <span class="req">*</span></label>
-          <select id="m-vendedor" onchange="onVendedorChange()">
-            <option value="">— Seleccionar —</option>
-          </select>
-        </div>
-        <div class="f">
-          <label>Fecha Desde <span class="req">*</span></label>
-          <input type="date" id="m-fecha-desde">
-        </div>
-        <div class="f">
-          <label>Fecha Hasta <span class="req">*</span></label>
-          <input type="date" id="m-fecha-hasta">
-        </div>
-        <div class="f" style="justify-content:flex-end">
-          <button class="btn-primary" style="align-self:flex-end" onclick="cargarClientesMeta()">
-            Cargar Clientes
-          </button>
-        </div>
+  <h2 class="card-title">Asignación de Metas</h2>
+
+  <!-- Encabezado -->
+  <div class="meta-header">
+
+    <div class="form-grid" style="margin-bottom:16px">
+
+      <div class="f">
+        <label>Vendedor <span class="req">*</span></label>
+        <select id="m-vendedor" onchange="onVendedorChange()">
+          <option value="">— Seleccionar —</option>
+        </select>
       </div>
 
-      <!-- Totalizadores automáticos -->
-      <div class="totales-bar">
-        <div class="total-chip">
-          <span class="total-label">Meta en USD</span>
-          <span class="total-val" id="tot-usd">$ 0.00</span>
-        </div>
-        <div class="total-chip">
-          <span class="total-label">Meta en Cajas</span>
-          <span class="total-val" id="tot-cajas">0</span>
-        </div>
-        <div class="total-chip">
-          <span class="total-label">Clientes Nuevos</span>
-          <span class="total-val" id="tot-nuevos">0</span>
-        </div>
-        <div class="total-chip">
-          <span class="total-label">Total Clientes</span>
-          <span class="total-val" id="tot-clientes">0</span>
-        </div>
+      <div class="f">
+        <label>Fecha Desde <span class="req">*</span></label>
+        <input type="date" id="m-fecha-desde">
       </div>
+
+      <div class="f">
+        <label>Fecha Hasta <span class="req">*</span></label>
+        <input type="date" id="m-fecha-hasta">
+      </div>
+
     </div>
 
-    <!-- Tabla de clientes -->
-    <div class="table-wrap" style="margin-top:18px">
-      <table id="tabla-metas-clientes">
-        <thead>
-          <tr>
-            <th>Cliente</th>
-            <th>Tipo</th>
-            <th style="text-align:center">Pasapalo<br><small style="font-weight:400;text-transform:none">cajas</small></th>
-            <th style="text-align:center">Restaurante<br><small style="font-weight:400;text-transform:none">cajas</small></th>
-            <th style="text-align:center">Torta<br><small style="font-weight:400;text-transform:none">cajas</small></th>
-            <th style="text-align:center">Total Cajas</th>
-            <th style="text-align:center">Total USD</th>
-          </tr>
-        </thead>
-        <tbody id="tbody-metas-clientes">
-          <tr><td colspan="7" style="text-align:center;color:var(--gris);padding:30px">
-            Selecciona un vendedor y haz clic en <strong>Cargar Clientes</strong>.
-          </td></tr>
-        </tbody>
-      </table>
-    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
 
-    <div style="margin-top:18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-      <button class="btn-primary" id="btn-meta" onclick="guardarMeta()">
-        <span id="txt-meta">Guardar Meta</span>
-        <div class="sp" id="sp-meta"></div>
+      <button
+        type="button"
+        class="btn-primary"
+        id="btn-cargar-clientes-meta"
+        onclick="cargarClientesMeta()">
+
+        <span id="txt-cargar-clientes-meta">
+          Cargar Clientes
+        </span>
+
+        <div class="sp" id="sp-cargar-clientes-meta"></div>
+
       </button>
-    </div>
-    <div class="alert ok"  id="ok-meta"></div>
-    <div class="alert err" id="err-meta"></div>
 
-  </div><!-- /sec-metas -->
+    </div>
+
+  </div>
+
+  <!-- Totalizadores -->
+  <div class="totales-bar" style="margin-top:18px">
+
+    <div class="total-chip">
+      <span class="total-label">Clientes</span>
+      <span class="total-val" id="tot-clientes">0</span>
+    </div>
+
+    <div class="total-chip">
+      <span class="total-label">Clientes Nuevos</span>
+      <span class="total-val" id="tot-nuevos">0</span>
+    </div>
+
+    <div class="total-chip">
+      <span class="total-label">Total Cajas</span>
+      <span class="total-val" id="tot-cajas">0</span>
+    </div>
+
+    <div class="total-chip">
+      <span class="total-label">Total USD</span>
+      <span class="total-val" id="tot-usd">$ 0.00</span>
+    </div>
+
+  </div>
+
+  <!-- Tabla dinámica -->
+  <div style="overflow-x:auto;margin-top:18px">
+
+    <table id="tabla-metas-clientes">
+
+      <thead id="thead-metas-clientes">
+
+        <tr>
+          <th>Cliente</th>
+          <th style="text-align:center">Tipo</th>
+
+          <!-- Las columnas de productos se generan dinámicamente -->
+
+          <th style="text-align:center">
+            Total Cajas
+          </th>
+
+          <th style="text-align:center">
+            Total USD
+          </th>
+        </tr>
+
+      </thead>
+
+      <tbody id="tbody-metas-clientes">
+
+        <tr>
+          <td
+            colspan="4"
+            style="text-align:center;color:var(--gris);padding:30px">
+
+            Selecciona un vendedor y haz clic en
+            <strong>Cargar Clientes</strong>.
+
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+  <div
+    style="
+      margin-top:18px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      flex-wrap:wrap
+    ">
+
+    <button
+      class="btn-primary"
+      id="btn-meta"
+      onclick="guardarMeta()">
+
+      <span id="txt-meta">Guardar Meta</span>
+
+      <div class="sp" id="sp-meta"></div>
+
+    </button>
+
+  </div>
+
+  <div class="alert ok" id="ok-meta"></div>
+  <div class="alert err" id="err-meta"></div>
+
+</div><!-- /sec-metas -->
 
 </main>
 
@@ -510,461 +572,885 @@
   &copy; 2026 Sistema Comercial Casabe Real (SCCR v2.5.0) &mdash; 0412.290.58.33
 </footer>
 
-<script>
-// ─────────────────────────────────────────────────────────────
-//  SCCR v2.5.0 — cargas.html
-//
-//  CORRECCIÓN PRINCIPAL: se unifica la URL del API con la del
-//  resto del sistema. La URL anterior apuntaba a un script
-//  diferente que no reconocía las acciones POST.
-// ─────────────────────────────────────────────────────────────
-const API = 'https://script.google.com/macros/s/AKfycbyWRB5745Ors7n8RYqTqyBfb7LXIX3W9x-LFxfnnJf4Bv7fyoS51KeqKgChaldfmLqjSw/exec';
+// ═══════════════════════════════════════════════════════════════
+//  MÓDULO DE ASIGNACIÓN DE METAS
+//  Productos y clientes obtenidos dinámicamente desde la BD
+// ═══════════════════════════════════════════════════════════════
 
-// ── INIT ──────────────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', () => {
-  const sesion = SCCR.initSCCR(['admin', 'gerente']);
-  if (!sesion) return;
+let _productosMeta = [];
+let _filasMeta = [];
 
-  const rol = (sesion.rol || '').toLowerCase();
 
-  // Header — mismo funcionamiento de clientes.html
-  document.getElementById('user-name-display').textContent = sesion.nombre || '—';
-  document.getElementById('user-role-display').textContent =
-    rol === 'admin' ? 'Administrador' :
-    rol === 'gerente' ? 'Gerente de Ventas' : 'Asesor Comercial';
+// ── CAMBIO DE VENDEDOR ────────────────────────────────────────
+function onVendedorChange() {
 
-  // Menú administrativo — Cargas requiere admin o gerente
-  if (rol === 'admin' || rol === 'gerente') {
-    document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
+  _filasMeta = [];
+
+  const thead = document.getElementById('thead-metas-clientes');
+  const tbody = document.getElementById('tbody-metas-clientes');
+
+  thead.innerHTML = `
+    <tr>
+      <th>Cliente</th>
+      <th style="text-align:center">Tipo</th>
+      <th style="text-align:center">Total Cajas</th>
+      <th style="text-align:center">Total USD</th>
+    </tr>
+  `;
+
+  tbody.innerHTML = `
+    <tr>
+      <td
+        colspan="4"
+        style="text-align:center;color:var(--gris);padding:30px">
+
+        Selecciona un vendedor y haz clic en
+        <strong>Cargar Clientes</strong>.
+
+      </td>
+    </tr>
+  `;
+
+  actualizarTotales();
+}
+
+
+// ── CARGAR CLIENTES + PRODUCTOS ───────────────────────────────
+async function cargarClientesMeta() {
+
+  const vendedor_id =
+    document.getElementById('m-vendedor').value;
+
+  if (!vendedor_id) {
+
+    showAlert(
+      'meta',
+      'err',
+      'Selecciona un vendedor primero.'
+    );
+
+    return;
   }
 
-  cargarUsuarios();
-  cargarVendedores();
+  const tbody =
+    document.getElementById('tbody-metas-clientes');
 
-  // Fecha de hoy por defecto en metas
-  const hoy = new Date().toISOString().split('T')[0];
-  document.getElementById('m-fecha-desde').value = hoy;
-  document.getElementById('m-fecha-hasta').value = hoy;
-});
+  tbody.innerHTML = `
+    <tr>
+      <td
+        colspan="4"
+        style="text-align:center;color:var(--gris);padding:30px">
 
-function cerrarSesion() { SCCR.cerrarSesion(); }
+        Cargando información…
 
-// ── NAVEGACIÓN ENTRE SECCIONES ────────────────────────────────
-const SECCIONES = ['usuarios','clientes','reg-productos','metas'];
-function showSection(id) {
-  SECCIONES.forEach(s => {
-    document.getElementById('sec-' + s).classList.toggle('on', s === id);
-  });
-  document.querySelectorAll('.stab').forEach((btn, i) => {
-    btn.classList.toggle('on', SECCIONES[i] === id);
-  });
-}
+      </td>
+    </tr>
+  `;
 
-// ── HELPERS UI ────────────────────────────────────────────────
-function setLoading(prefix, on) {
-  document.getElementById('btn-'  + prefix).disabled      = on;
-  document.getElementById('txt-'  + prefix).style.display = on ? 'none' : '';
-  document.getElementById('sp-'   + prefix).classList.toggle('show', on);
-}
-function showAlert(prefix, type, msg) {
-  ['ok','err'].forEach(t => document.getElementById(t + '-' + prefix).classList.remove('show'));
-  const el = document.getElementById(type + '-' + prefix);
-  el.textContent = msg;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 6000);
-}
+  _filasMeta = [];
+  _productosMeta = [];
 
-// ── CARGAR VENDEDORES (para todos los selects) ─────────────────
-let _vendedores = []; // cache global
 
-async function cargarVendedores() {
+  // ─────────────────────────────────────────────────────────
+  // 1. CARGAR PRODUCTOS DESDE PRODUCTOS
+  // ─────────────────────────────────────────────────────────
+
   try {
-    const r = await fetch(API + '?action=getUsuarios', { redirect: 'follow' });
-    const d = await r.json();
-    _vendedores = (d.data || []).filter(u => u.rol === 'vendedor' && u.estado === 'activo');
 
-    ['c-vendedor', 'm-vendedor'].forEach(id => {
-      const sel = document.getElementById(id);
-      // Conservar la primera opción (placeholder)
-      while (sel.options.length > 1) sel.remove(1);
-      _vendedores.forEach(v => {
-        const opt = document.createElement('option');
-        opt.value = v.user;
-        opt.textContent = v.nombre;
-        sel.appendChild(opt);
-      });
-    });
-  } catch(e) {
-    console.warn('No se pudo cargar vendedores:', e);
-  }
-}
+    const rp = await fetch(
+      API + '?action=getProductos',
+      { redirect:'follow' }
+    );
 
-// ── CARGAR TABLA DE USUARIOS ──────────────────────────────────
-async function cargarUsuarios() {
-  const tbody = document.getElementById('tabla-usuarios');
-  try {
-    const r = await fetch(API + '?action=getUsuarios', { redirect: 'follow' });
-    const d = await r.json();
-    const lista = d.data || [];
-    if (!lista.length) {
-      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--gris);padding:20px">Sin usuarios registrados.</td></tr>';
-      return;
+    const dp = await rp.json();
+
+    if (!dp.ok) {
+      throw new Error(
+        dp.msg || 'No se pudieron cargar los productos.'
+      );
     }
-    tbody.innerHTML = lista.map(u => `
+
+    _productosMeta = (dp.data || [])
+      .filter(p =>
+        String(p.estado || '')
+          .toLowerCase() !== 'inactivo'
+      )
+      .map((p, index) => ({
+
+        id:
+          p.id_producto ||
+          ('PROD-DIN-' + index),
+
+        nombre:
+          p.nombre ||
+          'Producto',
+
+        precio:
+          Number(p.precio_usd) || 0,
+
+        unidades:
+          Number(p.unidades_por_caja) || 0,
+
+        etiqueta:
+          p.lleva_etiqueta || '',
+
+        tipoCaja:
+          p.tipo_caja || ''
+
+      }));
+
+  } catch(e) {
+
+    tbody.innerHTML = `
       <tr>
-        <td style="font-weight:600">${u.nombre}</td>
-        <td style="color:var(--gris)">${u.user}</td>
-        <td><span class="badge ${u.rol}">${u.rol}</span></td>
-        <td><span class="badge ${u.estado}">${u.estado}</span></td>
+        <td
+          colspan="4"
+          style="text-align:center;color:var(--gris);padding:30px">
+
+          Error al cargar los productos.
+          Verifica la conexión.
+
+        </td>
       </tr>
-    `).join('');
-  } catch(e) {
-    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--gris);padding:20px">No se pudo cargar la lista.</td></tr>';
-  }
-}
+    `;
 
-// ── GUARDAR USUARIO ───────────────────────────────────────────
-async function guardarUsuario() {
-  const nombre = document.getElementById('u-nombre').value.trim();
-  const user   = document.getElementById('u-user').value.trim().toLowerCase().replace(/\s+/g,'');
-  const pass   = document.getElementById('u-pass').value;
-  const rol    = document.getElementById('u-rol').value;
-  const estado = document.getElementById('u-estado').value;
+    console.error(
+      'Error cargando productos:',
+      e
+    );
 
-  if (!nombre || !user || !pass || !rol) {
-    showAlert('usuario', 'err', 'Completa todos los campos obligatorios.'); return;
-  }
-  if (pass.length < 6) {
-    showAlert('usuario', 'err', 'La contraseña debe tener al menos 6 caracteres.'); return;
-  }
-  if (!/^[a-z0-9_-]+$/.test(user)) {
-    showAlert('usuario', 'err', 'El usuario solo puede tener letras minúsculas, números, guión y guión bajo.'); return;
+    return;
   }
 
-  setLoading('usuario', true);
-  const vendedor_id = rol === 'vendedor' ? user : null;
+
+  if (!_productosMeta.length) {
+
+    tbody.innerHTML = `
+      <tr>
+        <td
+          colspan="4"
+          style="text-align:center;color:var(--gris);padding:30px">
+
+          No existen productos activos en la base de datos.
+
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+
+  // ─────────────────────────────────────────────────────────
+  // 2. CARGAR CLIENTES DEL VENDEDOR
+  // ─────────────────────────────────────────────────────────
 
   try {
-    const r = await fetch(API, {
-      method: 'POST',
-      body: JSON.stringify({ action:'crearUsuario', nombre, user, pass, rol, vendedor_id, estado }),
-      redirect: 'follow'
-    });
-    const d = await r.json();
-    if (d.ok) {
-      showAlert('usuario', 'ok', `✓ Usuario "${nombre}" creado exitosamente.`);
-      ['u-nombre','u-user','u-pass'].forEach(id => document.getElementById(id).value = '');
-      document.getElementById('u-rol').value = '';
-      cargarUsuarios();
-      cargarVendedores();
-    } else {
-      showAlert('usuario', 'err', d.msg || 'Error al guardar el usuario.');
-    }
-  } catch(e) {
-    showAlert('usuario', 'err', 'Error de conexión. Verifica la red.');
-  }
-  setLoading('usuario', false);
-}
 
-// ── GUARDAR CLIENTE ───────────────────────────────────────────
-// Solo Razón Social es obligatorio. Si se selecciona etapa de embudo,
-// se crea también una oportunidad en la hoja embudo.
-async function guardarCliente() {
-  const nombre      = document.getElementById('c-nombre').value.trim();
-  const rif         = document.getElementById('c-rif').value.trim();
-  const contacto    = document.getElementById('c-contacto').value.trim();
-  const telefono    = document.getElementById('c-telefono').value.trim();
-  const sector      = document.getElementById('c-sector').value;
-  const vendedor_id = document.getElementById('c-vendedor').value;
-  const etapa       = document.getElementById('c-etapa').value;
-  const obs         = document.getElementById('c-obs').value.trim();
+    const url =
+      API +
+      '?action=clientes&vendedor=' +
+      encodeURIComponent(vendedor_id);
 
-  if (!nombre) {
-    showAlert('cliente', 'err', 'La Razón Social es obligatoria.'); return;
-  }
+    const r = await fetch(
+      url,
+      { redirect:'follow' }
+    );
 
-  setLoading('cliente', true);
-  try {
-    // 1. Guardar cliente en hoja clientes
-    const r = await fetch(API, {
-      method: 'POST',
-      body: JSON.stringify({ action:'crearCliente', nombre, rif, contacto, telefono, sector, vendedor_id }),
-      redirect: 'follow'
-    });
     const d = await r.json();
 
     if (!d.ok) {
-      showAlert('cliente', 'err', d.msg || 'Error al guardar el cliente.');
-      setLoading('cliente', false);
-      return;
+      throw new Error(
+        d.msg || 'No se pudieron cargar los clientes.'
+      );
     }
 
-    // 2. Si se seleccionó etapa, crear oportunidad en embudo
-    if (etapa && vendedor_id) {
-      await fetch(API, {
-        method: 'POST',
-        body: JSON.stringify({
-          action:              'guardarOportunidad',
-          nombre:              nombre,
-          razon_social:        nombre,
-          establecimiento:     nombre,
-          contacto:            contacto || '',
-          telefono:            telefono || '',
-          vendedor:            vendedor_id,
-          etapa:               etapa,
-          valor_estimado_usd:  0,
-          proxima_accion:      '',
-          observaciones:       obs || 'Creado desde Cargas'
-        }),
-        redirect: 'follow'
-      });
-    }
+    _filasMeta = (d.data || [])
+      .map(c => ({
 
-    showAlert('cliente', 'ok', `✓ Cliente "${nombre}" registrado.${etapa ? ` Oportunidad creada en etapa "${etapa}".` : ''}`);
-    ['c-nombre','c-rif','c-contacto','c-telefono','c-obs'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('c-sector').value   = '';
-    document.getElementById('c-vendedor').value = '';
-    document.getElementById('c-etapa').value    = '';
+        id:
+          c.id_cliente || '',
+
+        nombre:
+          c.razon_social ||
+          c.nombre ||
+          c.establecimiento ||
+          '—',
+
+        tipo:
+          c.tipo || ''
+
+      }));
 
   } catch(e) {
-    showAlert('cliente', 'err', 'Error de conexión. Verifica la red.');
-  }
-  setLoading('cliente', false);
-}
 
-// ── GUARDAR REGISTRO DE PRODUCTO (hoja PRODUCTOS) ─────────────
-async function guardarRegistroProducto() {
-  const nombre      = document.getElementById('rp-nombre').value.trim();
-  const descripcion = document.getElementById('rp-descripcion').value.trim();
-  const unidades    = document.getElementById('rp-unidades').value;
-  const precio      = document.getElementById('rp-precio').value;
-  const canal       = document.getElementById('rp-canal').value;
-  const etiqueta    = document.getElementById('rp-etiqueta').value;
-  const tipo_caja   = document.getElementById('rp-tipo-caja').value;
+    tbody.innerHTML = `
+      <tr>
+        <td
+          colspan="4"
+          style="text-align:center;color:var(--gris);padding:30px">
 
-  if (!nombre || !unidades || !precio || !canal || !etiqueta || !tipo_caja) {
-    showAlert('reg-producto', 'err', 'Completa todos los campos obligatorios.'); return;
-  }
+          Error al cargar los clientes.
+          Verifica la conexión.
 
-  setLoading('reg-producto', true);
-  try {
-    const r = await fetch(API, {
-      method: 'POST',
-      body: JSON.stringify({
-        action: 'crearProducto',
-        nombre, descripcion,
-        unidades: +unidades, precio: +precio,
-        canal, etiqueta, tipo_caja
-      }),
-      redirect: 'follow'
-    });
-    const d = await r.json();
-    if (d.ok) {
-      showAlert('reg-producto', 'ok', `✓ Producto "${nombre}" registrado exitosamente.`);
-      ['rp-nombre','rp-descripcion','rp-unidades','rp-precio'].forEach(id => document.getElementById(id).value = '');
-      ['rp-canal','rp-etiqueta','rp-tipo-caja'].forEach(id => document.getElementById(id).value = '');
-    } else {
-      showAlert('reg-producto', 'err', d.msg || 'Error al registrar el producto.');
-    }
-  } catch(e) {
-    showAlert('reg-producto', 'err', 'Error de conexión. Verifica la red.');
-  }
-  setLoading('reg-producto', false);
-}
+        </td>
+      </tr>
+    `;
 
-// ═══════════════════════════════════════════════════════════════
-//  MÓDULO DE ASIGNACIÓN DE METAS
-// ═══════════════════════════════════════════════════════════════
+    console.error(
+      'Error cargando clientes:',
+      e
+    );
 
-// Precios por producto para calcular USD (se pueden cargar desde el API)
-let _preciosPorProducto = {
-  pasapalo:    0,
-  restaurante: 0,
-  torta:       0
-};
-let _filasMeta = []; // referencia a los clientes cargados en la tabla
-
-// Cuando cambia el vendedor, limpiar la tabla
-function onVendedorChange() {
-  const tbody = document.getElementById('tbody-metas-clientes');
-  tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--gris);padding:30px">Selecciona un vendedor y haz clic en <strong>Cargar Clientes</strong>.</td></tr>';
-  _filasMeta = [];
-  actualizarTotales();
-}
-
-// ── CARGAR CLIENTES DEL VENDEDOR ──────────────────────────────
-async function cargarClientesMeta() {
-  const vendedor_id = document.getElementById('m-vendedor').value;
-  if (!vendedor_id) {
-    showAlert('meta', 'err', 'Selecciona un vendedor primero.'); return;
-  }
-
-  const tbody = document.getElementById('tbody-metas-clientes');
-  tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--gris);padding:30px">Cargando clientes…</td></tr>';
-  _filasMeta = [];
-
-  // Intentar traer precios de productos para cálculo USD
-  try {
-    const rp = await fetch(API + '?action=getProductos', { redirect: 'follow' });
-    const dp = await rp.json();
-    (dp.data || []).forEach(p => {
-      const n = (p.nombre || '').toLowerCase();
-      if (n.includes('pasapalo'))    _preciosPorProducto.pasapalo    = +p.precio || 0;
-      if (n.includes('restaurante')) _preciosPorProducto.restaurante = +p.precio || 0;
-      if (n.includes('torta'))       _preciosPorProducto.torta       = +p.precio || 0;
-    });
-  } catch(e) { /* usa precios en 0 */ }
-
-  // Traer clientes asignados al vendedor
-  let clientes = [];
-  try {
-    const url = API + '?action=getClientes&vendedor=' + encodeURIComponent(vendedor_id);
-    const r   = await fetch(url, { redirect: 'follow' });
-    const d   = await r.json();
-    clientes  = (d.data || []).map(c => ({
-      nombre: c.nombre || c.razon_social || '—',
-      tipo:   ''   // tipo se asigna en el módulo de metas
-    }));
-  } catch(e) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--gris);padding:30px">Error al cargar clientes. Verifica la conexión.</td></tr>';
     return;
   }
 
-  if (!clientes.length) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--gris);padding:30px">No hay clientes asignados a este vendedor.</td></tr>';
+
+  if (!_filasMeta.length) {
+
+    tbody.innerHTML = `
+      <tr>
+        <td
+          colspan="4"
+          style="text-align:center;color:var(--gris);padding:30px">
+
+          No hay clientes asignados a este vendedor.
+
+        </td>
+      </tr>
+    `;
+
     return;
   }
 
-  _filasMeta = clientes;
-  renderTablaClientes();
+
+  renderTablaClientesMeta();
+
 }
 
-// ── RENDER DE LA TABLA DE CLIENTES ────────────────────────────
-function renderTablaClientes() {
-  const tbody = document.getElementById('tbody-metas-clientes');
-  tbody.innerHTML = _filasMeta.map((c, i) => `
-    <tr id="mfila-${i}">
-      <td style="font-weight:600;white-space:nowrap;min-width:140px">${c.nombre}</td>
-      <td>
-        <select class="tipo-sel" id="mc-tipo-${i}" onchange="actualizarTotales()">
-          <option value="">— Tipo —</option>
-          <option value="Nuevo">Nuevo</option>
-          <option value="Inactivo">Inactivo</option>
-          <option value="Activo">Activo</option>
-        </select>
-      </td>
-      <td><input type="number" id="mc-p-${i}"  min="0" value="" oninput="recalcFila(${i})" placeholder="0"></td>
-      <td><input type="number" id="mc-r-${i}"  min="0" value="" oninput="recalcFila(${i})" placeholder="0"></td>
-      <td><input type="number" id="mc-t-${i}"  min="0" value="" oninput="recalcFila(${i})" placeholder="0"></td>
-      <td class="num" id="mc-tcajas-${i}">0</td>
-      <td class="usd"  id="mc-tusd-${i}">$ 0.00</td>
-    </tr>
-  `).join('');
 
-  actualizarTotales();
-}
+// ── RENDERIZAR TABLA DINÁMICA ─────────────────────────────────
+function renderTablaClientesMeta() {
 
-// ── RECALCULAR FILA ────────────────────────────────────────────
-function recalcFila(i) {
-  const p  = +document.getElementById(`mc-p-${i}`)?.value  || 0;
-  const r  = +document.getElementById(`mc-r-${i}`)?.value  || 0;
-  const t  = +document.getElementById(`mc-t-${i}`)?.value  || 0;
-  const tc = p + r + t;
-  const usd = p * _preciosPorProducto.pasapalo
-            + r * _preciosPorProducto.restaurante
-            + t * _preciosPorProducto.torta;
+  const thead =
+    document.getElementById('thead-metas-clientes');
 
-  const tcEl  = document.getElementById(`mc-tcajas-${i}`);
-  const usdEl = document.getElementById(`mc-tusd-${i}`);
-  if (tcEl)  tcEl.textContent  = tc;
-  if (usdEl) usdEl.textContent = '$ ' + usd.toFixed(2);
+  const tbody =
+    document.getElementById('tbody-metas-clientes');
 
-  actualizarTotales();
-}
 
-// ── ACTUALIZAR BARRA DE TOTALES ────────────────────────────────
-function actualizarTotales() {
-  let totalCajas = 0, totalUsd = 0, totalNuevos = 0, totalClientes = 0;
-  _filasMeta.forEach((_, i) => {
-    const p    = +document.getElementById(`mc-p-${i}`)?.value  || 0;
-    const r    = +document.getElementById(`mc-r-${i}`)?.value  || 0;
-    const t    = +document.getElementById(`mc-t-${i}`)?.value  || 0;
-    const tipo = document.getElementById(`mc-tipo-${i}`)?.value || '';
-    const cajas = p + r + t;
-    const usd   = p * _preciosPorProducto.pasapalo
-                + r * _preciosPorProducto.restaurante
-                + t * _preciosPorProducto.torta;
-    if (cajas > 0 || tipo) totalClientes++;
-    if (tipo === 'Nuevo') totalNuevos++;
-    totalCajas += cajas;
-    totalUsd   += usd;
+  // ─────────────────────────────────────────────────────────
+  // ENCABEZADO DINÁMICO
+  // ─────────────────────────────────────────────────────────
+
+  let header = `
+    <tr>
+
+      <th>Cliente</th>
+
+      <th style="text-align:center">
+        Tipo
+      </th>
+  `;
+
+
+  _productosMeta.forEach((producto, pIndex) => {
+
+    header += `
+      <th style="text-align:center;min-width:125px">
+
+        ${escapeHtmlMeta(producto.nombre)}
+
+        <br>
+
+        <small
+          style="
+            font-weight:400;
+            text-transform:none;
+            white-space:nowrap
+          ">
+
+          $ ${producto.precio.toFixed(2)} / caja
+
+        </small>
+
+      </th>
+    `;
+
   });
 
-  document.getElementById('tot-usd').textContent     = '$ ' + totalUsd.toFixed(2);
-  document.getElementById('tot-cajas').textContent   = totalCajas;
-  document.getElementById('tot-nuevos').textContent  = totalNuevos;
-  document.getElementById('tot-clientes').textContent = totalClientes;
+
+  header += `
+      <th style="text-align:center">
+        Total Cajas
+      </th>
+
+      <th style="text-align:center">
+        Total USD
+      </th>
+
+    </tr>
+  `;
+
+
+  thead.innerHTML = header;
+
+
+  // ─────────────────────────────────────────────────────────
+  // FILAS DE CLIENTES
+  // ─────────────────────────────────────────────────────────
+
+  tbody.innerHTML = _filasMeta.map((cliente, i) => {
+
+    let fila = `
+
+      <tr id="mfila-${i}">
+
+        <td
+          style="
+            font-weight:600;
+            white-space:nowrap;
+            min-width:160px
+          ">
+
+          ${escapeHtmlMeta(cliente.nombre)}
+
+        </td>
+
+        <td>
+
+          <select
+            class="tipo-sel"
+            id="mc-tipo-${i}"
+            onchange="actualizarTotales()">
+
+            <option value="">
+              — Tipo —
+            </option>
+
+            <option value="Nuevo">
+              Nuevo
+            </option>
+
+            <option value="Inactivo">
+              Inactivo
+            </option>
+
+            <option value="Activo">
+              Activo
+            </option>
+
+          </select>
+
+        </td>
+    `;
+
+
+    _productosMeta.forEach((producto, pIndex) => {
+
+      fila += `
+
+        <td style="text-align:center">
+
+          <input
+            type="number"
+            id="mc-prod-${i}-${pIndex}"
+            min="0"
+            step="1"
+            value=""
+            placeholder="0"
+            oninput="recalcFilaMeta(${i})"
+            style="width:82px">
+
+        </td>
+
+      `;
+
+    });
+
+
+    fila += `
+
+        <td
+          class="num"
+          id="mc-tcajas-${i}">
+
+          0
+
+        </td>
+
+        <td
+          class="usd"
+          id="mc-tusd-${i}">
+
+          $ 0.00
+
+        </td>
+
+      </tr>
+
+    `;
+
+
+    return fila;
+
+  }).join('');
+
+
+  actualizarTotales();
+
 }
+
+
+// ── RECALCULAR FILA ──────────────────────────────────────────
+function recalcFilaMeta(i) {
+
+  let totalCajas = 0;
+  let totalUsd = 0;
+
+
+  _productosMeta.forEach((producto, pIndex) => {
+
+    const input =
+      document.getElementById(
+        `mc-prod-${i}-${pIndex}`
+      );
+
+    const cajas =
+      Number(input?.value) || 0;
+
+    totalCajas += cajas;
+
+    totalUsd +=
+      cajas *
+      Number(producto.precio || 0);
+
+  });
+
+
+  const tcEl =
+    document.getElementById(
+      `mc-tcajas-${i}`
+    );
+
+  const usdEl =
+    document.getElementById(
+      `mc-tusd-${i}`
+    );
+
+
+  if (tcEl) {
+
+    tcEl.textContent =
+      totalCajas;
+
+  }
+
+
+  if (usdEl) {
+
+    usdEl.textContent =
+      '$ ' +
+      totalUsd.toFixed(2);
+
+  }
+
+
+  actualizarTotales();
+
+}
+
+
+// ── ACTUALIZAR TOTALIZADORES ─────────────────────────────────
+function actualizarTotales() {
+
+  let totalCajas = 0;
+  let totalUsd = 0;
+  let totalNuevos = 0;
+  let totalClientes = 0;
+
+
+  _filasMeta.forEach((cliente, i) => {
+
+    let cajasCliente = 0;
+    let usdCliente = 0;
+
+
+    _productosMeta.forEach((producto, pIndex) => {
+
+      const input =
+        document.getElementById(
+          `mc-prod-${i}-${pIndex}`
+        );
+
+      const cajas =
+        Number(input?.value) || 0;
+
+      cajasCliente += cajas;
+
+      usdCliente +=
+        cajas *
+        Number(producto.precio || 0);
+
+    });
+
+
+    const tipo =
+      document.getElementById(
+        `mc-tipo-${i}`
+      )?.value || '';
+
+
+    if (
+      cajasCliente > 0 ||
+      tipo
+    ) {
+
+      totalClientes++;
+
+    }
+
+
+    if (
+      tipo.toLowerCase() === 'nuevo'
+    ) {
+
+      totalNuevos++;
+
+    }
+
+
+    totalCajas += cajasCliente;
+    totalUsd += usdCliente;
+
+  });
+
+
+  document.getElementById(
+    'tot-clientes'
+  ).textContent = totalClientes;
+
+
+  document.getElementById(
+    'tot-nuevos'
+  ).textContent = totalNuevos;
+
+
+  document.getElementById(
+    'tot-cajas'
+  ).textContent = totalCajas;
+
+
+  document.getElementById(
+    'tot-usd'
+  ).textContent =
+    '$ ' +
+    totalUsd.toFixed(2);
+
+}
+
+
+// ── ESCAPAR TEXTO PARA HTML ──────────────────────────────────
+function escapeHtmlMeta(valor) {
+
+  return String(valor || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+
+}
+
 
 // ── GUARDAR META ──────────────────────────────────────────────
 async function guardarMeta() {
-  const vendedor_id  = document.getElementById('m-vendedor').value;
-  const fecha_desde  = document.getElementById('m-fecha-desde').value;
-  const fecha_hasta  = document.getElementById('m-fecha-hasta').value;
 
-  if (!vendedor_id || !fecha_desde || !fecha_hasta) {
-    showAlert('meta', 'err', 'Completa el vendedor y las fechas.'); return;
+  const vendedor_id =
+    document.getElementById(
+      'm-vendedor'
+    ).value;
+
+  const fecha_desde =
+    document.getElementById(
+      'm-fecha-desde'
+    ).value;
+
+  const fecha_hasta =
+    document.getElementById(
+      'm-fecha-hasta'
+    ).value;
+
+
+  if (
+    !vendedor_id ||
+    !fecha_desde ||
+    !fecha_hasta
+  ) {
+
+    showAlert(
+      'meta',
+      'err',
+      'Completa el vendedor y las fechas.'
+    );
+
+    return;
+
   }
-  if (fecha_hasta < fecha_desde) {
-    showAlert('meta', 'err', 'La fecha hasta debe ser igual o posterior a la fecha desde.'); return;
+
+
+  if (
+    fecha_hasta < fecha_desde
+  ) {
+
+    showAlert(
+      'meta',
+      'err',
+      'La fecha hasta debe ser igual o posterior a la fecha desde.'
+    );
+
+    return;
+
   }
+
+
   if (!_filasMeta.length) {
-    showAlert('meta', 'err', 'Carga los clientes del vendedor antes de guardar.'); return;
+
+    showAlert(
+      'meta',
+      'err',
+      'Carga los clientes del vendedor antes de guardar.'
+    );
+
+    return;
+
   }
 
-  // Armar filas con datos ingresados
-  const filas = _filasMeta.map((c, i) => ({
-    cliente:     c.nombre,
-    tipo:        document.getElementById(`mc-tipo-${i}`)?.value || '',
-    pasapalo:    +document.getElementById(`mc-p-${i}`)?.value   || 0,
-    restaurante: +document.getElementById(`mc-r-${i}`)?.value   || 0,
-    torta:       +document.getElementById(`mc-t-${i}`)?.value   || 0
-  })).filter(f => f.tipo || f.pasapalo || f.restaurante || f.torta);
 
-  if (!filas.length) {
-    showAlert('meta', 'err', 'Asigna al menos un cliente con tipo o cajas antes de guardar.'); return;
-  }
+  const clientes = [];
 
-  // Totales calculados
-  const tot_cajas   = +document.getElementById('tot-cajas').textContent   || 0;
-  const tot_usd     = parseFloat(document.getElementById('tot-usd').textContent.replace('$','').trim()) || 0;
-  const tot_nuevos  = +document.getElementById('tot-nuevos').textContent  || 0;
 
-  setLoading('meta', true);
-  try {
-    const r = await fetch(API, {
-      method: 'POST',
-      body: JSON.stringify({
-        action:               'asignarMeta',
-        vendedor_id, fecha_desde, fecha_hasta,
-        meta_usd:             tot_usd,
-        meta_cajas:           tot_cajas,
-        meta_clientes_nuevos: tot_nuevos,
-        clientes:             filas
-      }),
-      redirect: 'follow'
+  _filasMeta.forEach((cliente, i) => {
+
+    const productos = [];
+
+    let totalCajas = 0;
+    let totalUsd = 0;
+
+
+    _productosMeta.forEach((producto, pIndex) => {
+
+      const cajas =
+        Number(
+          document.getElementById(
+            `mc-prod-${i}-${pIndex}`
+          )?.value
+        ) || 0;
+
+
+      if (cajas > 0) {
+
+        const subtotal =
+          cajas *
+          Number(producto.precio || 0);
+
+
+        productos.push({
+
+          id_producto:
+            producto.id,
+
+          nombre:
+            producto.nombre,
+
+          cajas:
+            cajas,
+
+          precio_usd:
+            Number(producto.precio || 0),
+
+          subtotal:
+            subtotal
+
+        });
+
+
+        totalCajas += cajas;
+        totalUsd += subtotal;
+
+      }
+
     });
-    const d = await r.json();
-    if (d.ok) {
-      showAlert('meta', 'ok', `✓ Meta guardada — ${filas.length} cliente(s), ${tot_cajas} cajas, $ ${tot_usd.toFixed(2)} USD.`);
-    } else {
-      showAlert('meta', 'err', d.msg || 'Error al guardar la meta.');
+
+
+    const tipo =
+      document.getElementById(
+        `mc-tipo-${i}`
+      )?.value || '';
+
+
+    if (
+      tipo ||
+      totalCajas > 0
+    ) {
+
+      clientes.push({
+
+        id_cliente:
+          cliente.id,
+
+        cliente:
+          cliente.nombre,
+
+        tipo:
+          tipo,
+
+        productos:
+          productos,
+
+        total_cajas:
+          totalCajas,
+
+        total_usd:
+          totalUsd
+
+      });
+
     }
-  } catch(e) {
-    showAlert('meta', 'err', 'Error de conexión. Verifica la red.');
+
+  });
+
+
+  if (!clientes.length) {
+
+    showAlert(
+      'meta',
+      'err',
+      'Asigna al menos un cliente con tipo o cajas antes de guardar.'
+    );
+
+    return;
+
   }
-  setLoading('meta', false);
+
+
+  const metaCajas =
+    clientes.reduce(
+      (sum, c) =>
+        sum +
+        Number(c.total_cajas || 0),
+      0
+    );
+
+
+  const metaUsd =
+    clientes.reduce(
+      (sum, c) =>
+        sum +
+        Number(c.total_usd || 0),
+      0
+    );
+
+
+  const metaNuevos =
+    clientes.filter(
+      c =>
+        String(c.tipo).toLowerCase() === 'nuevo'
+    ).length;
+
+
+  setLoading(
+    'meta',
+    true
+  );
+
+
+  try {
+
+    const r =
+      await fetch(API, {
+
+        method: 'POST',
+
+        body: JSON.stringify({
+
+          action:
+            'asignarMeta',
+
+          vendedor_id:
+            vendedor_id,
+
+          fecha_desde:
+            fecha_desde,
+
+          fecha_hasta:
+            fecha_hasta,
+
+          meta_usd:
+            metaUsd,
+
+          meta_cajas:
+            metaCajas,
+
+          meta_clientes_nuevos:
+            metaNuevos,
+
+          clientes:
+            clientes,
+
+          productos:
+            _productosMeta
+
+        }),
+
+        redirect:
+          'follow'
+
+      });
+
+
+    const d =
+      await r.json();
+
+
+    if (d.ok) {
+
+      showAlert(
+        'meta',
+        'ok',
+        `✓ Meta guardada — ${clientes.length} cliente(s), ${metaCajas} cajas, $ ${metaUsd.toFixed(2)} USD.`
+      );
+
+    } else {
+
+      showAlert(
+        'meta',
+        'err',
+        d.msg ||
+        'Error al guardar la meta.'
+      );
+
+    }
+
+  } catch(e) {
+
+    console.error(
+      'Error guardando meta:',
+      e
+    );
+
+    showAlert(
+      'meta',
+      'err',
+      'Error de conexión. Verifica la red.'
+    );
+
+  }
+
+
+  setLoading(
+    'meta',
+    false
+  );
+
 }
-</script>
-</body>
-</html>
