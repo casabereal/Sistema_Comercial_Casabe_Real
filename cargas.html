@@ -738,46 +738,6 @@ async function guardarRegistroProducto() {
   const unidades    = document.getElementById('rp-unidades').value;
   const precio      = document.getElementById('rp-precio').value;
   const canal       = document.getElementById('rp-canal').value;
-
-  if (!nombre || !unidades || !precio || !canal) {
-    showAlert('reg-producto', 'err', 'Completa los campos obligatorios.'); return;
-  }
-
-  setLoading('reg-producto', true);
-  try {
-    const r = await fetch(API, {
-      method: 'POST',
-      body: JSON.stringify({
-        action:      'crearRegistroProducto',
-        nombre,
-        descripcion,
-        unidades:    +unidades,
-        precio:      +precio,
-        canal
-      }),
-      redirect: 'follow'
-    });
-    const d = await r.json();
-    if (d.ok) {
-      showAlert('reg-producto', 'ok', `✓ Producto "${nombre}" registrado en la hoja PRODUCTOS.`);
-      ['rp-nombre','rp-descripcion','rp-unidades','rp-precio'].forEach(id => document.getElementById(id).value = '');
-      document.getElementById('rp-canal').value = '';
-    } else {
-      showAlert('reg-producto', 'err', d.msg || 'Error al registrar el producto.');
-    }
-  } catch(e) {
-    showAlert('reg-producto', 'err', 'Error de conexión. Verifica la red.');
-  }
-  setLoading('reg-producto', false);
-}
-
-// ── GUARDAR REGISTRO DE PRODUCTO (hoja PRODUCTOS) ─────────────
-async function guardarRegistroProducto() {
-  const nombre      = document.getElementById('rp-nombre').value.trim();
-  const descripcion = document.getElementById('rp-descripcion').value.trim();
-  const unidades    = document.getElementById('rp-unidades').value;
-  const precio      = document.getElementById('rp-precio').value;
-  const canal       = document.getElementById('rp-canal').value;
   const etiqueta    = document.getElementById('rp-etiqueta').value;
   const tipo_caja   = document.getElementById('rp-tipo-caja').value;
 
