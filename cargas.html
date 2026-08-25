@@ -790,7 +790,7 @@ async function guardarRegistroProducto() {
     const r = await fetch(API, {
       method: 'POST',
       body: JSON.stringify({
-        action: 'crearRegistroProducto',
+        action: 'crearProducto',
         nombre, descripcion,
         unidades: +unidades, precio: +precio,
         canal, etiqueta, tipo_caja
