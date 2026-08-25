@@ -18,14 +18,9 @@
   --alerta:#E74C3C;--r:6px;--sh:0 2px 4px rgba(0,0,0,.05)
 }
 body{font-family:'Open Sans',sans-serif;background:var(--light-bg);color:var(--text-dark);display:flex;flex-direction:column;min-height:100vh;font-size:.75rem}
-header{background:var(--rojo);color:var(--white);height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;box-shadow:0 2px 4px rgba(0,0,0,.1);position:sticky;top:0;z-index:1000}
-.header-left{display:flex;align-items:center;gap:11px}.header-left img{width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25));display:block}
-.header-title{font-family:'League Spartan',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
-.header-right{display:flex;align-items:center;gap:12px}.header-user-info{font-size:.7rem;text-align:right;line-height:1.3}.header-user-info .user-name{font-weight:600}.header-user-info .user-role{font-size:.65rem;opacity:.9}
-.btn-logout{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:5px 10px;cursor:pointer;color:rgba(255,255,255,.9);font-size:.68rem;font-family:'Open Sans',sans-serif}
-.nav-bar{background:var(--white);border-bottom:1px solid var(--border-color);display:flex;gap:0;padding:0 18px;overflow-x:auto;position:sticky;top:60px;z-index:900;box-shadow:0 1px 2px rgba(0,0,0,.03)}
-.nav-item{font-size:.68rem;font-weight:700;color:var(--gris);text-decoration:none;padding:11px 12px;border-bottom:3px solid transparent;white-space:nowrap}
-.nav-item:hover,.nav-item.active{color:var(--rojo)}.nav-item.active{border-bottom-color:var(--rojo)}
+header{background-color:var(--rojo);color:var(--white);height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;box-shadow:0 2px 4px rgba(0,0,0,0.1);position:sticky;top:0;z-index:1000}
+.header-left{display:flex;align-items:center;gap:11px}.header-left img{width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25));display:block}.header-title{font-family:'League Spartan',sans-serif;font-size:0.95rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase}.header-right{display:flex;align-items:center;gap:12px}.header-user-info{font-size:0.7rem;text-align:right;line-height:1.3}.header-user-info .user-name{font-weight:600}.header-user-info .user-role{font-size:0.65rem;opacity:.9}.btn-logout{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:5px 10px;cursor:pointer;color:rgba(255,255,255,.9);font-size:0.7rem;transition:background .2s;white-space:nowrap;font-family:'Open Sans',sans-serif;font-weight:600}.btn-logout:hover{background:rgba(255,255,255,.22)}
+.nav-bar{background:var(--white);border-bottom:1px solid var(--border-color);padding:0 18px;display:flex;overflow-x:auto;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.05)}.nav-bar::-webkit-scrollbar{height:3px}.nav-bar::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px}.menu-item{display:inline-block;padding:12px 14px;font-size:0.7rem;color:var(--text-dark);text-decoration:none;transition:all .2s;border-bottom:3px solid transparent}.menu-item:hover{background:var(--sidebar-hover);color:var(--rojo)}.menu-item.active{font-family:'League Spartan',sans-serif;font-weight:700;color:var(--rojo);border-bottom-color:var(--rojo)}.admin-only{display:none}
 .main-container{width:100%;max-width:1450px;margin:0 auto;padding:22px 18px 30px}
 .section-header{margin-bottom:18px}.breadcrumb{font-size:.63rem;color:var(--gris);margin-bottom:5px}.breadcrumb span{color:var(--rojo);font-weight:700}
 .section-header h1{font-family:'League Spartan',sans-serif;font-size:1.55rem;font-weight:700;line-height:1.1}.highlight{color:var(--rojo)}
@@ -60,34 +55,22 @@ footer{text-align:center;padding:14px 18px;font-size:.65rem;color:var(--gris);bo
 
 <header>
   <div class="header-left">
-    <img src="assets/logo-casabe-real.png" alt="Casabe Real">
-    <span class="header-title">Sistema Comercial<br>Casabe Real</span>
+    <img src="assets/logo-casabe-real.png" alt="Casabe Real" onerror="this.style.display='none'">
+    <span class="header-title">Sistema Comercial Casabe Real</span>
   </div>
   <div class="header-right">
     <div class="header-user-info">
-      <div class="user-name" id="user-name-display">—</div>
-      <div class="user-role" id="user-role-display">—</div>
+      <div class="user-name" id="user-name-display">Cargando...</div>
+      <div class="user-role" id="user-role-display">Portal Comercial</div>
     </div>
     <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
   </div>
 </header>
 
-<!-- ── NAV ───────────────────────────────────────────────────── -->
 <nav class="nav-bar">
-  <a href="inicio.html"    class="menu-item">INICIO</a>
-  <a href="clientes.html"  class="menu-item active">CLIENTES</a>
-  <a href="meta.html"      class="menu-item">META</a>
-  <a href="propuesta.html" class="menu-item">PROPUESTA</a>
-  <a href="pedido.html"    class="menu-item">PEDIDO</a>
-  <a href="reporte.html"   class="menu-item">REPORTE</a>
-  <a href="embudo.html"    class="menu-item">EMBUDO</a>
-  <a href="dashboard.html" class="menu-item">DASHBOARD</a>
-  <a href="bi-ia.html"     class="menu-item admin-only">BI+IA</a>
-  <a href="cargas.html"    class="menu-item admin-only">CARGAS</a>
-  <a href="historico.html" class="menu-item admin-only">HISTÓRICO</a>
-  <a href="ccp.html"       class="menu-item admin-only">CCP</a>
+  <a href="inicio.html" class="menu-item">INICIO</a><a href="clientes.html" class="menu-item">CLIENTES</a><a href="meta.html" class="menu-item">META</a><a href="propuesta.html" class="menu-item">PROPUESTA</a><a href="pedido.html" class="menu-item">PEDIDO</a><a href="reporte.html" class="menu-item">REPORTE</a><a href="embudo.html" class="menu-item">EMBUDO</a><a href="dashboard.html" class="menu-item">DASHBOARD</a><a href="bi-ia.html" class="menu-item admin-only">BI+IA</a><a href="cargas.html" class="menu-item admin-only">CARGAS</a><a href="historico.html" class="menu-item admin-only">HISTÓRICO</a><a href="ccp.html" class="menu-item admin-only active">CCP</a>
 </nav>
-  
+
 <main class="main-container">
   <div class="section-header">
     <div class="breadcrumb">Sistema / <span>CCP</span></div>
@@ -220,7 +203,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(!sesion)return;
     const rol=(sesion.rol||'').toLowerCase();
     document.getElementById('user-name-display').textContent=sesion.nombre||'—';
-    document.getElementById('user-role-display').textContent=rol==='admin'?'Administrador':rol==='gerente'?'Gerente de Ventas':'—';
+    document.getElementById('user-role-display').textContent=rol==='admin'?'Administrador':'Gerente de Ventas';
+    document.querySelectorAll('.admin-only').forEach(el=>el.style.display='inline-block');
     inicializarFechas();
     cargarTodo();
   }catch(e){setStatus('Error de sesión','err')}
