@@ -45,6 +45,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:10px 9px;text-align:left
 .toast{position:fixed;right:18px;bottom:18px;background:#333;color:#fff;border-radius:6px;padding:10px 13px;font-size:.67rem;z-index:3000;display:none;max-width:380px}.toast.show{display:block}.toast.ok{background:#065f46}.toast.err{background:#991b1b}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:2500;padding:18px}.modal-overlay.open{display:flex}.modal{background:#fff;width:min(580px,100%);border-radius:6px;box-shadow:0 10px 35px rgba(0,0,0,.2)}.modal-header,.modal-footer{padding:13px 15px;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center}.modal-footer{border-top:1px solid var(--border-color);border-bottom:0;justify-content:flex-end;gap:8px}.modal-header h3{font-family:'League Spartan',sans-serif;font-size:.95rem}.modal-body{padding:15px}.close-btn{background:none;border:0;font-size:20px;color:var(--gris);cursor:pointer}
 footer{text-align:center;padding:14px 18px;font-size:.65rem;color:var(--gris);border-top:1px solid var(--border-color);background:var(--white);margin-top:auto}
+.cost-table th,.cost-table td{vertical-align:middle}.cost-input{width:105px;padding:7px 8px;border:1px solid var(--border-color);border-radius:6px;font-size:.68rem;text-align:right}.cost-label{font-size:.62rem;color:var(--gris)}.range-caja-input{width:95px;padding:8px;border:1px solid var(--border-color);border-radius:6px;text-align:right;font-weight:700}.range-product-select{min-width:240px;padding:8px;border:1px solid var(--border-color);border-radius:6px;font-size:.68rem}.btn-danger{color:#B91C1C;border-color:#FECACA;background:#FEF2F2}
 @media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(3,1fr)}.split{grid-template-columns:1fr}}
 @media(max-width:900px){.inventory-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:768px){header{padding:0 10px;height:50px}.nav-bar{top:50px}.header-title{font-size:.7rem}.header-user-info{display:none}.main-container{padding:15px 10px}.section-header h1{font-size:1.1rem}.mode-grid{grid-template-columns:1fr}}
@@ -138,6 +139,19 @@ footer{text-align:center;padding:14px 18px;font-size:.65rem;color:var(--gris);bo
     </div>
   </div>
 
+  <div class="content-card hidden" id="range-builder">
+    <div class="card-header">
+      <div><h2>Creación de producción excepcional</h2><p>Agregue manualmente las cajas requeridas por producto/presentación para el período seleccionado.</p></div>
+      <span class="badge amarillo">CARGA MANUAL</span>
+    </div>
+    <div class="card-body">
+      <div class="notice notice-info">En <strong>DESDE – HASTA</strong> las cantidades de cajas NO vienen de METAS. Usted define manualmente cuántas cajas producir de cada producto/presentación y CCP procesa posteriormente los costos.</div>
+      <div class="toolbar" style="margin-bottom:10px"><div class="toolbar-left"><button class="btn btn-outline" onclick="agregarFilaRango()">＋ Agregar producto/presentación</button></div><div class="toolbar-right"><strong id="range-total-cajas">0 cajas</strong></div></div>
+      <div class="table-scroll" id="range-builder-table"></div>
+      <div style="margin-top:12px;text-align:right"><button class="btn btn-primary" onclick="procesarRangoManual()">Procesar costos</button></div>
+    </div>
+  </div>
+
   <div class="kpi-grid">
     <div class="kpi-card"><div class="kpi-title">Cajas</div><div class="kpi-value" id="k-cajas">—</div><div class="kpi-sub">Meta / solicitud</div></div>
     <div class="kpi-card"><div class="kpi-title">Unidades</div><div class="kpi-value" id="k-unidades">—</div><div class="kpi-sub">Cajas × unidades/caja</div></div>
@@ -157,7 +171,7 @@ footer{text-align:center;padding:14px 18px;font-size:.65rem;color:var(--gris);bo
       <div class="card-header"><div><h2>Parámetros de costos</h2><p>Propios del módulo y modificables manualmente.</p></div><button class="btn btn-primary" onclick="guardarParametros()">Guardar</button></div>
       <div class="card-body">
         <div class="notice notice-info">Estos valores son parámetros internos de CCP. No se toman de METAS ni de PRODUCTOS.</div>
-        <div id="parametros"><div class="loading">Cargando parámetros...</div></div>
+        <div id="parametros"><div class="loading">Cargando costos por producto/presentación...</div></div>
       </div>
     </div>
   </div>
@@ -186,7 +200,7 @@ footer{text-align:center;padding:14px 18px;font-size:.65rem;color:var(--gris);bo
 
 <script>
 const API='https://script.google.com/macros/s/AKfycbyWRB5745Ors7n8RYqTqyBfb7LXIX3W9x-LFxfnnJf4Bv7fyoS51KeqKgChaldfmLqjSw/exec';
-let sesion=null, modo='mensual', db={metas:[],productos:[],parametros:[],inventario:[],historico:[]}, calculo=null;
+let sesion=null, modo='mensual', db={metas:[],productos:[],parametros:[],inventario:[],historico:[]}, calculo=null, rangoFilas=[];
 
 const PARAM_DEFS=[
   {key:'materia_prima',label:'Materia prima',help:'Costo de materia prima.'},
@@ -220,7 +234,7 @@ function pct(v){return n(v).toLocaleString('es-VE',{minimumFractionDigits:2,maxi
 function fmt(v){return n(v).toLocaleString('es-VE',{minimumFractionDigits:2,maximumFractionDigits:2})}
 function toast(m,type){const e=document.getElementById('toast');e.textContent=m;e.className='toast show '+(type||'');clearTimeout(window.__toast);window.__toast=setTimeout(()=>e.className='toast',4500)}
 function inicializarFechas(){const d=new Date();document.getElementById('periodo').value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');document.getElementById('desde').value=d.toISOString().slice(0,8)+'01';document.getElementById('hasta').value=d.toISOString().slice(0,10)}
-function seleccionarModo(m){modo=m;const mensual=m==='mensual';document.getElementById('mode-month').classList.toggle('active',mensual);document.getElementById('mode-range').classList.toggle('active',!mensual);document.getElementById('monthly-controls').classList.toggle('hidden',!mensual);document.getElementById('range-controls').classList.toggle('hidden',mensual);document.getElementById('selector-title').textContent=mensual?'Período mensual':'Período DESDE – HASTA';document.getElementById('selector-help').textContent=mensual?'Las cajas provienen de METAS. Productos y parámetros se procesan dentro de CCP.':'La producción excepcional puede ser independiente de METAS y requiere una razón.';document.getElementById('mode-badge').textContent=mensual?'MENSUAL':'DESDE – HASTA';document.getElementById('mode-badge').className='badge '+(mensual?'azul':'amarillo')}
+function seleccionarModo(m){modo=m;const mensual=m==='mensual';document.getElementById('mode-month').classList.toggle('active',mensual);document.getElementById('mode-range').classList.toggle('active',!mensual);document.getElementById('monthly-controls').classList.toggle('hidden',!mensual);document.getElementById('range-controls').classList.toggle('hidden',mensual);document.getElementById('range-builder').classList.toggle('hidden',mensual);document.getElementById('selector-title').textContent=mensual?'Período mensual':'Período DESDE – HASTA';document.getElementById('selector-help').textContent=mensual?'Las cajas provienen de METAS. Productos y parámetros se procesan dentro de CCP.':'La producción excepcional es manual por producto/presentación y no depende de METAS.';document.getElementById('mode-badge').textContent=mensual?'MENSUAL':'DESDE – HASTA';document.getElementById('mode-badge').className='badge '+(mensual?'azul':'amarillo');if(!mensual){rangoFilas=[];renderRangeBuilder()}}
 function toggleOtraRazon(){document.getElementById('otra-wrap').classList.toggle('hidden',document.getElementById('razon').value!=='Otra')}
 async function getJSON(url){const r=await fetch(url,{redirect:'follow'});if(!r.ok)throw Error('HTTP '+r.status);const d=await r.json();if(!d.ok)throw Error(d.msg||'API error');return d}
 async function postJSON(body){const r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body),redirect:'follow'});if(!r.ok)throw Error('HTTP '+r.status);const d=await r.json();if(!d.ok)throw Error(d.msg||'API error');return d}
@@ -255,8 +269,15 @@ function pintarVendedores(){
   document.getElementById('filtro-vendedor').innerHTML='<option value="">Todos los vendedores</option>'+vs.map(v=>'<option value="'+esc(v)+'">'+esc(v)+'</option>').join('');
 }
 function pintarParametros(){
-  const map={};db.parametros.forEach(p=>{const k=p.key||p.codigo||p.parametro||p.nombre;if(k)map[k]=n(p.valor)});
-  document.getElementById('parametros').innerHTML=PARAM_DEFS.map(p=>'<div class="param-row"><div><div class="param-name">'+esc(p.label)+'</div><div class="param-help">'+esc(p.help)+'</div></div><input class="param-input" type="number" min="0" step="0.01" data-param="'+p.key+'" value="'+(map[p.key]??0)+'"></div>').join('');
+  const map={};
+  db.parametros.forEach(p=>{const k=p.key||p.codigo||p.parametro||p.nombre; if(k) map[k]=p});
+  const productos=db.productos||[];
+  if(!productos.length){document.getElementById('parametros').innerHTML='<div class="empty-state"><div class="icon">📦</div><p>No hay productos/presentaciones disponibles.</p></div>';return}
+  document.getElementById('parametros').innerHTML='<div class="table-scroll"><table class="cost-table"><thead><tr><th>Producto / Presentación</th><th>Unid./Caja</th><th>Precio</th><th>Tipo de Caja</th><th>Etiqueta</th><th>Costo Materia Prima</th><th>Costo Etiqueta</th></tr></thead><tbody>'+productos.map((p,i)=>{
+    const id=p.id_producto||p.id||p.nombre||('P'+i), k=id, prm=map[k]||map[p.nombre]||{};
+    const lleva=String(p.lleva_etiqueta??prm.lleva_etiqueta??p.etiqueta??'').toLowerCase();
+    return '<tr><td><strong>'+esc(p.nombre||p.producto||'')+'</strong><div class="cost-label">ID: '+esc(id)+'</div></td><td class="num">'+integer(p.unidades_por_caja)+'</td><td class="num">'+money(p.precio_usd??p.precio)+'</td><td>'+esc(p.tipo_caja ?? p.tipo_de_caja ?? prm.tipo_caja ?? '—')+'</td><td><span class="badge '+((lleva==='si'||lleva==='true'||lleva==='1'||lleva==='sí')?'verde':'azul')+'">'+((lleva==='si'||lleva==='true'||lleva==='1'||lleva==='sí')?'Sí':'No')+'</span></td><td><input class="cost-input" type="number" min="0" step="0.0001" data-cost-product="'+esc(id)+'" data-cost-field="materia_prima" value="'+n(prm.materia_prima??prm.costo_materia_prima??0)+'"></td><td><input class="cost-input" type="number" min="0" step="0.0001" data-cost-product="'+esc(id)+'" data-cost-field="etiqueta" value="'+n(prm.etiqueta??prm.costo_etiqueta??0)+'" '+((lleva==='si'||lleva==='true'||lleva==='1'||lleva==='sí')?'':'disabled')+'></td></tr>';
+  }).join('')+'</tbody></table></div>';
 }
 function pintarInventario(){
   if(!db.productos.length){document.getElementById('inventario').innerHTML='<div class="empty-state"><div class="icon">📦</div><p>No hay productos disponibles.</p></div>';return}
@@ -278,11 +299,8 @@ async function calcular(){
       const [a,m]=p.split('-');url+='&mes='+m+'&anio='+a;
       const v=document.getElementById('filtro-vendedor').value;if(v)url+='&vendedor='+encodeURIComponent(v);
     }else{
-      const d=document.getElementById('desde').value,h=document.getElementById('hasta').value,r=document.getElementById('razon').value;
-      if(!d||!h||!r){toast('Complete DESDE, HASTA y la razón de producción excepcional.','err');return}
-      if(d>h){toast('DESDE no puede ser posterior a HASTA.','err');return}
-      const rf=r==='Otra'?document.getElementById('otra-razon').value.trim():r;if(!rf){toast('Especifique la razón.','err');return}
-      url+='&desde='+d+'&hasta='+h+'&razon='+encodeURIComponent(rf);
+      renderRangeBuilder();
+      return;
     }
     setStatus('Calculando...','azul');
     const r=await getJSON(url);calculo=r.data||r;pintarCalculo();setStatus('Cálculo actualizado','verde');
@@ -295,11 +313,31 @@ function pintarCalculo(){
   document.getElementById('result-wrap').innerHTML='<table><thead><tr><th>Vendedor</th><th>Producto</th><th>Cajas</th><th>Unid./Caja</th><th>Unidades</th><th>Inventario</th><th>Producción</th><th>Costo Unit.</th><th>Costo Total</th><th>Precio</th><th>Facturación</th><th>Margen</th></tr></thead><tbody>'+
   rows.map(r=>'<tr><td>'+esc(r.vendedor||'—')+'</td><td><strong>'+esc(r.producto||r.nombre||'')+'</strong></td><td class="num">'+integer(r.cajas)+'</td><td class="num">'+integer(r.unidades_por_caja)+'</td><td class="num">'+integer(r.unidades)+'</td><td class="num">'+integer(r.inventario)+'</td><td class="num"><strong>'+integer(r.produccion_requerida)+'</strong></td><td class="num">'+money(r.costo_unitario)+'</td><td class="num">'+money(r.costo_total)+'</td><td class="num">'+money(r.precio)+'</td><td class="num">'+money(r.facturacion)+'</td><td class="num">'+pct(r.margen_pct)+'</td></tr>').join('')+'</tbody></table>';
 }
+function renderRangeBuilder(){
+  const products=db.productos||[];
+  if(!rangoFilas.length && products.length) rangoFilas=[{productoId:products[0].id_producto||products[0].id||products[0].nombre,cajas:0}];
+  const wrap=document.getElementById('range-builder-table');
+  if(!products.length){wrap.innerHTML='<div class="empty-state"><p>No hay productos/presentaciones cargados desde PRODUCTOS.</p></div>';return}
+  const opts=products.map(p=>'<option value="'+esc(p.id_producto||p.id||p.nombre)+'">'+esc(p.nombre||p.producto||'')+'</option>').join('');
+  wrap.innerHTML='<table><thead><tr><th>Producto / Presentación</th><th>Unidades/Caja</th><th>Tipo de Caja</th><th>Cajas a producir</th><th></th></tr></thead><tbody>'+rangoFilas.map((r,i)=>{const p=products.find(x=>(x.id_producto||x.id||x.nombre)===r.productoId)||products[0];return '<tr><td><select class="range-product-select" onchange="cambiarFilaRango('+i+',this.value)">'+products.map(x=>'<option value="'+esc(x.id_producto||x.id||x.nombre)+'" '+((x.id_producto||x.id||x.nombre)===r.productoId?'selected':'')+'>'+esc(x.nombre||x.producto||'')+'</option>').join('')+'</select></td><td class="num">'+integer(p.unidades_por_caja)+'</td><td>'+esc(p.tipo_caja??p.tipo_de_caja??'—')+'</td><td><input class="range-caja-input" type="number" min="0" step="1" value="'+integer(r.cajas).replace(/,/g,'')+'" onchange="cambiarCajasRango('+i+',this.value)"></td><td><button class="btn btn-danger" onclick="eliminarFilaRango('+i+')">Eliminar</button></td></tr>'}).join('')+'</tbody></table>';actualizarTotalRango();}
+function agregarFilaRango(){const p=(db.productos||[])[0];if(!p)return;rangoFilas.push({productoId:p.id_producto||p.id||p.nombre,cajas:0});renderRangeBuilder()}
+function cambiarFilaRango(i,v){rangoFilas[i].productoId=v;renderRangeBuilder()}
+function cambiarCajasRango(i,v){rangoFilas[i].cajas=Math.max(0,Math.round(n(v)));actualizarTotalRango()}
+function eliminarFilaRango(i){rangoFilas.splice(i,1);renderRangeBuilder()}
+function actualizarTotalRango(){document.getElementById('range-total-cajas').textContent=integer(rangoFilas.reduce((s,r)=>s+n(r.cajas),0))+' cajas'}
+async function procesarRangoManual(){
+  const d=document.getElementById('desde').value,h=document.getElementById('hasta').value,r=document.getElementById('razon').value==='Otra'?document.getElementById('otra-razon').value.trim():document.getElementById('razon').value;
+  const cajas=rangoFilas.filter(x=>n(x.cajas)>0).map(x=>({producto_id:x.productoId,cajas:Math.round(n(x.cajas))}));
+  if(!d||!h||!r||d>h){toast('Complete correctamente DESDE, HASTA y la razón.','err');return}
+  if(!cajas.length){toast('Agregue al menos una cantidad de cajas.','err');return}
+  try{const url=API+'?action=ccp&modo=rango&desde='+encodeURIComponent(d)+'&hasta='+encodeURIComponent(h)+'&razon='+encodeURIComponent(r)+'&cajas='+encodeURIComponent(JSON.stringify(cajas));const res=await getJSON(url);calculo=res.data||res;pintarCalculo();setStatus('Costos procesados','verde')}catch(e){toast('No se pudo procesar el período. El backend debe recibir las cajas manuales por producto/presentación.','err')}
+}
 async function guardarParametros(){
   try{
-    const parametros=PARAM_DEFS.map(p=>({key:p.key,valor:n(document.querySelector('[data-param="'+p.key+'"]').value)}));
-    await postJSON({action:'ccpGuardarParametros',parametros});toast('Parámetros de CCP guardados.','ok');
-  }catch(e){toast('No se pudieron guardar los parámetros. Incorpore action=ccpGuardarParametros al SCRIPT(2).GS.','err')}
+    const parametros=[];
+    document.querySelectorAll('[data-cost-product]').forEach(e=>parametros.push({producto_id:e.dataset.costProduct,campo:e.dataset.costField,valor:n(e.value)}));
+    await postJSON({action:'ccpGuardarParametros',parametros});toast('Costos por producto/presentación guardados.','ok');
+  }catch(e){toast('No se pudieron guardar los costos. Incorpore action=ccpGuardarParametros al SCRIPT(2).GS.','err')}
 }
 async function guardarInventario(){
   try{
