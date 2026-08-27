@@ -443,8 +443,9 @@
           <input type="date" id="m-fecha-hasta">
         </div>
         <div class="f" style="justify-content:flex-end">
-          <button class="btn-primary" style="align-self:flex-end" onclick="cargarClientesMeta()">
-            Cargar Clientes
+          <button class="btn-primary" id="btn-cargar-clientes-meta" style="align-self:flex-end" onclick="cargarClientesMeta()">
+            <span id="txt-cargar-clientes-meta">Cargar Clientes</span>
+            <div class="sp" id="sp-cargar-clientes-meta"></div>
           </button>
         </div>
       </div>
@@ -730,45 +731,6 @@ async function guardarCliente() {
 }
 
 // ── GUARDAR REGISTRO DE PRODUCTO (hoja PRODUCTOS) ─────────────
-async function guardarRegistroProducto() {
-  const nombre      = document.getElementById('rp-nombre').value.trim();
-  const descripcion = document.getElementById('rp-descripcion').value.trim();
-  const unidades    = document.getElementById('rp-unidades').value;
-  const precio      = document.getElementById('rp-precio').value;
-  const canal       = document.getElementById('rp-canal').value;
-
-  if (!nombre || !unidades || !precio || !canal) {
-    showAlert('reg-producto', 'err', 'Completa los campos obligatorios.'); return;
-  }
-
-  setLoading('reg-producto', true);
-  try {
-    const r = await fetch(API, {
-      method: 'POST',
-      body: JSON.stringify({
-        action:      'crearRegistroProducto',
-        nombre,
-        descripcion,
-        unidades:    +unidades,
-        precio:      +precio,
-        canal
-      }),
-      redirect: 'follow'
-    });
-    const d = await r.json();
-    if (d.ok) {
-      showAlert('reg-producto', 'ok', `✓ Producto "${nombre}" registrado en la hoja PRODUCTOS.`);
-      ['rp-nombre','rp-descripcion','rp-unidades','rp-precio'].forEach(id => document.getElementById(id).value = '');
-      document.getElementById('rp-canal').value = '';
-    } else {
-      showAlert('reg-producto', 'err', d.msg || 'Error al registrar el producto.');
-    }
-  } catch(e) {
-    showAlert('reg-producto', 'err', 'Error de conexión. Verifica la red.');
-  }
-  setLoading('reg-producto', false);
-}
-
 // ── GUARDAR REGISTRO DE PRODUCTO (hoja PRODUCTOS) ─────────────
 async function guardarRegistroProducto() {
   const nombre      = document.getElementById('rp-nombre').value.trim();
@@ -816,6 +778,19 @@ async function guardarRegistroProducto() {
 // Precios por producto para calcular USD (se pueden cargar desde el API)
 let _productosMeta = []; // productos activos leídos directamente desde PRODUCTOS
 let _filasMeta = [];     // clientes leídos directamente desde CLIENTES
+
+// Escapar texto antes de insertarlo en HTML dinámico.
+function esc(valor) {
+  return String(valor ?? '').replace(/[&<>"']/g, function(m) {
+    return {
+      '&':'&amp;',
+      '<':'&lt;',
+      '>':'&gt;',
+      '"':'&quot;',
+      "'":'&#039;'
+    }[m];
+  });
+}
 // Cuando cambia el vendedor, limpiar la tabla
 function onVendedorChange() {
   const thead = document.getElementById('thead-metas-clientes');
@@ -849,7 +824,8 @@ function normalizarProducto(p, i) {
 function normalizarCliente(c, i) {
   return {
     id_cliente: String(c.id_cliente ?? c.id ?? c.codigo ?? `CLI-${i + 1}`),
-    nombre: String(c.razon_social ?? c.nombre ?? c.nombre_comercial ?? c.cliente ?? c.establecimiento ?? '—')
+    nombre: String(c.razon_social ?? c.nombre ?? c.nombre_comercial ?? c.cliente ?? c.establecimiento ?? '—'),
+    vendedor_asignado: String(c.vendedor_asignado ?? c.vendedor_id ?? c.vendedor ?? c.user_vendedor ?? '').trim()
   };
 }
 
@@ -867,9 +843,12 @@ async function cargarClientesMeta() {
   _productosMeta = [];
 
   try {
-    // CLIENTES: se consulta la acción actual del backend y se filtra por vendedor.
-    const urlClientes = API + '?action=clientes&vendedor=' + encodeURIComponent(vendedor_id);
-    // PRODUCTOS: se consulta directamente la hoja PRODUCTOS; no existen productos fijos en este HTML.
+    // CLIENTES: se consulta CLIENTES completa y se filtra aquí.
+    // Esto evita depender de que el backend interprete correctamente el
+    // parámetro de vendedor y permite trabajar tanto con vendedor_id
+    // como con vendedor_asignado / vendedor / user_vendedor.
+    const urlClientes = API + '?action=clientes';
+    // PRODUCTOS: se consulta directamente la hoja PRODUCTOS.
     const urlProductos = API + '?action=getProductos';
 
     const [rc, rp] = await Promise.all([
@@ -889,7 +868,21 @@ async function cargarClientesMeta() {
     const clientesRaw = Array.isArray(dc.data) ? dc.data : (Array.isArray(dc.clientes) ? dc.clientes : []);
     const productosRaw = Array.isArray(dp.data) ? dp.data : (Array.isArray(dp.productos) ? dp.productos : []);
 
-    _filasMeta = clientesRaw.map(normalizarCliente).filter(c => c.nombre && c.nombre !== '—');
+    // Identificación robusta del vendedor seleccionado.
+    const vendedorSeleccionado = (_vendedores || []).find(v =>
+      String(v.user || '').trim().toLowerCase() === String(vendedor_id).trim().toLowerCase()
+    );
+    const vendedorNombre = String(vendedorSeleccionado?.nombre || '').trim().toLowerCase();
+    const vendedorIdNorm = String(vendedor_id).trim().toLowerCase();
+
+    _filasMeta = clientesRaw
+      .map(normalizarCliente)
+      .filter(c => {
+        if (!c.nombre || c.nombre === '—') return false;
+        const asignado = String(c.vendedor_asignado || '').trim().toLowerCase();
+        return asignado === vendedorIdNorm ||
+               (vendedorNombre && asignado === vendedorNombre);
+      });
 
     _productosMeta = productosRaw
       .map(normalizarProducto)
