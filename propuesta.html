@@ -221,15 +221,6 @@ header{
 .btn-logout{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:5px 10px;cursor:pointer;color:rgba(255,255,255,.9);font-size:0.7rem;transition:background .2s;white-space:nowrap;font-family:'Open Sans',sans-serif;font-weight:600}
 .btn-logout:hover{background:rgba(255,255,255,.22)}
 
-/* ── NAV ─────────────────────────────────────────────────── */
-.nav-bar{background:var(--white);border-bottom:1px solid var(--border-color);padding:0 18px;display:flex;overflow-x:auto;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.05)}
-.nav-bar::-webkit-scrollbar{height:3px}
-.nav-bar::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px}
-.menu-item{display:inline-block;padding:12px 14px;font-size:0.7rem;color:var(--text-dark);text-decoration:none;transition:all .2s;border-bottom:3px solid transparent}
-.menu-item:hover{background:var(--sidebar-hover);color:var(--rojo)}
-.menu-item.active{font-family:'League Spartan',sans-serif;font-weight:700;color:var(--rojo);border-bottom-color:var(--rojo)}
-.admin-only{display:none}
-
 
 </style>
 </head>
@@ -250,23 +241,6 @@ header{
     <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
   </div>
 </header>
-
-<!-- NAV SCCR -->
-<!-- ── NAV ───────────────────────────────────────────────────── -->
-<nav class="nav-bar">
-  <a href="inicio.html"    class="menu-item">INICIO</a>
-  <a href="clientes.html"  class="menu-item">CLIENTES</a>
-  <a href="meta.html"      class="menu-item">META</a>
-  <a href="propuesta.html" class="menu-item active">PROPUESTA</a>
-  <a href="pedido.html"    class="menu-item">PEDIDO</a>
-  <a href="reporte.html"   class="menu-item">REPORTE</a>
-  <a href="embudo.html"    class="menu-item">EMBUDO</a>
-  <a href="dashboard.html" class="menu-item">DASHBOARD</a>
-  <a href="bi-ia.html"     class="menu-item admin-only">BI+IA</a>
-  <a href="cargas.html"    class="menu-item admin-only">CARGAS</a>
-  <a href="historico.html" class="menu-item admin-only">HISTÓRICO</a>
-</nav>
-
 
 
 <!-- HERO -->
