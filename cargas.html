@@ -10,1098 +10,155 @@
 <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <script src="assets/sccr-auth.js"></script>
 <style>
-  :root {
-    --rojo:    #C8181E;
-    --rojo-d:  #A01015;
-    --rojo-xs: #FEF2F2;
-    --naranja: #D97706;
-    --naranja-xs: #FFFBEB;
-    --fondo:   #F3F4F6;
-    --borde:   #E5E7EB;
-    --gris:    #6B7280;
-    --negro:   #111827;
-    --verde:   #059669;
-    --verde-xs:#ECFDF5;
-    --azul:    #2563EB;
-    --azul-xs: #EFF6FF;
-    --r:       14px;
-    --r-sm:    9px;
-    --sh:      0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
-    --sh-lg:   0 4px 16px rgba(0,0,0,.10);
-  }
-
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:"Inter",sans-serif;background:var(--fondo);color:var(--negro);min-height:100vh;display:flex;flex-direction:column}
-
-  /* ── HEADER / NAV — mismo layout y funcionamiento de clientes.html ── */
-  header{
-    background-color:#D30000;
-    color:#fff;
-    height:60px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 18px;
-    box-shadow:0 2px 4px rgba(0,0,0,.1);
-    position:sticky;
-    top:0;
-    z-index:1000;
-  }
-  .header-left{display:flex;align-items:center;gap:11px}
-  .header-left img{width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25));display:block}
-  .header-title{font-family:'League Spartan',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
-  .header-right{display:flex;align-items:center;gap:12px}
-  .header-user-info{font-size:.7rem;text-align:right;line-height:1.3}
-  .header-user-info .user-name{font-weight:600}
-  .header-user-info .user-role{font-size:.65rem;opacity:.9}
-  .btn-logout{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:5px 10px;cursor:pointer;color:rgba(255,255,255,.9);font-size:.7rem;transition:background .2s;white-space:nowrap;font-family:'Open Sans',sans-serif;font-weight:600}
-  .btn-logout:hover{background:rgba(255,255,255,.22)}
-
-  /* ── NAV ─────────────────────────────────────────────────── */
-  .nav-bar{background:#fff;border-bottom:1px solid #E0E0E0;padding:0 18px;display:flex;overflow-x:auto;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.05)}
-  .nav-bar::-webkit-scrollbar{height:3px}
-  .nav-bar::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px}
-  .menu-item{display:inline-block;padding:12px 14px;font-size:.7rem;color:#333;text-decoration:none;transition:all .2s;border-bottom:3px solid transparent}
-  .menu-item:hover{background:#F1F3F5;color:#D30000}
-  .menu-item.active{font-family:'League Spartan',sans-serif;font-weight:700;color:#D30000;border-bottom-color:#D30000}
-  .admin-only{display:none}
-
-  /* ── LAYOUT ─────────────────────────────────────────────── */
-  .main{flex:1;padding:24px 18px;max-width:1200px;margin:0 auto;width:100%}
-  .page-header{margin-bottom:22px}
-  .page-header h1{font-size:1.4rem;font-weight:800;color:var(--negro);margin-bottom:4px}
-  .page-header p{font-size:.75rem;color:var(--gris)}
-
-  /* ── TABS DE SECCIÓN ─────────────────────────────────────── */
-  .section-tabs{display:flex;gap:6px;margin-bottom:22px;flex-wrap:wrap}
-  .stab{padding:9px 18px;border-radius:var(--r-sm);font-size:.75rem;font-weight:600;border:1.5px solid var(--borde);background:#fff;color:var(--gris);cursor:pointer;transition:.2s}
-  .stab.on{background:var(--rojo);color:#fff;border-color:var(--rojo)}
-  .stab:hover:not(.on){border-color:var(--rojo);color:var(--rojo)}
-
-  /* ── CARD ────────────────────────────────────────────────── */
-  .card{background:#fff;border-radius:var(--r);border:1px solid var(--borde);box-shadow:var(--sh);padding:24px;display:none}
-  .card.on{display:block}
-  .card-title{font-size:1rem;font-weight:700;color:var(--negro);margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--borde)}
-
-  /* ── SUBTABS (para Metas: Meta / Activación) ─────────────── */
-  .subtabs{display:flex;gap:4px;margin-bottom:20px}
-  .subtab{padding:7px 16px;border-radius:var(--r-sm);font-size:.72rem;font-weight:600;border:1.5px solid var(--borde);background:var(--fondo);color:var(--gris);cursor:pointer;transition:.2s}
-  .subtab.on{background:var(--naranja);color:#fff;border-color:var(--naranja)}
-  .subtab:hover:not(.on){border-color:var(--naranja);color:var(--naranja)}
-  .subpanel{display:none}
-  .subpanel.on{display:block}
-
-  /* ── FORMULARIOS ────────────────────────────────────────── */
-  .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:20px}
-  .f{display:flex;flex-direction:column;gap:5px}
-  .f label{font-size:.72rem;font-weight:600;color:var(--negro)}
-  .f input,.f select,.f textarea{padding:11px 13px;border:1.5px solid var(--borde);border-radius:var(--r-sm);font-size:.8rem;font-family:"Inter",sans-serif;color:var(--negro);background:#fff;outline:none;transition:border .2s}
-  .f input:focus,.f select:focus,.f textarea:focus{border-color:var(--rojo);box-shadow:0 0 0 3px rgba(200,24,30,.10)}
-  .f .hint{font-size:.67rem;color:var(--gris)}
-  .req{color:var(--rojo)}
-
-  /* ── BOTONES ────────────────────────────────────────────── */
-  .btn-primary{background:var(--rojo);color:#fff;border:none;padding:11px 24px;border-radius:var(--r-sm);font-size:.8rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-family:"Inter",sans-serif;transition:.2s}
-  .btn-primary:hover{background:var(--rojo-d)}
-  .btn-primary:disabled{background:#D1D5DB;cursor:not-allowed}
-  .btn-naranja{background:var(--naranja);color:#fff;border:none;padding:11px 24px;border-radius:var(--r-sm);font-size:.8rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-family:"Inter",sans-serif;transition:.2s}
-  .btn-naranja:hover{background:#B45309}
-  .btn-naranja:disabled{background:#D1D5DB;cursor:not-allowed}
-  .sp{width:16px;height:16px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
-  .sp.show{display:inline-block}
-  @keyframes spin{to{transform:rotate(360deg)}}
-
-  /* ── ALERTAS ────────────────────────────────────────────── */
-  .alert{border-radius:var(--r-sm);padding:12px 16px;font-size:.78rem;font-weight:500;display:none;margin-top:14px}
-  .alert.show{display:block}
-  .alert.ok{background:var(--verde-xs);border:1px solid #6EE7B7;color:var(--verde)}
-  .alert.err{background:var(--rojo-xs);border:1px solid #FECACA;color:var(--rojo)}
-
-  /* ── TABLAS ─────────────────────────────────────────────── */
-  .table-wrap{overflow-x:auto;margin-top:20px}
-  table{width:100%;border-collapse:collapse;font-size:.75rem}
-  th{background:var(--fondo);color:var(--gris);font-weight:600;padding:10px 14px;border-bottom:1px solid var(--borde);text-align:left;text-transform:uppercase;font-size:.67rem}
-  td{padding:12px 14px;border-bottom:1px solid var(--borde);color:var(--negro)}
-  tr:hover td{background:var(--rojo-xs)}
-  .badge{display:inline-block;padding:3px 10px;border-radius:50px;font-size:.67rem;font-weight:600}
-  .badge.admin{background:#EDE9FE;color:#7C3AED}
-  .badge.gerente{background:#FEF3C7;color:#92400E}
-  .badge.vendedor{background:var(--rojo-xs);color:var(--rojo)}
-  .badge.activo{background:var(--verde-xs);color:var(--verde)}
-  .badge.inactivo{background:var(--fondo);color:var(--gris)}
-  .badge.prospecto{background:var(--azul-xs);color:var(--azul)}
-
-  /* ── TABLA DE ACTIVACIÓN ─────────────────────────────────── */
-  .act-table tr.seleccionado td{background:#EFF6FF}
-  .btn-asignar{background:var(--azul);color:#fff;border:none;padding:4px 10px;border-radius:6px;font-size:.67rem;font-weight:600;cursor:pointer;transition:.2s}
-  .btn-asignar:hover{background:#1D4ED8}
-
-  /* ── DIVISOR ────────────────────────────────────────────── */
-  .divider{border:none;border-top:1px solid var(--borde);margin:22px 0}
-
-  /* ── TOTALIZADORES META ──────────────────────────────────── */
-  .totales-bar{display:flex;gap:12px;flex-wrap:wrap;margin-top:4px}
-  .total-chip{background:var(--fondo);border:1.5px solid var(--borde);border-radius:var(--r-sm);padding:10px 18px;display:flex;flex-direction:column;gap:3px;min-width:140px}
-  .total-label{font-size:.67rem;font-weight:600;color:var(--gris);text-transform:uppercase;letter-spacing:.4px}
-  .total-val{font-size:1.15rem;font-weight:800;color:var(--rojo)}
-
-  /* ── TABLA METAS POR CLIENTE ─────────────────────────────── */
-  #tabla-metas-clientes input[type="number"]{
-    width:72px;padding:5px 6px;border:1.5px solid var(--borde);
-    border-radius:6px;font-size:.78rem;font-family:"Inter",sans-serif;
-    text-align:center;outline:none;transition:border .2s;background:#fff
-  }
-  #tabla-metas-clientes input[type="number"]:focus{border-color:var(--rojo);box-shadow:0 0 0 3px rgba(200,24,30,.08)}
-  #tabla-metas-clientes .tipo-badge{display:inline-block;padding:3px 10px;border-radius:50px;font-size:.67rem;font-weight:600;white-space:nowrap}
-  #tabla-metas-clientes .tipo-nuevo{background:#EDE9FE;color:#7C3AED}
-  #tabla-metas-clientes .tipo-inactivo{background:var(--fondo);color:var(--gris)}
-  #tabla-metas-clientes .tipo-activo{background:var(--verde-xs);color:var(--verde)}
-  #tabla-metas-clientes td.num{text-align:center;font-weight:600}
-  #tabla-metas-clientes td.usd{text-align:center;color:var(--verde);font-weight:700}
-  #tabla-metas-clientes select.tipo-sel{
-    padding:4px 8px;font-size:.72rem;border:1.5px solid var(--borde);
-    border-radius:6px;font-family:"Inter",sans-serif;outline:none;background:#fff
-  }
-  #tabla-metas-clientes select.tipo-sel:focus{border-color:var(--rojo)}
-
-  /* ── FOOTER ─────────────────────────────────────────────── */
-  footer{text-align:center;padding:18px;font-size:.68rem;color:var(--gris);border-top:1px solid var(--borde);background:#fff;margin-top:auto}
-
-  @media(max-width:600px){
-    .form-grid{grid-template-columns:1fr}
-  }
-  @media(max-width:768px){
-    header{padding:0 10px;height:50px}
-    .header-title{font-size:.7rem}
-  }
+:root{--rojo:#C8181E;--rojo-d:#A01015;--rojo-xs:#FEF2F2;--naranja:#D97706;--fondo:#F3F4F6;--borde:#E5E7EB;--gris:#6B7280;--negro:#111827;--verde:#059669;--verde-xs:#ECFDF5;--azul:#2563EB;--azul-xs:#EFF6FF;--r:14px;--r-sm:9px;--sh:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04)}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:Inter,sans-serif;background:var(--fondo);color:var(--negro);min-height:100vh;display:flex;flex-direction:column}
+header{background:#D30000;color:#fff;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;box-shadow:0 2px 4px rgba(0,0,0,.1);position:sticky;top:0;z-index:1000}.header-left{display:flex;align-items:center;gap:11px}.header-left img{width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25));display:block}.header-title{font-family:'League Spartan',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase}.header-right{display:flex;align-items:center;gap:12px}.header-user-info{font-size:.7rem;text-align:right;line-height:1.3}.header-user-info .user-name{font-weight:600}.header-user-info .user-role{font-size:.65rem;opacity:.9}.btn-logout{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:5px 10px;cursor:pointer;color:#fff;font-size:.7rem;font-family:Open Sans,sans-serif;font-weight:600}.nav-bar{background:#fff;border-bottom:1px solid #E0E0E0;padding:0 18px;display:flex;overflow-x:auto;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.05)}.menu-item{display:inline-block;padding:12px 14px;font-size:.7rem;color:#333;text-decoration:none;border-bottom:3px solid transparent}.menu-item:hover{background:#F1F3F5;color:#D30000}.menu-item.active{font-family:'League Spartan';font-weight:700;color:#D30000;border-bottom-color:#D30000}.admin-only{display:none}
+.main{flex:1;padding:24px 18px;max-width:1200px;margin:0 auto;width:100%}.page-header{margin-bottom:22px}.page-header h1{font-size:1.4rem;font-weight:800;margin-bottom:4px}.page-header p{font-size:.75rem;color:var(--gris)}.section-tabs{display:flex;gap:6px;margin-bottom:22px;flex-wrap:wrap}.stab{padding:9px 18px;border-radius:9px;font-size:.75rem;font-weight:600;border:1.5px solid var(--borde);background:#fff;color:var(--gris);cursor:pointer}.stab.on{background:var(--rojo);color:#fff;border-color:var(--rojo)}.card{background:#fff;border-radius:var(--r);border:1px solid var(--borde);box-shadow:var(--sh);padding:24px;display:none}.card.on{display:block}.card-title{font-size:1rem;font-weight:700;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--borde)}.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:20px}.f{display:flex;flex-direction:column;gap:5px}.f label{font-size:.72rem;font-weight:600}.f input,.f select,.f textarea{padding:11px 13px;border:1.5px solid var(--borde);border-radius:9px;font-size:.8rem;font-family:Inter;color:var(--negro);background:#fff;outline:none}.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--rojo);box-shadow:0 0 0 3px rgba(200,24,30,.1)}.hint{font-size:.67rem;color:var(--gris)}.req{color:var(--rojo)}
+.btn-primary{background:var(--rojo);color:#fff;border:none;padding:11px 24px;border-radius:9px;font-size:.8rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px}.btn-primary:hover{background:var(--rojo-d)}.btn-primary:disabled{background:#D1D5DB;cursor:not-allowed}.sp{width:16px;height:16px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}.sp.show{display:inline-block}@keyframes spin{to{transform:rotate(360deg)}}
+.alert{border-radius:9px;padding:12px 16px;font-size:.78rem;font-weight:500;display:none;margin-top:14px}.alert.show{display:block}.alert.ok{background:var(--verde-xs);border:1px solid #6EE7B7;color:var(--verde)}.alert.err{background:var(--rojo-xs);border:1px solid #FECACA;color:var(--rojo)}.table-wrap{overflow-x:auto;margin-top:20px}table{width:100%;border-collapse:collapse;font-size:.75rem}th{background:var(--fondo);color:var(--gris);font-weight:600;padding:10px 14px;border-bottom:1px solid var(--borde);text-align:left;text-transform:uppercase;font-size:.67rem}td{padding:12px 14px;border-bottom:1px solid var(--borde)}.badge{display:inline-block;padding:3px 10px;border-radius:50px;font-size:.67rem;font-weight:600}.badge.vendedor{background:var(--rojo-xs);color:var(--rojo)}.badge.gerente{background:#FEF3C7;color:#92400E}.badge.admin{background:#EDE9FE;color:#7C3AED}.badge.activo{background:var(--verde-xs);color:var(--verde)}.badge.inactivo{background:var(--fondo);color:var(--gris)}
+.divider{border:none;border-top:1px solid var(--borde);margin:22px 0}.totales-bar{display:flex;gap:12px;flex-wrap:wrap;margin-top:4px}.total-chip{background:var(--fondo);border:1.5px solid var(--borde);border-radius:9px;padding:10px 18px;display:flex;flex-direction:column;gap:3px;min-width:140px}.total-label{font-size:.67rem;font-weight:600;color:var(--gris);text-transform:uppercase}.total-val{font-size:1.15rem;font-weight:800;color:var(--rojo)}#tabla-metas-clientes input[type=number]{width:88px;padding:5px 6px;border:1.5px solid var(--borde);border-radius:6px;font-size:.78rem;text-align:center}#tabla-metas-clientes select{padding:4px 8px;font-size:.72rem;border:1.5px solid var(--borde);border-radius:6px;background:#fff}footer{text-align:center;padding:18px;font-size:.68rem;color:var(--gris);border-top:1px solid var(--borde);background:#fff;margin-top:auto}@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-
-<!-- ── HEADER ────────────────────────────────────────────────── -->
-<header>
-  <div class="header-left">
-    <img src="assets/logo-casabe-real.png" alt="Casabe Real" onerror="this.style.display='none'">
-    <span class="header-title">Sistema Comercial Casabe Real</span>
-  </div>
-  <div class="header-right">
-    <div class="header-user-info">
-      <div class="user-name" id="user-name-display">Cargando...</div>
-      <div class="user-role" id="user-role-display">Portal Comercial</div>
-    </div>
-    <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
-  </div>
-</header>
-
-<!-- ── NAV ───────────────────────────────────────────────────── -->
+<header><div class="header-left"><img src="assets/logo-casabe-real.png" alt="Casabe Real" onerror="this.style.display='none'"><span class="header-title">Sistema Comercial Casabe Real</span></div><div class="header-right"><div class="header-user-info"><div class="user-name" id="user-name-display">Cargando...</div><div class="user-role" id="user-role-display">Portal Comercial</div></div><button class="btn-logout" onclick="cerrarSesion()">Salir</button></div></header>
 <nav class="nav-bar">
-  <a href="inicio.html"    class="menu-item">INICIO</a>
-  <a href="clientes.html"  class="menu-item">CLIENTES</a>
-  <a href="meta.html"      class="menu-item">META</a>
-  <a href="propuesta.html" class="menu-item">PROPUESTA</a>
-  <a href="pedido.html"    class="menu-item">PEDIDO</a>
-  <a href="reporte.html"   class="menu-item">REPORTE</a>
-  <a href="embudo.html"    class="menu-item">EMBUDO</a>
-  <a href="dashboard.html" class="menu-item">DASHBOARD</a>
-  <a href="bi-ia.html"     class="menu-item admin-only">BI+IA</a>
-  <a href="cargas.html"    class="menu-item admin-only active">CARGAS</a>
-  <a href="historico.html" class="menu-item admin-only">HISTÓRICO</a>
-  <a href="ccp.html"       class="menu-item admin-only">CCP</a>
+<a href="inicio.html" class="menu-item">INICIO</a><a href="clientes.html" class="menu-item">CLIENTES</a><a href="meta.html" class="menu-item">META</a><a href="propuesta.html" class="menu-item">PROPUESTA</a><a href="pedido.html" class="menu-item">PEDIDO</a><a href="reporte.html" class="menu-item">REPORTE</a><a href="embudo.html" class="menu-item">EMBUDO</a><a href="dashboard.html" class="menu-item">DASHBOARD</a><a href="bi-ia.html" class="menu-item admin-only">BI+IA</a><a href="cargas.html" class="menu-item admin-only active">CARGAS</a><a href="historico.html" class="menu-item admin-only">HISTÓRICO</a><a href="ccp.html" class="menu-item admin-only">CCP</a>
 </nav>
-
-<!-- ── MAIN ─────────────────────────────────────────────────── -->
 <main class="main">
+<div class="page-header"><h1>Cargas y Configuración</h1><p>Gestión de usuarios, clientes, productos y metas — solo visible para Gerencia y Administración.</p></div>
+<div class="section-tabs"><button class="stab on" onclick="showSection('usuarios')">Registro de Usuarios</button><button class="stab" onclick="showSection('clientes')">Registro de Clientes</button><button class="stab" onclick="showSection('reg-productos')">Registro de Productos</button><button class="stab" onclick="showSection('metas')">Asignación de Metas</button></div>
 
-  <div class="page-header">
-    <h1>Cargas y Configuración</h1>
-    <p>Gestión de usuarios, clientes, productos y metas — solo visible para Gerencia y Administración.</p>
-  </div>
+<div class="card on" id="sec-usuarios"><h2 class="card-title">Registro de Usuarios</h2><div class="form-grid">
+<div class="f"><label>Nombre Completo <span class="req">*</span></label><input type="text" id="u-nombre" placeholder="Ej: Carlos Cova"></div>
+<div class="f"><label>Usuario (login) <span class="req">*</span></label><input type="text" id="u-user" placeholder="Ej: ccova" autocapitalize="none"><span class="hint">Sin espacios · solo letras, números y guiones</span></div>
+<div class="f"><label>Contraseña <span class="req">*</span></label><input type="password" id="u-pass" placeholder="Mínimo 6 caracteres"></div>
+<div class="f"><label>Rol <span class="req">*</span></label><select id="u-rol"><option value="">— Seleccionar —</option><option value="vendedor">Vendedor</option><option value="gerente">Gerente</option><option value="admin">Administrador</option></select></div>
+<div class="f"><label>Estado</label><select id="u-estado"><option value="activo">Activo</option><option value="inactivo">Inactivo</option></select></div></div>
+<button class="btn-primary" id="btn-usuario" onclick="guardarUsuario()"><span id="txt-usuario">Guardar Usuario</span><div class="sp" id="sp-usuario"></div></button><div class="alert ok" id="ok-usuario"></div><div class="alert err" id="err-usuario"></div><hr class="divider">
+<h3 style="font-size:.85rem;margin-bottom:12px">Usuarios Registrados</h3><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Usuario</th><th>Rol</th><th>Estado</th></tr></thead><tbody id="tabla-usuarios"><tr><td colspan="4" style="text-align:center;padding:20px">Cargando usuarios…</td></tr></tbody></table></div></div>
 
-  <!-- Tabs de sección -->
-  <div class="section-tabs">
-    <button class="stab on" onclick="showSection('usuarios')">Registro de Usuarios</button>
-    <button class="stab"    onclick="showSection('clientes')">Registro de Clientes</button>
-    <button class="stab"    onclick="showSection('reg-productos')">Registro de Productos</button>
-    <button class="stab"    onclick="showSection('metas')">Asignación de Metas</button>
-  </div>
+<div class="card" id="sec-clientes"><h2 class="card-title">Registro de Clientes</h2>
+<div class="form-grid">
+<div class="f"><label>Razón Social <span class="req">*</span></label><input type="text" id="c-razon-social" placeholder="Ej: Restaurante Ávila"></div>
+<div class="f"><label>Establecimiento</label><input type="text" id="c-establecimiento" placeholder="Ej: Sucursal Las Mercedes"></div>
+<div class="f"><label>Nombre del Contacto</label><input type="text" id="c-contacto" placeholder="Ej: Pedro Gómez"></div>
+<div class="f"><label>Teléfono</label><input type="text" id="c-telefono" placeholder="Ej: 0412-5551234"></div>
+<div class="f"><label>Tipo</label><select id="c-tipo"><option value="">— Seleccionar —</option><option value="restaurante">Restaurante</option><option value="hotel">Hotel</option><option value="supermercado">Supermercado</option><option value="bodegon">Bodegón</option><option value="distribuidor">Distribuidor</option><option value="otro">Otro</option></select></div>
+<div class="f"><label>Vendedor Asignado</label><select id="c-vendedor"><option value="">— Seleccionar —</option></select><span class="hint">Se carga desde USUARIOS: rol = vendedor y estado = activo.</span></div>
+<div class="f"><label>Etapa del Embudo</label><select id="c-etapa"><option value="">— Sin etapa —</option><option value="Prospecto">1 · Prospecto</option><option value="Contacto">2 · Contacto</option><option value="Presentación">3 · Presentación</option><option value="Negociación">4 · Activación</option><option value="Pedido">5 · Fidelización</option></select></div>
+<div class="f"><label>Frecuencia</label><select id="c-frecuencia"><option value="">— Seleccionar —</option><option value="semanal">Semanal</option><option value="quincenal">Quincenal</option><option value="mensual">Mensual</option><option value="trimestral">Trimestral</option><option value="ocasional">Ocasional</option></select></div>
+<div class="f"><label>Estado</label><select id="c-estado"><option value="activo">Activo</option><option value="inactivo">Inactivo</option></select></div>
+</div>
+<span class="hint">Al registrar un cliente se generan automáticamente id_cliente y fecha_registro. total_compras inicia en 0 y ultima_compra queda vacía.</span><br><br>
+<button class="btn-primary" id="btn-cliente" onclick="guardarCliente()"><span id="txt-cliente">Guardar Cliente</span><div class="sp" id="sp-cliente"></div></button><div class="alert ok" id="ok-cliente"></div><div class="alert err" id="err-cliente"></div></div>
 
-  <!-- ══════════════════════════════════════════════════════════
-       SECCIÓN 1 — REGISTRO DE USUARIOS
-  ══════════════════════════════════════════════════════════ -->
-  <div class="card on" id="sec-usuarios">
-    <h2 class="card-title">Registro de Usuarios</h2>
+<div class="card" id="sec-reg-productos"><h2 class="card-title">Registro de Productos</h2><div class="form-grid">
+<div class="f"><label>Nombre del Producto <span class="req">*</span></label><input type="text" id="rp-nombre"></div><div class="f"><label>Descripción</label><input type="text" id="rp-descripcion"></div><div class="f"><label>Unidades por Caja <span class="req">*</span></label><input type="number" id="rp-unidades" min="1"></div><div class="f"><label>Precio (USD) <span class="req">*</span></label><input type="number" id="rp-precio" step=".01" min="0"></div><div class="f"><label>Canal Comercial <span class="req">*</span></label><select id="rp-canal"><option value="">— Seleccionar —</option><option value="RETAIL">RETAIL</option><option value="HORECA">HORECA</option><option value="RETAIL y HORECA">RETAIL y HORECA</option></select></div><div class="f"><label>Lleva Etiqueta <span class="req">*</span></label><select id="rp-etiqueta"><option value="">— Seleccionar —</option><option value="SI">Sí</option><option value="NO">No</option></select></div><div class="f"><label>Tipo de Caja <span class="req">*</span></label><select id="rp-tipo-caja"><option value="">— Seleccionar —</option><option value="Caja Pequeña">Caja Pequeña</option><option value="Caja Galón">Caja Galón</option><option value="Caja 45x32x32">Caja 45×32×32</option><option value="Caja Grande">Caja Grande</option></select></div></div>
+<button class="btn-primary" id="btn-reg-producto" onclick="guardarRegistroProducto()"><span id="txt-reg-producto">Guardar Producto</span><div class="sp" id="sp-reg-producto"></div></button><div class="alert ok" id="ok-reg-producto"></div><div class="alert err" id="err-reg-producto"></div></div>
 
-    <div class="form-grid">
-      <div class="f">
-        <label>Nombre Completo <span class="req">*</span></label>
-        <input type="text" id="u-nombre" placeholder="Ej: Carlos Cova">
-      </div>
-      <div class="f">
-        <label>Usuario (login) <span class="req">*</span></label>
-        <input type="text" id="u-user" placeholder="Ej: ccova" autocapitalize="none">
-        <span class="hint">Sin espacios · solo letras, números y guiones</span>
-      </div>
-      <div class="f">
-        <label>Contraseña <span class="req">*</span></label>
-        <input type="password" id="u-pass" placeholder="Mínimo 6 caracteres">
-      </div>
-      <div class="f">
-        <label>Rol <span class="req">*</span></label>
-        <select id="u-rol">
-          <option value="">— Seleccionar —</option>
-          <option value="vendedor">Vendedor</option>
-          <option value="gerente">Gerente</option>
-          <option value="admin">Administrador</option>
-        </select>
-      </div>
-      <div class="f">
-        <label>Estado</label>
-        <select id="u-estado">
-          <option value="activo">Activo</option>
-          <option value="inactivo">Inactivo</option>
-        </select>
-      </div>
-    </div>
-
-    <button class="btn-primary" id="btn-usuario" onclick="guardarUsuario()">
-      <span id="txt-usuario">Guardar Usuario</span>
-      <div class="sp" id="sp-usuario"></div>
-    </button>
-    <div class="alert ok"  id="ok-usuario"></div>
-    <div class="alert err" id="err-usuario"></div>
-
-    <hr class="divider">
-
-    <h3 style="font-size:.85rem;font-weight:700;color:var(--negro);margin-bottom:12px">Usuarios Registrados</h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Usuario</th>
-            <th>Rol</th>
-            <th>Estado</th>
-          </tr>
-        </thead>
-        <tbody id="tabla-usuarios">
-          <tr><td colspan="4" style="text-align:center;color:var(--gris);padding:20px">Cargando usuarios…</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════════════════════════
-       SECCIÓN 2 — REGISTRO DE CLIENTES
-       · Todos los campos son opcionales excepto Razón Social
-       · Se agrega selector de etapa del Embudo
-  ══════════════════════════════════════════════════════════ -->
-  <div class="card" id="sec-clientes">
-    <h2 class="card-title">Registro de Clientes</h2>
-
-    <div class="form-grid">
-      <div class="f">
-        <label>Razón Social / Nombre Comercial <span class="req">*</span></label>
-        <input type="text" id="c-nombre" placeholder="Ej: Restaurante Ávila">
-      </div>
-      <div class="f">
-        <label>RIF</label>
-        <input type="text" id="c-rif" placeholder="Ej: J-30495832-1">
-      </div>
-      <div class="f">
-        <label>Persona de Contacto</label>
-        <input type="text" id="c-contacto" placeholder="Ej: Pedro Gómez">
-      </div>
-      <div class="f">
-        <label>Teléfono</label>
-        <input type="text" id="c-telefono" placeholder="Ej: 0412-5551234">
-      </div>
-      <div class="f">
-        <label>Sector</label>
-        <select id="c-sector">
-          <option value="">— Seleccionar —</option>
-          <option value="restaurante">Restaurante</option>
-          <option value="hotel">Hotel</option>
-          <option value="supermercado">Supermercado</option>
-          <option value="bodegon">Bodegón</option>
-          <option value="distribuidor">Distribuidor</option>
-          <option value="otro">Otro</option>
-        </select>
-      </div>
-      <div class="f">
-        <label>Vendedor Asignado</label>
-        <select id="c-vendedor">
-          <option value="">— Seleccionar —</option>
-        </select>
-      </div>
-      <!-- ── NUEVO: Etapa del Embudo ── -->
-      <div class="f">
-        <label>Etapa en el Embudo</label>
-        <select id="c-etapa">
-          <option value="">— Sin etapa —</option>
-          <option value="Prospecto">1 · Prospecto</option>
-          <option value="Contacto">2 · Contacto</option>
-          <option value="Presentación">3 · Presentación</option>
-          <option value="Negociación">4 · Activación</option>
-          <option value="Pedido">5 · Fidelización</option>
-        </select>
-        <span class="hint">Si se selecciona una etapa, se crea automáticamente una oportunidad en el Embudo</span>
-      </div>
-      <div class="f">
-        <label>Observaciones</label>
-        <textarea id="c-obs" rows="2" placeholder="Notas adicionales sobre el cliente..." style="resize:vertical"></textarea>
-      </div>
-    </div>
-
-    <button class="btn-primary" id="btn-cliente" onclick="guardarCliente()">
-      <span id="txt-cliente">Guardar Cliente</span>
-      <div class="sp" id="sp-cliente"></div>
-    </button>
-    <div class="alert ok"  id="ok-cliente"></div>
-    <div class="alert err" id="err-cliente"></div>
-  </div>
-
-  <!-- ══════════════════════════════════════════════════════════
-       SECCIÓN 3 — REGISTRO DE PRODUCTOS
-  ══════════════════════════════════════════════════════════ -->
-  <div class="card" id="sec-reg-productos">
-    <h2 class="card-title">Registro de Productos</h2>
-
-    <div class="form-grid">
-      <div class="f">
-        <label>Nombre del Producto <span class="req">*</span></label>
-        <input type="text" id="rp-nombre" placeholder="Ej: Casabe Tipo Pasapalo">
-      </div>
-      <div class="f">
-        <label>Descripción</label>
-        <input type="text" id="rp-descripcion" placeholder="Ej: Casabe artesanal en formato pasapalo">
-      </div>
-      <div class="f">
-        <label>Unidades por Caja <span class="req">*</span></label>
-        <input type="number" id="rp-unidades" placeholder="Ej: 12" min="1">
-      </div>
-      <div class="f">
-        <label>Precio (USD) <span class="req">*</span></label>
-        <input type="number" id="rp-precio" placeholder="Ej: 3.50" step="0.01" min="0">
-      </div>
-      <div class="f">
-        <label>Canal Comercial <span class="req">*</span></label>
-        <select id="rp-canal">
-          <option value="">— Seleccionar —</option>
-          <option value="RETAIL">RETAIL</option>
-          <option value="HORECA">HORECA</option>
-          <option value="RETAIL y HORECA">RETAIL y HORECA</option>
-        </select>
-      </div>
-      <div class="f">
-        <label>Lleva Etiqueta <span class="req">*</span></label>
-        <select id="rp-etiqueta">
-          <option value="">— Seleccionar —</option>
-          <option value="SI">Sí</option>
-          <option value="NO">No</option>
-        </select>
-      </div>
-      <div class="f">
-        <label>Tipo de Caja <span class="req">*</span></label>
-        <select id="rp-tipo-caja">
-          <option value="">— Seleccionar —</option>
-          <option value="Caja Pequeña">Caja Pequeña</option>
-          <option value="Caja Galón">Caja Galón</option>
-          <option value="Caja 45x32x32">Caja 45×32×32</option>
-          <option value="Caja Grande">Caja Grande</option>
-        </select>
-      </div>
-    </div>
-
-    <button class="btn-primary" id="btn-reg-producto" onclick="guardarRegistroProducto()">
-      <span id="txt-reg-producto">Guardar Producto</span>
-      <div class="sp" id="sp-reg-producto"></div>
-    </button>
-    <div class="alert ok"  id="ok-reg-producto"></div>
-    <div class="alert err" id="err-reg-producto"></div>
-  </div>
-
-  <!-- ══════════════════════════════════════════════════════════
-       SECCIÓN 4 — ASIGNACIÓN DE METAS
-  ══════════════════════════════════════════════════════════ -->
-  <div class="card" id="sec-metas">
-    <h2 class="card-title">Asignación de Metas</h2>
-
-    <!-- Encabezado: Vendedor + Fechas + Totalizadores -->
-    <div class="meta-header">
-      <div class="form-grid" style="margin-bottom:16px">
-        <div class="f">
-          <label>Vendedor <span class="req">*</span></label>
-          <select id="m-vendedor" onchange="onVendedorChange()">
-            <option value="">— Seleccionar —</option>
-          </select>
-        </div>
-        <div class="f">
-          <label>Fecha Desde <span class="req">*</span></label>
-          <input type="date" id="m-fecha-desde">
-        </div>
-        <div class="f">
-          <label>Fecha Hasta <span class="req">*</span></label>
-          <input type="date" id="m-fecha-hasta">
-        </div>
-        <div class="f" style="justify-content:flex-end">
-          <button class="btn-primary" id="btn-cargar-clientes-meta" style="align-self:flex-end" onclick="cargarClientesMeta()">
-            <span id="txt-cargar-clientes-meta">Cargar Clientes</span>
-            <div class="sp" id="sp-cargar-clientes-meta"></div>
-          </button>
-        </div>
-      </div>
-
-      <!-- Totalizadores automáticos -->
-      <div class="totales-bar">
-        <div class="total-chip">
-          <span class="total-label">Meta en USD</span>
-          <span class="total-val" id="tot-usd">$ 0.00</span>
-        </div>
-        <div class="total-chip">
-          <span class="total-label">Meta en Cajas</span>
-          <span class="total-val" id="tot-cajas">0</span>
-        </div>
-        <div class="total-chip">
-          <span class="total-label">Clientes Nuevos</span>
-          <span class="total-val" id="tot-nuevos">0</span>
-        </div>
-        <div class="total-chip">
-          <span class="total-label">Total Clientes</span>
-          <span class="total-val" id="tot-clientes">0</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Tabla de clientes -->
-    <div class="table-wrap" style="margin-top:18px">
-      <table id="tabla-metas-clientes">
-        <thead id="thead-metas-clientes">
-          <tr>
-            <th>Cliente</th>
-            <th>Tipo</th>
-            <th style="text-align:center">Productos<br><small style="font-weight:400;text-transform:none">cajas</small></th>
-            <th style="text-align:center">Total Cajas</th>
-            <th style="text-align:center">Total USD</th>
-          </tr>
-        </thead>
-        <tbody id="tbody-metas-clientes">
-          <tr><td colspan="5" style="text-align:center;color:var(--gris);padding:30px">
-            Selecciona un vendedor y haz clic en <strong>Cargar Clientes</strong>.
-          </td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div style="margin-top:18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-      <button class="btn-primary" id="btn-meta" onclick="guardarMeta()">
-        <span id="txt-meta">Guardar Meta</span>
-        <div class="sp" id="sp-meta"></div>
-      </button>
-    </div>
-    <div class="alert ok"  id="ok-meta"></div>
-    <div class="alert err" id="err-meta"></div>
-
-  </div><!-- /sec-metas -->
-
+<div class="card" id="sec-metas"><h2 class="card-title">Asignación de Metas</h2><div class="form-grid">
+<div class="f"><label>Vendedor <span class="req">*</span></label><select id="m-vendedor" onchange="onVendedorChange()"><option value="">— Seleccionar —</option></select></div>
+<div class="f"><label>Fecha Desde <span class="req">*</span></label><input type="date" id="m-fecha-desde"></div><div class="f"><label>Fecha Hasta <span class="req">*</span></label><input type="date" id="m-fecha-hasta"></div>
+<div class="f" style="justify-content:flex-end"><button class="btn-primary" id="btn-cargar-clientes-meta" onclick="cargarClientesMeta()"><span id="txt-cargar-clientes-meta">Cargar Clientes</span><div class="sp" id="sp-cargar-clientes-meta"></div></button></div></div>
+<div class="totales-bar"><div class="total-chip"><span class="total-label">Meta en USD</span><span class="total-val" id="tot-usd">$ 0.00</span></div><div class="total-chip"><span class="total-label">Meta en Cajas</span><span class="total-val" id="tot-cajas">0</span></div><div class="total-chip"><span class="total-label">Clientes Nuevos</span><span class="total-val" id="tot-nuevos">0</span></div><div class="total-chip"><span class="total-label">Total Clientes</span><span class="total-val" id="tot-clientes">0</span></div></div>
+<div class="table-wrap"><table id="tabla-metas-clientes"><thead id="thead-metas-clientes"><tr><th>Cliente</th><th>Tipo</th><th>Productos / cajas</th><th>Total Cajas</th><th>Total USD</th></tr></thead><tbody id="tbody-metas-clientes"><tr><td colspan="5" style="text-align:center;padding:30px">Selecciona un vendedor y haz clic en <strong>Cargar Clientes</strong>.</td></tr></tbody></table></div>
+<button class="btn-primary" id="btn-meta" onclick="guardarMeta()" style="margin-top:18px"><span id="txt-meta">Guardar Meta</span><div class="sp" id="sp-meta"></div></button><div class="alert ok" id="ok-meta"></div><div class="alert err" id="err-meta"></div></div>
 </main>
-
-<footer>
-  &copy; 2026 Sistema Comercial Casabe Real (SCCR v2.5.0) &mdash; 0412.290.58.33
-</footer>
+<footer>&copy; 2026 Sistema Comercial Casabe Real (SCCR v2.5.0)</footer>
 
 <script>
-// ─────────────────────────────────────────────────────────────
-//  SCCR v2.5.0 — cargas.html
-//
-//  CORRECCIÓN PRINCIPAL: se unifica la URL del API con la del
-//  resto del sistema. La URL anterior apuntaba a un script
-//  diferente que no reconocía las acciones POST.
-// ─────────────────────────────────────────────────────────────
-const API = 'https://script.google.com/macros/s/AKfycbyWRB5745Ors7n8RYqTqyBfb7LXIX3W9x-LFxfnnJf4Bv7fyoS51KeqKgChaldfmLqjSw/exec';
+const API='https://script.google.com/macros/s/AKfycbyWRB5745Ors7n8RYqTqyBfb7LXIX3W9x-LFxfnnJf4Bv7fyoS51KeqKgChaldfmLqjSw/exec';
+let _vendedores=[],_productosMeta=[],_filasMeta=[];
 
-// ── INIT ──────────────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', () => {
-  const sesion = SCCR.initSCCR(['admin', 'gerente']);
-  if (!sesion) return;
-
-  const rol = (sesion.rol || '').toLowerCase();
-
-  // Header — mismo funcionamiento de clientes.html
-  document.getElementById('user-name-display').textContent = sesion.nombre || '—';
-  document.getElementById('user-role-display').textContent =
-    rol === 'admin' ? 'Administrador' :
-    rol === 'gerente' ? 'Gerente de Ventas' : 'Asesor Comercial';
-
-  // Menú administrativo — Cargas requiere admin o gerente
-  if (rol === 'admin' || rol === 'gerente') {
-    document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
-  }
-
-  cargarUsuarios();
-  cargarVendedores();
-
-  // Fecha de hoy por defecto en metas
-  const hoy = new Date().toISOString().split('T')[0];
-  document.getElementById('m-fecha-desde').value = hoy;
-  document.getElementById('m-fecha-hasta').value = hoy;
+window.addEventListener('DOMContentLoaded',async()=>{
+ const sesion=SCCR.initSCCR(['admin','gerente']); if(!sesion)return;
+ const rol=(sesion.rol||'').toLowerCase();
+ document.getElementById('user-name-display').textContent=sesion.nombre||'—';
+ document.getElementById('user-role-display').textContent=rol==='admin'?'Administrador':rol==='gerente'?'Gerente de Ventas':'Asesor Comercial';
+ if(rol==='admin'||rol==='gerente')document.querySelectorAll('.admin-only').forEach(e=>e.style.display='inline-block');
+ cargarUsuarios(); await cargarVendedores();
+ const hoy=new Date().toISOString().split('T')[0];document.getElementById('m-fecha-desde').value=hoy;document.getElementById('m-fecha-hasta').value=hoy;
 });
+function cerrarSesion(){SCCR.cerrarSesion()}
+const SECCIONES=['usuarios','clientes','reg-productos','metas'];
+function showSection(id){SECCIONES.forEach(s=>document.getElementById('sec-'+s).classList.toggle('on',s===id));document.querySelectorAll('.stab').forEach((b,i)=>b.classList.toggle('on',SECCIONES[i]===id))}
+function setLoading(prefix,on){const b=document.getElementById('btn-'+prefix);if(b)b.disabled=on;const t=document.getElementById('txt-'+prefix);if(t)t.style.display=on?'none':'';const s=document.getElementById('sp-'+prefix);if(s)s.classList.toggle('show',on)}
+function showAlert(prefix,type,msg){['ok','err'].forEach(t=>document.getElementById(t+'-'+prefix).classList.remove('show'));const e=document.getElementById(type+'-'+prefix);e.textContent=msg;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),6000)}
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 
-function cerrarSesion() { SCCR.cerrarSesion(); }
-
-// ── NAVEGACIÓN ENTRE SECCIONES ────────────────────────────────
-const SECCIONES = ['usuarios','clientes','reg-productos','metas'];
-function showSection(id) {
-  SECCIONES.forEach(s => {
-    document.getElementById('sec-' + s).classList.toggle('on', s === id);
-  });
-  document.querySelectorAll('.stab').forEach((btn, i) => {
-    btn.classList.toggle('on', SECCIONES[i] === id);
-  });
+async function cargarVendedores(){
+ try{
+  const r=await fetch(API+'?action=getUsuarios',{redirect:'follow'}),d=await r.json();
+  const lista=Array.isArray(d.data)?d.data:[];
+  // ÚNICA fuente de vendedores: USUARIOS. Filtra rol, estado y mantiene nombre como variable de selección.
+  _vendedores=lista.filter(u=>String(u.rol||'').trim().toLowerCase()==='vendedor'&&String(u.estado||'').trim().toLowerCase()==='activo'&&String(u.nombre||'').trim()!=='');
+  ['c-vendedor','m-vendedor'].forEach(id=>{const s=document.getElementById(id);while(s.options.length>1)s.remove(1);_vendedores.forEach(v=>{const o=document.createElement('option');o.value=String(v.nombre).trim();o.textContent=String(v.nombre).trim();s.appendChild(o)})});
+ }catch(e){console.warn(e)}
+}
+async function cargarUsuarios(){
+ const tb=document.getElementById('tabla-usuarios');
+ try{const r=await fetch(API+'?action=getUsuarios',{redirect:'follow'}),d=await r.json(),a=d.data||[];tb.innerHTML=a.length?a.map(u=>`<tr><td style="font-weight:600">${esc(u.nombre)}</td><td>${esc(u.user)}</td><td><span class="badge ${esc(String(u.rol).toLowerCase())}">${esc(u.rol)}</span></td><td><span class="badge ${esc(String(u.estado).toLowerCase())}">${esc(u.estado)}</span></td></tr>`).join(''):'<tr><td colspan="4" style="text-align:center;padding:20px">Sin usuarios registrados.</td></tr>'}catch(e){tb.innerHTML='<tr><td colspan="4" style="text-align:center;padding:20px">No se pudo cargar la lista.</td></tr>'}
+}
+async function guardarUsuario(){
+ const nombre=document.getElementById('u-nombre').value.trim(),user=document.getElementById('u-user').value.trim().toLowerCase().replace(/\s+/g,''),pass=document.getElementById('u-pass').value,rol=document.getElementById('u-rol').value,estado=document.getElementById('u-estado').value;
+ if(!nombre||!user||!pass||!rol)return showAlert('usuario','err','Completa todos los campos obligatorios.');
+ if(pass.length<6)return showAlert('usuario','err','La contraseña debe tener al menos 6 caracteres.');
+ if(!/^[a-z0-9_-]+$/.test(user))return showAlert('usuario','err','El usuario solo puede tener letras minúsculas, números, guión y guión bajo.');
+ setLoading('usuario',true);
+ try{const r=await fetch(API,{method:'POST',body:JSON.stringify({action:'crearUsuario',nombre,user,pass,rol,vendedor_id:rol==='vendedor'?user:null,estado}),redirect:'follow'}),d=await r.json();if(d.ok){showAlert('usuario','ok',`✓ Usuario "${nombre}" creado exitosamente.`);['u-nombre','u-user','u-pass'].forEach(id=>document.getElementById(id).value='');document.getElementById('u-rol').value='';await cargarUsuarios();await cargarVendedores()}else showAlert('usuario','err',d.msg||'Error al guardar el usuario.')}catch(e){showAlert('usuario','err','Error de conexión. Verifica la red.')}setLoading('usuario',false)
 }
 
-// ── HELPERS UI ────────────────────────────────────────────────
-function setLoading(prefix, on) {
-  document.getElementById('btn-'  + prefix).disabled      = on;
-  document.getElementById('txt-'  + prefix).style.display = on ? 'none' : '';
-  document.getElementById('sp-'   + prefix).classList.toggle('show', on);
-}
-function showAlert(prefix, type, msg) {
-  ['ok','err'].forEach(t => document.getElementById(t + '-' + prefix).classList.remove('show'));
-  const el = document.getElementById(type + '-' + prefix);
-  el.textContent = msg;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 6000);
-}
-
-// ── CARGAR VENDEDORES (para todos los selects) ─────────────────
-let _vendedores = []; // cache global
-
-async function cargarVendedores() {
-  try {
-    const r = await fetch(API + '?action=getUsuarios', { redirect: 'follow' });
-    const d = await r.json();
-    _vendedores = (d.data || []).filter(u => u.rol === 'vendedor' && u.estado === 'activo');
-
-    ['c-vendedor', 'm-vendedor'].forEach(id => {
-      const sel = document.getElementById(id);
-      // Conservar la primera opción (placeholder)
-      while (sel.options.length > 1) sel.remove(1);
-      _vendedores.forEach(v => {
-        const opt = document.createElement('option');
-        opt.value = v.user;
-        opt.textContent = v.nombre;
-        sel.appendChild(opt);
-      });
-    });
-  } catch(e) {
-    console.warn('No se pudo cargar vendedores:', e);
-  }
+async function guardarCliente(){
+ const razon_social=document.getElementById('c-razon-social').value.trim(),establecimiento=document.getElementById('c-establecimiento').value.trim(),contacto=document.getElementById('c-contacto').value.trim(),telefono=document.getElementById('c-telefono').value.trim(),tipo=document.getElementById('c-tipo').value,vendedor_asignado=document.getElementById('c-vendedor').value.trim(),etapa=document.getElementById('c-etapa').value,frecuencia=document.getElementById('c-frecuencia').value,estado=document.getElementById('c-estado').value;
+ if(!razon_social)return showAlert('cliente','err','La Razón Social es obligatoria.');
+ setLoading('cliente',true);
+ try{
+  // Los nombres de las propiedades coinciden con las columnas de CLIENTES.
+  const payload={action:'crearCliente',razon_social,establecimiento,contacto,telefono,tipo,vendedor_asignado,fecha_registro:new Date().toISOString(),total_compras:0,ultima_compra:'',frecuencia,etapa_embudo:etapa,estado};
+  const r=await fetch(API,{method:'POST',body:JSON.stringify(payload),redirect:'follow'}),d=await r.json();
+  if(!d.ok){showAlert('cliente','err',d.msg||'Error al guardar el cliente.');return}
+  if(etapa&&vendedor_asignado)await fetch(API,{method:'POST',body:JSON.stringify({action:'guardarOportunidad',razon_social,establecimiento,contacto,telefono,vendedor:vendedor_asignado,etapa,valor_estimado_usd:0,proxima_accion:'',observaciones:'Creado desde Cargas'}),redirect:'follow'});
+  showAlert('cliente','ok',`✓ Cliente "${razon_social}" registrado correctamente.`);
+  ['c-razon-social','c-establecimiento','c-contacto','c-telefono'].forEach(id=>document.getElementById(id).value='');['c-tipo','c-vendedor','c-etapa','c-frecuencia'].forEach(id=>document.getElementById(id).value='');document.getElementById('c-estado').value='activo';
+ }catch(e){console.error(e);showAlert('cliente','err','Error de conexión. Verifica la red.')}finally{setLoading('cliente',false)}
 }
 
-// ── CARGAR TABLA DE USUARIOS ──────────────────────────────────
-async function cargarUsuarios() {
-  const tbody = document.getElementById('tabla-usuarios');
-  try {
-    const r = await fetch(API + '?action=getUsuarios', { redirect: 'follow' });
-    const d = await r.json();
-    const lista = d.data || [];
-    if (!lista.length) {
-      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--gris);padding:20px">Sin usuarios registrados.</td></tr>';
-      return;
-    }
-    tbody.innerHTML = lista.map(u => `
-      <tr>
-        <td style="font-weight:600">${u.nombre}</td>
-        <td style="color:var(--gris)">${u.user}</td>
-        <td><span class="badge ${u.rol}">${u.rol}</span></td>
-        <td><span class="badge ${u.estado}">${u.estado}</span></td>
-      </tr>
-    `).join('');
-  } catch(e) {
-    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--gris);padding:20px">No se pudo cargar la lista.</td></tr>';
-  }
+async function guardarRegistroProducto(){
+ const nombre=document.getElementById('rp-nombre').value.trim(),descripcion=document.getElementById('rp-descripcion').value.trim(),unidades=document.getElementById('rp-unidades').value,precio=document.getElementById('rp-precio').value,canal=document.getElementById('rp-canal').value,etiqueta=document.getElementById('rp-etiqueta').value,tipo_caja=document.getElementById('rp-tipo-caja').value;
+ if(!nombre||!unidades||!precio||!canal||!etiqueta||!tipo_caja)return showAlert('reg-producto','err','Completa todos los campos obligatorios.');
+ setLoading('reg-producto',true);try{const r=await fetch(API,{method:'POST',body:JSON.stringify({action:'crearProducto',nombre,descripcion,unidades:+unidades,precio:+precio,canal,etiqueta,tipo_caja}),redirect:'follow'}),d=await r.json();if(d.ok){showAlert('reg-producto','ok',`✓ Producto "${nombre}" registrado exitosamente.`);['rp-nombre','rp-descripcion','rp-unidades','rp-precio'].forEach(id=>document.getElementById(id).value='');['rp-canal','rp-etiqueta','rp-tipo-caja'].forEach(id=>document.getElementById(id).value='')}else showAlert('reg-producto','err',d.msg||'Error al registrar el producto.')}catch(e){showAlert('reg-producto','err','Error de conexión. Verifica la red.')}setLoading('reg-producto',false)
 }
 
-// ── GUARDAR USUARIO ───────────────────────────────────────────
-async function guardarUsuario() {
-  const nombre = document.getElementById('u-nombre').value.trim();
-  const user   = document.getElementById('u-user').value.trim().toLowerCase().replace(/\s+/g,'');
-  const pass   = document.getElementById('u-pass').value;
-  const rol    = document.getElementById('u-rol').value;
-  const estado = document.getElementById('u-estado').value;
-
-  if (!nombre || !user || !pass || !rol) {
-    showAlert('usuario', 'err', 'Completa todos los campos obligatorios.'); return;
-  }
-  if (pass.length < 6) {
-    showAlert('usuario', 'err', 'La contraseña debe tener al menos 6 caracteres.'); return;
-  }
-  if (!/^[a-z0-9_-]+$/.test(user)) {
-    showAlert('usuario', 'err', 'El usuario solo puede tener letras minúsculas, números, guión y guión bajo.'); return;
-  }
-
-  setLoading('usuario', true);
-  const vendedor_id = rol === 'vendedor' ? user : null;
-
-  try {
-    const r = await fetch(API, {
-      method: 'POST',
-      body: JSON.stringify({ action:'crearUsuario', nombre, user, pass, rol, vendedor_id, estado }),
-      redirect: 'follow'
-    });
-    const d = await r.json();
-    if (d.ok) {
-      showAlert('usuario', 'ok', `✓ Usuario "${nombre}" creado exitosamente.`);
-      ['u-nombre','u-user','u-pass'].forEach(id => document.getElementById(id).value = '');
-      document.getElementById('u-rol').value = '';
-      cargarUsuarios();
-      cargarVendedores();
-    } else {
-      showAlert('usuario', 'err', d.msg || 'Error al guardar el usuario.');
-    }
-  } catch(e) {
-    showAlert('usuario', 'err', 'Error de conexión. Verifica la red.');
-  }
-  setLoading('usuario', false);
+function onVendedorChange(){_filasMeta=[];_productosMeta=[];document.getElementById('thead-metas-clientes').innerHTML='<tr><th>Cliente</th><th>Tipo</th><th>Productos / cajas</th><th>Total Cajas</th><th>Total USD</th></tr>';document.getElementById('tbody-metas-clientes').innerHTML='<tr><td colspan="5" style="text-align:center;padding:30px">Haz clic en Cargar Clientes.</td></tr>';actualizarTotales()}
+function normalizarProducto(p,i){return{id_producto:String(p.id_producto??p.id??`PROD-${i+1}`),nombre:String(p.nombre??p.producto??p.descripcion??`Producto ${i+1}`),precio_usd:Number(p.precio_usd??p.precio??0)||0,unidades_por_caja:p.unidades_por_caja??p.unidades??'',lleva_etiqueta:p.lleva_etiqueta??'',tipo_caja:p.tipo_caja??'',estado:String(p.estado??'activo').toLowerCase()}}
+function normalizarCliente(c,i){return{id_cliente:String(c.id_cliente??c.id??`CLI-${i+1}`),nombre:String(c.razon_social??c.nombre??c.cliente??c.establecimiento??'—'),vendedor_asignado:String(c.vendedor_asignado??c.vendedor_id??c.vendedor??'').trim()}}
+async function cargarClientesMeta(){
+ const vendedor=document.getElementById('m-vendedor').value;if(!vendedor)return showAlert('meta','err','Selecciona un vendedor primero.');
+ const tb=document.getElementById('tbody-metas-clientes');setLoading('cargar-clientes-meta',true);tb.innerHTML='<tr><td colspan="5" style="text-align:center;padding:30px">Cargando clientes y productos…</td></tr>';_filasMeta=[];_productosMeta=[];
+ try{
+  const [rc,rp]=await Promise.all([fetch(API+'?action=clientes',{redirect:'follow'}),fetch(API+'?action=getProductos',{redirect:'follow'})]),dc=await rc.json(),dp=await rp.json();
+  const clientes=Array.isArray(dc.data)?dc.data:Array.isArray(dc.clientes)?dc.clientes:[],productos=Array.isArray(dp.data)?dp.data:Array.isArray(dp.productos)?dp.productos:[];
+  const vn=vendedor.trim().toLowerCase();
+  _filasMeta=clientes.map(normalizarCliente).filter(c=>c.nombre!=='—'&&c.vendedor_asignado.trim().toLowerCase()===vn);
+  _productosMeta=productos.map(normalizarProducto).filter(p=>p.estado!=='inactivo'&&p.nombre!=='—');
+  if(!_productosMeta.length)return tb.innerHTML='<tr><td colspan="5" style="text-align:center;padding:30px">No hay productos activos registrados en PRODUCTOS.</td></tr>';
+  if(!_filasMeta.length)return tb.innerHTML='<tr><td colspan="5" style="text-align:center;padding:30px">No hay clientes asignados a este vendedor en CLIENTES.</td></tr>';
+  renderTablaClientes();
+ }catch(e){console.error(e);tb.innerHTML=`<tr><td colspan="5" style="text-align:center;color:var(--rojo);padding:30px">${esc(e.message||'Error al cargar datos.')}</td></tr>`}finally{setLoading('cargar-clientes-meta',false)}
 }
-
-// ── GUARDAR CLIENTE ───────────────────────────────────────────
-// Solo Razón Social es obligatorio. Si se selecciona etapa de embudo,
-// se crea también una oportunidad en la hoja embudo.
-async function guardarCliente() {
-  const nombre      = document.getElementById('c-nombre').value.trim();
-  const rif         = document.getElementById('c-rif').value.trim();
-  const contacto    = document.getElementById('c-contacto').value.trim();
-  const telefono    = document.getElementById('c-telefono').value.trim();
-  const sector      = document.getElementById('c-sector').value;
-  const vendedor_id = document.getElementById('c-vendedor').value;
-  const etapa       = document.getElementById('c-etapa').value;
-  const obs         = document.getElementById('c-obs').value.trim();
-
-  if (!nombre) {
-    showAlert('cliente', 'err', 'La Razón Social es obligatoria.'); return;
-  }
-
-  setLoading('cliente', true);
-  try {
-    // 1. Guardar cliente en hoja clientes
-    const r = await fetch(API, {
-      method: 'POST',
-      body: JSON.stringify({ action:'crearCliente', nombre, rif, contacto, telefono, sector, vendedor_id }),
-      redirect: 'follow'
-    });
-    const d = await r.json();
-
-    if (!d.ok) {
-      showAlert('cliente', 'err', d.msg || 'Error al guardar el cliente.');
-      setLoading('cliente', false);
-      return;
-    }
-
-    // 2. Si se seleccionó etapa, crear oportunidad en embudo
-    if (etapa && vendedor_id) {
-      await fetch(API, {
-        method: 'POST',
-        body: JSON.stringify({
-          action:              'guardarOportunidad',
-          nombre:              nombre,
-          razon_social:        nombre,
-          establecimiento:     nombre,
-          contacto:            contacto || '',
-          telefono:            telefono || '',
-          vendedor:            vendedor_id,
-          etapa:               etapa,
-          valor_estimado_usd:  0,
-          proxima_accion:      '',
-          observaciones:       obs || 'Creado desde Cargas'
-        }),
-        redirect: 'follow'
-      });
-    }
-
-    showAlert('cliente', 'ok', `✓ Cliente "${nombre}" registrado.${etapa ? ` Oportunidad creada en etapa "${etapa}".` : ''}`);
-    ['c-nombre','c-rif','c-contacto','c-telefono','c-obs'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('c-sector').value   = '';
-    document.getElementById('c-vendedor').value = '';
-    document.getElementById('c-etapa').value    = '';
-
-  } catch(e) {
-    showAlert('cliente', 'err', 'Error de conexión. Verifica la red.');
-  }
-  setLoading('cliente', false);
+function renderTablaClientes(){
+ const th=document.getElementById('thead-metas-clientes'),tb=document.getElementById('tbody-metas-clientes');let h='<tr><th>Cliente</th><th>Tipo</th>';_productosMeta.forEach(p=>h+=`<th style="text-align:center;min-width:150px">${esc(p.nombre)}<br><small>${p.unidades_por_caja?esc(p.unidades_por_caja)+' unid./caja · ':''}$ ${p.precio_usd.toFixed(2)}</small></th>`);th.innerHTML=h+'<th>Total Cajas</th><th>Total USD</th></tr>';
+ tb.innerHTML=_filasMeta.map((c,i)=>{let r=`<tr><td style="font-weight:600">${esc(c.nombre)}</td><td><select id="mc-tipo-${i}" onchange="actualizarTotales()"><option value="">— Tipo —</option><option value="Nuevo">Nuevo</option><option value="Inactivo">Inactivo</option><option value="Activo">Activo</option></select></td>`;_productosMeta.forEach((p,j)=>r+=`<td style="text-align:center"><input type="number" id="mc-prod-${i}-${j}" min="0" step="1" placeholder="0" oninput="recalcFila(${i})"></td>`);return r+`<td id="mc-tcajas-${i}">0</td><td id="mc-tusd-${i}">$ 0.00</td></tr>`}).join('');actualizarTotales()
 }
-
-// ── GUARDAR REGISTRO DE PRODUCTO (hoja PRODUCTOS) ─────────────
-// ── GUARDAR REGISTRO DE PRODUCTO (hoja PRODUCTOS) ─────────────
-async function guardarRegistroProducto() {
-  const nombre      = document.getElementById('rp-nombre').value.trim();
-  const descripcion = document.getElementById('rp-descripcion').value.trim();
-  const unidades    = document.getElementById('rp-unidades').value;
-  const precio      = document.getElementById('rp-precio').value;
-  const canal       = document.getElementById('rp-canal').value;
-  const etiqueta    = document.getElementById('rp-etiqueta').value;
-  const tipo_caja   = document.getElementById('rp-tipo-caja').value;
-
-  if (!nombre || !unidades || !precio || !canal || !etiqueta || !tipo_caja) {
-    showAlert('reg-producto', 'err', 'Completa todos los campos obligatorios.'); return;
-  }
-
-  setLoading('reg-producto', true);
-  try {
-    const r = await fetch(API, {
-      method: 'POST',
-      body: JSON.stringify({
-        action: 'crearProducto',
-        nombre, descripcion,
-        unidades: +unidades, precio: +precio,
-        canal, etiqueta, tipo_caja
-      }),
-      redirect: 'follow'
-    });
-    const d = await r.json();
-    if (d.ok) {
-      showAlert('reg-producto', 'ok', `✓ Producto "${nombre}" registrado exitosamente.`);
-      ['rp-nombre','rp-descripcion','rp-unidades','rp-precio'].forEach(id => document.getElementById(id).value = '');
-      ['rp-canal','rp-etiqueta','rp-tipo-caja'].forEach(id => document.getElementById(id).value = '');
-    } else {
-      showAlert('reg-producto', 'err', d.msg || 'Error al registrar el producto.');
-    }
-  } catch(e) {
-    showAlert('reg-producto', 'err', 'Error de conexión. Verifica la red.');
-  }
-  setLoading('reg-producto', false);
+function recalcFila(i){let c=0,u=0;_productosMeta.forEach((p,j)=>{const n=Number(document.getElementById(`mc-prod-${i}-${j}`)?.value)||0;c+=n;u+=n*p.precio_usd});document.getElementById(`mc-tcajas-${i}`).textContent=c;document.getElementById(`mc-tusd-${i}`).textContent='$ '+u.toFixed(2);actualizarTotales()}
+function actualizarTotales(){let c=0,u=0,n=0,tc=0;_filasMeta.forEach((x,i)=>{let cf=0,uf=0;_productosMeta.forEach((p,j)=>{const z=Number(document.getElementById(`mc-prod-${i}-${j}`)?.value)||0;cf+=z;uf+=z*p.precio_usd});const t=document.getElementById(`mc-tipo-${i}`)?.value||'';if(cf>0||t)tc++;if(t==='Nuevo')n++;c+=cf;u+=uf});document.getElementById('tot-usd').textContent='$ '+u.toFixed(2);document.getElementById('tot-cajas').textContent=c;document.getElementById('tot-nuevos').textContent=n;document.getElementById('tot-clientes').textContent=tc}
+async function guardarMeta(){
+ const vendedor_id=document.getElementById('m-vendedor').value,fecha_desde=document.getElementById('m-fecha-desde').value,fecha_hasta=document.getElementById('m-fecha-hasta').value;
+ if(!vendedor_id||!fecha_desde||!fecha_hasta)return showAlert('meta','err','Completa el vendedor y las fechas.');if(fecha_hasta<fecha_desde)return showAlert('meta','err','La fecha hasta debe ser igual o posterior a la fecha desde.');if(!_filasMeta.length||!_productosMeta.length)return showAlert('meta','err','Carga primero los clientes y productos.');
+ const clientes=_filasMeta.map((c,i)=>{let productos=[],tc=0,tu=0;_productosMeta.forEach((p,j)=>{const cajas=Number(document.getElementById(`mc-prod-${i}-${j}`)?.value)||0;if(cajas){const s=cajas*p.precio_usd;productos.push({id_producto:p.id_producto,nombre:p.nombre,cajas,precio_usd:p.precio_usd,subtotal:s,unidades_por_caja:p.unidades_por_caja,lleva_etiqueta:p.lleva_etiqueta,tipo_caja:p.tipo_caja});tc+=cajas;tu+=s}});return{id_cliente:c.id_cliente,cliente:c.nombre,tipo:document.getElementById(`mc-tipo-${i}`)?.value||'',productos,total_cajas:tc,total_usd:tu}}).filter(x=>x.tipo||x.total_cajas>0);
+ if(!clientes.length)return showAlert('meta','err','Asigna al menos un cliente con tipo o cajas antes de guardar.');
+ setLoading('meta',true);try{const r=await fetch(API,{method:'POST',body:JSON.stringify({action:'asignarMeta',vendedor_id,fecha_desde,fecha_hasta,meta_usd:clientes.reduce((s,x)=>s+x.total_usd,0),meta_cajas:clientes.reduce((s,x)=>s+x.total_cajas,0),meta_clientes_nuevos:clientes.filter(x=>x.tipo==='Nuevo').length,clientes,productos:_productosMeta}),redirect:'follow'}),d=await r.json();if(d.ok)showAlert('meta','ok','✓ Meta guardada correctamente.');else showAlert('meta','err',d.msg||'Error al guardar la meta.')}catch(e){showAlert('meta','err','Error de conexión. Verifica la red.')}finally{setLoading('meta',false)}
 }
-
-// ═══════════════════════════════════════════════════════════════
-//  MÓDULO DE ASIGNACIÓN DE METAS
-// ═══════════════════════════════════════════════════════════════
-
-// Precios por producto para calcular USD (se pueden cargar desde el API)
-let _productosMeta = []; // productos activos leídos directamente desde PRODUCTOS
-let _filasMeta = [];     // clientes leídos directamente desde CLIENTES
-
-// Escapar texto antes de insertarlo en HTML dinámico.
-function esc(valor) {
-  return String(valor ?? '').replace(/[&<>"']/g, function(m) {
-    return {
-      '&':'&amp;',
-      '<':'&lt;',
-      '>':'&gt;',
-      '"':'&quot;',
-      "'":'&#039;'
-    }[m];
-  });
-}
-// Cuando cambia el vendedor, limpiar la tabla
-function onVendedorChange() {
-  const thead = document.getElementById('thead-metas-clientes');
-  const tbody = document.getElementById('tbody-metas-clientes');
-  thead.innerHTML = `<tr>
-    <th>Cliente</th><th>Tipo</th><th style="text-align:center">Productos<br><small style="font-weight:400;text-transform:none">cajas</small></th>
-    <th style="text-align:center">Total Cajas</th><th style="text-align:center">Total USD</th>
-  </tr>`;
-  tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--gris);padding:30px">Selecciona un vendedor y haz clic en <strong>Cargar Clientes</strong>.</td></tr>';
-  _filasMeta = [];
-  _productosMeta = [];
-  actualizarTotales();
-}
-
-function normalizarProducto(p, i) {
-  const id = p.id_producto ?? p.id ?? p.codigo ?? `PROD-${i + 1}`;
-  const nombre = p.nombre ?? p.producto ?? p.descripcion ?? `Producto ${i + 1}`;
-  const precioRaw = p.precio_usd ?? p.precio ?? p.precioUSD ?? p.price ?? 0;
-  const unidades = p.unidades_por_caja ?? p.unidades ?? p.unidadesCaja ?? '';
-  return {
-    id_producto: String(id),
-    nombre: String(nombre),
-    precio_usd: Number(precioRaw) || 0,
-    unidades_por_caja: unidades,
-    lleva_etiqueta: p.lleva_etiqueta ?? '',
-    tipo_caja: p.tipo_caja ?? '',
-    estado: String(p.estado ?? 'activo').toLowerCase()
-  };
-}
-
-function normalizarCliente(c, i) {
-  return {
-    id_cliente: String(c.id_cliente ?? c.id ?? c.codigo ?? `CLI-${i + 1}`),
-    nombre: String(c.razon_social ?? c.nombre ?? c.nombre_comercial ?? c.cliente ?? c.establecimiento ?? '—'),
-    vendedor_asignado: String(c.vendedor_asignado ?? c.vendedor_id ?? c.vendedor ?? c.user_vendedor ?? '').trim()
-  };
-}
-
-async function cargarClientesMeta() {
-  const vendedor_id = document.getElementById('m-vendedor').value;
-  if (!vendedor_id) {
-    showAlert('meta', 'err', 'Selecciona un vendedor primero.');
-    return;
-  }
-
-  const tbody = document.getElementById('tbody-metas-clientes');
-  setLoading('cargar-clientes-meta', true);
-  tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--gris);padding:30px">Cargando clientes y productos desde la base de datos…</td></tr>';
-  _filasMeta = [];
-  _productosMeta = [];
-
-  try {
-    // CLIENTES: se consulta CLIENTES completa y se filtra aquí.
-    // Esto evita depender de que el backend interprete correctamente el
-    // parámetro de vendedor y permite trabajar tanto con vendedor_id
-    // como con vendedor_asignado / vendedor / user_vendedor.
-    const urlClientes = API + '?action=clientes';
-    // PRODUCTOS: se consulta directamente la hoja PRODUCTOS.
-    const urlProductos = API + '?action=getProductos';
-
-    const [rc, rp] = await Promise.all([
-      fetch(urlClientes, { redirect: 'follow' }),
-      fetch(urlProductos, { redirect: 'follow' })
-    ]);
-
-    if (!rc.ok) throw new Error('No fue posible consultar CLIENTES.');
-    if (!rp.ok) throw new Error('No fue posible consultar PRODUCTOS.');
-
-    const dc = await rc.json();
-    const dp = await rp.json();
-
-    if (dc.ok === false) throw new Error(dc.msg || 'El servidor no pudo cargar los clientes.');
-    if (dp.ok === false) throw new Error(dp.msg || 'El servidor no pudo cargar los productos.');
-
-    const clientesRaw = Array.isArray(dc.data) ? dc.data : (Array.isArray(dc.clientes) ? dc.clientes : []);
-    const productosRaw = Array.isArray(dp.data) ? dp.data : (Array.isArray(dp.productos) ? dp.productos : []);
-
-    // Identificación robusta del vendedor seleccionado.
-    const vendedorSeleccionado = (_vendedores || []).find(v =>
-      String(v.user || '').trim().toLowerCase() === String(vendedor_id).trim().toLowerCase()
-    );
-    const vendedorNombre = String(vendedorSeleccionado?.nombre || '').trim().toLowerCase();
-    const vendedorIdNorm = String(vendedor_id).trim().toLowerCase();
-
-    _filasMeta = clientesRaw
-      .map(normalizarCliente)
-      .filter(c => {
-        if (!c.nombre || c.nombre === '—') return false;
-        const asignado = String(c.vendedor_asignado || '').trim().toLowerCase();
-        return asignado === vendedorIdNorm ||
-               (vendedorNombre && asignado === vendedorNombre);
-      });
-
-    _productosMeta = productosRaw
-      .map(normalizarProducto)
-      .filter(p => p.estado !== 'inactivo' && p.nombre && p.nombre !== '—');
-
-    if (!_productosMeta.length) {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--gris);padding:30px">No hay productos activos registrados en PRODUCTOS.</td></tr>';
-      actualizarTotales();
-      return;
-    }
-
-    if (!_filasMeta.length) {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--gris);padding:30px">No hay clientes asignados a este vendedor en CLIENTES.</td></tr>';
-      actualizarTotales();
-      return;
-    }
-
-    renderTablaClientes();
-
-  } catch (e) {
-    console.error('Error CARGAS / metas:', e);
-    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--rojo);padding:30px">${esc(e.message || 'Error al cargar datos desde la base de datos.')}</td></tr>`;
-  } finally {
-    setLoading('cargar-clientes-meta', false);
-  }
-}
-
-function renderTablaClientes() {
-  const thead = document.getElementById('thead-metas-clientes');
-  const tbody = document.getElementById('tbody-metas-clientes');
-
-  let header = '<tr><th>Cliente</th><th>Tipo</th>';
-  _productosMeta.forEach((p, j) => {
-    header += `<th style="text-align:center;min-width:150px">
-      ${esc(p.nombre)}
-      <br><small style="font-weight:400;text-transform:none">
-        ${p.unidades_por_caja ? esc(p.unidades_por_caja) + ' unid./caja · ' : ''}$ ${p.precio_usd.toFixed(2)}
-      </small>
-    </th>`;
-  });
-  header += '<th style="text-align:center">Total Cajas</th><th style="text-align:center">Total USD</th>';
-  thead.innerHTML = header + '</tr>';
-
-  tbody.innerHTML = _filasMeta.map((c, i) => {
-    let row = `<tr id="mfila-${i}">
-      <td style="font-weight:600;white-space:nowrap;min-width:160px">${esc(c.nombre)}</td>
-      <td>
-        <select class="tipo-sel" id="mc-tipo-${i}" onchange="actualizarTotales()">
-          <option value="">— Tipo —</option>
-          <option value="Nuevo">Nuevo</option>
-          <option value="Inactivo">Inactivo</option>
-          <option value="Activo">Activo</option>
-        </select>
-      </td>`;
-
-    _productosMeta.forEach((p, j) => {
-      row += `<td style="text-align:center">
-        <input type="number" id="mc-prod-${i}-${j}" min="0" step="1" value=""
-          oninput="recalcFila(${i})" placeholder="0" style="width:88px;text-align:center">
-      </td>`;
-    });
-
-    row += `<td class="num" id="mc-tcajas-${i}">0</td>
-            <td class="usd" id="mc-tusd-${i}">$ 0.00</td></tr>`;
-    return row;
-  }).join('');
-
-  actualizarTotales();
-}
-
-function recalcFila(i) {
-  let totalCajas = 0;
-  let totalUsd = 0;
-
-  _productosMeta.forEach((p, j) => {
-    const cajas = Number(document.getElementById(`mc-prod-${i}-${j}`)?.value) || 0;
-    totalCajas += cajas;
-    totalUsd += cajas * p.precio_usd;
-  });
-
-  const cajasEl = document.getElementById(`mc-tcajas-${i}`);
-  const usdEl = document.getElementById(`mc-tusd-${i}`);
-  if (cajasEl) cajasEl.textContent = totalCajas;
-  if (usdEl) usdEl.textContent = '$ ' + totalUsd.toFixed(2);
-
-  actualizarTotales();
-}
-
-function actualizarTotales() {
-  let totalCajas = 0;
-  let totalUsd = 0;
-  let totalNuevos = 0;
-  let totalClientes = 0;
-
-  _filasMeta.forEach((c, i) => {
-    let cajasFila = 0;
-    let usdFila = 0;
-
-    _productosMeta.forEach((p, j) => {
-      const cajas = Number(document.getElementById(`mc-prod-${i}-${j}`)?.value) || 0;
-      cajasFila += cajas;
-      usdFila += cajas * p.precio_usd;
-    });
-
-    const tipo = document.getElementById(`mc-tipo-${i}`)?.value || '';
-
-    if (cajasFila > 0 || tipo) totalClientes++;
-    if (tipo === 'Nuevo') totalNuevos++;
-
-    totalCajas += cajasFila;
-    totalUsd += usdFila;
-  });
-
-  document.getElementById('tot-usd').textContent = '$ ' + totalUsd.toFixed(2);
-  document.getElementById('tot-cajas').textContent = totalCajas;
-  document.getElementById('tot-nuevos').textContent = totalNuevos;
-  document.getElementById('tot-clientes').textContent = totalClientes;
-}
-
-async function guardarMeta() {
-  const vendedor_id = document.getElementById('m-vendedor').value;
-  const fecha_desde = document.getElementById('m-fecha-desde').value;
-  const fecha_hasta = document.getElementById('m-fecha-hasta').value;
-
-  if (!vendedor_id || !fecha_desde || !fecha_hasta) {
-    showAlert('meta', 'err', 'Completa el vendedor y las fechas.');
-    return;
-  }
-
-  if (fecha_hasta < fecha_desde) {
-    showAlert('meta', 'err', 'La fecha hasta debe ser igual o posterior a la fecha desde.');
-    return;
-  }
-
-  if (!_filasMeta.length || !_productosMeta.length) {
-    showAlert('meta', 'err', 'Carga primero los clientes y productos desde la base de datos.');
-    return;
-  }
-
-  const clientes = _filasMeta.map((c, i) => {
-    const productos = [];
-    let total_cajas = 0;
-    let total_usd = 0;
-
-    _productosMeta.forEach((p, j) => {
-      const cajas = Number(document.getElementById(`mc-prod-${i}-${j}`)?.value) || 0;
-      if (cajas > 0) {
-        const subtotal = cajas * p.precio_usd;
-        productos.push({
-          id_producto: p.id_producto,
-          nombre: p.nombre,
-          cajas: cajas,
-          precio_usd: p.precio_usd,
-          subtotal: subtotal,
-          unidades_por_caja: p.unidades_por_caja,
-          lleva_etiqueta: p.lleva_etiqueta,
-          tipo_caja: p.tipo_caja
-        });
-        total_cajas += cajas;
-        total_usd += subtotal;
-      }
-    });
-
-    return {
-      id_cliente: c.id_cliente,
-      cliente: c.nombre,
-      tipo: document.getElementById(`mc-tipo-${i}`)?.value || '',
-      productos: productos,
-      total_cajas: total_cajas,
-      total_usd: total_usd
-    };
-  }).filter(f => f.tipo || f.total_cajas > 0);
-
-  if (!clientes.length) {
-    showAlert('meta', 'err', 'Asigna al menos un cliente con tipo o cajas antes de guardar.');
-    return;
-  }
-
-  const tot_cajas = clientes.reduce((s, f) => s + f.total_cajas, 0);
-  const tot_usd = clientes.reduce((s, f) => s + f.total_usd, 0);
-  const tot_nuevos = clientes.filter(f => f.tipo === 'Nuevo').length;
-
-  setLoading('meta', true);
-
-  try {
-    const r = await fetch(API, {
-      method: 'POST',
-      body: JSON.stringify({
-        action: 'asignarMeta',
-        vendedor_id,
-        fecha_desde,
-        fecha_hasta,
-        meta_usd: tot_usd,
-        meta_cajas: tot_cajas,
-        meta_clientes_nuevos: tot_nuevos,
-        clientes,
-        productos: _productosMeta
-      }),
-      redirect: 'follow'
-    });
-
-    const d = await r.json();
-
-    if (d.ok) {
-      showAlert('meta', 'ok',
-        `✓ Meta guardada — ${clientes.length} cliente(s), ${tot_cajas} cajas, $ ${tot_usd.toFixed(2)} USD.`
-      );
-    } else {
-      showAlert('meta', 'err', d.msg || 'Error al guardar la meta.');
-    }
-  } catch (e) {
-    console.error(e);
-    showAlert('meta', 'err', 'Error de conexión. Verifica la red.');
-  } finally {
-    setLoading('meta', false);
-  }
-}
-
 </script>
 </body>
 </html>
