@@ -240,19 +240,221 @@ async function guardarUsuario(){
  try{const r=await fetch(API,{method:'POST',body:JSON.stringify({action:'crearUsuario',nombre,user,pass,rol,vendedor_id:rol==='vendedor'?user:null,estado}),redirect:'follow'}),d=await r.json();if(d.ok){showAlert('usuario','ok',`✓ Usuario "${nombre}" creado exitosamente.`);['u-nombre','u-user','u-pass'].forEach(id=>document.getElementById(id).value='');document.getElementById('u-rol').value='';await cargarUsuarios();await cargarVendedores()}else showAlert('usuario','err',d.msg||'Error al guardar el usuario.')}catch(e){showAlert('usuario','err','Error de conexión. Verifica la red.')}setLoading('usuario',false)
 }
 
-async function guardarCliente(){
- const razon_social=document.getElementById('c-razon-social').value.trim(),establecimiento=document.getElementById('c-establecimiento').value.trim(),contacto=document.getElementById('c-contacto').value.trim(),telefono=document.getElementById('c-telefono').value.trim(),tipo=document.getElementById('c-tipo').value,vendedor_asignado=document.getElementById('c-vendedor').value.trim(),etapa=document.getElementById('c-etapa').value,frecuencia=document.getElementById('c-frecuencia').value,estado=document.getElementById('c-estado').value;
- if(!razon_social)return showAlert('cliente','err','La Razón Social es obligatoria.');
- setLoading('cliente',true);
- try{
-  // Los nombres de las propiedades coinciden con las columnas de CLIENTES.
-  const payload={action:'crearCliente',razon_social,establecimiento,contacto,telefono,tipo,vendedor_asignado,fecha_registro:new Date().toISOString(),total_compras:0,ultima_compra:'',frecuencia,etapa_embudo:etapa,estado};
-  const r=await fetch(API,{method:'POST',body:JSON.stringify(payload),redirect:'follow'}),d=await r.json();
-  if(!d.ok){showAlert('cliente','err',d.msg||'Error al guardar el cliente.');return}
-  if(etapa&&vendedor_asignado)await fetch(API,{method:'POST',body:JSON.stringify({action:'guardarOportunidad',razon_social,establecimiento,contacto,telefono,vendedor:vendedor_asignado,etapa,valor_estimado_usd:0,proxima_accion:'',observaciones:'Creado desde Cargas'}),redirect:'follow'});
-  showAlert('cliente','ok',`✓ Cliente "${razon_social}" registrado correctamente.`);
-  ['c-razon-social','c-establecimiento','c-contacto','c-telefono'].forEach(id=>document.getElementById(id).value='');['c-tipo','c-vendedor','c-etapa','c-frecuencia'].forEach(id=>document.getElementById(id).value='');document.getElementById('c-estado').value='activo';
- }catch(e){console.error(e);showAlert('cliente','err','Error de conexión. Verifica la red.')}finally{setLoading('cliente',false)}
+// ── GUARDAR CLIENTE ──────────────────────────────────────────
+async function guardarCliente() {
+
+  const razon_social =
+    document.getElementById('c-razon-social').value.trim();
+
+  const establecimiento =
+    document.getElementById('c-establecimiento').value.trim();
+
+  const rif =
+    document.getElementById('c-rif').value.trim();
+
+  const direccion_fiscal =
+    document.getElementById('c-direccion-fiscal').value.trim();
+
+  const contacto =
+    document.getElementById('c-contacto').value.trim();
+
+  const telefono =
+    document.getElementById('c-telefono').value.trim();
+
+  const tipo =
+    document.getElementById('c-tipo').value;
+
+  const vendedor_asignado =
+    document.getElementById('c-vendedor').value.trim();
+
+  const etapa_embudo =
+    document.getElementById('c-etapa').value;
+
+  const estado =
+    document.getElementById('c-estado').value;
+
+  // ─────────────────────────────────────────────────────────
+  // VALIDACIÓN DE CAMPOS OBLIGATORIOS
+  // ─────────────────────────────────────────────────────────
+
+  if (!razon_social) {
+    showAlert(
+      'cliente',
+      'err',
+      'La Razón Social es obligatoria.'
+    );
+    return;
+  }
+
+  if (!establecimiento) {
+    showAlert(
+      'cliente',
+      'err',
+      'El Nombre del Establecimiento es obligatorio.'
+    );
+    return;
+  }
+
+  if (!rif) {
+    showAlert(
+      'cliente',
+      'err',
+      'El RIF es obligatorio.'
+    );
+    return;
+  }
+
+  if (!direccion_fiscal) {
+    showAlert(
+      'cliente',
+      'err',
+      'La Dirección Fiscal es obligatoria.'
+    );
+    return;
+  }
+
+  if (!telefono) {
+    showAlert(
+      'cliente',
+      'err',
+      'El Teléfono es obligatorio.'
+    );
+    return;
+  }
+
+  setLoading('cliente', true);
+
+  try {
+
+    const payload = {
+
+      action: 'crearCliente',
+
+      razon_social: razon_social,
+      establecimiento: establecimiento,
+      rif: rif,
+      direccion_fiscal: direccion_fiscal,
+
+      contacto: contacto,
+      telefono: telefono,
+      tipo: tipo,
+
+      vendedor_asignado: vendedor_asignado,
+
+      fecha_registro: new Date().toISOString(),
+
+      total_compras: 0,
+      ultima_compra: '',
+      frecuencia: 0,
+
+      etapa_embudo: etapa_embudo,
+      estado: estado
+
+    };
+
+    const r = await fetch(API, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      redirect: 'follow'
+    });
+
+    const d = await r.json();
+
+    if (!d.ok) {
+
+      showAlert(
+        'cliente',
+        'err',
+        d.msg || 'Error al guardar el cliente.'
+      );
+
+      return;
+    }
+
+    // ───────────────────────────────────────────────────────
+    // CREAR OPORTUNIDAD EN EMBUDO
+    // ───────────────────────────────────────────────────────
+
+    if (etapa_embudo) {
+
+      await fetch(API, {
+        method: 'POST',
+
+        body: JSON.stringify({
+
+          action: 'guardarOportunidad',
+
+          nombre: establecimiento,
+
+          razon_social: razon_social,
+
+          establecimiento: establecimiento,
+
+          contacto: contacto,
+
+          telefono: telefono,
+
+          vendedor: vendedor_asignado,
+
+          etapa: etapa_embudo,
+
+          valor_estimado_usd: 0,
+
+          proxima_accion: '',
+
+          observaciones: 'Creado desde Cargas'
+
+        }),
+
+        redirect: 'follow'
+      });
+
+    }
+
+    showAlert(
+      'cliente',
+      'ok',
+      `✓ Cliente "${razon_social}" registrado correctamente.`
+    );
+
+    // Limpiar formulario
+
+    [
+      'c-razon-social',
+      'c-establecimiento',
+      'c-rif',
+      'c-direccion-fiscal',
+      'c-contacto',
+      'c-telefono'
+    ].forEach(id => {
+
+      document.getElementById(id).value = '';
+
+    });
+
+    document.getElementById('c-tipo').value = '';
+    document.getElementById('c-vendedor').value = '';
+    document.getElementById('c-etapa').value = '';
+    document.getElementById('c-estado').value = 'activo';
+
+  } catch (e) {
+
+    console.error(
+      'Error al registrar cliente:',
+      e
+    );
+
+    showAlert(
+      'cliente',
+      'err',
+      'Error de conexión. Verifica la red.'
+    );
+
+  } finally {
+
+    setLoading('cliente', false);
+
+  }
 }
 
 async function guardarRegistroProducto(){
