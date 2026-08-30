@@ -37,20 +37,152 @@ header{background:#D30000;color:#fff;height:60px;display:flex;align-items:center
 <button class="btn-primary" id="btn-usuario" onclick="guardarUsuario()"><span id="txt-usuario">Guardar Usuario</span><div class="sp" id="sp-usuario"></div></button><div class="alert ok" id="ok-usuario"></div><div class="alert err" id="err-usuario"></div><hr class="divider">
 <h3 style="font-size:.85rem;margin-bottom:12px">Usuarios Registrados</h3><div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Usuario</th><th>Rol</th><th>Estado</th></tr></thead><tbody id="tabla-usuarios"><tr><td colspan="4" style="text-align:center;padding:20px">Cargando usuarios…</td></tr></tbody></table></div></div>
 
-<div class="card" id="sec-clientes"><h2 class="card-title">Registro de Clientes</h2>
-<div class="form-grid">
-<div class="f"><label>Razón Social <span class="req">*</span></label><input type="text" id="c-razon-social" placeholder="Ej: Restaurante Ávila"></div>
-<div class="f"><label>Establecimiento</label><input type="text" id="c-establecimiento" placeholder="Ej: Sucursal Las Mercedes"></div>
-<div class="f"><label>Nombre del Contacto</label><input type="text" id="c-contacto" placeholder="Ej: Pedro Gómez"></div>
-<div class="f"><label>Teléfono</label><input type="text" id="c-telefono" placeholder="Ej: 0412-5551234"></div>
-<div class="f"><label>Tipo</label><select id="c-tipo"><option value="">— Seleccionar —</option><option value="restaurante">Restaurante</option><option value="hotel">Hotel</option><option value="supermercado">Supermercado</option><option value="bodegon">Bodegón</option><option value="distribuidor">Distribuidor</option><option value="otro">Otro</option></select></div>
-<div class="f"><label>Vendedor Asignado</label><select id="c-vendedor"><option value="">— Seleccionar —</option></select><span class="hint">Se carga desde USUARIOS: rol = vendedor y estado = activo.</span></div>
-<div class="f"><label>Etapa del Embudo</label><select id="c-etapa"><option value="">— Sin etapa —</option><option value="Prospecto">1 · Prospecto</option><option value="Contacto">2 · Contacto</option><option value="Presentación">3 · Presentación</option><option value="Negociación">4 · Activación</option><option value="Pedido">5 · Fidelización</option></select></div>
-<div class="f"><label>Frecuencia</label><select id="c-frecuencia"><option value="">— Seleccionar —</option><option value="semanal">Semanal</option><option value="quincenal">Quincenal</option><option value="mensual">Mensual</option><option value="trimestral">Trimestral</option><option value="ocasional">Ocasional</option></select></div>
-<div class="f"><label>Estado</label><select id="c-estado"><option value="activo">Activo</option><option value="inactivo">Inactivo</option></select></div>
+<div class="card" id="sec-clientes">
+
+  <h2 class="card-title">Registro de Clientes</h2>
+
+  <div class="form-grid">
+
+    <!-- RAZÓN SOCIAL -->
+    <div class="f">
+      <label>
+        Razón Social
+        <span class="req">*</span>
+      </label>
+      <input
+        type="text"
+        id="c-razon-social"
+        placeholder="Ej: Alimentos Caracas C.A."
+        autocomplete="organization">
+    </div>
+
+    <!-- ESTABLECIMIENTO -->
+    <div class="f">
+      <label>
+        Nombre del Establecimiento
+        <span class="req">*</span>
+      </label>
+      <input
+        type="text"
+        id="c-establecimiento"
+        placeholder="Ej: Restaurante Caracas Centro">
+    </div>
+
+    <!-- RIF -->
+    <div class="f">
+      <label>
+        RIF
+        <span class="req">*</span>
+      </label>
+      <input
+        type="text"
+        id="c-rif"
+        placeholder="Ej: J-30495832-1">
+    </div>
+
+    <!-- DIRECCIÓN FISCAL -->
+    <div class="f">
+      <label>
+        Dirección Fiscal
+        <span class="req">*</span>
+      </label>
+      <textarea
+        id="c-direccion-fiscal"
+        rows="2"
+        placeholder="Dirección fiscal completa"
+        style="resize:vertical"></textarea>
+    </div>
+
+    <!-- CONTACTO -->
+    <div class="f">
+      <label>Nombre del Contacto</label>
+      <input
+        type="text"
+        id="c-contacto"
+        placeholder="Ej: Pedro Gómez">
+    </div>
+
+    <!-- TELÉFONO -->
+    <div class="f">
+      <label>
+        Teléfono
+        <span class="req">*</span>
+      </label>
+      <input
+        type="text"
+        id="c-telefono"
+        placeholder="Ej: 0412-5551234"
+        autocomplete="tel">
+    </div>
+
+    <!-- TIPO -->
+    <div class="f">
+      <label>Tipo de Cliente</label>
+      <select id="c-tipo">
+        <option value="">— Seleccionar —</option>
+        <option value="restaurante">Restaurante</option>
+        <option value="hotel">Hotel</option>
+        <option value="supermercado">Supermercado</option>
+        <option value="bodegon">Bodegón</option>
+        <option value="distribuidor">Distribuidor</option>
+        <option value="otro">Otro</option>
+      </select>
+    </div>
+
+    <!-- VENDEDOR -->
+    <div class="f">
+      <label>Vendedor Asignado</label>
+      <select id="c-vendedor">
+        <option value="">— Seleccionar —</option>
+      </select>
+    </div>
+
+    <!-- ETAPA EMBUDO -->
+    <div class="f">
+      <label>Etapa del Embudo</label>
+      <select id="c-etapa">
+        <option value="">— Sin etapa —</option>
+        <option value="Prospección">1 · Prospección</option>
+        <option value="Contacto">2 · Contacto</option>
+        <option value="Presentación">3 · Presentación</option>
+        <option value="Negociación">4 · Negociación</option>
+        <option value="Activación">5 · Activación</option>
+        <option value="Fidelización">6 · Fidelización</option>
+      </select>
+      <span class="hint">
+        Si se selecciona una etapa, se crea automáticamente la oportunidad en el Embudo.
+      </span>
+    </div>
+
+    <!-- ESTADO -->
+    <div class="f">
+      <label>Estado</label>
+      <select id="c-estado">
+        <option value="activo">Activo</option>
+        <option value="inactivo">Inactivo</option>
+      </select>
+    </div>
+
+  </div>
+
+  <button
+    class="btn-primary"
+    id="btn-cliente"
+    onclick="guardarCliente()">
+
+    <span id="txt-cliente">Guardar Cliente</span>
+
+    <div
+      class="sp"
+      id="sp-cliente">
+    </div>
+
+  </button>
+
+  <div class="alert ok" id="ok-cliente"></div>
+  <div class="alert err" id="err-cliente"></div>
+
 </div>
-<span class="hint">Al registrar un cliente se generan automáticamente id_cliente y fecha_registro. total_compras inicia en 0 y ultima_compra queda vacía.</span><br><br>
-<button class="btn-primary" id="btn-cliente" onclick="guardarCliente()"><span id="txt-cliente">Guardar Cliente</span><div class="sp" id="sp-cliente"></div></button><div class="alert ok" id="ok-cliente"></div><div class="alert err" id="err-cliente"></div></div>
 
 <div class="card" id="sec-reg-productos"><h2 class="card-title">Registro de Productos</h2><div class="form-grid">
 <div class="f"><label>Nombre del Producto <span class="req">*</span></label><input type="text" id="rp-nombre"></div><div class="f"><label>Descripción</label><input type="text" id="rp-descripcion"></div><div class="f"><label>Unidades por Caja <span class="req">*</span></label><input type="number" id="rp-unidades" min="1"></div><div class="f"><label>Precio (USD) <span class="req">*</span></label><input type="number" id="rp-precio" step=".01" min="0"></div><div class="f"><label>Canal Comercial <span class="req">*</span></label><select id="rp-canal"><option value="">— Seleccionar —</option><option value="RETAIL">RETAIL</option><option value="HORECA">HORECA</option><option value="RETAIL y HORECA">RETAIL y HORECA</option></select></div><div class="f"><label>Lleva Etiqueta <span class="req">*</span></label><select id="rp-etiqueta"><option value="">— Seleccionar —</option><option value="SI">Sí</option><option value="NO">No</option></select></div><div class="f"><label>Tipo de Caja <span class="req">*</span></label><select id="rp-tipo-caja"><option value="">— Seleccionar —</option><option value="Caja Pequeña">Caja Pequeña</option><option value="Caja Galón">Caja Galón</option><option value="Caja 45x32x32">Caja 45×32×32</option><option value="Caja Grande">Caja Grande</option></select></div></div>
