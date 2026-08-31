@@ -199,7 +199,7 @@ header{background:#D30000;color:#fff;height:60px;display:flex;align-items:center
 <footer>&copy; 2026 Sistema Comercial Casabe Real (SCCR v2.5.0)</footer>
 
 <script>
-const API='https://script.google.com/macros/s/AKfycbyWRB5745Ors7n8RYqTqyBfb7LXIX3W9x-LFxfnnJf4Bv7fyoS51KeqKgChaldfmLqjSw/exec';
+const API='https://script.google.com/macros/s/AKfycbzIuj9oVgGNtO3ZA7bWq65IMJpt8CHlAemeg_0Un34aYhtPKCaKbATbioOsyhUx_pGPWQ/exec';
 let _vendedores=[],_productosMeta=[],_filasMeta=[];
 
 window.addEventListener('DOMContentLoaded',async()=>{
@@ -224,7 +224,8 @@ async function cargarVendedores(){
   const lista=Array.isArray(d.data)?d.data:[];
   // ÚNICA fuente de vendedores: USUARIOS. Filtra rol, estado y mantiene nombre como variable de selección.
   _vendedores=lista.filter(u=>String(u.rol||'').trim().toLowerCase()==='vendedor'&&String(u.estado||'').trim().toLowerCase()==='activo'&&String(u.nombre||'').trim()!=='');
-  ['c-vendedor','m-vendedor'].forEach(id=>{const s=document.getElementById(id);while(s.options.length>1)s.remove(1);_vendedores.forEach(v=>{const o=document.createElement('option');o.value=String(v.nombre).trim();o.textContent=String(v.nombre).trim();s.appendChild(o)})});
+  // BUG FIX: value = user (identificador real para el backend), textContent = nombre (display)
+  ['c-vendedor','m-vendedor'].forEach(id=>{const s=document.getElementById(id);while(s.options.length>1)s.remove(1);_vendedores.forEach(v=>{const o=document.createElement('option');o.value=String(v.user||v.vendedor_id||v.nombre).trim();o.textContent=String(v.nombre).trim();s.appendChild(o)})});
  }catch(e){console.warn(e)}
 }
 async function cargarUsuarios(){
@@ -345,7 +346,6 @@ async function guardarCliente() {
 
       total_compras: 0,
       ultima_compra: '',
-      frecuencia: 0,
 
       etapa_embudo: etapa_embudo,
       estado: estado
