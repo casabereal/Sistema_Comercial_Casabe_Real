@@ -238,7 +238,7 @@ async function guardarUsuario(){
  if(pass.length<6)return showAlert('usuario','err','La contraseña debe tener al menos 6 caracteres.');
  if(!/^[a-z0-9_-]+$/.test(user))return showAlert('usuario','err','El usuario solo puede tener letras minúsculas, números, guión y guión bajo.');
  setLoading('usuario',true);
- try{const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'crearUsuario',nombre,user,pass,rol,vendedor_id:rol==='vendedor'?user:null,estado}),redirect:'follow'}),d=await r.json();if(d.ok){showAlert('usuario','ok',`✓ Usuario "${nombre}" creado exitosamente.`);['u-nombre','u-user','u-pass'].forEach(id=>document.getElementById(id).value='');document.getElementById('u-rol').value='';await cargarUsuarios();await cargarVendedores()}else showAlert('usuario','err',d.msg||'Error al guardar el usuario.')}catch(e){showAlert('usuario','err','Error de conexión. Verifica la red.')}setLoading('usuario',false)
+ try{const r=await fetch(API,{method:'POST',body:JSON.stringify({action:'crearUsuario',nombre,user,pass,rol,vendedor_id:rol==='vendedor'?user:null,estado}),redirect:'follow'}),_t=await r.text(),d=JSON.parse(_t);if(d.ok){showAlert('usuario','ok',`✓ Usuario "${nombre}" creado exitosamente.`);['u-nombre','u-user','u-pass'].forEach(id=>document.getElementById(id).value='');document.getElementById('u-rol').value='';await cargarUsuarios();await cargarVendedores()}else showAlert('usuario','err',d.msg||'Error al guardar el usuario.')}catch(e){showAlert('usuario','err','Error de conexión. Verifica la red.')}setLoading('usuario',false)
 }
 
 // ── GUARDAR CLIENTE ──────────────────────────────────────────
@@ -354,12 +354,12 @@ async function guardarCliente() {
 
     const r = await fetch(API, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
       redirect: 'follow'
     });
 
-    const d = await r.json();
+    const txt = await r.text();
+    const d = JSON.parse(txt);
 
     if (!d.ok) {
 
@@ -380,8 +380,6 @@ async function guardarCliente() {
 
       await fetch(API, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-
         body: JSON.stringify({
 
           action: 'guardarOportunidad',
@@ -441,15 +439,12 @@ async function guardarCliente() {
 
   } catch (e) {
 
-    console.error(
-      'Error al registrar cliente:',
-      e
-    );
+    console.error('Error al registrar cliente:', e);
 
     showAlert(
       'cliente',
       'err',
-      'Error de conexión. Verifica la red.'
+      'Error: ' + (e.message || 'Verifica la consola del navegador.')
     );
 
   } finally {
@@ -462,7 +457,7 @@ async function guardarCliente() {
 async function guardarRegistroProducto(){
  const nombre=document.getElementById('rp-nombre').value.trim(),descripcion=document.getElementById('rp-descripcion').value.trim(),unidades=document.getElementById('rp-unidades').value,precio=document.getElementById('rp-precio').value,canal=document.getElementById('rp-canal').value,etiqueta=document.getElementById('rp-etiqueta').value,tipo_caja=document.getElementById('rp-tipo-caja').value;
  if(!nombre||!unidades||!precio||!canal||!etiqueta||!tipo_caja)return showAlert('reg-producto','err','Completa todos los campos obligatorios.');
- setLoading('reg-producto',true);try{const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'crearProducto',nombre,descripcion,unidades:+unidades,precio:+precio,canal,etiqueta,tipo_caja}),redirect:'follow'}),d=await r.json();if(d.ok){showAlert('reg-producto','ok',`✓ Producto "${nombre}" registrado exitosamente.`);['rp-nombre','rp-descripcion','rp-unidades','rp-precio'].forEach(id=>document.getElementById(id).value='');['rp-canal','rp-etiqueta','rp-tipo-caja'].forEach(id=>document.getElementById(id).value='')}else showAlert('reg-producto','err',d.msg||'Error al registrar el producto.')}catch(e){showAlert('reg-producto','err','Error de conexión. Verifica la red.')}setLoading('reg-producto',false)
+ setLoading('reg-producto',true);try{const r=await fetch(API,{method:'POST',body:JSON.stringify({action:'crearProducto',nombre,descripcion,unidades:+unidades,precio:+precio,canal,etiqueta,tipo_caja}),redirect:'follow'}),_t=await r.text(),d=JSON.parse(_t);if(d.ok){showAlert('reg-producto','ok',`✓ Producto "${nombre}" registrado exitosamente.`);['rp-nombre','rp-descripcion','rp-unidades','rp-precio'].forEach(id=>document.getElementById(id).value='');['rp-canal','rp-etiqueta','rp-tipo-caja'].forEach(id=>document.getElementById(id).value='')}else showAlert('reg-producto','err',d.msg||'Error al registrar el producto.')}catch(e){showAlert('reg-producto','err','Error de conexión. Verifica la red.')}setLoading('reg-producto',false)
 }
 
 function onVendedorChange(){_filasMeta=[];_productosMeta=[];document.getElementById('thead-metas-clientes').innerHTML='<tr><th>Cliente</th><th>Tipo</th><th>Productos / cajas</th><th>Total Cajas</th><th>Total USD</th></tr>';document.getElementById('tbody-metas-clientes').innerHTML='<tr><td colspan="5" style="text-align:center;padding:30px">Haz clic en Cargar Clientes.</td></tr>';actualizarTotales()}
@@ -493,7 +488,7 @@ async function guardarMeta(){
  if(!vendedor_id||!fecha_desde||!fecha_hasta)return showAlert('meta','err','Completa el vendedor y las fechas.');if(fecha_hasta<fecha_desde)return showAlert('meta','err','La fecha hasta debe ser igual o posterior a la fecha desde.');if(!_filasMeta.length||!_productosMeta.length)return showAlert('meta','err','Carga primero los clientes y productos.');
  const clientes=_filasMeta.map((c,i)=>{let productos=[],tc=0,tu=0;_productosMeta.forEach((p,j)=>{const cajas=Number(document.getElementById(`mc-prod-${i}-${j}`)?.value)||0;if(cajas){const s=cajas*p.precio_usd;productos.push({id_producto:p.id_producto,nombre:p.nombre,cajas,precio_usd:p.precio_usd,subtotal:s,unidades_por_caja:p.unidades_por_caja,lleva_etiqueta:p.lleva_etiqueta,tipo_caja:p.tipo_caja});tc+=cajas;tu+=s}});return{id_cliente:c.id_cliente,cliente:c.nombre,tipo:document.getElementById(`mc-tipo-${i}`)?.value||'',productos,total_cajas:tc,total_usd:tu}}).filter(x=>x.tipo||x.total_cajas>0);
  if(!clientes.length)return showAlert('meta','err','Asigna al menos un cliente con tipo o cajas antes de guardar.');
- setLoading('meta',true);try{const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'asignarMeta',vendedor_id,fecha_desde,fecha_hasta,meta_usd:clientes.reduce((s,x)=>s+x.total_usd,0),meta_cajas:clientes.reduce((s,x)=>s+x.total_cajas,0),meta_clientes_nuevos:clientes.filter(x=>x.tipo==='Nuevo').length,clientes,productos:_productosMeta}),redirect:'follow'}),d=await r.json();if(d.ok)showAlert('meta','ok','✓ Meta guardada correctamente.');else showAlert('meta','err',d.msg||'Error al guardar la meta.')}catch(e){showAlert('meta','err','Error de conexión. Verifica la red.')}finally{setLoading('meta',false)}
+ setLoading('meta',true);try{const r=await fetch(API,{method:'POST',body:JSON.stringify({action:'asignarMeta',vendedor_id,fecha_desde,fecha_hasta,meta_usd:clientes.reduce((s,x)=>s+x.total_usd,0),meta_cajas:clientes.reduce((s,x)=>s+x.total_cajas,0),meta_clientes_nuevos:clientes.filter(x=>x.tipo==='Nuevo').length,clientes,productos:_productosMeta}),redirect:'follow'}),_t=await r.text(),d=JSON.parse(_t);if(d.ok)showAlert('meta','ok','✓ Meta guardada correctamente.');else showAlert('meta','err',d.msg||'Error al guardar la meta.')}catch(e){showAlert('meta','err','Error de conexión. Verifica la red.')}finally{setLoading('meta',false)}
 }
 </script>
 </body>
