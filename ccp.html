@@ -236,15 +236,15 @@ function toast(m,type){const e=document.getElementById('toast');e.textContent=m;
 function inicializarFechas(){const d=new Date();document.getElementById('periodo').value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');document.getElementById('desde').value=d.toISOString().slice(0,8)+'01';document.getElementById('hasta').value=d.toISOString().slice(0,10)}
 function seleccionarModo(m){modo=m;const mensual=m==='mensual';document.getElementById('mode-month').classList.toggle('active',mensual);document.getElementById('mode-range').classList.toggle('active',!mensual);document.getElementById('monthly-controls').classList.toggle('hidden',!mensual);document.getElementById('range-controls').classList.toggle('hidden',mensual);document.getElementById('range-builder').classList.toggle('hidden',mensual);document.getElementById('selector-title').textContent=mensual?'Período mensual':'Período DESDE – HASTA';document.getElementById('selector-help').textContent=mensual?'Las cajas provienen de METAS. Productos y parámetros se procesan dentro de CCP.':'La producción excepcional es manual por producto/presentación y no depende de METAS.';document.getElementById('mode-badge').textContent=mensual?'MENSUAL':'DESDE – HASTA';document.getElementById('mode-badge').className='badge '+(mensual?'azul':'amarillo');if(!mensual){rangoFilas=[];renderRangeBuilder()}}
 function toggleOtraRazon(){document.getElementById('otra-wrap').classList.toggle('hidden',document.getElementById('razon').value!=='Otra')}
-async function getJSON(url){const r=await fetch(url,{redirect:'follow'});if(!r.ok)throw Error('HTTP '+r.status);const d=await r.json();if(!d.ok)throw Error(d.msg||'API error');return d}
-async function postJSON(body){const r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body),redirect:'follow'});if(!r.ok)throw Error('HTTP '+r.status);const d=await r.json();if(!d.ok)throw Error(d.msg||'API error');return d}
+async function getJSON(url){const r=await fetch(url,{redirect:'follow'});if(!r.ok)throw Error('HTTP '+r.status);const t=await r.text();const d=JSON.parse(t);if(!d.ok)throw Error(d.msg||'API error');return d}
+async function postJSON(body){const r=await fetch(API,{method:'POST',body:JSON.stringify(body),redirect:'follow'});if(!r.ok)throw Error('HTTP '+r.status);const t=await r.text();const d=JSON.parse(t);if(!d.ok)throw Error(d.msg||'API error');return d}
 
 async function cargarTodo(){
   setStatus('Conectando...','azul');
   try{
     const [ccp,productos,metas,hist]=await Promise.all([
       getJSON(API+'?action=ccp'),
-      getJSON(API+'?action=productos'),
+      getJSON(API+'?action=getProductos'),
       getJSON(API+'?action=metas'),
       getJSON(API+'?action=ccpHistorico')
     ]);
