@@ -37,19 +37,37 @@ header{background-color:var(--rojo);color:var(--white);height:60px;display:flex;
 .mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px}.mode-card{background:#fff;border:1px solid var(--border-color);border-radius:var(--r);padding:14px;cursor:pointer;box-shadow:var(--sh)}.mode-card.active{border-color:var(--rojo);box-shadow:0 0 0 1px var(--rojo)}
 .mode-title{display:flex;gap:10px;align-items:center}.mode-icon{width:34px;height:34px;border-radius:6px;background:var(--rojo-xs);display:grid;place-items:center;font-size:1rem}.mode-title h3{font-family:'League Spartan',sans-serif;font-size:.88rem}.mode-title p{font-size:.62rem;color:var(--gris);margin-top:2px}
 .notice{padding:9px 11px;border-radius:6px;font-size:.64rem;margin-bottom:11px}.notice-info{background:var(--azul-xs);color:#1e40af}.notice-warn{background:var(--naranja-xs);color:#92400e}
-.split{display:grid;grid-template-columns:1.4fr .6fr;gap:15px}.param-grid{display:grid;grid-template-columns:1fr;gap:2px}.param-row{display:grid;grid-template-columns:1fr 105px;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--border-color)}.param-name{font-size:.68rem;font-weight:700}.param-help{font-size:.58rem;color:var(--gris);margin-top:2px}.param-input{width:100%;padding:7px;border:1px solid var(--border-color);border-radius:6px;text-align:right;font-size:.68rem}
-.inventory-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.inv-row{border:1px solid var(--border-color);border-radius:6px;padding:10px}.inv-row label{font-size:.63rem;font-weight:700;display:block;margin-bottom:6px}.inv-row input{width:100%;border:1px solid var(--border-color);border-radius:5px;padding:7px;font-size:.68rem}
-table{width:100%;border-collapse:collapse}th,td{padding:10px 9px;text-align:left;border-bottom:1px solid var(--border-color)}th{background:var(--light-bg);font-size:.61rem;color:var(--gris);font-weight:600;text-transform:uppercase;letter-spacing:.25px;position:sticky;top:0;z-index:2}td{font-size:.68rem;color:var(--text-dark)}tr:hover td{background:var(--sidebar-hover)}td.num{text-align:right}.table-scroll{overflow-x:auto;max-height:520px}
+.split{display:grid;grid-template-columns:1.4fr .6fr;gap:15px}
+/* ── PARÁMETROS DE COSTOS ── */
+.param-grid{display:grid;grid-template-columns:1fr;gap:2px}
+table{width:100%;border-collapse:collapse}th,td{padding:10px 9px;text-align:left;border-bottom:1px solid var(--border-color)}th{background:var(--light-bg);font-size:.61rem;color:var(--gris);font-weight:600;text-transform:uppercase;letter-spacing:.25px;position:sticky;top:0;z-index:2}td{font-size:.68rem;color:var(--text-dark)}tr:hover td{background:var(--sidebar-hover)}td.num{text-align:right;font-variant-numeric:tabular-nums}.table-scroll{overflow-x:auto;max-height:520px}
 .badge{display:inline-block;padding:3px 8px;border-radius:20px;font-size:.61rem;font-weight:600}.badge.verde{background:var(--verde-xs);color:#15803D}.badge.amarillo{background:var(--naranja-xs);color:#B45309}.badge.rojo{background:var(--rojo-xs);color:#DC2626}.badge.azul{background:var(--azul-xs);color:var(--azul)}
 .empty-state{text-align:center;padding:36px 20px;color:var(--gris)}.empty-state .icon{font-size:2.2rem;margin-bottom:8px}.empty-state p{font-size:.75rem}.loading{text-align:center;padding:28px;color:var(--gris);font-size:.68rem}
 .toast{position:fixed;right:18px;bottom:18px;background:#333;color:#fff;border-radius:6px;padding:10px 13px;font-size:.67rem;z-index:3000;display:none;max-width:380px}.toast.show{display:block}.toast.ok{background:#065f46}.toast.err{background:#991b1b}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:2500;padding:18px}.modal-overlay.open{display:flex}.modal{background:#fff;width:min(580px,100%);border-radius:6px;box-shadow:0 10px 35px rgba(0,0,0,.2)}.modal-header,.modal-footer{padding:13px 15px;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center}.modal-footer{border-top:1px solid var(--border-color);border-bottom:0;justify-content:flex-end;gap:8px}.modal-header h3{font-family:'League Spartan',sans-serif;font-size:.95rem}.modal-body{padding:15px}.close-btn{background:none;border:0;font-size:20px;color:var(--gris);cursor:pointer}
 footer{text-align:center;padding:14px 18px;font-size:.65rem;color:var(--gris);border-top:1px solid var(--border-color);background:var(--white);margin-top:auto}
-.cost-table th,.cost-table td{vertical-align:middle}.cost-input{width:105px;padding:7px 8px;border:1px solid var(--border-color);border-radius:6px;font-size:.68rem;text-align:right}.cost-label{font-size:.62rem;color:var(--gris)}.range-caja-input{width:95px;padding:8px;border:1px solid var(--border-color);border-radius:6px;text-align:right;font-weight:700}.range-product-select{min-width:240px;padding:8px;border:1px solid var(--border-color);border-radius:6px;font-size:.68rem}.btn-danger{color:#B91C1C;border-color:#FECACA;background:#FEF2F2}
+.cost-input{width:95px;padding:7px 8px;border:1px solid var(--border-color);border-radius:6px;font-size:.68rem;text-align:right}
+.cost-input:disabled{background:var(--light-bg);color:var(--gris);cursor:not-allowed}
+.cost-label{font-size:.62rem;color:var(--gris)}
+.range-caja-input{width:95px;padding:8px;border:1px solid var(--border-color);border-radius:6px;text-align:right;font-weight:700}
+.range-product-select{min-width:240px;padding:8px;border:1px solid var(--border-color);border-radius:6px;font-size:.68rem}
+.btn-danger{color:#B91C1C;border-color:#FECACA;background:#FEF2F2}
+/* ── INVENTARIO DOBLE VISTA ── */
+.inv-section-title{font-size:.61rem;font-weight:700;text-transform:uppercase;color:var(--gris);letter-spacing:.3px;padding:8px 0 5px;border-bottom:2px solid var(--border-color);margin-bottom:8px}
+.inv-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:16px}
+.inv-grid-auto{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:9px}
+.inv-row{border:1px solid var(--border-color);border-radius:6px;padding:10px}
+.inv-row label{font-size:.63rem;font-weight:700;display:block;margin-bottom:2px}
+.inv-row .inv-sub{font-size:.58rem;color:var(--gris);margin-bottom:5px}
+.inv-row input{width:100%;border:1px solid var(--border-color);border-radius:5px;padding:7px;font-size:.68rem}
+.inv-row.produccion{border-top:3px solid var(--rojo)}
+.inv-row.ventas{border-top:3px solid var(--azul)}
+/* ── HISTÓRICO ── */
+.hist-total-row td{font-weight:700;background:var(--light-bg);border-top:2px solid var(--border-color)}
 @media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(3,1fr)}.split{grid-template-columns:1fr}}
-@media(max-width:900px){.inventory-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){.inv-grid-3{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:768px){header{padding:0 10px;height:50px}.nav-bar{top:50px}.header-title{font-size:.7rem}.header-user-info{display:none}.main-container{padding:15px 10px}.section-header h1{font-size:1.1rem}.mode-grid{grid-template-columns:1fr}}
-@media(max-width:500px){.kpi-grid,.inventory-grid{grid-template-columns:1fr}}
+@media(max-width:500px){.kpi-grid,.inv-grid-3{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -84,7 +102,8 @@ footer{text-align:center;padding:14px 18px;font-size:.65rem;color:var(--gris);bo
       <span id="data-status" class="badge azul">Conectando...</span>
     </div>
     <div class="toolbar-right">
-      <button class="btn btn-outline" onclick="cargarTodo()">↻ Actualizar</button>
+      <!-- FIX #5: Actualizar recarga todo y recalcula -->
+      <button class="btn btn-outline" onclick="actualizarTodo()">↻ Actualizar</button>
       <button class="btn btn-primary" onclick="abrirConfirmacion()">💾 Guardar cálculo</button>
     </div>
   </div>
@@ -139,55 +158,81 @@ footer{text-align:center;padding:14px 18px;font-size:.65rem;color:var(--gris);bo
     </div>
   </div>
 
+  <!-- PRODUCCIÓN EXCEPCIONAL -->
   <div class="content-card hidden" id="range-builder">
     <div class="card-header">
-      <div><h2>Creación de producción excepcional</h2><p>Agregue manualmente las cajas requeridas por producto/presentación para el período seleccionado.</p></div>
+      <div><h2>Creación de producción excepcional</h2><p>Agregue las cajas requeridas por producto/presentación para el período seleccionado.</p></div>
       <span class="badge amarillo">CARGA MANUAL</span>
     </div>
     <div class="card-body">
-      <div class="notice notice-info">En <strong>DESDE – HASTA</strong> las cantidades de cajas NO vienen de METAS. Usted define manualmente cuántas cajas producir de cada producto/presentación y CCP procesa posteriormente los costos.</div>
-      <div class="toolbar" style="margin-bottom:10px"><div class="toolbar-left"><button class="btn btn-outline" onclick="agregarFilaRango()">＋ Agregar producto/presentación</button></div><div class="toolbar-right"><strong id="range-total-cajas">0 cajas</strong></div></div>
+      <div class="notice notice-info">En <strong>DESDE – HASTA</strong> las cantidades de cajas NO vienen de METAS. Defina manualmente cuántas cajas producir de cada producto/presentación y presione <strong>Procesar costos</strong> para calcular.</div>
+      <div class="toolbar" style="margin-bottom:10px">
+        <div class="toolbar-left"><button class="btn btn-outline" onclick="agregarFilaRango()">＋ Agregar producto/presentación</button></div>
+        <div class="toolbar-right"><strong id="range-total-cajas">0 cajas</strong></div>
+      </div>
       <div class="table-scroll" id="range-builder-table"></div>
-      <div style="margin-top:12px;text-align:right"><button class="btn btn-primary" onclick="procesarRangoManual()">Procesar costos</button></div>
+      <!-- FIX #6: Procesar costos llama procesarRangoManual() que llama calcular() -->
+      <div style="margin-top:12px;text-align:right">
+        <button class="btn btn-primary" onclick="procesarRangoManual()">▶ Procesar costos</button>
+      </div>
     </div>
   </div>
 
+  <!-- KPIs -->
   <div class="kpi-grid">
     <div class="kpi-card"><div class="kpi-title">Cajas</div><div class="kpi-value" id="k-cajas">—</div><div class="kpi-sub">Meta / solicitud</div></div>
     <div class="kpi-card"><div class="kpi-title">Unidades</div><div class="kpi-value" id="k-unidades">—</div><div class="kpi-sub">Cajas × unidades/caja</div></div>
-    <div class="kpi-card"><div class="kpi-title">Producción</div><div class="kpi-value" id="k-produccion">—</div><div class="kpi-sub">Unidades requeridas</div></div>
+    <div class="kpi-card"><div class="kpi-title">Producción req.</div><div class="kpi-value" id="k-produccion">—</div><div class="kpi-sub">Unidades requeridas</div></div>
     <div class="kpi-card"><div class="kpi-title">Costo total</div><div class="kpi-value" id="k-costo">$—</div><div class="kpi-sub">Costo calculado</div></div>
     <div class="kpi-card"><div class="kpi-title">Facturación</div><div class="kpi-value" id="k-facturacion">$—</div><div class="kpi-sub">A precio vigente</div></div>
     <div class="kpi-card"><div class="kpi-title">Margen</div><div class="kpi-value" id="k-margen">—</div><div class="kpi-sub">Margen porcentual</div></div>
   </div>
 
   <div class="split">
+    <!-- DETALLE DE PRODUCCIÓN -->
     <div class="content-card">
       <div class="card-header"><div><h2>Detalle de producción</h2><p>Datos de METAS y PRODUCTOS + cálculos propios de CCP.</p></div></div>
       <div class="table-scroll" id="result-wrap"><div class="empty-state"><div class="icon">🏭</div><p>Seleccione un período y ejecute el cálculo.</p></div></div>
     </div>
 
+    <!-- FIX #3 y #4: PARÁMETROS DE COSTOS — por unidad + columna costo de caja -->
     <div class="content-card">
-      <div class="card-header"><div><h2>Parámetros de costos</h2><p>Propios del módulo y modificables manualmente.</p></div><button class="btn btn-primary" onclick="guardarParametros()">Guardar</button></div>
+      <div class="card-header">
+        <div><h2>Parámetros de costos</h2><p>Costos expresados por unidad (paquete). Costo de caja = calculado.</p></div>
+        <button class="btn btn-primary" onclick="guardarParametros()">Guardar</button>
+      </div>
       <div class="card-body">
-        <div class="notice notice-info">Estos valores son parámetros internos de CCP. No se toman de METAS ni de PRODUCTOS.</div>
+        <div class="notice notice-info">Ingrese los costos <strong>por unidad</strong>: materia prima por paquete, etiqueta por paquete, cuota parte de caja por paquete. El costo de caja se calcula automáticamente.</div>
         <div id="parametros"><div class="loading">Cargando costos por producto/presentación...</div></div>
       </div>
     </div>
   </div>
 
+  <!-- FIX #1: INVENTARIO — doble vista: producción (unidades) y ventas (cajas) -->
   <div class="content-card">
-    <div class="card-header"><div><h2>Inventario para CCP</h2><p>Inventario disponible que CCP utilizará para determinar la producción requerida.</p></div><button class="btn btn-primary" onclick="guardarInventario()">Guardar</button></div>
-    <div class="card-body"><div id="inventario" class="inventory-grid"><div class="loading">Cargando productos...</div></div></div>
+    <div class="card-header">
+      <div><h2>Inventario para CCP</h2><p>Unidades por presentación para producción · Cajas por producto para ventas.</p></div>
+      <button class="btn btn-primary" onclick="guardarInventario()">Guardar inventario</button>
+    </div>
+    <div class="card-body">
+      <div class="inv-section-title">🏭 Producción — Unidades totales por presentación</div>
+      <div class="inv-grid-3" id="inv-produccion"><div class="loading">Cargando...</div></div>
+      <div class="inv-section-title" style="margin-top:8px">📦 Control de ventas — Cajas disponibles por producto</div>
+      <div class="inv-grid-auto" id="inv-ventas"><div class="loading">Cargando...</div></div>
+    </div>
   </div>
 
+  <!-- FIX #2: HISTÓRICO — lote, fecha, unidades por producto, costo por producto, total inversión -->
   <div class="content-card">
-    <div class="card-header"><div><h2>Histórico CCP</h2><p>Producciones mensuales y producciones excepcionales DESDE – HASTA.</p></div><button class="btn btn-outline" onclick="cargarHistorico()">↻ Actualizar</button></div>
+    <div class="card-header">
+      <div><h2>Histórico CCP</h2><p>Lotes de producción registrados con detalle por producto.</p></div>
+      <button class="btn btn-outline" onclick="cargarHistorico()">↻ Actualizar</button>
+    </div>
     <div class="table-scroll" id="historico-wrap"><div class="loading">Cargando histórico...</div></div>
   </div>
 </main>
 
-<footer>&copy; 2026 <strong>Sistema Comercial Casabe Real (SCCR)</strong>. Todos los derechos reservados. &nbsp;|&nbsp; v2.5.0 &nbsp;|&nbsp; 0412.290.58.33</footer>
+<footer>&copy; 2026 <strong>Sistema Comercial Casabe Real (SCCR)</strong>. Todos los derechos reservados. &nbsp;|&nbsp; v2.5.1 &nbsp;|&nbsp; 0412.290.58.33</footer>
 
 <div class="modal-overlay" id="confirm-overlay">
   <div class="modal">
@@ -202,15 +247,22 @@ footer{text-align:center;padding:14px 18px;font-size:.65rem;color:var(--gris);bo
 const API='https://script.google.com/macros/s/AKfycbyludOrnVw1jSCYJUWELTjPjhuR7N1uXdBO6mjR7XVE-SqmkP-pe3qieg5SX-8wRh2Dsg/exec';
 let sesion=null, modo='mensual', db={metas:[],productos:[],parametros:[],inventario:[],historico:[]}, calculo=null, rangoFilas=[];
 
-const PARAM_DEFS=[
-  {key:'materia_prima',label:'Materia prima',help:'Costo de materia prima.'},
-  {key:'etiqueta',label:'Etiqueta',help:'Costo unitario de etiqueta cuando el producto la utiliza.'},
-  {key:'caja_pequena',label:'Caja pequeña',help:'Costo de caja pequeña.'},
-  {key:'caja_galon',label:'Caja galón',help:'Costo de caja galón.'},
-  {key:'caja_45x32x32',label:'Caja 45 × 32 × 32',help:'Costo de caja 45 × 32 × 32.'},
-  {key:'caja_grande',label:'Caja grande',help:'Costo de caja grande.'}
-];
+// ── UTILIDADES ────────────────────────────────────────────────
+function cerrarSesion(){SCCR.cerrarSesion()}
+function setStatus(t,cls){const e=document.getElementById('data-status');e.textContent=t;e.className='badge '+(cls||'azul')}
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function n(v){if(v===null||v===undefined||v==='')return 0;if(typeof v==='number')return isNaN(v)?0:v;let s=String(v).replace(/\$/g,'').replace(/\s/g,'');if(s.includes('.')&&s.includes(',')){s=s.lastIndexOf(',')>s.lastIndexOf('.')?s.replace(/\./g,'').replace(',','.'):s.replace(/,/g,'')}else if(s.includes(','))s=s.replace(',','.');const x=Number(s);return isNaN(x)?0:x}
+function money(v){return '$'+n(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function integer(v){return Math.round(n(v)).toLocaleString('es-VE')}
+function pct(v){return n(v).toLocaleString('es-VE',{minimumFractionDigits:2,maximumFractionDigits:2})+'%'}
+function toast(m,type){const e=document.getElementById('toast');e.textContent=m;e.className='toast show '+(type||'');clearTimeout(window.__toast);window.__toast=setTimeout(()=>e.className='toast',4500)}
+function inicializarFechas(){const d=new Date();document.getElementById('periodo').value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');document.getElementById('desde').value=d.toISOString().slice(0,8)+'01';document.getElementById('hasta').value=d.toISOString().slice(0,10)}
 
+// ── FETCH ─────────────────────────────────────────────────────
+async function getJSON(url){const r=await fetch(url,{redirect:'follow'});if(!r.ok)throw Error('HTTP '+r.status);const t=await r.text();const d=JSON.parse(t);if(!d.ok)throw Error(d.msg||'API error');return d}
+async function postJSON(body){const r=await fetch(API,{method:'POST',body:JSON.stringify(body),redirect:'follow'});if(!r.ok)throw Error('HTTP '+r.status);const t=await r.text();const d=JSON.parse(t);if(!d.ok)throw Error(d.msg||'API error');return d}
+
+// ── INIT ──────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded',()=>{
   try{
     sesion=SCCR.initSCCR(['admin','gerente']);
@@ -221,24 +273,16 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.querySelectorAll('.admin-only').forEach(el=>el.style.display='inline-block');
     inicializarFechas();
     cargarTodo();
-  }catch(e){setStatus('Error de sesión','err')}
+  }catch(e){setStatus('Error de sesión','rojo')}
 });
 
-function cerrarSesion(){SCCR.cerrarSesion()}
-function setStatus(t,cls){const e=document.getElementById('data-status');e.textContent=t;e.className='badge '+(cls||'azul')}
-function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-function n(v){if(v===null||v===undefined||v==='')return 0;if(typeof v==='number')return isNaN(v)?0:v;let s=String(v).replace(/\$/g,'').replace(/\s/g,'');if(s.includes('.')&&s.includes(',')){s=s.lastIndexOf(',')>s.lastIndexOf('.')?s.replace(/\./g,'').replace(',','.'):s.replace(/,/g,'')}else if(s.includes(','))s=s.replace(',','.');const x=Number(s);return isNaN(x)?0:x}
-function money(v){return '$'+n(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
-function integer(v){return Math.round(n(v)).toLocaleString('es-VE')}
-function pct(v){return n(v).toLocaleString('es-VE',{minimumFractionDigits:2,maximumFractionDigits:2})+'%'}
-function fmt(v){return n(v).toLocaleString('es-VE',{minimumFractionDigits:2,maximumFractionDigits:2})}
-function toast(m,type){const e=document.getElementById('toast');e.textContent=m;e.className='toast show '+(type||'');clearTimeout(window.__toast);window.__toast=setTimeout(()=>e.className='toast',4500)}
-function inicializarFechas(){const d=new Date();document.getElementById('periodo').value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');document.getElementById('desde').value=d.toISOString().slice(0,8)+'01';document.getElementById('hasta').value=d.toISOString().slice(0,10)}
-function seleccionarModo(m){modo=m;const mensual=m==='mensual';document.getElementById('mode-month').classList.toggle('active',mensual);document.getElementById('mode-range').classList.toggle('active',!mensual);document.getElementById('monthly-controls').classList.toggle('hidden',!mensual);document.getElementById('range-controls').classList.toggle('hidden',mensual);document.getElementById('range-builder').classList.toggle('hidden',mensual);document.getElementById('selector-title').textContent=mensual?'Período mensual':'Período DESDE – HASTA';document.getElementById('selector-help').textContent=mensual?'Las cajas provienen de METAS. Productos y parámetros se procesan dentro de CCP.':'La producción excepcional es manual por producto/presentación y no depende de METAS.';document.getElementById('mode-badge').textContent=mensual?'MENSUAL':'DESDE – HASTA';document.getElementById('mode-badge').className='badge '+(mensual?'azul':'amarillo');if(!mensual){rangoFilas=[];renderRangeBuilder()}}
-function toggleOtraRazon(){document.getElementById('otra-wrap').classList.toggle('hidden',document.getElementById('razon').value!=='Otra')}
-async function getJSON(url){const r=await fetch(url,{redirect:'follow'});if(!r.ok)throw Error('HTTP '+r.status);const t=await r.text();const d=JSON.parse(t);if(!d.ok)throw Error(d.msg||'API error');return d}
-async function postJSON(body){const r=await fetch(API,{method:'POST',body:JSON.stringify(body),redirect:'follow'});if(!r.ok)throw Error('HTTP '+r.status);const t=await r.text();const d=JSON.parse(t);if(!d.ok)throw Error(d.msg||'API error');return d}
+// ── FIX #5: ACTUALIZAR — recarga datos Y recalcula ────────────
+async function actualizarTodo(){
+  await cargarTodo();
+  if(modo==='mensual') await calcular();
+}
 
+// ── CARGA INICIAL ─────────────────────────────────────────────
 async function cargarTodo(){
   setStatus('Conectando...','azul');
   try{
@@ -248,118 +292,489 @@ async function cargarTodo(){
       getJSON(API+'?action=metas'),
       getJSON(API+'?action=ccpHistorico')
     ]);
-    db.parametros=ccp.data?.parametros||ccp.parametros||[];
-    db.inventario=ccp.data?.inventario||ccp.inventario||[];
-    db.productos=productos.data||[];
-    db.metas=metas.data||[];
-    db.historico=hist.data||[];
-    pintarVendedores();pintarParametros();pintarInventario();pintarHistorico();
+    db.parametros = ccp.parametros || ccp.data?.parametros || [];
+    db.inventario = ccp.inventario || ccp.data?.inventario || [];
+    db.productos  = productos.data || [];
+    db.metas      = metas.data || [];
+    db.historico  = hist.data || [];
+    pintarVendedores();
+    pintarParametros();
+    pintarInventario();
+    pintarHistorico();
     setStatus('Conectado','verde');
     calcular();
   }catch(e){
     setStatus('Backend CCP pendiente','amarillo');
     pintarParametros();
     pintarInventario();
-    document.getElementById('historico-wrap').innerHTML='<div class="empty-state"><div class="icon">🗂</div><p>El módulo visual está listo. El histórico se habilitará al incorporar las acciones CCP al SCRIPT(2).GS.</p></div>';
+    document.getElementById('historico-wrap').innerHTML='<div class="empty-state"><div class="icon">🗂</div><p>El módulo visual está listo. Conecte el SCRIPT con las acciones CCP.</p></div>';
   }
 }
 
+// ── MODO ──────────────────────────────────────────────────────
+function seleccionarModo(m){
+  modo=m;
+  const mensual=m==='mensual';
+  document.getElementById('mode-month').classList.toggle('active',mensual);
+  document.getElementById('mode-range').classList.toggle('active',!mensual);
+  document.getElementById('monthly-controls').classList.toggle('hidden',!mensual);
+  document.getElementById('range-controls').classList.toggle('hidden',mensual);
+  document.getElementById('range-builder').classList.toggle('hidden',mensual);
+  document.getElementById('selector-title').textContent=mensual?'Período mensual':'Período DESDE – HASTA';
+  document.getElementById('selector-help').textContent=mensual?'Las cajas provienen de METAS. Productos y parámetros se procesan dentro de CCP.':'La producción excepcional es manual por producto/presentación y no depende de METAS.';
+  document.getElementById('mode-badge').textContent=mensual?'MENSUAL':'DESDE – HASTA';
+  document.getElementById('mode-badge').className='badge '+(mensual?'azul':'amarillo');
+  if(!mensual){rangoFilas=[];renderRangeBuilder()}
+}
+function toggleOtraRazon(){document.getElementById('otra-wrap').classList.toggle('hidden',document.getElementById('razon').value!=='Otra')}
+
+// ── VENDEDORES ────────────────────────────────────────────────
 function pintarVendedores(){
   const vs=[...new Set(db.metas.map(x=>x.vendedor).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
   document.getElementById('filtro-vendedor').innerHTML='<option value="">Todos los vendedores</option>'+vs.map(v=>'<option value="'+esc(v)+'">'+esc(v)+'</option>').join('');
 }
+
+// ── FIX #3 y #4: PARÁMETROS DE COSTOS ────────────────────────
+// Costos por UNIDAD: materia prima/paquete, etiqueta/paquete, cuota caja/paquete
+// Costo de caja = calculado automáticamente (suma × unidades/caja)
 function pintarParametros(){
-  const map={};
-  db.parametros.forEach(p=>{const k=p.key||p.codigo||p.parametro||p.nombre; if(k) map[k]=p});
   const productos=db.productos||[];
-  if(!productos.length){document.getElementById('parametros').innerHTML='<div class="empty-state"><div class="icon">📦</div><p>No hay productos/presentaciones disponibles.</p></div>';return}
-  document.getElementById('parametros').innerHTML='<div class="table-scroll"><table class="cost-table"><thead><tr><th>Producto / Presentación</th><th>Unid./Caja</th><th>Precio</th><th>Tipo de Caja</th><th>Etiqueta</th><th>Costo Materia Prima</th><th>Costo Etiqueta</th></tr></thead><tbody>'+productos.map((p,i)=>{
-    const id=p.id_producto||p.id||p.nombre||('P'+i), k=id, prm=map[k]||map[p.nombre]||{};
-    const lleva=String(p.lleva_etiqueta??prm.lleva_etiqueta??p.etiqueta??'').toLowerCase();
-    return '<tr><td><strong>'+esc(p.nombre||p.producto||'')+'</strong><div class="cost-label">ID: '+esc(id)+'</div></td><td class="num">'+integer(p.unidades_por_caja)+'</td><td class="num">'+money(p.precio_usd??p.precio)+'</td><td>'+esc(p.tipo_caja ?? p.tipo_de_caja ?? prm.tipo_caja ?? '—')+'</td><td><span class="badge '+((lleva==='si'||lleva==='true'||lleva==='1'||lleva==='sí')?'verde':'azul')+'">'+((lleva==='si'||lleva==='true'||lleva==='1'||lleva==='sí')?'Sí':'No')+'</span></td><td><input class="cost-input" type="number" min="0" step="0.0001" data-cost-product="'+esc(id)+'" data-cost-field="materia_prima" value="'+n(prm.materia_prima??prm.costo_materia_prima??0)+'"></td><td><input class="cost-input" type="number" min="0" step="0.0001" data-cost-product="'+esc(id)+'" data-cost-field="etiqueta" value="'+n(prm.etiqueta??prm.costo_etiqueta??0)+'" '+((lleva==='si'||lleva==='true'||lleva==='1'||lleva==='sí')?'':'disabled')+'></td></tr>';
-  }).join('')+'</tbody></table></div>';
-}
-function pintarInventario(){
-  if(!db.productos.length){document.getElementById('inventario').innerHTML='<div class="empty-state"><div class="icon">📦</div><p>No hay productos disponibles.</p></div>';return}
-  const map={};db.inventario.forEach(x=>{map[x.id_producto||x.producto]=n(x.unidades??x.stock_unidades??x.stock)});
-  document.getElementById('inventario').innerHTML=db.productos.map(p=>{const k=p.id_producto||p.nombre;return '<div class="inv-row"><label>'+esc(p.nombre)+'</label><input type="number" min="0" step="1" data-inv="'+esc(k)+'" data-name="'+esc(p.nombre)+'" value="'+(map[k]??0)+'"></div>'}).join('');
-}
-function pintarHistorico(){
-  const rows=db.historico||[];
-  if(!rows.length){document.getElementById('historico-wrap').innerHTML='<div class="empty-state"><div class="icon">🗂</div><p>No existen registros históricos de CCP.</p></div>';return}
-  document.getElementById('historico-wrap').innerHTML='<table><thead><tr><th>Tipo</th><th>Período</th><th>Razón</th><th>Producto</th><th>Cajas</th><th>Unidades</th><th>Producción</th><th>Costo</th><th>Facturación</th><th>Margen</th></tr></thead><tbody>'+
-  rows.map(r=>'<tr><td><span class="badge '+(r.tipo==='RANGO'?'amarillo':'azul')+'">'+esc(r.tipo||'')+'</span></td><td>'+esc(r.periodo||((r.desde||'')+' – '+(r.hasta||'')))+'</td><td>'+esc(r.razon||r.razon_produccion||'—')+'</td><td>'+esc(r.producto||'')+'</td><td class="num">'+integer(r.cajas)+'</td><td class="num">'+integer(r.unidades)+'</td><td class="num">'+integer(r.produccion_requerida)+'</td><td class="num">'+money(r.costo_total)+'</td><td class="num">'+money(r.facturacion)+'</td><td class="num">'+pct(r.margen_pct)+'</td></tr>').join('')+'</tbody></table>';
+  if(!productos.length){
+    document.getElementById('parametros').innerHTML='<div class="empty-state"><div class="icon">📦</div><p>No hay productos disponibles.</p></div>';
+    return;
+  }
+  const map={};
+  db.parametros.forEach(p=>{
+    const k=String(p.id_producto||p.key||p.codigo||p.nombre||'').trim();
+    if(k) map[k]=p;
+  });
+
+  const filas=productos.map((p,i)=>{
+    const id  = String(p.id_producto||p.id||p.nombre||('P'+i)).trim();
+    const prm = map[id]||map[p.nombre]||{};
+    const upc = n(p.unidades_por_caja)||1;
+    const lleva = String(p.lleva_etiqueta||prm.lleva_etiqueta||'').toLowerCase();
+    const tieneEtiqueta = lleva==='si'||lleva==='sí'||lleva==='true'||lleva==='1';
+    const cMateria  = n(prm.costo_materia_prima_usd||prm.materia_prima||0);
+    const cEtiqueta = n(prm.costo_etiqueta_usd||prm.etiqueta||0);
+    const cEmpaque  = n(prm.costo_empaque_usd||prm.empaque||0);  // cuota caja/paquete
+    const cManoObra = n(prm.costo_mano_obra_usd||prm.mano_obra||0);
+    const cOtros    = n(prm.costo_otros_usd||prm.otros||0);
+    const cUnitTotal= cMateria + (tieneEtiqueta?cEtiqueta:0) + cEmpaque + cManoObra + cOtros;
+    const cCaja     = cUnitTotal * upc;
+
+    return `<tr>
+      <td><strong>${esc(p.nombre||'')}</strong><div class="cost-label">ID: ${esc(id)}</div></td>
+      <td class="num">${integer(upc)}</td>
+      <td class="num">${money(p.precio_usd||p.precio)}</td>
+      <td>${esc(p.tipo_caja||prm.tipo_caja||'—')}</td>
+      <td><span class="badge ${tieneEtiqueta?'verde':'azul'}">${tieneEtiqueta?'Sí':'No'}</span></td>
+      <td><input class="cost-input" type="number" min="0" step="0.0001"
+          data-prod="${esc(id)}" data-field="costo_materia_prima_usd"
+          value="${cMateria}" oninput="recalcularCostoCaja(this)"></td>
+      <td><input class="cost-input" type="number" min="0" step="0.0001"
+          data-prod="${esc(id)}" data-field="costo_etiqueta_usd"
+          value="${cEtiqueta}" ${tieneEtiqueta?'':'disabled'}
+          oninput="recalcularCostoCaja(this)"></td>
+      <td title="Cuota parte del costo de la caja dividida entre las unidades que contiene"><input class="cost-input" type="number" min="0" step="0.0001"
+          data-prod="${esc(id)}" data-field="costo_empaque_usd"
+          value="${cEmpaque}" oninput="recalcularCostoCaja(this)"></td>
+      <td><input class="cost-input" type="number" min="0" step="0.0001"
+          data-prod="${esc(id)}" data-field="costo_mano_obra_usd"
+          value="${cManoObra}" oninput="recalcularCostoCaja(this)"></td>
+      <td><input class="cost-input" type="number" min="0" step="0.0001"
+          data-prod="${esc(id)}" data-field="costo_otros_usd"
+          value="${cOtros}" oninput="recalcularCostoCaja(this)"></td>
+      <td class="num" id="costo-caja-${esc(id)}" style="font-weight:700;color:var(--rojo)">${money(cCaja)}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('parametros').innerHTML=`
+    <div class="table-scroll">
+      <table class="cost-table">
+        <thead><tr>
+          <th>Producto / Presentación</th>
+          <th>Unid./Caja</th>
+          <th>Precio Caja</th>
+          <th>Tipo Caja</th>
+          <th>Etiqueta</th>
+          <th>Mat. Prima / unidad</th>
+          <th>Etiqueta / unidad</th>
+          <th>Cuota Caja / unidad</th>
+          <th>Mano de Obra / unidad</th>
+          <th>Otros / unidad</th>
+          <th>Costo de Caja</th>
+        </tr></thead>
+        <tbody>${filas}</tbody>
+      </table>
+    </div>`;
 }
 
+// Recalcula la columna "Costo de Caja" en tiempo real al editar un campo
+function recalcularCostoCaja(input){
+  const prod = input.dataset.prod;
+  const fila = input.closest('tr');
+  const upc  = n(fila.querySelectorAll('td')[1].textContent)||1;
+  const inputs= fila.querySelectorAll('input.cost-input:not(:disabled)');
+  let suma=0; inputs.forEach(i=>suma+=n(i.value));
+  const celda=document.getElementById('costo-caja-'+prod);
+  if(celda) celda.textContent=money(suma*upc);
+}
+
+// ── FIX #1: INVENTARIO — doble vista ─────────────────────────
+// Producción: unidades totales por PRESENTACIÓN (Pasapalo, Restaurante, Torta)
+// Ventas: cajas disponibles por PRODUCTO
+function pintarInventario(){
+  const productos=db.productos||[];
+  if(!productos.length){
+    document.getElementById('inv-produccion').innerHTML='<div class="empty-state"><p>No hay productos disponibles.</p></div>';
+    document.getElementById('inv-ventas').innerHTML='';
+    return;
+  }
+
+  // Mapa de inventario guardado
+  const map={};
+  (db.inventario||[]).forEach(x=>{
+    const k=String(x.id_producto||x.producto||'').trim();
+    if(k) map[k]=n(x.unidades??x.inventario_unidades??x.stock_unidades??x.stock??0);
+  });
+  // También revisar en parametros si tiene inventario_unidades
+  (db.parametros||[]).forEach(p=>{
+    const k=String(p.id_producto||'').trim();
+    if(k && p.inventario_unidades!==undefined && !map[k])
+      map[k]=n(p.inventario_unidades);
+  });
+
+  // VISTA 1: Producción — unidades totales por presentación
+  const htmlProd=productos.map(p=>{
+    const k=String(p.id_producto||p.nombre||'').trim();
+    const unidadesActual=map[k]||0;
+    return `<div class="inv-row produccion">
+      <label>${esc(p.nombre)}</label>
+      <div class="inv-sub">Presentación · unidades disponibles</div>
+      <input type="number" min="0" step="1"
+        data-inv="${esc(k)}" data-name="${esc(p.nombre)}" data-tipo="produccion"
+        value="${Math.round(unidadesActual)}"
+        placeholder="Unidades">
+    </div>`;
+  }).join('');
+
+  // VISTA 2: Ventas — cajas disponibles por producto
+  const htmlVentas=productos.map(p=>{
+    const k=String(p.id_producto||p.nombre||'').trim();
+    const upc=n(p.unidades_por_caja)||1;
+    const unidades=map[k]||0;
+    const cajas=unidades>0?Math.floor(unidades/upc):0;
+    return `<div class="inv-row ventas">
+      <label>${esc(p.nombre)}</label>
+      <div class="inv-sub">${integer(cajas)} cajas · ${integer(unidades)} unidades</div>
+      <input type="number" min="0" step="1"
+        data-inv-cajas="${esc(k)}" data-name="${esc(p.nombre)}"
+        data-upc="${upc}" data-tipo="ventas"
+        value="${cajas}"
+        placeholder="Cajas"
+        oninput="sincronizarUnidades(this)">
+    </div>`;
+  }).join('');
+
+  document.getElementById('inv-produccion').innerHTML=htmlProd;
+  document.getElementById('inv-ventas').innerHTML=htmlVentas;
+}
+
+// Sincronizar: al editar cajas en ventas → actualiza unidades en producción
+function sincronizarUnidades(inputCajas){
+  const k=inputCajas.dataset.invCajas;
+  const upc=n(inputCajas.dataset.upc)||1;
+  const cajas=n(inputCajas.value);
+  const inputUnidades=document.querySelector('[data-inv="'+k+'"]');
+  if(inputUnidades) inputUnidades.value=Math.round(cajas*upc);
+}
+
+// ── FIX #2: HISTÓRICO — lote, fecha, unidades x producto, costo x producto, total ──
+function pintarHistorico(){
+  const rows=db.historico||[];
+  if(!rows.length){
+    document.getElementById('historico-wrap').innerHTML='<div class="empty-state"><div class="icon">🗂</div><p>No existen registros históricos de producción.</p></div>';
+    return;
+  }
+
+  let totalInversion=0, totalUnidades=0, totalCajas=0;
+  const filas=rows.map(r=>{
+    const costoTotal=n(r.costo_total||r.costo_total_usd||0);
+    const unidades  =n(r.unidades||r.unidades_producidas||0);
+    const cajas     =n(r.cajas||r.cajas_producidas||0);
+    totalInversion+=costoTotal;
+    totalUnidades+=unidades;
+    totalCajas+=cajas;
+
+    // Parsear detalle de productos del campo observaciones si existe
+    let detalleProds='—';
+    const obs=String(r.observaciones||'');
+    if(obs.includes('DETALLE:')){
+      try{
+        const jsonStr=obs.split('DETALLE:')[1].trim();
+        const arr=JSON.parse(jsonStr);
+        detalleProds=arr.map(d=>`${esc(d.producto)}: ${integer(d.cajas)} cj / ${money(d.costo)}`).join('<br>');
+      }catch(e){detalleProds='—'}
+    }
+
+    return `<tr>
+      <td><strong>${esc(r.id_lote||'—')}</strong></td>
+      <td>${esc(r.fecha_formateada||r.fecha||'—')}</td>
+      <td>${esc(r.nombre_producto||r.producto||'—')}</td>
+      <td class="num">${integer(unidades)}</td>
+      <td class="num">${integer(cajas)}</td>
+      <td class="num">${money(n(r.costo_unitario||r.costo_unitario_usd||0))}</td>
+      <td class="num"><strong>${money(costoTotal)}</strong></td>
+      <td style="font-size:.6rem;max-width:220px">${detalleProds}</td>
+    </tr>`;
+  }).join('');
+
+  // Fila de totales
+  const filaTotales=`<tr class="hist-total-row">
+    <td colspan="3"><strong>TOTAL</strong></td>
+    <td class="num"><strong>${integer(totalUnidades)}</strong></td>
+    <td class="num"><strong>${integer(totalCajas)}</strong></td>
+    <td></td>
+    <td class="num"><strong>${money(totalInversion)}</strong></td>
+    <td></td>
+  </tr>`;
+
+  document.getElementById('historico-wrap').innerHTML=`
+    <table>
+      <thead><tr>
+        <th>Lote</th>
+        <th>Fecha Producción</th>
+        <th>Período / Producto</th>
+        <th>Unidades Producidas</th>
+        <th>Cajas Producidas</th>
+        <th>Costo Unit.</th>
+        <th>Costo Total Producción</th>
+        <th>Detalle por Producto</th>
+      </tr></thead>
+      <tbody>${filas}${filaTotales}</tbody>
+    </table>`;
+}
+
+// ── CÁLCULO ───────────────────────────────────────────────────
 async function calcular(){
   try{
     let url=API+'?action=ccp&modo='+modo;
     if(modo==='mensual'){
-      const p=document.getElementById('periodo').value;if(!p){toast('Seleccione el mes.','err');return}
+      const p=document.getElementById('periodo').value;
+      if(!p){toast('Seleccione el mes.','err');return}
       const [a,m]=p.split('-');url+='&mes='+m+'&anio='+a;
-      const v=document.getElementById('filtro-vendedor').value;if(v)url+='&vendedor='+encodeURIComponent(v);
+      const v=document.getElementById('filtro-vendedor').value;
+      if(v)url+='&vendedor='+encodeURIComponent(v);
     }else{
       renderRangeBuilder();
       return;
     }
     setStatus('Calculando...','azul');
-    const r=await getJSON(url);calculo=r.data||r;pintarCalculo();setStatus('Cálculo actualizado','verde');
-  }catch(e){setStatus('Sin cálculo','amarillo');toast('El cálculo requiere el action=ccp en SCRIPT(2).GS.','err')}
+    const r=await getJSON(url);
+    calculo=r;  // guardar objeto completo con totales y detalle
+    pintarCalculo();
+    setStatus('Cálculo actualizado','verde');
+  }catch(e){
+    setStatus('Sin cálculo','amarillo');
+    toast('Error al calcular: '+(e.message||e),'err');
+  }
 }
+
 function pintarCalculo(){
-  const c=calculo||{},t=c.totales||{},rows=c.detalle||c.resultados||c.data||[];
-  document.getElementById('k-cajas').textContent=integer(t.cajas??c.cajas);document.getElementById('k-unidades').textContent=integer(t.unidades??c.unidades);document.getElementById('k-produccion').textContent=integer(t.produccion_requerida??c.produccion_requerida);document.getElementById('k-costo').textContent=money(t.costo_total??c.costo_total);document.getElementById('k-facturacion').textContent=money(t.facturacion??c.facturacion);document.getElementById('k-margen').textContent=pct(t.margen_pct??c.margen_pct);
-  if(!rows.length){document.getElementById('result-wrap').innerHTML='<div class="empty-state"><div class="icon">🏭</div><p>No existen datos para el período.</p></div>';return}
-  document.getElementById('result-wrap').innerHTML='<table><thead><tr><th>Vendedor</th><th>Producto</th><th>Cajas</th><th>Unid./Caja</th><th>Unidades</th><th>Inventario</th><th>Producción</th><th>Costo Unit.</th><th>Costo Total</th><th>Precio</th><th>Facturación</th><th>Margen</th></tr></thead><tbody>'+
-  rows.map(r=>'<tr><td>'+esc(r.vendedor||'—')+'</td><td><strong>'+esc(r.producto||r.nombre||'')+'</strong></td><td class="num">'+integer(r.cajas)+'</td><td class="num">'+integer(r.unidades_por_caja)+'</td><td class="num">'+integer(r.unidades)+'</td><td class="num">'+integer(r.inventario)+'</td><td class="num"><strong>'+integer(r.produccion_requerida)+'</strong></td><td class="num">'+money(r.costo_unitario)+'</td><td class="num">'+money(r.costo_total)+'</td><td class="num">'+money(r.precio)+'</td><td class="num">'+money(r.facturacion)+'</td><td class="num">'+pct(r.margen_pct)+'</td></tr>').join('')+'</tbody></table>';
+  const c=calculo||{};
+  const t=c.totales||c.data||c;
+  const rows=c.detalle||c.resultados||[];
+  document.getElementById('k-cajas').textContent=integer(t.cajas);
+  document.getElementById('k-unidades').textContent=integer(t.unidades);
+  document.getElementById('k-produccion').textContent=integer(t.produccion_requerida);
+  document.getElementById('k-costo').textContent=money(t.costo_total);
+  document.getElementById('k-facturacion').textContent=money(t.facturacion);
+  document.getElementById('k-margen').textContent=pct(t.margen_pct);
+
+  if(!rows.length){
+    document.getElementById('result-wrap').innerHTML='<div class="empty-state"><div class="icon">🏭</div><p>No existen datos para el período. Verifique que existan metas registradas con productos asignados.</p></div>';
+    return;
+  }
+  document.getElementById('result-wrap').innerHTML='<table><thead><tr>'+
+    '<th>Producto</th><th>Cajas</th><th>Unid./Caja</th><th>Unidades</th>'+
+    '<th>Costo Unit.</th><th>Costo Caja</th><th>Costo Total</th>'+
+    '<th>Precio Caja</th><th>Facturación</th><th>Margen %</th>'+
+    '</tr></thead><tbody>'+
+    rows.map(r=>`<tr>
+      <td><strong>${esc(r.producto||r.nombre||'')}</strong></td>
+      <td class="num">${integer(r.cajas)}</td>
+      <td class="num">${integer(r.unidades_por_caja)}</td>
+      <td class="num">${integer(r.unidades)}</td>
+      <td class="num">${money(r.costo_unitario)}</td>
+      <td class="num">${money(r.costo_caja)}</td>
+      <td class="num"><strong>${money(r.costo_total)}</strong></td>
+      <td class="num">${money(r.precio_venta_usd)}</td>
+      <td class="num">${money(r.facturacion)}</td>
+      <td class="num">${pct(r.margen_pct)}</td>
+    </tr>`).join('')+
+    '</tbody></table>';
 }
+
+// ── FIX #6: PRODUCCIÓN EXCEPCIONAL — Procesar costos ─────────
 function renderRangeBuilder(){
   const products=db.productos||[];
-  if(!rangoFilas.length && products.length) rangoFilas=[{productoId:products[0].id_producto||products[0].id||products[0].nombre,cajas:0}];
+  if(!rangoFilas.length && products.length)
+    rangoFilas=[{productoId:products[0].id_producto||products[0].id||products[0].nombre,cajas:0}];
   const wrap=document.getElementById('range-builder-table');
-  if(!products.length){wrap.innerHTML='<div class="empty-state"><p>No hay productos/presentaciones cargados desde PRODUCTOS.</p></div>';return}
-  const opts=products.map(p=>'<option value="'+esc(p.id_producto||p.id||p.nombre)+'">'+esc(p.nombre||p.producto||'')+'</option>').join('');
-  wrap.innerHTML='<table><thead><tr><th>Producto / Presentación</th><th>Unidades/Caja</th><th>Tipo de Caja</th><th>Cajas a producir</th><th></th></tr></thead><tbody>'+rangoFilas.map((r,i)=>{const p=products.find(x=>(x.id_producto||x.id||x.nombre)===r.productoId)||products[0];return '<tr><td><select class="range-product-select" onchange="cambiarFilaRango('+i+',this.value)">'+products.map(x=>'<option value="'+esc(x.id_producto||x.id||x.nombre)+'" '+((x.id_producto||x.id||x.nombre)===r.productoId?'selected':'')+'>'+esc(x.nombre||x.producto||'')+'</option>').join('')+'</select></td><td class="num">'+integer(p.unidades_por_caja)+'</td><td>'+esc(p.tipo_caja??p.tipo_de_caja??'—')+'</td><td><input class="range-caja-input" type="number" min="0" step="1" value="'+integer(r.cajas).replace(/,/g,'')+'" onchange="cambiarCajasRango('+i+',this.value)"></td><td><button class="btn btn-danger" onclick="eliminarFilaRango('+i+')">Eliminar</button></td></tr>'}).join('')+'</tbody></table>';actualizarTotalRango();}
+  if(!products.length){
+    wrap.innerHTML='<div class="empty-state"><p>No hay productos/presentaciones cargados.</p></div>';
+    return;
+  }
+  wrap.innerHTML='<table><thead><tr>'+
+    '<th>Producto / Presentación</th><th>Unidades/Caja</th><th>Tipo de Caja</th>'+
+    '<th>Cajas a producir</th><th></th>'+
+    '</tr></thead><tbody>'+
+    rangoFilas.map((r,i)=>{
+      const p=products.find(x=>(x.id_producto||x.id||x.nombre)===r.productoId)||products[0];
+      return `<tr>
+        <td><select class="range-product-select" onchange="cambiarFilaRango(${i},this.value)">
+          ${products.map(x=>`<option value="${esc(x.id_producto||x.id||x.nombre)}" ${(x.id_producto||x.id||x.nombre)===r.productoId?'selected':''}>${esc(x.nombre||x.producto||'')}</option>`).join('')}
+        </select></td>
+        <td class="num">${integer(p.unidades_por_caja)}</td>
+        <td>${esc(p.tipo_caja||p.tipo_de_caja||'—')}</td>
+        <td><input class="range-caja-input" type="number" min="0" step="1"
+            value="${n(r.cajas)}" onchange="cambiarCajasRango(${i},this.value)"></td>
+        <td><button class="btn btn-danger" onclick="eliminarFilaRango(${i})">Eliminar</button></td>
+      </tr>`;
+    }).join('')+'</tbody></table>';
+  actualizarTotalRango();
+}
 function agregarFilaRango(){const p=(db.productos||[])[0];if(!p)return;rangoFilas.push({productoId:p.id_producto||p.id||p.nombre,cajas:0});renderRangeBuilder()}
 function cambiarFilaRango(i,v){rangoFilas[i].productoId=v;renderRangeBuilder()}
 function cambiarCajasRango(i,v){rangoFilas[i].cajas=Math.max(0,Math.round(n(v)));actualizarTotalRango()}
 function eliminarFilaRango(i){rangoFilas.splice(i,1);renderRangeBuilder()}
 function actualizarTotalRango(){document.getElementById('range-total-cajas').textContent=integer(rangoFilas.reduce((s,r)=>s+n(r.cajas),0))+' cajas'}
+
+// FIX #6: procesarRangoManual — construye el objeto calculo desde las filas manuales
+// y llama al backend con los parámetros de rango
 async function procesarRangoManual(){
-  const d=document.getElementById('desde').value,h=document.getElementById('hasta').value,r=document.getElementById('razon').value==='Otra'?document.getElementById('otra-razon').value.trim():document.getElementById('razon').value;
-  const cajas=rangoFilas.filter(x=>n(x.cajas)>0).map(x=>({producto_id:x.productoId,cajas:Math.round(n(x.cajas))}));
-  if(!d||!h||!r||d>h){toast('Complete correctamente DESDE, HASTA y la razón.','err');return}
-  if(!cajas.length){toast('Agregue al menos una cantidad de cajas.','err');return}
-  try{const url=API+'?action=ccp&modo=rango&desde='+encodeURIComponent(d)+'&hasta='+encodeURIComponent(h)+'&razon='+encodeURIComponent(r)+'&cajas='+encodeURIComponent(JSON.stringify(cajas));const res=await getJSON(url);calculo=res.data||res;pintarCalculo();setStatus('Costos procesados','verde')}catch(e){toast('No se pudo procesar el período. El backend debe recibir las cajas manuales por producto/presentación.','err')}
+  const d=document.getElementById('desde').value;
+  const h=document.getElementById('hasta').value;
+  const razonSel=document.getElementById('razon').value;
+  const razon=razonSel==='Otra'?document.getElementById('otra-razon').value.trim():razonSel;
+  const cajasValidas=rangoFilas.filter(x=>n(x.cajas)>0);
+
+  if(!d||!h){toast('Complete las fechas DESDE y HASTA.','err');return}
+  if(d>h){toast('La fecha HASTA debe ser igual o posterior a DESDE.','err');return}
+  if(!razon){toast('Seleccione la razón de producción excepcional.','err');return}
+  if(!cajasValidas.length){toast('Agregue al menos una línea con cajas > 0.','err');return}
+
+  setStatus('Procesando costos...','azul');
+  try{
+    // Construir el payload con los productos y cajas manuales
+    const cajasParam=encodeURIComponent(JSON.stringify(
+      cajasValidas.map(x=>({producto_id:x.productoId,cajas:Math.round(n(x.cajas))}))
+    ));
+    const url=API+'?action=ccp&modo=rango&desde='+encodeURIComponent(d)+
+              '&hasta='+encodeURIComponent(h)+
+              '&cajas='+cajasParam;
+    const res=await getJSON(url);
+    calculo=res;
+    pintarCalculo();
+    setStatus('Costos procesados','verde');
+    toast('Costos calculados correctamente. Puede guardar el cálculo.','ok');
+  }catch(e){
+    setStatus('Error','rojo');
+    toast('Error al procesar: '+(e.message||e),'err');
+  }
 }
+
+// ── GUARDAR PARÁMETROS ────────────────────────────────────────
 async function guardarParametros(){
   try{
-    const parametros=[];
-    document.querySelectorAll('[data-cost-product]').forEach(e=>parametros.push({producto_id:e.dataset.costProduct,campo:e.dataset.costField,valor:n(e.value)}));
-    await postJSON({action:'ccpGuardarParametros',parametros});toast('Costos por producto/presentación guardados.','ok');
-  }catch(e){toast('No se pudieron guardar los costos. Incorpore action=ccpGuardarParametros al SCRIPT(2).GS.','err')}
+    // Recolectar todos los inputs de parámetros agrupados por producto
+    const map={};
+    document.querySelectorAll('[data-prod][data-field]').forEach(e=>{
+      const id=e.dataset.prod, field=e.dataset.field;
+      if(!map[id]) map[id]={id_producto:id};
+      map[id][field]=n(e.value);
+    });
+    // Buscar nombre del producto
+    db.productos.forEach(p=>{
+      const id=String(p.id_producto||p.nombre||'').trim();
+      if(map[id]) map[id].nombre_producto=p.nombre||id;
+    });
+    const parametros=Object.values(map);
+    if(!parametros.length){toast('No hay parámetros para guardar.','err');return}
+    // Guardar uno por uno (el backend hace upsert por id_producto)
+    for(const param of parametros){
+      await postJSON({action:'ccpGuardarParametros',...param});
+    }
+    toast('Parámetros de costos guardados correctamente.','ok');
+  }catch(e){toast('Error al guardar parámetros: '+(e.message||e),'err')}
 }
+
+// ── GUARDAR INVENTARIO ────────────────────────────────────────
 async function guardarInventario(){
   try{
-    const inventario=[...document.querySelectorAll('[data-inv]')].map(e=>({id_producto:e.dataset.inv,producto:e.dataset.name,unidades:n(e.value)}));
-    await postJSON({action:'ccpGuardarInventario',inventario});toast('Inventario CCP guardado.','ok');calcular();
-  }catch(e){toast('No se pudo guardar el inventario. Incorpore action=ccpGuardarInventario al SCRIPT(2).GS.','err')}
+    // Tomar los valores de unidades (vista producción, que es la fuente de verdad)
+    const inventario=[...document.querySelectorAll('[data-inv]')].map(e=>({
+      id_producto:e.dataset.inv,
+      producto:e.dataset.name,
+      unidades:n(e.value)
+    }));
+    if(!inventario.length){toast('No hay inventario para guardar.','err');return}
+    await postJSON({action:'ccpGuardarInventario',inventario});
+    toast('Inventario CCP guardado correctamente.','ok');
+    calcular();
+  }catch(e){toast('Error al guardar inventario: '+(e.message||e),'err')}
 }
+
+// ── GUARDAR CÁLCULO EN HISTÓRICO ──────────────────────────────
 function abrirConfirmacion(){
   if(!calculo){toast('Primero ejecute un cálculo.','err');return}
-  const razon=modo==='mensual'?'Producción mensual ajustada a META':(document.getElementById('razon').value==='Otra'?document.getElementById('otra-razon').value.trim():document.getElementById('razon').value);
-  document.getElementById('confirm-text').innerHTML='Se registrará el cálculo como <strong>'+modo.toUpperCase()+'</strong>.<br>Razón: <strong>'+esc(razon)+'</strong>.<br>Costo total: <strong>'+money(calculo.totales?.costo_total??calculo.costo_total)+'</strong>.';
+  const t=calculo.totales||calculo.data||calculo;
+  const razon=modo==='mensual'?'Producción mensual ajustada a META':
+    (document.getElementById('razon').value==='Otra'?
+      document.getElementById('otra-razon').value.trim():
+      document.getElementById('razon').value);
+  document.getElementById('confirm-text').innerHTML=
+    'Se registrará el cálculo como <strong>'+modo.toUpperCase()+'</strong>.<br>'+
+    'Razón: <strong>'+esc(razon)+'</strong>.<br>'+
+    'Cajas: <strong>'+integer(t.cajas)+'</strong> · '+
+    'Costo total: <strong>'+money(t.costo_total)+'</strong>.';
   document.getElementById('confirm-overlay').classList.add('open');
 }
 function cerrarConfirmacion(){document.getElementById('confirm-overlay').classList.remove('open')}
+
 async function confirmarGuardar(){
   try{
-    const razon=modo==='mensual'?'Producción mensual ajustada a META':(document.getElementById('razon').value==='Otra'?document.getElementById('otra-razon').value.trim():document.getElementById('razon').value);
-    await postJSON({action:'ccpGuardarCalculo',tipo:modo==='mensual'?'MENSUAL':'RANGO',periodo:modo==='mensual'?document.getElementById('periodo').value:'',desde:modo==='rango'?document.getElementById('desde').value:'',hasta:modo==='rango'?document.getElementById('hasta').value:'',razon,calculo});
-    cerrarConfirmacion();toast('Cálculo guardado en histórico CCP.','ok');cargarHistorico();
-  }catch(e){toast('No se pudo guardar. Incorpore action=ccpGuardarCalculo al SCRIPT(2).GS.','err')}
+    const razon=modo==='mensual'?'Producción mensual ajustada a META':
+      (document.getElementById('razon').value==='Otra'?
+        document.getElementById('otra-razon').value.trim():
+        document.getElementById('razon').value);
+    await postJSON({
+      action:'ccpGuardarCalculo',
+      tipo:modo==='mensual'?'MENSUAL':'RANGO',
+      periodo:modo==='mensual'?document.getElementById('periodo').value:'',
+      desde:modo==='rango'?document.getElementById('desde').value:'',
+      hasta:modo==='rango'?document.getElementById('hasta').value:'',
+      razon,
+      registrado_por:sesion?.user||sesion?.nombre||'',
+      calculo
+    });
+    cerrarConfirmacion();
+    toast('Lote de producción guardado en el histórico CCP.','ok');
+    cargarHistorico();
+  }catch(e){toast('Error al guardar: '+(e.message||e),'err')}
 }
-async function cargarHistorico(){try{const r=await getJSON(API+'?action=ccpHistorico');db.historico=r.data||[];pintarHistorico()}catch(e){document.getElementById('historico-wrap').innerHTML='<div class="empty-state"><div class="icon">🗂</div><p>Histórico CCP pendiente de conexión con SCRIPT(2).GS.</p></div>'}}
+
+async function cargarHistorico(){
+  try{
+    const r=await getJSON(API+'?action=ccpHistorico');
+    db.historico=r.data||[];
+    pintarHistorico();
+  }catch(e){
+    document.getElementById('historico-wrap').innerHTML=
+      '<div class="empty-state"><div class="icon">🗂</div><p>No se pudo cargar el histórico.</p></div>';
+  }
+}
 </script>
 </body>
 </html>
