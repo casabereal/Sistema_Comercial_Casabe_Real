@@ -202,7 +202,7 @@ footer{text-align:center;padding:14px 18px;font-size:.65rem;color:var(--gris);bo
         <button class="btn btn-primary" onclick="guardarParametros()">Guardar</button>
       </div>
       <div class="card-body">
-        <div class="notice notice-info">Ingrese los costos <strong>por unidad</strong>: materia prima por paquete, etiqueta por paquete, cuota parte de caja por paquete. El costo de caja se calcula automáticamente.</div>
+        <div class="notice notice-info">Ingrese los costos <strong>por unidad (paquete)</strong>: materia prima, etiqueta y el costo de la <strong>caja de cartón (embalaje) prorrateado</strong> entre las unidades que contiene. El <strong>Costo de Caja</strong> final se calcula automáticamente sumando todos los componentes × unidades/caja.</div>
         <div id="parametros"><div class="loading">Cargando costos por producto/presentación...</div></div>
       </div>
     </div>
@@ -314,6 +314,8 @@ async function cargarTodo(){
 // ── MODO ──────────────────────────────────────────────────────
 function seleccionarModo(m){
   modo=m;
+  calculo=null;  // limpiar cálculo anterior al cambiar modo
+  resetKPIs();   // limpiar KPIs
   const mensual=m==='mensual';
   document.getElementById('mode-month').classList.toggle('active',mensual);
   document.getElementById('mode-range').classList.toggle('active',!mensual);
@@ -324,7 +326,16 @@ function seleccionarModo(m){
   document.getElementById('selector-help').textContent=mensual?'Las cajas provienen de METAS. Productos y parámetros se procesan dentro de CCP.':'La producción excepcional es manual por producto/presentación y no depende de METAS.';
   document.getElementById('mode-badge').textContent=mensual?'MENSUAL':'DESDE – HASTA';
   document.getElementById('mode-badge').className='badge '+(mensual?'azul':'amarillo');
+  document.getElementById('result-wrap').innerHTML='<div class="empty-state"><div class="icon">🏭</div><p>'+
+    (mensual?'Seleccione el mes y ejecute el cálculo.':'Defina el período, agregue productos y presione Procesar costos.')+
+    '</p></div>';
   if(!mensual){rangoFilas=[];renderRangeBuilder()}
+}
+
+function resetKPIs(){
+  ['k-cajas','k-unidades','k-produccion'].forEach(id=>document.getElementById(id).textContent='—');
+  ['k-costo','k-facturacion'].forEach(id=>document.getElementById(id).textContent='$—');
+  document.getElementById('k-margen').textContent='—';
 }
 function toggleOtraRazon(){document.getElementById('otra-wrap').classList.toggle('hidden',document.getElementById('razon').value!=='Otra')}
 
@@ -376,7 +387,7 @@ function pintarParametros(){
           data-prod="${esc(id)}" data-field="costo_etiqueta_usd"
           value="${cEtiqueta}" ${tieneEtiqueta?'':'disabled'}
           oninput="recalcularCostoCaja(this)"></td>
-      <td title="Cuota parte del costo de la caja dividida entre las unidades que contiene"><input class="cost-input" type="number" min="0" step="0.0001"
+      <td title="Costo de la caja de cartón (embalaje) ÷ unidades por caja. Ejemplo: caja cuesta $2,00 y tiene 20 paquetes → $0,10 por unidad."><input class="cost-input" type="number" min="0" step="0.0001"
           data-prod="${esc(id)}" data-field="costo_empaque_usd"
           value="${cEmpaque}" oninput="recalcularCostoCaja(this)"></td>
       <td><input class="cost-input" type="number" min="0" step="0.0001"
@@ -385,7 +396,7 @@ function pintarParametros(){
       <td><input class="cost-input" type="number" min="0" step="0.0001"
           data-prod="${esc(id)}" data-field="costo_otros_usd"
           value="${cOtros}" oninput="recalcularCostoCaja(this)"></td>
-      <td class="num" id="costo-caja-${esc(id)}" style="font-weight:700;color:var(--rojo)">${money(cCaja)}</td>
+      <td class="num" data-costo-caja="${esc(id)}" style="font-weight:700;color:var(--rojo)">${money(cCaja)}</td>
     </tr>`;
   }).join('');
 
@@ -400,7 +411,7 @@ function pintarParametros(){
           <th>Etiqueta</th>
           <th>Mat. Prima / unidad</th>
           <th>Etiqueta / unidad</th>
-          <th>Cuota Caja / unidad</th>
+          <th title="Costo del embalaje (caja de cartón) dividido entre las unidades que contiene. Refleja el peso que tiene la caja sobre el costo del producto terminado.">Embalaje (caja) / unidad</th>
           <th>Mano de Obra / unidad</th>
           <th>Otros / unidad</th>
           <th>Costo de Caja</th>
@@ -412,12 +423,13 @@ function pintarParametros(){
 
 // Recalcula la columna "Costo de Caja" en tiempo real al editar un campo
 function recalcularCostoCaja(input){
-  const prod = input.dataset.prod;
-  const fila = input.closest('tr');
-  const upc  = n(fila.querySelectorAll('td')[1].textContent)||1;
-  const inputs= fila.querySelectorAll('input.cost-input:not(:disabled)');
-  let suma=0; inputs.forEach(i=>suma+=n(i.value));
-  const celda=document.getElementById('costo-caja-'+prod);
+  const prod  = input.dataset.prod;
+  const fila  = input.closest('tr');
+  const upc   = n(fila.querySelectorAll('td')[1].textContent)||1;
+  const inputs= fila.querySelectorAll('input.cost-input');
+  let suma=0;
+  inputs.forEach(i=>{ if(!i.disabled) suma+=n(i.value); });
+  const celda = fila.querySelector('[data-costo-caja]');
   if(celda) celda.textContent=money(suma*upc);
 }
 
@@ -558,6 +570,8 @@ function pintarHistorico(){
 
 // ── CÁLCULO ───────────────────────────────────────────────────
 async function calcular(){
+  resetKPIs();
+  document.getElementById('result-wrap').innerHTML='<div class="loading">Calculando...</div>';
   try{
     let url=API+'?action=ccp&modo='+modo;
     if(modo==='mensual'){
@@ -596,7 +610,12 @@ function pintarCalculo(){
     document.getElementById('result-wrap').innerHTML='<div class="empty-state"><div class="icon">🏭</div><p>No existen datos para el período. Verifique que existan metas registradas con productos asignados.</p></div>';
     return;
   }
-  document.getElementById('result-wrap').innerHTML='<table><thead><tr>'+
+  /* c ya está declarado arriba */
+  const etiquetaModo=c.modo==='rango'
+    ? '<span class="badge amarillo">DESDE–HASTA: '+(c.desde||'')+'→'+(c.hasta||'')+'</span>'
+    : '<span class="badge azul">MENSUAL: '+(c.periodo?.mes||'')+'/'+( c.periodo?.anio||'')+'</span>';
+  document.getElementById('result-wrap').innerHTML='<div style="padding:6px 9px;border-bottom:1px solid var(--border-color)">'+etiquetaModo+'</div>'+
+  '<table><thead><tr>'+
     '<th>Producto</th><th>Cajas</th><th>Unid./Caja</th><th>Unidades</th>'+
     '<th>Costo Unit.</th><th>Costo Caja</th><th>Costo Total</th>'+
     '<th>Precio Caja</th><th>Facturación</th><th>Margen %</th>'+
@@ -651,9 +670,9 @@ function cambiarCajasRango(i,v){rangoFilas[i].cajas=Math.max(0,Math.round(n(v)))
 function eliminarFilaRango(i){rangoFilas.splice(i,1);renderRangeBuilder()}
 function actualizarTotalRango(){document.getElementById('range-total-cajas').textContent=integer(rangoFilas.reduce((s,r)=>s+n(r.cajas),0))+' cajas'}
 
-// FIX #6: procesarRangoManual — construye el objeto calculo desde las filas manuales
-// y llama al backend con los parámetros de rango
-async function procesarRangoManual(){
+// FIX #6: procesarRangoManual — calcula LOCALMENTE con db.parametros + db.productos
+// No llama al backend para el cálculo: usa los datos ya cargados en memoria.
+function procesarRangoManual(){
   const d=document.getElementById('desde').value;
   const h=document.getElementById('hasta').value;
   const razonSel=document.getElementById('razon').value;
@@ -665,24 +684,81 @@ async function procesarRangoManual(){
   if(!razon){toast('Seleccione la razón de producción excepcional.','err');return}
   if(!cajasValidas.length){toast('Agregue al menos una línea con cajas > 0.','err');return}
 
-  setStatus('Procesando costos...','azul');
-  try{
-    // Construir el payload con los productos y cajas manuales
-    const cajasParam=encodeURIComponent(JSON.stringify(
-      cajasValidas.map(x=>({producto_id:x.productoId,cajas:Math.round(n(x.cajas))}))
-    ));
-    const url=API+'?action=ccp&modo=rango&desde='+encodeURIComponent(d)+
-              '&hasta='+encodeURIComponent(h)+
-              '&cajas='+cajasParam;
-    const res=await getJSON(url);
-    calculo=res;
-    pintarCalculo();
-    setStatus('Costos procesados','verde');
-    toast('Costos calculados correctamente. Puede guardar el cálculo.','ok');
-  }catch(e){
-    setStatus('Error','rojo');
-    toast('Error al procesar: '+(e.message||e),'err');
-  }
+  // Mapa de parámetros de costos por id_producto
+  const paramMap={};
+  (db.parametros||[]).forEach(p=>{
+    const k=String(p.id_producto||p.nombre||'').trim();
+    if(k) paramMap[k]=p;
+  });
+
+  // Calcular detalle por línea manual
+  const detalle=cajasValidas.map(fila=>{
+    const prod=db.productos.find(p=>(p.id_producto||p.id||p.nombre)===fila.productoId)||{};
+    const prm =paramMap[String(prod.id_producto||prod.nombre||'').trim()]||{};
+    const upc =n(prod.unidades_por_caja)||1;
+    const cajas=Math.round(n(fila.cajas));
+    const lleva=String(prod.lleva_etiqueta||prm.lleva_etiqueta||'').toLowerCase();
+    const tieneEtiqueta=lleva==='si'||lleva==='sí'||lleva==='true'||lleva==='1';
+
+    const cMateria  =n(prm.costo_materia_prima_usd||0);
+    const cEtiqueta =tieneEtiqueta?n(prm.costo_etiqueta_usd||0):0;
+    const cEmpaque  =n(prm.costo_empaque_usd||0);
+    const cManoObra =n(prm.costo_mano_obra_usd||0);
+    const cOtros    =n(prm.costo_otros_usd||0);
+    const costoUnit =cMateria+cEtiqueta+cEmpaque+cManoObra+cOtros;
+    const costoCaja =costoUnit*upc;
+    const unidades  =cajas*upc;
+    const costoTotal=costoCaja*cajas;
+    const precioVenta=n(prod.precio_usd||0);
+    const factura   =precioVenta*cajas;
+    const margenUsd =factura-costoTotal;
+    const margenPct =factura>0?Math.round((margenUsd/factura)*10000)/100:0;
+
+    return {
+      id_producto:      String(prod.id_producto||prod.nombre||fila.productoId),
+      producto:         prod.nombre||fila.productoId||'',
+      tipo:             'RANGO',
+      periodo:          d+' - '+h,
+      cajas,
+      unidades,
+      produccion_requerida:cajas,
+      unidades_por_caja:upc,
+      costo_unitario:   Math.round(costoUnit*10000)/100,
+      costo_caja:       Math.round(costoCaja*10000)/100,
+      costo_total:      Math.round(costoTotal*100)/100,
+      precio_venta_usd: precioVenta,
+      facturacion:      Math.round(factura*100)/100,
+      margen_usd:       Math.round(margenUsd*100)/100,
+      margen_pct:       margenPct,
+      lleva_etiqueta:   prod.lleva_etiqueta||'',
+    };
+  });
+
+  // Totales
+  const totales={
+    cajas:                detalle.reduce((s,r)=>s+r.cajas,0),
+    unidades:             detalle.reduce((s,r)=>s+r.unidades,0),
+    produccion_requerida: detalle.reduce((s,r)=>s+r.produccion_requerida,0),
+    costo_total:          Math.round(detalle.reduce((s,r)=>s+r.costo_total,0)*100)/100,
+    facturacion:          Math.round(detalle.reduce((s,r)=>s+r.facturacion,0)*100)/100,
+    margen_pct:           detalle.length
+      ? Math.round(detalle.reduce((s,r)=>s+r.margen_pct,0)/detalle.length*100)/100
+      : 0,
+    meta_cajas:0,meta_usd:0,num_metas:0,
+  };
+  totales.margen_usd=Math.round((totales.facturacion-totales.costo_total)*100)/100;
+
+  // Construir objeto calculo igual que el backend devuelve
+  calculo={
+    ok:true, modo:'rango', desde:d, hasta:h, razon,
+    totales, detalle,
+    data:totales,
+    periodo:{modo:'rango',desde:d,hasta:h},
+  };
+
+  pintarCalculo();
+  setStatus('Costos procesados','verde');
+  toast('Costos calculados. Puede guardar el lote en el histórico.','ok');
 }
 
 // ── GUARDAR PARÁMETROS ────────────────────────────────────────
