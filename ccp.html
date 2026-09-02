@@ -178,14 +178,49 @@ footer{text-align:center;padding:14px 18px;font-size:.65rem;color:var(--gris);bo
     </div>
   </div>
 
-  <!-- KPIs -->
-  <div class="kpi-grid">
-    <div class="kpi-card"><div class="kpi-title">Cajas</div><div class="kpi-value" id="k-cajas">—</div><div class="kpi-sub">Meta / solicitud</div></div>
-    <div class="kpi-card"><div class="kpi-title">Unidades</div><div class="kpi-value" id="k-unidades">—</div><div class="kpi-sub">Cajas × unidades/caja</div></div>
-    <div class="kpi-card"><div class="kpi-title">Producción req.</div><div class="kpi-value" id="k-produccion">—</div><div class="kpi-sub">Unidades requeridas</div></div>
-    <div class="kpi-card"><div class="kpi-title">Costo total</div><div class="kpi-value" id="k-costo">$—</div><div class="kpi-sub">Costo calculado</div></div>
-    <div class="kpi-card"><div class="kpi-title">Facturación</div><div class="kpi-value" id="k-facturacion">$—</div><div class="kpi-sub">A precio vigente</div></div>
-    <div class="kpi-card"><div class="kpi-title">Margen</div><div class="kpi-value" id="k-margen">—</div><div class="kpi-sub">Margen porcentual</div></div>
+  <!-- ── CAMBIO 2: KPIs debajo del subtítulo de planificación ── -->
+  <div class="content-card" style="margin-bottom:15px">
+    <div class="card-header" style="border-bottom:0;padding-bottom:8px">
+      <div>
+        <h2>Planificación de producción y cálculo de costos del período</h2>
+        <p id="section-sub-inner">Seleccione el período y ejecute el cálculo para ver los indicadores.</p>
+      </div>
+      <!-- CAMBIO 3: Botón limpiar producción mensual -->
+      <button class="btn btn-danger" onclick="limpiarCalculo()" title="Borra los resultados del cálculo actual">🗑 Limpiar</button>
+    </div>
+    <div style="padding:0 15px 15px">
+      <div class="kpi-grid" style="margin-bottom:0">
+        <div class="kpi-card"><div class="kpi-title">Cajas</div><div class="kpi-value" id="k-cajas">—</div><div class="kpi-sub">Meta / solicitud</div></div>
+        <div class="kpi-card"><div class="kpi-title">Unidades planificadas</div><div class="kpi-value" id="k-unidades">—</div><div class="kpi-sub">Cajas × unidades/caja</div></div>
+        <div class="kpi-card"><div class="kpi-title">Costo total</div><div class="kpi-value" id="k-costo">$—</div><div class="kpi-sub">Todos los componentes</div></div>
+        <div class="kpi-card"><div class="kpi-title">Costo Mat. Prima + M.O.</div><div class="kpi-value" id="k-costo-core">$—</div><div class="kpi-sub">Solo materia prima y mano de obra</div></div>
+        <div class="kpi-card"><div class="kpi-title">Facturación</div><div class="kpi-value" id="k-facturacion">$—</div><div class="kpi-sub">A precio vigente</div></div>
+        <div class="kpi-card"><div class="kpi-title">Margen</div><div class="kpi-value" id="k-margen">—</div><div class="kpi-sub">Margen porcentual</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAMBIO 1: Cuadro diferencia producción planificada vs inventario -->
+  <div class="content-card" id="diff-wrap" style="margin-bottom:15px;display:none">
+    <div class="card-header">
+      <div><h2>Diferencia: Producción Planificada vs Inventario</h2>
+        <p>Unidades a producir = Planificadas − Inventario disponible. Costo estimado = solo Materia Prima + Mano de Obra.</p>
+      </div>
+    </div>
+    <div class="table-scroll">
+      <table id="diff-table">
+        <thead><tr>
+          <th>Producto</th>
+          <th>Unidades planificadas</th>
+          <th>Inventario disponible</th>
+          <th>Unidades a producir</th>
+          <th>Costo Mat. Prima / unidad</th>
+          <th>Costo M.O. / unidad</th>
+          <th>Costo estimado (MP + MO)</th>
+        </tr></thead>
+        <tbody id="diff-tbody"></tbody>
+      </table>
+    </div>
   </div>
 
   <div class="split">
@@ -333,9 +368,23 @@ function seleccionarModo(m){
 }
 
 function resetKPIs(){
-  ['k-cajas','k-unidades','k-produccion'].forEach(id=>document.getElementById(id).textContent='—');
-  ['k-costo','k-facturacion'].forEach(id=>document.getElementById(id).textContent='$—');
+  ['k-cajas','k-unidades'].forEach(id=>document.getElementById(id).textContent='—');
+  ['k-costo','k-costo-core','k-facturacion'].forEach(id=>document.getElementById(id).textContent='$—');
   document.getElementById('k-margen').textContent='—';
+  // Ocultar cuadro diferencia
+  document.getElementById('diff-wrap').style.display='none';
+  document.getElementById('diff-tbody').innerHTML='';
+}
+
+// CAMBIO 3: Limpiar cálculo actual
+function limpiarCalculo(){
+  calculo=null;
+  resetKPIs();
+  document.getElementById('result-wrap').innerHTML='<div class="empty-state"><div class="icon">🏭</div><p>'+
+    (modo==='mensual'?'Seleccione el mes y ejecute el cálculo.':'Defina el período, agregue productos y presione Procesar costos.')+
+    '</p></div>';
+  setStatus('Listo','azul');
+  toast('Cálculo limpiado.','ok');
 }
 function toggleOtraRazon(){document.getElementById('otra-wrap').classList.toggle('hidden',document.getElementById('razon').value!=='Otra')}
 
@@ -599,12 +648,77 @@ function pintarCalculo(){
   const c=calculo||{};
   const t=c.totales||c.data||c;
   const rows=c.detalle||c.resultados||[];
+
+  // KPIs principales
   document.getElementById('k-cajas').textContent=integer(t.cajas);
   document.getElementById('k-unidades').textContent=integer(t.unidades);
-  document.getElementById('k-produccion').textContent=integer(t.produccion_requerida);
   document.getElementById('k-costo').textContent=money(t.costo_total);
   document.getElementById('k-facturacion').textContent=money(t.facturacion);
   document.getElementById('k-margen').textContent=pct(t.margen_pct);
+
+  // KPI Costo Mat.Prima + M.O. — suma de los dos componentes por producto
+  const costoCore=rows.reduce((s,r)=>{
+    const upc =n(r.unidades_por_caja)||1;
+    const cajs=n(r.cajas);
+    const cMP =n(r.costo_materia_prima_usd||r.costo_mp||0);
+    const cMO =n(r.costo_mano_obra_usd||r.costo_mo||0);
+    // Si el detalle no trae los campos separados, calcular desde parametros
+    const prm =(db.parametros||[]).find(p=>String(p.id_producto||'').trim()===String(r.id_producto||'').trim())||{};
+    const mp  =cMP||n(prm.costo_materia_prima_usd||0);
+    const mo  =cMO||n(prm.costo_mano_obra_usd||0);
+    return s + (mp+mo)*upc*cajs;
+  },0);
+  document.getElementById('k-costo-core').textContent=money(costoCore);
+
+  // ── Cuadro diferencia producción vs inventario ─────────────
+  // Inventario: leer los inputs data-inv (vista producción = unidades)
+  const invMap={};
+  document.querySelectorAll('[data-inv]').forEach(el=>{
+    invMap[el.dataset.inv]=n(el.value);
+  });
+
+  if(rows.length){
+    const filasDiff=rows.map(r=>{
+      const k      =String(r.id_producto||r.producto||'').trim();
+      const planif =n(r.unidades);
+      const invDisp=invMap[k]||0;
+      const aProdu =Math.max(0,planif-invDisp);
+      const prm    =(db.parametros||[]).find(p=>String(p.id_producto||'').trim()===k)||{};
+      const cMP    =n(prm.costo_materia_prima_usd||0);
+      const cMO    =n(prm.costo_mano_obra_usd||0);
+      const costoEst=aProdu*(cMP+cMO);
+      const classDiff=aProdu===0?'verde':aProdu<planif?'amarillo':'rojo';
+      return `<tr>
+        <td><strong>${esc(r.producto||r.nombre||'—')}</strong></td>
+        <td class="num">${integer(planif)}</td>
+        <td class="num">${integer(invDisp)}</td>
+        <td class="num"><span class="badge ${classDiff}">${integer(aProdu)}</span></td>
+        <td class="num">${money(cMP)}</td>
+        <td class="num">${money(cMO)}</td>
+        <td class="num"><strong>${money(costoEst)}</strong></td>
+      </tr>`;
+    }).join('');
+    // Fila total
+    const totalPlan  =rows.reduce((s,r)=>s+n(r.unidades),0);
+    const totalInv   =rows.reduce((s,r)=>s+(invMap[String(r.id_producto||r.producto||'').trim()]||0),0);
+    const totalAProd =Math.max(0,totalPlan-totalInv);
+    const totalCoreT =rows.reduce((s,r)=>{
+      const k=String(r.id_producto||r.producto||'').trim();
+      const prm=(db.parametros||[]).find(p=>String(p.id_producto||'').trim()===k)||{};
+      const aP=Math.max(0,n(r.unidades)-(invMap[k]||0));
+      return s+aP*(n(prm.costo_materia_prima_usd||0)+n(prm.costo_mano_obra_usd||0));
+    },0);
+    document.getElementById('diff-tbody').innerHTML=filasDiff+
+      `<tr class="hist-total-row">
+        <td><strong>TOTAL</strong></td>
+        <td class="num"><strong>${integer(totalPlan)}</strong></td>
+        <td class="num"><strong>${integer(totalInv)}</strong></td>
+        <td class="num"><strong>${integer(totalAProd)}</strong></td>
+        <td></td><td></td>
+        <td class="num"><strong>${money(totalCoreT)}</strong></td>
+      </tr>`;
+    document.getElementById('diff-wrap').style.display='block';
+  }
 
   if(!rows.length){
     document.getElementById('result-wrap').innerHTML='<div class="empty-state"><div class="icon">🏭</div><p>No existen datos para el período. Verifique que existan metas registradas con productos asignados.</p></div>';
