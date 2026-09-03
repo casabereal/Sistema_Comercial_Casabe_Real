@@ -217,6 +217,42 @@ footer{
   background:var(--blanco);border-top:1px solid var(--borde);
   text-align:center;padding:11px;font-size:.63rem;color:var(--sub);
 }
+/* ── TABLA DE CLIENTES META ── */
+.meta-cliente-card{background:var(--blanco);border:1px solid var(--borde);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:14px;overflow:hidden}
+.meta-cliente-hdr{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--fondo);border-bottom:1px solid var(--borde);flex-wrap:wrap;gap:8px}
+.meta-cliente-hdr h4{font-size:.82rem;font-weight:700;margin:0}
+.meta-cliente-hdr .sub{font-size:.67rem;color:var(--sub);margin-top:2px}
+.meta-acciones{display:flex;gap:6px;flex-shrink:0}
+.btn-convertir{padding:5px 11px;border-radius:6px;font-size:.67rem;font-weight:700;cursor:pointer;border:none;background:#DBEAFE;color:#1D4ED8}
+.btn-convertir:hover{background:#BFDBFE}
+.btn-anular{padding:5px 11px;border-radius:6px;font-size:.67rem;font-weight:700;cursor:pointer;border:none;background:var(--rojo-xs);color:#DC2626}
+.btn-anular:hover{background:#FECACA}
+.btn-anulado{padding:5px 11px;border-radius:6px;font-size:.67rem;font-weight:700;cursor:default;border:none;background:var(--fondo);color:var(--sub)}
+.prod-chips{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px}
+.prod-chip{background:var(--fondo);border:1px solid var(--borde);border-radius:6px;padding:6px 10px;font-size:.68rem;display:flex;flex-direction:column;gap:1px}
+.prod-chip .pc-nom{font-weight:700;color:var(--texto)}
+.prod-chip .pc-det{color:var(--sub);font-size:.62rem}
+.prod-chip.anulado{opacity:.45;text-decoration:line-through}
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:2000;padding:16px}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:var(--r);box-shadow:0 20px 60px rgba(0,0,0,.25);width:min(480px,100%);padding:24px}
+.modal-box h3{font-size:1rem;font-weight:700;margin-bottom:6px}
+.modal-box p{font-size:.75rem;color:var(--sub);margin-bottom:14px}
+.modal-box textarea{width:100%;padding:10px;border:1.5px solid var(--borde);border-radius:8px;font-size:.78rem;font-family:inherit;resize:vertical;min-height:90px;outline:none}
+.modal-box textarea:focus{border-color:var(--rojo)}
+.modal-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+/* ── FILTROS CLIENTES META ── */
+.mc-filtros{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.mc-filtros select{padding:7px 10px;border:1px solid var(--borde);border-radius:var(--r-sm);font-size:.74rem;font-family:inherit;color:var(--texto);background:#fff;outline:none}
+.mc-filtros select:focus{border-color:var(--rojo)}
+/* ── ESTADO ANULADO en chip ── */
+.badge-anulado{background:#F3F4F6;color:var(--sub)}
+/* ── TOAST ── */
+.toast{position:fixed;right:18px;bottom:18px;background:#1F2937;color:#fff;border-radius:8px;padding:10px 14px;font-size:.72rem;z-index:3000;display:none;max-width:340px}
+.toast.show{display:block}
+.toast.ok-t{background:#065F46}
+.toast.err-t{background:#991B1B}
 
 /* ── RESPONSIVE ── */
 @media(max-width:768px){
@@ -344,7 +380,8 @@ footer{
   <!-- TABS -->
   <div class="tabs-bar">
     <button class="tab-btn activo" onclick="switchTab('tabOperativo',this)">📈 Control Operativo</button>
-    <button class="tab-btn" onclick="switchTab('tabDesglose',this)">📋 Desglose por Vendedor</button>
+    <button class="tab-btn admin-tab" onclick="switchTab('tabDesglose',this)">📋 Desglose por Vendedor</button>
+    <button class="tab-btn" onclick="switchTab('tabClientes',this)">👥 Metas por Cliente</button>
   </div>
 
   <!-- TAB: Control Operativo -->
@@ -397,7 +434,76 @@ footer{
     </div>
   </div>
 
+  <!-- TAB: Metas por Cliente -->
+  <div id="tabClientes" class="tab-panel">
+    <div class="card" style="margin:0">
+      <div class="card-title">
+        Metas Asignadas por Cliente
+        <span style="font-size:.7rem;font-weight:400;color:var(--sub)">Cajas por producto · Acciones disponibles</span>
+      </div>
+
+      <div class="mc-filtros" id="mc-filtros-wrap">
+        <div>
+          <label style="font-size:.63rem;font-weight:700;color:var(--sub);text-transform:uppercase;display:block;margin-bottom:3px">Vendedor</label>
+          <select id="mc-filtro-vendedor" onchange="renderTabClientes()">
+            <option value="">Todos los vendedores</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:.63rem;font-weight:700;color:var(--sub);text-transform:uppercase;display:block;margin-bottom:3px">Estado</label>
+          <select id="mc-filtro-estado" onchange="renderTabClientes()">
+            <option value="">Todos</option>
+            <option value="activo">Activos</option>
+            <option value="anulado">Anulados</option>
+            <option value="convertido">Convertidos</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:.63rem;font-weight:700;color:var(--sub);text-transform:uppercase;display:block;margin-bottom:3px">Período</label>
+          <select id="mc-filtro-periodo" onchange="renderTabClientes()">
+            <option value="">Todos los períodos</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="mc-kpis" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px"></div>
+      <div id="mc-contenido">
+        <div class="estado-msg"><div class="icon">📋</div>Cargando metas por cliente…</div>
+      </div>
+    </div>
+  </div>
+
 </main>
+
+<!-- ── MODAL ANULACIÓN ── -->
+<div class="modal-overlay" id="modal-anulacion">
+  <div class="modal-box">
+    <h3>🚫 Anular cliente de la meta</h3>
+    <p id="modal-anul-desc">Se marcará este cliente como anulado en la meta.</p>
+    <label style="font-size:.72rem;font-weight:700;display:block;margin-bottom:6px">Razón de la anulación <span style="color:var(--rojo)">*</span></label>
+    <textarea id="modal-anul-razon" placeholder="Describa el motivo de la anulación…"></textarea>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="cerrarModalAnulacion()">Cancelar</button>
+      <button class="btn btn-primary" onclick="confirmarAnulacion()">Confirmar anulación</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL CONVERTIR ── -->
+<div class="modal-overlay" id="modal-convertir">
+  <div class="modal-box">
+    <h3>🛒 Convertir a Pedido</h3>
+    <p id="modal-conv-desc">Se creará un pedido con las cajas de la meta para este cliente.</p>
+    <div id="modal-conv-detalle" style="background:var(--fondo);border-radius:8px;padding:12px;font-size:.74rem;margin-bottom:14px"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="cerrarModalConvertir()">Cancelar</button>
+      <button class="btn btn-primary" onclick="confirmarConversion()">✓ Crear pedido</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast"></div>
 
 <footer>
   &copy; 2026 Sistema Comercial Casabe Real (SCCR v2.5.0) — Todos los derechos reservados.
@@ -411,237 +517,294 @@ footer{
 // ══════════════════════════════════════════════════════════
 const API_URL = 'https://script.google.com/macros/s/AKfycbyludOrnVw1jSCYJUWELTjPjhuR7N1uXdBO6mjR7XVE-SqmkP-pe3qieg5SX-8wRh2Dsg/exec';
 
-let sesion        = null;
+let sesion          = null;
 let dimensionActual = 'USD';
-let chartInstance = null;
+let chartInstance   = null;
+let esDirectivo     = false;
 
-// Datos crudos cargados de la API
-let datosRaw = {
-  metas: [],      // [{vendedor_id, nombre, ciclo, meta_usd, meta_cajas, real_usd, real_cajas, dias_transcurridos, dias_totales}]
-  lineas: []      // [{linea, meta_usd, real_usd, meta_cajas, real_cajas}]
-};
+// Datos crudos desde la API (action=metas devuelve array plano)
+let metasRaw    = [];   // array de metas con detalle_clientes JSON
+let clientesMap = [];   // lista plana de {meta, cli, estado, razon_anulacion}
 
-// Datos procesados (filtrados)
-let datosFiltrados = { metas:[], lineas:[] };
+// Contexto para modales
+let _anulCtx     = null;  // {metaIdx, cliIdx}
+let _convCtx     = null;  // {metaIdx, cliIdx}
 
 // ══════════════════════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
-  // Auth
-  sesion = SCCR.getSesion();
+  sesion = SCCR.getSesion ? SCCR.getSesion() : SCCR.initSCCR(['admin','gerente','vendedor']);
   if (!sesion) { window.location.href = 'index.html'; return; }
 
-  // Header — mismo funcionamiento que clientes.html
   const rol = (sesion.rol || '').toLowerCase();
   document.getElementById('user-name-display').textContent = sesion.nombre || '—';
   document.getElementById('user-role-display').textContent =
     rol === 'admin' ? 'Administrador' :
     rol === 'gerente' ? 'Gerente de Ventas' : 'Asesor Comercial';
 
-  // Menú admin-only — mismo funcionamiento que clientes.html
-  const esDirectivo = (rol === 'gerente' || rol === 'admin');
+  esDirectivo = (rol === 'admin' || rol === 'gerente');
+
   if (esDirectivo) {
     document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
-  }
-  if (esDirectivo) {
     document.getElementById('seccion-filtros').style.display = 'grid';
   } else {
-    // Vendedor: ocultar tab de desglose
-    document.querySelectorAll('.tab-btn')[1].style.display = 'none';
+    // Vendedor: ocultar tab desglose
+    document.querySelectorAll('.admin-tab').forEach(el => el.style.display = 'none');
+    // Ocultar filtro de vendedor en tab clientes
+    document.getElementById('mc-filtros-wrap').querySelector('[for="mc-filtro-vendedor"]')
+      ?.closest('div')?.style && (document.querySelector('[id="mc-filtro-vendedor"]')
+        ?.closest('div').style.display = 'none');
   }
 
-  SCCR.aplicarMenuPorRol(sesion);
+  if (typeof SCCR.aplicarMenuPorRol === 'function') SCCR.aplicarMenuPorRol(sesion);
   cargarMetas();
 });
 
 function cerrarSesion() { SCCR.cerrarSesion(); }
 
 // ══════════════════════════════════════════════════════════
-//  CARGA DE DATOS DESDE API
+//  FETCH CORRECTO — action=metas (no getMetas)
 // ══════════════════════════════════════════════════════════
 async function cargarMetas() {
   mostrarEstado('Cargando datos…');
-
   try {
-    const params = new URLSearchParams({ action: 'getMetas' });
-
-    // Vendedor solo ve sus propios datos
-    if (sesion.rol === 'vendedor' && sesion.vendedor_id) {
-      params.append('vendedor_id', sesion.vendedor_id);
+    // ── BUG FIX: la acción correcta es 'metas', no 'getMetas'
+    let url = API_URL + '?action=metas';
+    // Vendedor solo ve sus propias metas
+    if (!esDirectivo && sesion.vendedor_id) {
+      url += '&vendedor=' + encodeURIComponent(sesion.vendedor_id);
     }
 
-    const res  = await fetch(`${API_URL}?${params}`);
-    const json = await res.json();
+    const res  = await fetch(url, { redirect: 'follow' });
+    const txt  = await res.text();
+    const json = JSON.parse(txt);
 
-    if (json.error) throw new Error(json.error);
+    // La API devuelve { ok:true, data:[ {..., detalle_clientes:'[...]'} ] }
+    metasRaw = Array.isArray(json.data) ? json.data : [];
 
-    datosRaw.metas  = json.metas  || [];
-    datosRaw.lineas = json.lineas || [];
+    // Filtrar por vendedor si es vendedor
+    if (!esDirectivo && sesion.vendedor_id) {
+      metasRaw = metasRaw.filter(m =>
+        String(m.vendedor || '').toLowerCase() === String(sesion.vendedor_id).toLowerCase()
+      );
+    }
 
-    poblarFiltroVendedores(datosRaw.metas);
-    poblarFiltroCiclos(datosRaw.metas);
+    // Construir clientesMap plano para el tab de clientes
+    construirClientesMap();
+
+    // Poblar filtros del tab de clientes
+    poblarFiltrosMC();
+
+    // Poblar filtros KPI (vendedores y ciclos)
+    poblarFiltroKPI();
     aplicarFiltros();
 
   } catch (err) {
-    console.error('Error getMetas:', err);
+    console.error('Error cargarMetas:', err);
     mostrarEstado('⚠️ No se pudieron cargar las metas. Verifica la conexión.', true);
   }
 }
 
-function mostrarEstado(msg, esError = false) {
-  const color = esError ? 'var(--rojo)' : 'var(--sub)';
-  ['kpi-real','kpi-meta','kpi-pct','kpi-runrate','kpi-rr-badge',
-   'kpi-ritmo','kpi-gap','kpi-dias-rest','kpi-semaforo'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = esError ? '—' : '…';
+// Construir lista plana cliente × meta para el tab de clientes
+function construirClientesMap() {
+  clientesMap = [];
+  metasRaw.forEach((meta, mi) => {
+    let clientes = [];
+    try { clientes = JSON.parse(meta.detalle_clientes || '[]'); } catch(e) {}
+    if (!Array.isArray(clientes)) return;
+    clientes.forEach((cli, ci) => {
+      clientesMap.push({
+        metaIdx:   mi,
+        cliIdx:    ci,
+        meta,
+        cli,
+        estado:    cli._estado || 'activo',       // activo | anulado | convertido
+        razon:     cli._razon  || '',
+        pedidoNum: cli._pedido || '',
+      });
+    });
   });
-  document.getElementById('tabla-lineas').innerHTML =
-    `<tr><td colspan="3" style="text-align:center;padding:20px;color:${color}">${msg}</td></tr>`;
-  document.getElementById('tabla-vendedores').innerHTML =
-    `<tr><td colspan="7" style="text-align:center;padding:20px;color:${color}">${msg}</td></tr>`;
 }
 
 // ══════════════════════════════════════════════════════════
-//  FILTROS
+//  POBLAR FILTROS
 // ══════════════════════════════════════════════════════════
-function poblarFiltroVendedores(metas) {
-  const sel = document.getElementById('filtroVendedor');
-  const nombres = [...new Set(metas.map(m => m.nombre))];
-  sel.innerHTML = '<option value="">Todos los Asesores</option>' +
-    nombres.map(n => `<option value="${n}">${n}</option>`).join('');
+function poblarFiltroKPI() {
+  // Vendedores únicos de metas
+  const vendedores = [...new Set(metasRaw.map(m => m.vendedor).filter(Boolean))];
+  const selV = document.getElementById('filtroVendedor');
+  if (selV) {
+    selV.innerHTML = '<option value="">Todos los Asesores</option>' +
+      vendedores.map(v => `<option value="${v}">${v}</option>`).join('');
+  }
+  // Ciclos/períodos únicos
+  const ciclos = [...new Set(metasRaw.map(m => m.periodo || (m.mes+'/'+m.anio)).filter(Boolean))].sort().reverse();
+  const selC = document.getElementById('filtroCiclo');
+  if (selC) {
+    selC.innerHTML = '<option value="">Ciclo Actual</option>' +
+      ciclos.map(c => `<option value="${c}">${c}</option>`).join('');
+  }
 }
 
-function poblarFiltroCiclos(metas) {
-  const sel = document.getElementById('filtroCiclo');
-  const ciclos = [...new Set(metas.map(m => m.ciclo).filter(Boolean))].sort().reverse();
-  sel.innerHTML = '<option value="">Ciclo Actual</option>' +
-    ciclos.map(c => `<option value="${c}">${c}</option>`).join('');
+function poblarFiltrosMC() {
+  // Vendedores para filtro del tab clientes
+  const vendedores = [...new Set(metasRaw.map(m => m.vendedor).filter(Boolean))].sort();
+  const selV = document.getElementById('mc-filtro-vendedor');
+  if (selV) {
+    selV.innerHTML = '<option value="">Todos los vendedores</option>' +
+      vendedores.map(v => `<option value="${v}">${v}</option>`).join('');
+  }
+  // Períodos únicos
+  const periodos = [...new Set(metasRaw.map(m => m.periodo || (m.mes+'/'+m.anio)).filter(Boolean))].sort().reverse();
+  const selP = document.getElementById('mc-filtro-periodo');
+  if (selP) {
+    selP.innerHTML = '<option value="">Todos los períodos</option>' +
+      periodos.map(p => `<option value="${p}">${p}</option>`).join('');
+  }
 }
 
+// ══════════════════════════════════════════════════════════
+//  FILTROS KPI
+// ══════════════════════════════════════════════════════════
 function aplicarFiltros() {
-  const fVendedor = document.getElementById('filtroVendedor')?.value || '';
-  const fLinea    = document.getElementById('filtroLinea')?.value   || '';
-  const fCiclo    = document.getElementById('filtroCiclo')?.value   || '';
-
-  // Filtrar metas
-  datosFiltrados.metas = datosRaw.metas.filter(m => {
-    const okVend  = !fVendedor || m.nombre === fVendedor;
-    const okCiclo = !fCiclo   || m.ciclo  === fCiclo;
-    return okVend && okCiclo;
+  const fV = document.getElementById('filtroVendedor')?.value || '';
+  const fC = document.getElementById('filtroCiclo')?.value   || '';
+  const mFilt = metasRaw.filter(m => {
+    const periodo = m.periodo || (m.mes+'/'+m.anio) || '';
+    return (!fV || m.vendedor === fV) && (!fC || periodo === fC);
   });
-
-  // Filtrar líneas
-  datosFiltrados.lineas = datosRaw.lineas.filter(l => {
-    return !fLinea || l.linea === fLinea;
-  });
-
-  actualizarDashboard();
+  actualizarDashboard(mFilt);
 }
 
 // ══════════════════════════════════════════════════════════
-//  DASHBOARD (re-render con datos filtrados)
+//  DASHBOARD KPI
 // ══════════════════════════════════════════════════════════
-function actualizarDashboard() {
+function actualizarDashboard(metas) {
+  metas = metas || metasRaw;
   const dim = dimensionActual;
-  const metas = datosFiltrados.metas;
 
   if (!metas.length) {
     mostrarEstado('Sin datos para los filtros seleccionados.');
     return;
   }
 
-  // Agregar totales
-  const metaTotal   = metas.reduce((s,m) => s + (Number(dim==='USD' ? m.meta_usd  : m.meta_cajas) ||0), 0);
-  const realTotal   = metas.reduce((s,m) => s + (Number(dim==='USD' ? m.real_usd  : m.real_cajas) ||0), 0);
-  const diasTrans   = metas[0]?.dias_transcurridos || 18;
-  const diasTotales = metas[0]?.dias_totales        || 21;
+  const metaTotal   = metas.reduce((s,m) => s + (Number(dim==='USD' ? m.meta_monto_usd  : m.meta_cajas)  ||0), 0);
+  const realTotal   = metas.reduce((s,m) => s + (Number(dim==='USD' ? m.real_monto_usd  : m.real_cajas)  ||0), 0);
 
+  const hoy         = new Date();
+  const diasTotales = new Date(hoy.getFullYear(), hoy.getMonth()+1, 0).getDate();
+  const diasTrans   = hoy.getDate();
   const pct         = metaTotal > 0 ? (realTotal / metaTotal) * 100 : 0;
   const gap         = Math.max(0, metaTotal - realTotal);
   const diasRest    = Math.max(0, diasTotales - diasTrans);
   const ritmo       = diasRest > 0 ? gap / diasRest : 0;
   const runRate     = diasTrans > 0 ? (realTotal / diasTrans) * diasTotales : 0;
 
-  const pre  = dim === 'USD' ? '$ ' : '';
-  const suf  = dim === 'USD' ? '' : ' Cj.';
-  const fmt  = (n) => pre + Math.round(n).toLocaleString('es-VE') + suf;
-  const fmtD = (n) => pre + n.toFixed(2) + suf;
+  const pre = dim === 'USD' ? '$ ' : '';
+  const suf = dim === 'USD' ? '' : ' Cj.';
+  const fmt  = n => pre + Math.round(n).toLocaleString('es-VE') + suf;
+  const fmtD = n => pre + n.toFixed(2) + suf;
 
-  // KPIs
-  document.getElementById('kpi-real').textContent    = fmt(realTotal);
-  document.getElementById('kpi-meta').textContent    = fmt(metaTotal);
-  document.getElementById('kpi-runrate').textContent = fmt(runRate);
-  document.getElementById('kpi-ritmo').textContent   = fmtD(ritmo);
-  document.getElementById('kpi-gap').textContent     = fmt(gap);
-  document.getElementById('kpi-dias-rest').textContent = `${diasRest} días`;
+  document.getElementById('kpi-real').textContent     = fmt(realTotal);
+  document.getElementById('kpi-meta').textContent     = fmt(metaTotal);
+  document.getElementById('kpi-runrate').textContent  = fmt(runRate);
+  document.getElementById('kpi-ritmo').textContent    = fmtD(ritmo);
+  document.getElementById('kpi-gap').textContent      = fmt(gap);
+  document.getElementById('kpi-dias-rest').textContent= `${diasRest} días`;
 
-  // Porcentaje + barra
+  const sem   = getSemaforo(pct);
   const pctEl = document.getElementById('kpi-pct');
   pctEl.textContent = pct.toFixed(1) + '%';
-  const sem = getSemaforo(pct);
-  pctEl.className = `badge ${sem.badge}`;
-  document.getElementById('bar-pct').style.width = Math.min(pct,100) + '%';
+  pctEl.className   = `badge ${sem.badge}`;
+  document.getElementById('bar-pct').style.width      = Math.min(pct,100) + '%';
   document.getElementById('bar-pct').style.background = sem.color;
 
-  // Run-rate badge
-  const rrBadge = document.getElementById('kpi-rr-badge');
-  rrBadge.textContent = runRate >= metaTotal ? 'ON TRACK ✓' : 'REVISAR ↗';
-  rrBadge.className   = `badge ${runRate >= metaTotal ? 'badge-verde' : 'badge-amarillo'}`;
+  const rrB = document.getElementById('kpi-rr-badge');
+  rrB.textContent = runRate >= metaTotal ? 'ON TRACK ✓' : 'REVISAR ↗';
+  rrB.className   = `badge ${runRate >= metaTotal ? 'badge-verde' : 'badge-amarillo'}`;
 
-  // Semáforo
   const semEl = document.getElementById('kpi-semaforo');
   semEl.textContent = sem.icono + ' ' + sem.texto;
   semEl.style.color = sem.color;
 
-  // Tablas
-  renderTablaLineas(datosFiltrados.lineas, pre, suf, dim);
-  renderTablaVendedores(metas, pre, suf, dim, diasRest, diasTrans, diasTotales);
+  // Tabla lineas — construir desde detalle_clientes de todas las metas
+  const lineasMap = {};
+  metas.forEach(meta => {
+    let clientes = [];
+    try { clientes = JSON.parse(meta.detalle_clientes || '[]'); } catch(e) {}
+    clientes.forEach(cli => {
+      (cli.productos || []).forEach(p => {
+        const k = p.nombre || p.id_producto || '—';
+        if (!lineasMap[k]) lineasMap[k] = { linea:k, meta_usd:0, real_usd:0, meta_cajas:0, real_cajas:0 };
+        lineasMap[k].meta_cajas += Number(p.cajas) || 0;
+        lineasMap[k].meta_usd   += Number(p.subtotal) || 0;
+      });
+    });
+  });
+  renderTablaLineas(Object.values(lineasMap), pre, suf, dim);
 
-  // Chart
+  // Tabla vendedores
+  const vendMap = {};
+  metas.forEach(m => {
+    const k = m.vendedor || '—';
+    if (!vendMap[k]) vendMap[k] = { nombre:k, meta_usd:0, meta_cajas:0, real_monto_usd:0, real_cajas:0 };
+    vendMap[k].meta_usd       += Number(m.meta_monto_usd) || 0;
+    vendMap[k].meta_cajas     += Number(m.meta_cajas)     || 0;
+    vendMap[k].real_monto_usd += Number(m.real_monto_usd) || 0;
+    vendMap[k].real_cajas     += Number(m.real_cajas)     || 0;
+  });
+  renderTablaVendedores(Object.values(vendMap), pre, suf, dim, diasRest);
+
   renderChartRunRate(metaTotal, realTotal, runRate, diasTrans, diasTotales, pre);
+
+  // Si el tab de clientes está activo, también actualizarlo
+  if (document.getElementById('tabClientes')?.classList.contains('activo')) {
+    renderTabClientes();
+  }
 }
 
 // ══════════════════════════════════════════════════════════
 //  SEMÁFORO
 // ══════════════════════════════════════════════════════════
 function getSemaforo(pct) {
-  if (pct >= 90) return { badge:'badge-verde',  color:'var(--verde)',    texto:'VERDE',    icono:'✅' };
-  if (pct >= 75) return { badge:'badge-amarillo',color:'var(--amarillo)',texto:'AMARILLO', icono:'⚠️' };
-  return             { badge:'badge-rojo',    color:'#DC2626',         texto:'ROJO',     icono:'🔴' };
+  if (pct >= 90) return { badge:'badge-verde',    color:'var(--verde)',   texto:'VERDE',    icono:'✅' };
+  if (pct >= 75) return { badge:'badge-amarillo', color:'var(--amarillo)',texto:'AMARILLO', icono:'⚠️' };
+  return             { badge:'badge-rojo',      color:'#DC2626',        texto:'ROJO',     icono:'🔴' };
 }
 
 // ══════════════════════════════════════════════════════════
-//  TABLAS
+//  TABLA LÍNEAS
 // ══════════════════════════════════════════════════════════
 function renderTablaLineas(lineas, pre, suf, dim) {
   const tbody = document.getElementById('tabla-lineas');
   if (!lineas.length) {
-    tbody.innerHTML = '<tr><td colspan="3" class="estado-msg">Sin datos de líneas.</td></tr>';
-    return;
+    tbody.innerHTML = '<tr><td colspan="3" class="estado-msg">Sin datos.</td></tr>'; return;
   }
   tbody.innerHTML = lineas.map(l => {
-    const real = Number(dim === 'USD' ? l.real_usd : l.real_cajas) || 0;
-    const meta = Number(dim === 'USD' ? l.meta_usd : l.meta_cajas) || 0;
+    const real = Number(dim==='USD' ? l.real_usd : l.real_cajas) || 0;
+    const meta = Number(dim==='USD' ? l.meta_usd : l.meta_cajas) || 0;
     const pct  = meta > 0 ? (real / meta) * 100 : 0;
     const sem  = getSemaforo(pct);
     return `<tr>
       <td><strong>${l.linea}</strong></td>
-      <td>${pre}${Math.round(real).toLocaleString('es-VE')}${suf}</td>
+      <td>${pre}${Math.round(meta).toLocaleString('es-VE')}${suf}</td>
       <td><span class="badge ${sem.badge}">${pct.toFixed(1)}%</span></td>
     </tr>`;
   }).join('');
 }
 
-function renderTablaVendedores(metas, pre, suf, dim, diasRest, diasTrans, diasTotales) {
+// ══════════════════════════════════════════════════════════
+//  TABLA VENDEDORES
+// ══════════════════════════════════════════════════════════
+function renderTablaVendedores(metas, pre, suf, dim, diasRest) {
   const tbody = document.getElementById('tabla-vendedores');
   if (!metas.length) {
-    tbody.innerHTML = '<tr><td colspan="7" class="estado-msg">Sin datos.</td></tr>';
-    return;
+    tbody.innerHTML = '<tr><td colspan="7" class="estado-msg">Sin datos.</td></tr>'; return;
   }
   tbody.innerHTML = metas.map(m => {
-    const metaV = Number(dim === 'USD' ? m.meta_usd  : m.meta_cajas) || 0;
-    const realV = Number(dim === 'USD' ? m.real_usd  : m.real_cajas) || 0;
+    const metaV = Number(dim==='USD' ? m.meta_usd  : m.meta_cajas)     || 0;
+    const realV = Number(dim==='USD' ? m.real_monto_usd : m.real_cajas) || 0;
     const pct   = metaV > 0 ? (realV / metaV) * 100 : 0;
     const gap   = Math.max(0, metaV - realV);
     const ritmo = diasRest > 0 ? gap / diasRest : 0;
@@ -659,70 +822,329 @@ function renderTablaVendedores(metas, pre, suf, dim, diasRest, diasTrans, diasTo
 }
 
 // ══════════════════════════════════════════════════════════
+//  TAB CLIENTES — render principal
+// ══════════════════════════════════════════════════════════
+function renderTabClientes() {
+  const fV = document.getElementById('mc-filtro-vendedor')?.value  || '';
+  const fE = document.getElementById('mc-filtro-estado')?.value    || '';
+  const fP = document.getElementById('mc-filtro-periodo')?.value   || '';
+
+  let filas = clientesMap.filter(e => {
+    const periodo = e.meta.periodo || (e.meta.mes+'/'+e.meta.anio) || '';
+    const okV = !fV || e.meta.vendedor === fV || !esDirectivo;
+    const okE = !fE || e.estado === fE;
+    const okP = !fP || periodo === fP;
+    return okV && okE && okP;
+  });
+
+  // Si es vendedor, solo sus clientes
+  if (!esDirectivo && sesion.vendedor_id) {
+    filas = filas.filter(e =>
+      String(e.meta.vendedor||'').toLowerCase() ===
+      String(sesion.vendedor_id).toLowerCase()
+    );
+  }
+
+  // KPIs del tab
+  const totalClientes   = filas.length;
+  const totalActivos    = filas.filter(e => e.estado === 'activo').length;
+  const totalCajas      = filas.reduce((s,e) =>
+    s + (e.cli.productos||[]).reduce((ss,p) => ss + (Number(p.cajas)||0), 0), 0);
+  const totalUSD        = filas.reduce((s,e) =>
+    s + (e.cli.productos||[]).reduce((ss,p) => ss + (Number(p.subtotal)||0), 0), 0);
+  const totalConv       = filas.filter(e => e.estado === 'convertido').length;
+
+  document.getElementById('mc-kpis').innerHTML = `
+    <div class="kpi-card" style="padding:12px 16px;min-width:120px">
+      <div class="kpi-lbl">Clientes</div>
+      <div class="kpi-val" style="font-size:1.4rem">${totalClientes}</div>
+      <div class="kpi-sub">${totalActivos} activos</div>
+    </div>
+    <div class="kpi-card" style="padding:12px 16px;min-width:120px">
+      <div class="kpi-lbl">Total Cajas</div>
+      <div class="kpi-val" style="font-size:1.4rem">${totalCajas.toLocaleString('es-VE')}</div>
+      <div class="kpi-sub">planificadas</div>
+    </div>
+    <div class="kpi-card" style="padding:12px 16px;min-width:140px">
+      <div class="kpi-lbl">Total USD</div>
+      <div class="kpi-val" style="font-size:1.4rem">$ ${totalUSD.toFixed(2)}</div>
+      <div class="kpi-sub">valor meta</div>
+    </div>
+    <div class="kpi-card" style="padding:12px 16px;min-width:130px">
+      <div class="kpi-lbl">Convertidos</div>
+      <div class="kpi-val" style="font-size:1.4rem;color:var(--verde)">${totalConv}</div>
+      <div class="kpi-sub">en pedidos</div>
+    </div>`;
+
+  if (!filas.length) {
+    document.getElementById('mc-contenido').innerHTML =
+      '<div class="estado-msg"><div class="icon">📋</div>No hay clientes para los filtros seleccionados.</div>';
+    return;
+  }
+
+  // Render de cards de clientes
+  document.getElementById('mc-contenido').innerHTML = filas.map((e, i) => {
+    const cli     = e.cli;
+    const estado  = e.estado;
+    const periodo = e.meta.periodo || (e.meta.mes+'/'+e.meta.anio) || '—';
+    const totalCli= (cli.productos||[]).reduce((s,p)=>s+(Number(p.cajas)||0),0);
+    const totalUsdCli=(cli.productos||[]).reduce((s,p)=>s+(Number(p.subtotal)||0),0);
+
+    const badgeEstado =
+      estado === 'convertido' ? '<span class="badge badge-verde">✓ Convertido</span>' :
+      estado === 'anulado'    ? '<span class="badge badge-rojo">✗ Anulado</span>' :
+                                '<span class="badge badge-azul">● Activo</span>';
+
+    // Botones de acción según estado
+    let btns = '';
+    if (estado === 'activo') {
+      btns = `
+        <button class="btn-convertir" onclick="abrirModalConvertir(${i})">🛒 Convertir a Pedido</button>
+        <button class="btn-anular"    onclick="abrirModalAnulacion(${i})">🚫 Anular</button>`;
+    } else if (estado === 'convertido') {
+      btns = `<span class="btn-anulado">📦 Pedido ${e.pedidoNum||'generado'}</span>`;
+    } else if (estado === 'anulado') {
+      btns = `<span class="btn-anulado" title="${e.razon}">Anulado: ${e.razon.substring(0,30)}…</span>`;
+    }
+
+    // Chips de productos
+    const chips = (cli.productos||[]).map(p => `
+      <div class="prod-chip ${estado==='anulado'?'anulado':''}">
+        <span class="pc-nom">${p.nombre||p.id_producto||'—'}</span>
+        <span class="pc-det">${p.cajas||0} cj · $ ${(Number(p.subtotal)||0).toFixed(2)}</span>
+      </div>`).join('');
+
+    return `
+    <div class="meta-cliente-card" id="mc-card-${i}">
+      <div class="meta-cliente-hdr">
+        <div>
+          <h4>${cli.cliente||cli.nombre||'—'} ${badgeEstado}</h4>
+          <div class="sub">
+            Vendedor: <strong>${e.meta.vendedor||'—'}</strong> ·
+            Período: <strong>${periodo}</strong> ·
+            ${totalCli} cajas · $ ${totalUsdCli.toFixed(2)}
+          </div>
+        </div>
+        <div class="meta-acciones">${btns}</div>
+      </div>
+      <div class="prod-chips">${chips||'<span style="font-size:.72rem;color:var(--sub)">Sin productos asignados</span>'}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════════
+//  MODAL ANULACIÓN
+// ══════════════════════════════════════════════════════════
+function abrirModalAnulacion(idx) {
+  _anulCtx = idx;
+  const e   = clientesMap[idx];
+  document.getElementById('modal-anul-desc').textContent =
+    `Cliente: ${e.cli.cliente||e.cli.nombre||'—'} · Período: ${e.meta.periodo||(e.meta.mes+'/'+e.meta.anio)||'—'}`;
+  document.getElementById('modal-anul-razon').value = '';
+  document.getElementById('modal-anulacion').classList.add('open');
+}
+
+function cerrarModalAnulacion() {
+  document.getElementById('modal-anulacion').classList.remove('open');
+  _anulCtx = null;
+}
+
+async function confirmarAnulacion() {
+  const razon = document.getElementById('modal-anul-razon').value.trim();
+  if (!razon) {
+    document.getElementById('modal-anul-razon').style.borderColor = 'var(--rojo)';
+    document.getElementById('modal-anul-razon').placeholder = 'La razón es obligatoria.';
+    return;
+  }
+  document.getElementById('modal-anul-razon').style.borderColor = '';
+
+  const e = clientesMap[_anulCtx];
+  e.estado      = 'anulado';
+  e.razon       = razon;
+  e.cli._estado = 'anulado';
+  e.cli._razon  = razon;
+
+  // Guardar en backend actualizando el detalle_clientes de la meta
+  await persistirEstadoCliente(e);
+
+  cerrarModalAnulacion();
+  renderTabClientes();
+  mostrarToast('Cliente anulado correctamente.', 'ok-t');
+}
+
+// ══════════════════════════════════════════════════════════
+//  MODAL CONVERTIR A PEDIDO
+// ══════════════════════════════════════════════════════════
+function abrirModalConvertir(idx) {
+  _convCtx = idx;
+  const e   = clientesMap[idx];
+  const cli = e.cli;
+  document.getElementById('modal-conv-desc').textContent =
+    `Cliente: ${cli.cliente||cli.nombre||'—'} · Período: ${e.meta.periodo||(e.meta.mes+'/'+e.meta.anio)||'—'}`;
+
+  const det = (cli.productos||[]).map(p =>
+    `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--borde)">
+      <span>${p.nombre||p.id_producto||'—'}</span>
+      <strong>${p.cajas||0} cajas · $ ${(Number(p.subtotal)||0).toFixed(2)}</strong>
+    </div>`).join('');
+  document.getElementById('modal-conv-detalle').innerHTML = det ||
+    '<span style="color:var(--sub);font-size:.72rem">Sin productos</span>';
+
+  document.getElementById('modal-convertir').classList.add('open');
+}
+
+function cerrarModalConvertir() {
+  document.getElementById('modal-convertir').classList.remove('open');
+  _convCtx = null;
+}
+
+async function confirmarConversion() {
+  const e   = clientesMap[_convCtx];
+  const cli = e.cli;
+  const meta= e.meta;
+
+  // Construir payload para nuevoPedido
+  const productos = (cli.productos||[]).map(p => ({
+    nombre:   p.nombre || p.id_producto || '',
+    cajas:    Number(p.cajas) || 0,
+    precio:   Number(p.precio_usd) || 0,
+    subtotal: Number(p.subtotal)   || 0,
+  }));
+
+  const totalCajas = productos.reduce((s,p) => s + p.cajas, 0);
+  const totalUSD   = productos.reduce((s,p) => s + p.subtotal, 0);
+
+  const payload = {
+    action:          'nuevoPedido',
+    vendedor:        meta.vendedor     || sesion.nombre      || '',
+    userVendedor:    meta.vendedor     || sesion.vendedor_id || '',
+    razonSocial:     cli.cliente       || cli.nombre         || '',
+    establecimiento: cli.establecimiento || cli.cliente      || '',
+    contacto:        cli.contacto      || '',
+    telefono:        cli.telefono      || '',
+    tipoCliente:     cli.tipo          || 'activo',
+    productos,
+    totalUSD,
+    totalCajas,
+    condicionPago:   '5 días',
+    observaciones:   'Convertido desde META período ' + (meta.periodo||(meta.mes+'/'+meta.anio)||''),
+  };
+
+  try {
+    const r   = await fetch(API_URL, { method:'POST', body:JSON.stringify(payload), redirect:'follow' });
+    const txt = await r.text();
+    const d   = JSON.parse(txt);
+
+    if (d.ok) {
+      e.estado         = 'convertido';
+      e.pedidoNum      = d.numeroPedido || '';
+      e.cli._estado    = 'convertido';
+      e.cli._pedido    = d.numeroPedido || '';
+      await persistirEstadoCliente(e);
+      cerrarModalConvertir();
+      renderTabClientes();
+      mostrarToast(`✓ Pedido ${d.numeroPedido||''} creado correctamente.`, 'ok-t');
+    } else {
+      mostrarToast('Error: ' + (d.msg || 'No se pudo crear el pedido.'), 'err-t');
+    }
+  } catch(err) {
+    mostrarToast('Error de conexión: ' + err.message, 'err-t');
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+//  PERSISTIR ESTADO EN BACKEND
+//  Actualiza detalle_clientes de la meta para conservar
+//  el estado (anulado/convertido) y la razón
+// ══════════════════════════════════════════════════════════
+async function persistirEstadoCliente(entrada) {
+  const meta    = entrada.meta;
+  const periodo = meta.periodo || '';
+  const partes  = periodo.split(' al ');
+  const desde   = partes[0] || '';
+  const hasta   = partes[1] || partes[0] || '';
+
+  // Reconstruir clientes desde clientesMap para esta meta
+  const clisDeMeta = clientesMap
+    .filter(e => e.meta === meta)
+    .map(e => e.cli);
+
+  const payload = {
+    action:               'asignarMeta',
+    vendedor_id:          meta.vendedor || '',
+    fecha_desde:          desde,
+    fecha_hasta:          hasta,
+    meta_usd:             clisDeMeta.reduce((s,c) => s+(Number(c.total_usd)||0), 0),
+    meta_cajas:           clisDeMeta.reduce((s,c) => s+(Number(c.total_cajas)||0), 0),
+    meta_clientes_nuevos: clisDeMeta.filter(c => c.tipo==='Nuevo').length,
+    clientes:             clisDeMeta,
+    productos:            [],
+  };
+
+  try {
+    const r = await fetch(API_URL, { method:'POST', body:JSON.stringify(payload), redirect:'follow' });
+    const t = await r.text();
+    const d = JSON.parse(t);
+    if (!d.ok) console.warn('persistirEstadoCliente:', d.msg);
+  } catch(e) { console.warn('persistirEstadoCliente error:', e); }
+}
+
+// ══════════════════════════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════════════════════════
+function mostrarToast(msg, tipo) {
+  const t = document.getElementById('toast');
+  t.textContent  = msg;
+  t.className    = 'toast show ' + (tipo||'');
+  clearTimeout(window._toastT);
+  window._toastT = setTimeout(() => t.className = 'toast', 4500);
+}
+
+// ══════════════════════════════════════════════════════════
 //  CHART RUN-RATE
 // ══════════════════════════════════════════════════════════
 function renderChartRunRate(metaTotal, realTotal, runRate, diasTrans, diasTotales, pre) {
   const ctx = document.getElementById('chartRunRate').getContext('2d');
   if (chartInstance) chartInstance.destroy();
-
-  // Construir puntos reales proporcionales al tiempo
-  const step = Math.floor(diasTotales / 6);
-  const labelsBase = [];
-  const realesBase = [];
+  const step = Math.max(1, Math.floor(diasTotales / 6));
+  const labels = [], reales = [], proyec = [];
   for (let i = 1; i <= 6; i++) {
     const d = step * i;
-    labelsBase.push(`D${d}`);
-    realesBase.push(d <= diasTrans ? Math.round(realTotal * (d / diasTrans)) : null);
+    labels.push(`D${d}`);
+    reales.push(d <= diasTrans ? Math.round(realTotal * (d / Math.max(diasTrans,1))) : null);
+    proyec.push(null);
   }
-  const labels = [...labelsBase, 'Proy. Final'];
-  const reales  = [...realesBase, null];
-  const proyec  = [...Array(6).fill(null), Math.round(runRate)];
-
+  labels.push('Proy. Final'); reales.push(null); proyec.push(Math.round(runRate));
   chartInstance = new Chart(ctx, {
     type: 'line',
-    data: {
-      labels,
-      datasets: [
-        {
-          label: 'Real',
-          data: reales,
-          borderColor: '#C8181E',
-          backgroundColor: 'rgba(200,24,30,.08)',
-          fill: true, tension: .3, borderWidth: 2.5,
-          pointBackgroundColor: '#C8181E', pointRadius: 4
-        },
-        {
-          label: 'Proyección',
-          data: proyec,
-          borderColor: '#2563EB',
-          borderDash: [5,5], borderWidth: 2,
-          pointBackgroundColor: '#2563EB', pointRadius: 4
-        },
-        {
-          label: 'Meta',
-          data: Array(7).fill(metaTotal),
-          borderColor: '#10B981',
-          borderDash: [2,2], borderWidth: 1.5,
-          pointRadius: 0
-        }
-      ]
-    },
+    data: { labels, datasets: [
+      { label:'Real', data:reales, borderColor:'#C8181E', backgroundColor:'rgba(200,24,30,.08)', fill:true, tension:.3, borderWidth:2.5, pointBackgroundColor:'#C8181E', pointRadius:4 },
+      { label:'Proyección', data:proyec, borderColor:'#2563EB', borderDash:[5,5], borderWidth:2, pointBackgroundColor:'#2563EB', pointRadius:4 },
+      { label:'Meta', data:Array(7).fill(metaTotal), borderColor:'#10B981', borderDash:[2,2], borderWidth:1.5, pointRadius:0 }
+    ]},
     options: {
-      responsive: true, maintainAspectRatio: false,
+      responsive:true, maintainAspectRatio:false,
       plugins: {
-        legend: { position: 'bottom', labels: { font: { size: 11 } } },
-        tooltip: {
-          callbacks: {
-            label: (ctx) => ` ${ctx.dataset.label}: ${pre}${(ctx.parsed.y||0).toLocaleString('es-VE')}`
-          }
-        }
+        legend: { position:'bottom', labels:{ font:{ size:11 } } },
+        tooltip: { callbacks:{ label: c => ` ${c.dataset.label}: ${pre}${(c.parsed.y||0).toLocaleString('es-VE')}` } }
       },
-      scales: {
-        y: { grid: { color: '#F3F4F6' }, ticks: { font: { size: 11 } } },
-        x: { grid: { display: false }, ticks: { font: { size: 11 } } }
-      }
+      scales: { y:{ grid:{ color:'#F3F4F6' }, ticks:{ font:{ size:11 } } }, x:{ grid:{ display:false }, ticks:{ font:{ size:11 } } } }
     }
   });
+}
+
+function mostrarEstado(msg, esError=false) {
+  const color = esError ? 'var(--rojo)' : 'var(--sub)';
+  ['kpi-real','kpi-meta','kpi-pct','kpi-runrate','kpi-rr-badge',
+   'kpi-ritmo','kpi-gap','kpi-dias-rest','kpi-semaforo'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.textContent = esError ? '—' : '…';
+  });
+  document.getElementById('tabla-lineas').innerHTML =
+    `<tr><td colspan="3" style="text-align:center;padding:20px;color:${color}">${msg}</td></tr>`;
+  document.getElementById('tabla-vendedores').innerHTML =
+    `<tr><td colspan="7" style="text-align:center;padding:20px;color:${color}">${msg}</td></tr>`;
+  document.getElementById('mc-contenido').innerHTML =
+    `<div class="estado-msg" style="color:${color}">${msg}</div>`;
 }
 
 // ══════════════════════════════════════════════════════════
@@ -730,16 +1152,17 @@ function renderChartRunRate(metaTotal, realTotal, runRate, diasTrans, diasTotale
 // ══════════════════════════════════════════════════════════
 function setDimension(dim) {
   dimensionActual = dim;
-  document.getElementById('btnUSD').classList.toggle('activo', dim === 'USD');
-  document.getElementById('btnCajas').classList.toggle('activo', dim === 'CAJAS');
-  actualizarDashboard();
+  document.getElementById('btnUSD').classList.toggle('activo',   dim==='USD');
+  document.getElementById('btnCajas').classList.toggle('activo', dim==='CAJAS');
+  aplicarFiltros();
 }
 
 function switchTab(id, btn) {
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('activo'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('activo'));
+  document.querySelectorAll('.tab-btn').forEach(b   => b.classList.remove('activo'));
   document.getElementById(id).classList.add('activo');
   btn.classList.add('activo');
+  if (id === 'tabClientes') renderTabClientes();
 }
 </script>
 </body>
