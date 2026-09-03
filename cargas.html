@@ -267,7 +267,7 @@ window.addEventListener('DOMContentLoaded',async()=>{
 });
 function cerrarSesion(){SCCR.cerrarSesion()}
 const SECCIONES=['usuarios','clientes','reg-productos','metas'];
-function showSection(id){SECCIONES.forEach(s=>document.getElementById('sec-'+s).classList.toggle('on',s===id));document.querySelectorAll('.stab').forEach((b,i)=>b.classList.toggle('on',SECCIONES[i]===id))}
+function showSection(id){SECCIONES.forEach(s=>document.getElementById('sec-'+s).classList.toggle('on',s===id));document.querySelectorAll('.stab').forEach((b,i)=>b.classList.toggle('on',SECCIONES[i]===id));if(id==='metas')cargarResumen();}
 function setLoading(prefix,on){const b=document.getElementById('btn-'+prefix);if(b)b.disabled=on;const t=document.getElementById('txt-'+prefix);if(t)t.style.display=on?'none':'';const s=document.getElementById('sp-'+prefix);if(s)s.classList.toggle('show',on)}
 function showAlert(prefix,type,msg){['ok','err'].forEach(t=>document.getElementById(t+'-'+prefix).classList.remove('show'));const e=document.getElementById(type+'-'+prefix);e.textContent=msg;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),6000)}
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
@@ -544,10 +544,6 @@ function actualizarTotales(){let c=0,u=0,n=0,tc=0;_filasMeta.forEach((x,i)=>{let
 // ═══════════════════════════════════════════════════════════
 let _metasGuardadas = [];   // todas las metas cargadas desde el backend
 let _modoResumen = 'vendedor'; // 'vendedor' | 'total'
-
-// Cargar metas al abrir la pestaña
-document.querySelector('[onclick="showSection('metas')"]')
-  .addEventListener('click', () => { cargarResumen(); });
 
 async function cargarResumen() {
   try {
