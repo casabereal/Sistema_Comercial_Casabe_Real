@@ -17,6 +17,30 @@ header{background:#D30000;color:#fff;height:60px;display:flex;align-items:center
 .btn-primary{background:var(--rojo);color:#fff;border:none;padding:11px 24px;border-radius:9px;font-size:.8rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px}.btn-primary:hover{background:var(--rojo-d)}.btn-primary:disabled{background:#D1D5DB;cursor:not-allowed}.sp{width:16px;height:16px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}.sp.show{display:inline-block}@keyframes spin{to{transform:rotate(360deg)}}
 .alert{border-radius:9px;padding:12px 16px;font-size:.78rem;font-weight:500;display:none;margin-top:14px}.alert.show{display:block}.alert.ok{background:var(--verde-xs);border:1px solid #6EE7B7;color:var(--verde)}.alert.err{background:var(--rojo-xs);border:1px solid #FECACA;color:var(--rojo)}.table-wrap{overflow-x:auto;margin-top:20px}table{width:100%;border-collapse:collapse;font-size:.75rem}th{background:var(--fondo);color:var(--gris);font-weight:600;padding:10px 14px;border-bottom:1px solid var(--borde);text-align:left;text-transform:uppercase;font-size:.67rem}td{padding:12px 14px;border-bottom:1px solid var(--borde)}.badge{display:inline-block;padding:3px 10px;border-radius:50px;font-size:.67rem;font-weight:600}.badge.vendedor{background:var(--rojo-xs);color:var(--rojo)}.badge.gerente{background:#FEF3C7;color:#92400E}.badge.admin{background:#EDE9FE;color:#7C3AED}.badge.activo{background:var(--verde-xs);color:var(--verde)}.badge.inactivo{background:var(--fondo);color:var(--gris)}
 .divider{border:none;border-top:1px solid var(--borde);margin:22px 0}.totales-bar{display:flex;gap:12px;flex-wrap:wrap;margin-top:4px}.total-chip{background:var(--fondo);border:1.5px solid var(--borde);border-radius:9px;padding:10px 18px;display:flex;flex-direction:column;gap:3px;min-width:140px}.total-label{font-size:.67rem;font-weight:600;color:var(--gris);text-transform:uppercase}.total-val{font-size:1.15rem;font-weight:800;color:var(--rojo)}#tabla-metas-clientes input[type=number]{width:88px;padding:5px 6px;border:1.5px solid var(--borde);border-radius:6px;font-size:.78rem;text-align:center}#tabla-metas-clientes select{padding:4px 8px;font-size:.72rem;border:1.5px solid var(--borde);border-radius:6px;background:#fff}footer{text-align:center;padding:18px;font-size:.68rem;color:var(--gris);border-top:1px solid var(--borde);background:#fff;margin-top:auto}@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+.resumen-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin:24px 0 14px}
+.resumen-header h3{font-size:.9rem;font-weight:700}
+.resumen-tabs{display:flex;gap:6px}
+.rtab{padding:6px 14px;border-radius:7px;font-size:.72rem;font-weight:600;border:1.5px solid var(--borde);background:#fff;color:var(--gris);cursor:pointer}
+.rtab.on{background:var(--rojo);color:#fff;border-color:var(--rojo)}
+.resumen-filters{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.resumen-filters select{padding:7px 10px;border:1.5px solid var(--borde);border-radius:8px;font-size:.75rem;font-family:Inter;background:#fff}
+.resumen-kpis{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.r-kpi{background:var(--fondo);border:1.5px solid var(--borde);border-radius:9px;padding:9px 16px;min-width:130px}
+.r-kpi-lbl{font-size:.63rem;font-weight:600;color:var(--gris);text-transform:uppercase}
+.r-kpi-val{font-size:1.05rem;font-weight:800;color:var(--rojo);margin-top:2px}
+.resumen-wrap{overflow-x:auto}
+.resumen-wrap table{font-size:.72rem}
+.resumen-wrap th{font-size:.62rem;background:var(--fondo);color:var(--gris);font-weight:600;text-transform:uppercase;padding:9px 11px;border-bottom:1px solid var(--borde);white-space:nowrap}
+.resumen-wrap td{padding:10px 11px;border-bottom:1px solid var(--borde);vertical-align:middle}
+.resumen-wrap tr:hover td{background:#fafafa}
+.cell-prod{display:flex;flex-direction:column;gap:2px;min-width:80px}
+.cell-prod .cajas-val{font-weight:700;font-size:.8rem}
+.cell-prod .cajas-usd{font-size:.62rem;color:var(--gris)}
+.btn-sm{padding:4px 9px;border-radius:6px;font-size:.67rem;font-weight:600;cursor:pointer;border:1.5px solid var(--borde);background:#fff}
+.btn-sm.edit{color:var(--azul);border-color:#BFDBFE}
+.btn-sm.del{color:var(--rojo);border-color:#FECACA;background:var(--rojo-xs)}
+.edit-row td{background:#EFF6FF!important}
+.edit-input{width:80px;padding:5px 6px;border:1.5px solid var(--borde);border-radius:6px;font-size:.75rem;text-align:center}
 </style>
 </head>
 <body>
@@ -194,7 +218,37 @@ header{background:#D30000;color:#fff;height:60px;display:flex;align-items:center
 <div class="f" style="justify-content:flex-end"><button class="btn-primary" id="btn-cargar-clientes-meta" onclick="cargarClientesMeta()"><span id="txt-cargar-clientes-meta">Cargar Clientes</span><div class="sp" id="sp-cargar-clientes-meta"></div></button></div></div>
 <div class="totales-bar"><div class="total-chip"><span class="total-label">Meta en USD</span><span class="total-val" id="tot-usd">$ 0.00</span></div><div class="total-chip"><span class="total-label">Meta en Cajas</span><span class="total-val" id="tot-cajas">0</span></div><div class="total-chip"><span class="total-label">Clientes Nuevos</span><span class="total-val" id="tot-nuevos">0</span></div><div class="total-chip"><span class="total-label">Total Clientes</span><span class="total-val" id="tot-clientes">0</span></div></div>
 <div class="table-wrap"><table id="tabla-metas-clientes"><thead id="thead-metas-clientes"><tr><th>Cliente</th><th>Tipo</th><th>Productos / cajas</th><th>Total Cajas</th><th>Total USD</th></tr></thead><tbody id="tbody-metas-clientes"><tr><td colspan="5" style="text-align:center;padding:30px">Selecciona un vendedor y haz clic en <strong>Cargar Clientes</strong>.</td></tr></tbody></table></div>
-<button class="btn-primary" id="btn-meta" onclick="guardarMeta()" style="margin-top:18px"><span id="txt-meta">Guardar Meta</span><div class="sp" id="sp-meta"></div></button><div class="alert ok" id="ok-meta"></div><div class="alert err" id="err-meta"></div></div>
+<button class="btn-primary" id="btn-meta" onclick="guardarMeta()" style="margin-top:18px"><span id="txt-meta">Guardar Meta</span><div class="sp" id="sp-meta"></div></button><div class="alert ok" id="ok-meta"></div><div class="alert err" id="err-meta"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     RESUMEN VISUAL DE METAS ASIGNADAS
+     ═══════════════════════════════════════════════════════════ -->
+<hr class="divider">
+<div class="resumen-header">
+  <h3>📊 Resumen visual de metas asignadas</h3>
+  <div class="resumen-tabs">
+    <button class="rtab on" onclick="verResumen('vendedor')">Por vendedor</button>
+    <button class="rtab" onclick="verResumen('total')">Total clientes</button>
+  </div>
+</div>
+
+<div class="resumen-filters">
+  <select id="r-filtro-vendedor" onchange="renderResumen()">
+    <option value="">Todos los vendedores</option>
+  </select>
+  <select id="r-filtro-producto" onchange="renderResumen()">
+    <option value="">Todos los productos</option>
+  </select>
+</div>
+
+<div class="resumen-kpis" id="r-kpis"></div>
+<div class="resumen-wrap" id="r-tabla-wrap">
+  <div style="text-align:center;padding:30px;color:var(--gris);font-size:.8rem">
+    Guarda una meta para ver el resumen aquí.
+  </div>
+</div>
+
+</div>
 </main>
 <footer>&copy; 2026 Sistema Comercial Casabe Real (SCCR v2.5.0)</footer>
 
@@ -483,12 +537,369 @@ function renderTablaClientes(){
 }
 function recalcFila(i){let c=0,u=0;_productosMeta.forEach((p,j)=>{const n=Number(document.getElementById(`mc-prod-${i}-${j}`)?.value)||0;c+=n;u+=n*p.precio_usd});document.getElementById(`mc-tcajas-${i}`).textContent=c;document.getElementById(`mc-tusd-${i}`).textContent='$ '+u.toFixed(2);actualizarTotales()}
 function actualizarTotales(){let c=0,u=0,n=0,tc=0;_filasMeta.forEach((x,i)=>{let cf=0,uf=0;_productosMeta.forEach((p,j)=>{const z=Number(document.getElementById(`mc-prod-${i}-${j}`)?.value)||0;cf+=z;uf+=z*p.precio_usd});const t=document.getElementById(`mc-tipo-${i}`)?.value||'';if(cf>0||t)tc++;if(t==='Nuevo')n++;c+=cf;u+=uf});document.getElementById('tot-usd').textContent='$ '+u.toFixed(2);document.getElementById('tot-cajas').textContent=c;document.getElementById('tot-nuevos').textContent=n;document.getElementById('tot-clientes').textContent=tc}
+// ═══════════════════════════════════════════════════════════
+// RESUMEN VISUAL DE METAS
+// Fuente: _metasGuardadas — se llena desde la API al abrir la sección
+// y se actualiza cada vez que se guarda una meta.
+// ═══════════════════════════════════════════════════════════
+let _metasGuardadas = [];   // todas las metas cargadas desde el backend
+let _modoResumen = 'vendedor'; // 'vendedor' | 'total'
+
+// Cargar metas al abrir la pestaña
+document.querySelector('[onclick="showSection('metas')"]')
+  .addEventListener('click', () => { cargarResumen(); });
+
+async function cargarResumen() {
+  try {
+    const r = await fetch(API + '?action=metas', { redirect: 'follow' });
+    const t = await r.text();
+    const d = JSON.parse(t);
+    _metasGuardadas = Array.isArray(d.data) ? d.data : [];
+    poblarFiltrosResumen();
+    renderResumen();
+  } catch(e) {
+    console.warn('No se pudo cargar el resumen de metas:', e);
+  }
+}
+
+function poblarFiltrosResumen() {
+  // Vendedores únicos
+  const vendedores = [...new Set(_metasGuardadas.map(m => m.vendedor).filter(Boolean))].sort();
+  const selV = document.getElementById('r-filtro-vendedor');
+  selV.innerHTML = '<option value="">Todos los vendedores</option>' +
+    vendedores.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
+
+  // Productos únicos desde detalle_clientes
+  const prods = new Map();
+  _metasGuardadas.forEach(m => {
+    parsearDetalle(m.detalle_clientes).forEach(cli => {
+      (cli.productos || []).forEach(p => {
+        if (p.id_producto && !prods.has(p.id_producto))
+          prods.set(p.id_producto, p.nombre || p.id_producto);
+      });
+    });
+  });
+  const selP = document.getElementById('r-filtro-producto');
+  selP.innerHTML = '<option value="">Todos los productos</option>' +
+    [...prods.entries()].map(([id, nom]) =>
+      `<option value="${esc(id)}">${esc(nom)}</option>`).join('');
+}
+
+function parsearDetalle(raw) {
+  if (!raw) return [];
+  try { return JSON.parse(raw); } catch(e) { return []; }
+}
+
+function verResumen(modo) {
+  _modoResumen = modo;
+  document.querySelectorAll('.rtab').forEach((b, i) =>
+    b.classList.toggle('on', ['vendedor','total'][i] === modo));
+  renderResumen();
+}
+
+function renderResumen() {
+  const filtroV = document.getElementById('r-filtro-vendedor').value;
+  const filtroP = document.getElementById('r-filtro-producto').value;
+
+  // Filtrar metas por vendedor
+  let metas = _metasGuardadas;
+  if (filtroV) metas = metas.filter(m => m.vendedor === filtroV);
+
+  // Construir mapa: cliente → { vendedor, tipo, productos: { id → { nombre, cajas, usd } }, metaId, periodo }
+  // Clave única = id_cliente + periodo (puede tener varias metas el mismo cliente)
+  const mapaClientes = new Map();
+
+  metas.forEach(meta => {
+    const periodo = meta.periodo || (meta.mes + '/' + meta.anio);
+    parsearDetalle(meta.detalle_clientes).forEach(cli => {
+      const key = (cli.id_cliente || cli.cliente) + '||' + meta.vendedor;
+      if (!mapaClientes.has(key)) {
+        mapaClientes.set(key, {
+          id_cliente: cli.id_cliente || '',
+          cliente:    cli.cliente || cli.nombre || '—',
+          tipo:       cli.tipo || '',
+          vendedor:   meta.vendedor || '',
+          periodo,
+          metaId:     meta.id_meta || '',
+          productos:  {},
+        });
+      }
+      const entry = mapaClientes.get(key);
+      (cli.productos || []).forEach(p => {
+        if (filtroP && p.id_producto !== filtroP) return;
+        if (!entry.productos[p.id_producto]) {
+          entry.productos[p.id_producto] = {
+            nombre: p.nombre || p.id_producto,
+            cajas:  0, usd: 0
+          };
+        }
+        entry.productos[p.id_producto].cajas += Number(p.cajas) || 0;
+        entry.productos[p.id_producto].usd   += Number(p.subtotal || 0);
+      });
+    });
+  });
+
+  const filas = [...mapaClientes.values()];
+
+  // KPIs
+  const totalCajas   = filas.reduce((s, f) => s + Object.values(f.productos).reduce((ss, p) => ss + p.cajas, 0), 0);
+  const totalUsd     = filas.reduce((s, f) => s + Object.values(f.productos).reduce((ss, p) => ss + p.usd, 0), 0);
+  const totalClients = filas.length;
+  const totalNuevos  = filas.filter(f => f.tipo === 'Nuevo').length;
+
+  document.getElementById('r-kpis').innerHTML = `
+    <div class="r-kpi"><div class="r-kpi-lbl">Clientes</div><div class="r-kpi-val">${totalClients}</div></div>
+    <div class="r-kpi"><div class="r-kpi-lbl">Clientes nuevos</div><div class="r-kpi-val">${totalNuevos}</div></div>
+    <div class="r-kpi"><div class="r-kpi-lbl">Total cajas</div><div class="r-kpi-val">${totalCajas}</div></div>
+    <div class="r-kpi"><div class="r-kpi-lbl">Total USD</div><div class="r-kpi-val">$ ${totalUsd.toFixed(2)}</div></div>`;
+
+  if (!filas.length) {
+    document.getElementById('r-tabla-wrap').innerHTML =
+      '<div style="text-align:center;padding:30px;color:var(--gris)">No hay metas asignadas para los filtros seleccionados.</div>';
+    return;
+  }
+
+  // Productos únicos en las filas visibles
+  const prodsUnicos = new Map();
+  filas.forEach(f => Object.entries(f.productos).forEach(([id, p]) => {
+    if (!prodsUnicos.has(id)) prodsUnicos.set(id, p.nombre);
+  }));
+
+  // Cabecera de tabla
+  let thead = _modoResumen === 'vendedor'
+    ? '<th>Vendedor</th><th>Cliente</th><th>Tipo</th><th>Período</th>'
+    : '<th>Cliente</th><th>Tipo</th><th>Período</th>';
+
+  prodsUnicos.forEach(nombre => thead += `<th style="text-align:center">${esc(nombre)}</th>`);
+  thead += '<th style="text-align:center">Total Cajas</th><th style="text-align:right">Total USD</th><th></th>';
+
+  // Filas
+  const tbody = filas.map((f, idx) => {
+    let totalFilaCajas = 0, totalFilaUsd = 0;
+    let tdProds = '';
+    prodsUnicos.forEach((nombre, id) => {
+      const p = f.productos[id];
+      const cajas = p ? p.cajas : 0;
+      const usd   = p ? p.usd   : 0;
+      totalFilaCajas += cajas;
+      totalFilaUsd   += usd;
+      tdProds += `<td style="text-align:center" id="r-cell-${idx}-${id}">
+        <div class="cell-prod">
+          <span class="cajas-val">${cajas > 0 ? cajas : '—'}</span>
+          ${cajas > 0 ? `<span class="cajas-usd">$ ${usd.toFixed(2)}</span>` : ''}
+        </div>
+      </td>`;
+    });
+
+    const vendedorCol = _modoResumen === 'vendedor'
+      ? `<td style="font-size:.7rem;color:var(--gris)">${esc(f.vendedor)}</td>` : '';
+
+    return `<tr id="r-fila-${idx}" data-idx="${idx}">
+      ${vendedorCol}
+      <td style="font-weight:600;white-space:nowrap">${esc(f.cliente)}</td>
+      <td>${f.tipo ? `<span class="badge ${f.tipo==='Nuevo'?'activo':'vendedor'}">${esc(f.tipo)}</span>` : '—'}</td>
+      <td style="font-size:.7rem;color:var(--gris)">${esc(f.periodo)}</td>
+      ${tdProds}
+      <td style="text-align:center;font-weight:700">${totalFilaCajas}</td>
+      <td style="text-align:right;font-weight:700">$ ${totalFilaUsd.toFixed(2)}</td>
+      <td style="white-space:nowrap">
+        <button class="btn-sm edit" onclick="editarFilaResumen(${idx})">✏ Editar</button>
+        <button class="btn-sm del"  onclick="borrarFilaResumen(${idx})">🗑 Borrar</button>
+      </td>
+    </tr>`;
+  }).join('');
+
+  // Fila de totales
+  let tdTotalesProds = '';
+  prodsUnicos.forEach((nombre, id) => {
+    const tot = filas.reduce((s, f) => s + (f.productos[id]?.cajas || 0), 0);
+    tdTotalesProds += `<td style="text-align:center;font-weight:700">${tot > 0 ? tot : '—'}</td>`;
+  });
+  const grandTotalCajas = filas.reduce((s,f)=>s+Object.values(f.productos).reduce((ss,p)=>ss+p.cajas,0),0);
+  const grandTotalUsd   = filas.reduce((s,f)=>s+Object.values(f.productos).reduce((ss,p)=>ss+p.usd,0),0);
+  const vendedorColTot  = _modoResumen === 'vendedor' ? '<td></td>' : '';
+
+  const tfootRow = `<tr style="background:var(--fondo);font-weight:700;border-top:2px solid var(--borde)">
+    ${vendedorColTot}<td>TOTAL</td><td></td><td></td>
+    ${tdTotalesProds}
+    <td style="text-align:center">${grandTotalCajas}</td>
+    <td style="text-align:right">$ ${grandTotalUsd.toFixed(2)}</td>
+    <td></td>
+  </tr>`;
+
+  document.getElementById('r-tabla-wrap').innerHTML =
+    `<table><thead><tr>${thead}</tr></thead><tbody>${tbody}${tfootRow}</tbody></table>`;
+}
+
+// ── EDITAR FILA DEL RESUMEN ────────────────────────────────────
+// Convierte las celdas de cajas en inputs editables inline
+function editarFilaResumen(idx) {
+  const fila = document.querySelector(`#r-fila-${idx}`);
+  if (!fila) return;
+  fila.classList.add('edit-row');
+
+  // Obtener datos de la fila del mapa
+  const filas = [...document.querySelectorAll('[id^="r-fila-"]')];
+
+  // Reemplazar cada celda de producto con un input
+  const prodsUnicos = new Map();
+  const metas = _metasGuardadas;
+  const filtroV = document.getElementById('r-filtro-vendedor').value;
+  const filtroP = document.getElementById('r-filtro-producto').value;
+  let metasFiltradas = metas;
+  if (filtroV) metasFiltradas = metasFiltradas.filter(m => m.vendedor === filtroV);
+  metasFiltradas.forEach(m => {
+    parsearDetalle(m.detalle_clientes).forEach(cli => {
+      (cli.productos || []).forEach(p => {
+        if (!prodsUnicos.has(p.id_producto))
+          prodsUnicos.set(p.id_producto, p.nombre || p.id_producto);
+      });
+    });
+  });
+
+  prodsUnicos.forEach((nombre, id) => {
+    const cell = document.getElementById(`r-cell-${idx}-${id}`);
+    if (!cell) return;
+    const valActual = cell.querySelector('.cajas-val')?.textContent;
+    const v = valActual === '—' ? 0 : parseInt(valActual) || 0;
+    cell.innerHTML = `<input class="edit-input" type="number" min="0" step="1"
+      id="r-edit-${idx}-${id}" value="${v}">`;
+  });
+
+  // Cambiar botones
+  const btnArea = fila.querySelector('td:last-child');
+  btnArea.innerHTML = `
+    <button class="btn-sm edit" onclick="guardarEdicionFila(${idx})">💾 Guardar</button>
+    <button class="btn-sm" onclick="renderResumen()">✕</button>`;
+}
+
+async function guardarEdicionFila(idx) {
+  const filtroV = document.getElementById('r-filtro-vendedor').value;
+  const filtroP = document.getElementById('r-filtro-producto').value;
+  let metasFiltradas = _metasGuardadas;
+  if (filtroV) metasFiltradas = metasFiltradas.filter(m => m.vendedor === filtroV);
+
+  // Reconstruir el mapa para obtener la fila correcta
+  const mapaClientes = new Map();
+  metasFiltradas.forEach(meta => {
+    const periodo = meta.periodo || (meta.mes + '/' + meta.anio);
+    parsearDetalle(meta.detalle_clientes).forEach(cli => {
+      const key = (cli.id_cliente || cli.cliente) + '||' + meta.vendedor;
+      if (!mapaClientes.has(key)) {
+        mapaClientes.set(key, { cli, meta, key });
+      }
+    });
+  });
+
+  const entrada = [...mapaClientes.values()][idx];
+  if (!entrada) { renderResumen(); return; }
+
+  // Leer los valores editados
+  const inputs = document.querySelectorAll(`[id^="r-edit-${idx}-"]`);
+  const nuevosCajas = {};
+  inputs.forEach(inp => {
+    const partes = inp.id.split('-');
+    const prodId = partes.slice(3).join('-');
+    nuevosCajas[prodId] = parseInt(inp.value) || 0;
+  });
+
+  // Actualizar en _metasGuardadas el detalle_clientes de esa meta
+  const meta = entrada.meta;
+  let detalle = parsearDetalle(meta.detalle_clientes);
+  detalle = detalle.map(cli => {
+    const cliKey = (cli.id_cliente || cli.cliente) + '||' + meta.vendedor;
+    if (cliKey !== entrada.key) return cli;
+    const nuevosProductos = (cli.productos || []).map(p => {
+      if (nuevosCajas[p.id_producto] !== undefined) {
+        const nuevasCajas = nuevosCajas[p.id_producto];
+        return { ...p, cajas: nuevasCajas, subtotal: nuevasCajas * (p.precio_usd || 0) };
+      }
+      return p;
+    }).filter(p => p.cajas > 0);
+    const tc = nuevosProductos.reduce((s, p) => s + p.cajas, 0);
+    const tu = nuevosProductos.reduce((s, p) => s + (p.subtotal || 0), 0);
+    return { ...cli, productos: nuevosProductos, total_cajas: tc, total_usd: tu };
+  });
+
+  // Guardar en backend
+  try {
+    const payload = {
+      action:      'asignarMeta',
+      vendedor_id: meta.vendedor,
+      fecha_desde: meta.periodo?.split(' al ')[0] || meta.periodo || '',
+      fecha_hasta: meta.periodo?.split(' al ')[1] || meta.periodo || '',
+      meta_usd:    detalle.reduce((s, c) => s + c.total_usd, 0),
+      meta_cajas:  detalle.reduce((s, c) => s + c.total_cajas, 0),
+      meta_clientes_nuevos: detalle.filter(c => c.tipo === 'Nuevo').length,
+      clientes:    detalle,
+      productos:   _productosMeta,
+    };
+    const r = await fetch(API, { method: 'POST', body: JSON.stringify(payload), redirect: 'follow' });
+    const d = JSON.parse(await r.text());
+    if (d.ok) {
+      // Actualizar localmente
+      meta.detalle_clientes = JSON.stringify(detalle);
+      renderResumen();
+    } else {
+      alert('Error al guardar: ' + (d.msg || 'Error desconocido'));
+    }
+  } catch(e) {
+    alert('Error de conexión: ' + e.message);
+  }
+}
+
+function borrarFilaResumen(idx) {
+  if (!confirm('¿Borrar este cliente de la meta? Esta acción actualiza la meta guardada.')) return;
+
+  const filtroV = document.getElementById('r-filtro-vendedor').value;
+  let metasFiltradas = _metasGuardadas;
+  if (filtroV) metasFiltradas = metasFiltradas.filter(m => m.vendedor === filtroV);
+
+  const mapaClientes = new Map();
+  metasFiltradas.forEach(meta => {
+    const periodo = meta.periodo || (meta.mes + '/' + meta.anio);
+    parsearDetalle(meta.detalle_clientes).forEach(cli => {
+      const key = (cli.id_cliente || cli.cliente) + '||' + meta.vendedor;
+      if (!mapaClientes.has(key)) mapaClientes.set(key, { cli, meta, key });
+    });
+  });
+
+  const entrada = [...mapaClientes.values()][idx];
+  if (!entrada) return;
+
+  const meta = entrada.meta;
+  let detalle = parsearDetalle(meta.detalle_clientes);
+  detalle = detalle.filter(cli => {
+    const k = (cli.id_cliente || cli.cliente) + '||' + meta.vendedor;
+    return k !== entrada.key;
+  });
+
+  (async () => {
+    try {
+      const payload = {
+        action:      'asignarMeta',
+        vendedor_id: meta.vendedor,
+        fecha_desde: meta.periodo?.split(' al ')[0] || meta.periodo || '',
+        fecha_hasta: meta.periodo?.split(' al ')[1] || meta.periodo || '',
+        meta_usd:    detalle.reduce((s,c)=>s+c.total_usd,0),
+        meta_cajas:  detalle.reduce((s,c)=>s+c.total_cajas,0),
+        meta_clientes_nuevos: detalle.filter(c=>c.tipo==='Nuevo').length,
+        clientes: detalle, productos: _productosMeta,
+      };
+      const r = await fetch(API,{method:'POST',body:JSON.stringify(payload),redirect:'follow'});
+      const d = JSON.parse(await r.text());
+      if (d.ok) { meta.detalle_clientes=JSON.stringify(detalle); renderResumen(); }
+      else alert('Error: ' + (d.msg||'Error desconocido'));
+    } catch(e) { alert('Error de conexión: '+e.message); }
+  })();
+}
+
 async function guardarMeta(){
  const vendedor_id=document.getElementById('m-vendedor').value,fecha_desde=document.getElementById('m-fecha-desde').value,fecha_hasta=document.getElementById('m-fecha-hasta').value;
  if(!vendedor_id||!fecha_desde||!fecha_hasta)return showAlert('meta','err','Completa el vendedor y las fechas.');if(fecha_hasta<fecha_desde)return showAlert('meta','err','La fecha hasta debe ser igual o posterior a la fecha desde.');if(!_filasMeta.length||!_productosMeta.length)return showAlert('meta','err','Carga primero los clientes y productos.');
  const clientes=_filasMeta.map((c,i)=>{let productos=[],tc=0,tu=0;_productosMeta.forEach((p,j)=>{const cajas=Number(document.getElementById(`mc-prod-${i}-${j}`)?.value)||0;if(cajas){const s=cajas*p.precio_usd;productos.push({id_producto:p.id_producto,nombre:p.nombre,cajas,precio_usd:p.precio_usd,subtotal:s,unidades_por_caja:p.unidades_por_caja,lleva_etiqueta:p.lleva_etiqueta,tipo_caja:p.tipo_caja});tc+=cajas;tu+=s}});return{id_cliente:c.id_cliente,cliente:c.nombre,tipo:document.getElementById(`mc-tipo-${i}`)?.value||'',productos,total_cajas:tc,total_usd:tu}}).filter(x=>x.tipo||x.total_cajas>0);
  if(!clientes.length)return showAlert('meta','err','Asigna al menos un cliente con tipo o cajas antes de guardar.');
- setLoading('meta',true);try{const r=await fetch(API,{method:'POST',body:JSON.stringify({action:'asignarMeta',vendedor_id,fecha_desde,fecha_hasta,meta_usd:clientes.reduce((s,x)=>s+x.total_usd,0),meta_cajas:clientes.reduce((s,x)=>s+x.total_cajas,0),meta_clientes_nuevos:clientes.filter(x=>x.tipo==='Nuevo').length,clientes,productos:_productosMeta}),redirect:'follow'}),_t=await r.text(),d=JSON.parse(_t);if(d.ok)showAlert('meta','ok','✓ Meta guardada correctamente.');else showAlert('meta','err',d.msg||'Error al guardar la meta.')}catch(e){showAlert('meta','err','Error de conexión. Verifica la red.')}finally{setLoading('meta',false)}
+ setLoading('meta',true);try{const r=await fetch(API,{method:'POST',body:JSON.stringify({action:'asignarMeta',vendedor_id,fecha_desde,fecha_hasta,meta_usd:clientes.reduce((s,x)=>s+x.total_usd,0),meta_cajas:clientes.reduce((s,x)=>s+x.total_cajas,0),meta_clientes_nuevos:clientes.filter(x=>x.tipo==='Nuevo').length,clientes,productos:_productosMeta}),redirect:'follow'}),_t=await r.text(),d=JSON.parse(_t);if(d.ok){showAlert('meta','ok','✓ Meta guardada correctamente.');await cargarResumen();}else showAlert('meta','err',d.msg||'Error al guardar la meta.')}catch(e){showAlert('meta','err','Error de conexión. Verifica la red.')}finally{setLoading('meta',false)}
 }
 </script>
 </body>
