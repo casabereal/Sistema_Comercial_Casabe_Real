@@ -126,6 +126,24 @@ main{flex:1;padding:24px 20px;max-width:1400px;width:100%;margin:0 auto}
 }
 .fg select:focus,.fg input:focus{border-color:var(--rojo)}
 
+/* ── KPI GRID ── */
+.kpi-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;margin-bottom:22px;
+}
+.kpi-card{
+  background:var(--blanco);border:1px solid var(--borde);border-radius:var(--r);
+  padding:18px 20px;box-shadow:var(--sh);position:relative;overflow:hidden;
+}
+.kpi-card::before{
+  content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:var(--rojo);
+}
+.kpi-lbl{font-size:.65rem;font-weight:700;color:var(--sub);text-transform:uppercase;margin-bottom:6px}
+.kpi-val{font-size:1.8rem;font-weight:800;color:var(--texto);margin-bottom:4px;line-height:1}
+.kpi-sub{font-size:.68rem;color:var(--sub);display:flex;align-items:center;gap:6px;margin-top:6px}
+.progress-wrap{background:var(--fondo);height:5px;border-radius:3px;margin-top:10px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;transition:width .5s ease}
+
 /* ── BADGE ── */
 .badge{
   padding:3px 9px;border-radius:50px;font-size:.63rem;font-weight:700;
@@ -318,7 +336,39 @@ footer{
     </div>
   </div>
 
-    <!-- TABS -->
+  <!-- KPI CARDS — Calculados desde pedidos convertidos en el tab de clientes -->
+  <div class="kpi-grid" id="kpi-grid-main">
+    <div class="kpi-card">
+      <div class="kpi-lbl">Venta Real (Pedidos Convertidos)</div>
+      <div class="kpi-val" id="kpi-real">—</div>
+      <div class="kpi-sub">Basado en pedidos confirmados de esta meta</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-lbl">Meta Asignada</div>
+      <div class="kpi-val" id="kpi-meta">—</div>
+      <div class="kpi-sub">
+        Cumplimiento: <span class="badge badge-azul" id="kpi-pct">—</span>
+        <div class="progress-wrap" style="margin-top:6px">
+          <div class="progress-fill" id="bar-pct" style="width:0%;background:var(--rojo)"></div>
+        </div>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-lbl">Brecha GAP</div>
+      <div class="kpi-val" id="kpi-gap">—</div>
+      <div class="kpi-sub">Meta − Venta real convertida</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-lbl">Semáforo</div>
+      <div class="kpi-val sem-val" id="kpi-semaforo">—</div>
+      <div class="kpi-sub">
+        <span class="badge badge-amarillo">Hito 80%</span>
+        <span class="badge badge-verde">Hito 100%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS -->
   <div class="tabs-bar">
     <button class="tab-btn activo" onclick="switchTab('tabOperativo',this)">📈 Control Operativo</button>
     <button class="tab-btn admin-tab" onclick="switchTab('tabDesglose',this)">📋 Desglose por Vendedor</button>
@@ -643,45 +693,48 @@ function actualizarDashboard(metas) {
 
   if (!metas.length) { mostrarEstado('Sin datos para los filtros seleccionados.'); return; }
 
-  // Los campos ya vienen normalizados por cargarMetas()
-  // meta_monto_usd, meta_cajas, real_monto_usd, real_cajas son numéricos
+  // ── Meta total: suma de meta_monto_usd / meta_cajas de las metas filtradas
   const metaTotal = metas.reduce((s,m) => s + (dim==='USD' ? m.meta_monto_usd : m.meta_cajas), 0);
-  const realTotal = metas.reduce((s,m) => s + (dim==='USD' ? m.real_monto_usd : m.real_cajas), 0);
 
-  const hoy       = new Date();
-  const diasTot   = new Date(hoy.getFullYear(), hoy.getMonth()+1, 0).getDate();
-  const diasTrans = hoy.getDate();
-  const pct       = metaTotal > 0 ? (realTotal/metaTotal)*100 : 0;
+  // ── Venta real: calculada desde los clientes CONVERTIDOS a pedido
+  //    No usa real_monto_usd del backend (actualizado solo por trigger cada hora)
+  //    Suma el subtotal/cajas de todos los clientes con estado='convertido'
+  //    que pertenecen a las metas filtradas
+  const metasSet = new Set(metas.map(m => m.id_meta));
+  let realUSD = 0, realCajas = 0, clientesConvertidos = 0;
+
+  clientesMap.forEach(e => {
+    if (!metasSet.has(e.meta.id_meta)) return;
+    if (e.estado !== 'convertido') return;
+    clientesConvertidos++;
+    (e.cli.productos || []).forEach(p => {
+      realUSD   += toNum(p.subtotal);
+      realCajas += toNum(p.cajas);
+    });
+  });
+
+  const realTotal = dim === 'USD' ? realUSD : realCajas;
+  const pct       = metaTotal > 0 ? (realTotal / metaTotal) * 100 : 0;
   const gap       = Math.max(0, metaTotal - realTotal);
-  const diasRest  = Math.max(0, diasTot - diasTrans);
-  const ritmo     = diasRest > 0 ? gap/diasRest : 0;
-  const runRate   = diasTrans > 0 ? (realTotal/diasTrans)*diasTot : 0;
 
-  const pre = dim==='USD' ? '$ ' : '';
-  const suf = dim==='USD' ? '' : ' Cj.';
-  const fmt  = v => pre + Math.round(v).toLocaleString('es-VE') + suf;
-  const fmtD = v => pre + v.toFixed(2) + suf;
+  const pre = dim === 'USD' ? '$ ' : '';
+  const suf = dim === 'USD' ? '' : ' Cj.';
+  const fmt = v => pre + Math.round(v).toLocaleString('es-VE') + suf;
 
-  document.getElementById('kpi-real').textContent      = fmt(realTotal);
-  document.getElementById('kpi-meta').textContent      = fmt(metaTotal);
-  document.getElementById('kpi-runrate').textContent   = fmt(runRate);
-  document.getElementById('kpi-ritmo').textContent     = fmtD(ritmo);
-  document.getElementById('kpi-gap').textContent       = fmt(gap);
-  document.getElementById('kpi-dias-rest').textContent = diasRest + ' días';
+  // Pintar KPIs
+  document.getElementById('kpi-real').textContent = fmt(realTotal);
+  document.getElementById('kpi-meta').textContent = fmt(metaTotal);
+  document.getElementById('kpi-gap').textContent  = fmt(gap);
 
   const sem   = getSemaforo(pct);
   const pctEl = document.getElementById('kpi-pct');
-  pctEl.textContent = pct.toFixed(1)+'%';
-  pctEl.className   = 'badge '+sem.badge;
-  document.getElementById('bar-pct').style.width      = Math.min(pct,100)+'%';
+  pctEl.textContent = pct.toFixed(1) + '%';
+  pctEl.className   = 'badge ' + sem.badge;
+  document.getElementById('bar-pct').style.width      = Math.min(pct, 100) + '%';
   document.getElementById('bar-pct').style.background = sem.color;
 
-  const rrB = document.getElementById('kpi-rr-badge');
-  rrB.textContent = runRate >= metaTotal ? 'ON TRACK ✓' : 'REVISAR ↗';
-  rrB.className   = 'badge '+(runRate >= metaTotal ? 'badge-verde' : 'badge-amarillo');
-
   const semEl = document.getElementById('kpi-semaforo');
-  semEl.textContent = sem.icono+' '+sem.texto;
+  semEl.textContent = sem.icono + ' ' + sem.texto;
   semEl.style.color = sem.color;
 
   // ── Tabla LÍNEAS DE PRODUCTO: suma cajas y USD por producto
@@ -757,20 +810,30 @@ function renderTablaLineas(lineas, pre, suf, dim) {
 function renderTablaVendedores(vends, pre, suf, dim, diasRest) {
   const tbody = document.getElementById('tabla-vendedores');
   if (!vends.length) { tbody.innerHTML='<tr><td colspan="7" class="estado-msg">Sin datos.</td></tr>'; return; }
+  // Calcular real por vendedor desde clientesMap (estado=convertido)
+  const realPorVendedor = {};
+  clientesMap.forEach(e => {
+    if (e.estado !== 'convertido') return;
+    const v = e.meta.vendedor || '—';
+    if (!realPorVendedor[v]) realPorVendedor[v] = {usd:0, cajas:0};
+    (e.cli.productos||[]).forEach(p => {
+      realPorVendedor[v].usd   += toNum(p.subtotal);
+      realPorVendedor[v].cajas += toNum(p.cajas);
+    });
+  });
+
   tbody.innerHTML = vends.map(m => {
-    // meta_usd y real_monto_usd ya son números (normalizados en cargarMetas)
-    const metaV = dim==='USD' ? m.meta_usd  : m.meta_cajas;
-    const realV = dim==='USD' ? m.real_monto_usd : m.real_cajas;
+    const metaV = dim==='USD' ? m.meta_usd : m.meta_cajas;
+    const rv    = realPorVendedor[m.nombre] || {usd:0, cajas:0};
+    const realV = dim==='USD' ? rv.usd : rv.cajas;
     const pct   = metaV > 0 ? (realV/metaV)*100 : 0;
     const gap   = Math.max(0, metaV-realV);
-    const ritmo = diasRest > 0 ? gap/diasRest : 0;
     const sem   = getSemaforo(pct);
     return `<tr>
       <td><strong>${esc(m.nombre)}</strong></td>
       <td>${pre}${Math.round(metaV).toLocaleString('es-VE')}${suf}</td>
       <td style="color:var(--rojo);font-weight:700">${pre}${Math.round(realV).toLocaleString('es-VE')}${suf}</td>
       <td>${pre}${Math.round(gap).toLocaleString('es-VE')}${suf}</td>
-      <td>${pre}${ritmo.toFixed(2)}${suf}</td>
       <td><span class="badge ${sem.badge}">${pct.toFixed(1)}%</span></td>
       <td>${sem.icono}</td>
     </tr>`;
@@ -973,21 +1036,11 @@ async function confirmarConversion() {
       e.pedidoNum   = d.numeroPedido||'';
       e.cli._estado = 'convertido';
       e.cli._pedido = d.numeroPedido||'';
-      // Actualizar reales en la meta local INMEDIATAMENTE
-      // (el trigger del backend tarda hasta 1 hora en actualizar real_monto_usd)
-      meta.real_monto_usd = toNum(meta.real_monto_usd) + totalUSD;
-      meta.real_cajas     = toNum(meta.real_cajas)     + totalCajas;
-      meta.cumplimiento_pct = meta.meta_monto_usd > 0
-        ? Math.round((meta.real_monto_usd / meta.meta_monto_usd) * 10000) / 100
-        : 0;
-
       await persistirEstadoCliente(e);
       cerrarModalConvertir();
 
-      // Repintar dashboard con los datos actualizados en memoria
+      // Repintar: actualizarDashboard recalcula real desde clientesMap (estado=convertido)
       aplicarFiltros();
-      // Luego recargar del backend en segundo plano para sincronizar
-      cargarMetas();
 
       mostrarToast('✓ Pedido '+(d.numeroPedido||'')+' creado. KPIs actualizados.', 'ok-t');
     } else {
@@ -1042,10 +1095,11 @@ function mostrarToast(msg, tipo) {
 
 function mostrarEstado(msg, esError=false) {
   const color = esError ? 'var(--rojo)' : 'var(--sub)';
-  ['kpi-real','kpi-meta','kpi-pct','kpi-runrate','kpi-rr-badge',
-   'kpi-ritmo','kpi-gap','kpi-dias-rest','kpi-semaforo'].forEach(id => {
+  ['kpi-real','kpi-meta','kpi-pct','kpi-gap','kpi-semaforo'].forEach(id => {
     const el = document.getElementById(id); if (el) el.textContent = esError ? '—' : '…';
   });
+  const barEl = document.getElementById('bar-pct');
+  if (barEl) barEl.style.width = '0%';
   document.getElementById('tabla-lineas').innerHTML =
     `<tr><td colspan="3" style="text-align:center;padding:20px;color:${color}">${msg}</td></tr>`;
   document.getElementById('tabla-vendedores').innerHTML =
