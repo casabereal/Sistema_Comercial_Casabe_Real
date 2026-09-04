@@ -126,24 +126,6 @@ main{flex:1;padding:24px 20px;max-width:1400px;width:100%;margin:0 auto}
 }
 .fg select:focus,.fg input:focus{border-color:var(--rojo)}
 
-/* ── KPI GRID ── */
-.kpi-grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:16px;margin-bottom:22px;
-}
-.kpi-card{
-  background:var(--blanco);border:1px solid var(--borde);border-radius:var(--r);
-  padding:18px 20px;box-shadow:var(--sh);position:relative;overflow:hidden;
-}
-.kpi-card::before{
-  content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:var(--rojo);
-}
-.kpi-lbl{font-size:.65rem;font-weight:700;color:var(--sub);text-transform:uppercase;margin-bottom:6px}
-.kpi-val{font-size:1.8rem;font-weight:800;color:var(--texto);margin-bottom:4px;line-height:1}
-.kpi-sub{font-size:.68rem;color:var(--sub);display:flex;align-items:center;gap:6px;margin-top:6px}
-.progress-wrap{background:var(--fondo);height:5px;border-radius:3px;margin-top:10px;overflow:hidden}
-.progress-fill{height:100%;border-radius:3px;transition:width .5s ease}
-
 /* ── BADGE ── */
 .badge{
   padding:3px 9px;border-radius:50px;font-size:.63rem;font-weight:700;
@@ -336,48 +318,7 @@ footer{
     </div>
   </div>
 
-  <!-- KPI CARDS -->
-  <div class="kpi-grid">
-    <div class="kpi-card">
-      <div class="kpi-lbl">Venta Acumulada vs Meta</div>
-      <div class="kpi-val" id="kpi-real">—</div>
-      <div class="kpi-sub">
-        Meta: <strong id="kpi-meta">—</strong>
-        &nbsp;<span class="badge badge-azul" id="kpi-pct">—</span>
-      </div>
-      <div class="progress-wrap">
-        <div class="progress-fill" id="bar-pct" style="width:0%;background:var(--rojo)"></div>
-      </div>
-    </div>
-
-    <div class="kpi-card">
-      <div class="kpi-lbl">Proyección Cierre (Run-Rate)</div>
-      <div class="kpi-val" id="kpi-runrate">—</div>
-      <div class="kpi-sub">
-        Estimado fin de ciclo &nbsp;<span class="badge badge-verde" id="kpi-rr-badge">—</span>
-      </div>
-      <div style="font-size:.62rem;color:var(--sub);margin-top:6px">Fórmula: (Real ÷ Días) × Total días</div>
-    </div>
-
-    <div class="kpi-card">
-      <div class="kpi-lbl">Ritmo Diario Requerido</div>
-      <div class="kpi-val" id="kpi-ritmo">—</div>
-      <div class="kpi-sub">Días hábiles restantes: <strong id="kpi-dias-rest">—</strong></div>
-      <div style="font-size:.62rem;color:var(--sub);margin-top:6px">Brecha GAP: <strong id="kpi-gap">—</strong></div>
-    </div>
-
-    <div class="kpi-card">
-      <div class="kpi-lbl">Semáforo de Cumplimiento</div>
-      <div class="kpi-val sem-val" id="kpi-semaforo">—</div>
-      <div class="kpi-sub" id="kpi-hito">Próximo hito: <strong>100% (Bono)</strong></div>
-      <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap">
-        <span class="badge badge-amarillo">Hito 80%</span>
-        <span class="badge badge-verde">Hito 100%</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- TABS -->
+    <!-- TABS -->
   <div class="tabs-bar">
     <button class="tab-btn activo" onclick="switchTab('tabOperativo',this)">📈 Control Operativo</button>
     <button class="tab-btn admin-tab" onclick="switchTab('tabDesglose',this)">📋 Desglose por Vendedor</button>
