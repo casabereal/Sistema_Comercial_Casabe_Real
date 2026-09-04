@@ -370,36 +370,11 @@ footer{
 
   <!-- TABS -->
   <div class="tabs-bar">
-    <button class="tab-btn activo" onclick="switchTab('tabOperativo',this)">📈 Control Operativo</button>
     <button class="tab-btn admin-tab" onclick="switchTab('tabDesglose',this)">📋 Desglose por Vendedor</button>
     <button class="tab-btn" onclick="switchTab('tabClientes',this)">👥 Metas por Cliente</button>
   </div>
 
-  <!-- TAB: Control Operativo -->
-  <div id="tabOperativo" class="tab-panel activo">
-
-    <div class="grid g-8-4">
-      <div class="card" style="margin:0">
-        <div class="card-title">Tendencia de Cierre Run-Rate vs Meta</div>
-        <div style="height:260px;position:relative">
-          <canvas id="chartRunRate"></canvas>
-        </div>
-      </div>
-      <div class="card" style="margin:0">
-        <div class="card-title">Cierre por Línea de Producto</div>
-        <div class="tbl-wrap">
-          <table>
-            <thead><tr><th>Línea</th><th>Real</th><th>% Cumpl.</th></tr></thead>
-            <tbody id="tabla-lineas">
-              <tr><td colspan="3" class="estado-msg">Cargando…</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
+  
   <!-- TAB: Desglose por Vendedor (visible solo gerente/admin) -->
   <div id="tabDesglose" class="tab-panel">
     <div class="card" style="margin:0" id="card-desglose">
