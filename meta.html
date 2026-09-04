@@ -1032,10 +1032,23 @@ async function confirmarConversion() {
       e.pedidoNum   = d.numeroPedido||'';
       e.cli._estado = 'convertido';
       e.cli._pedido = d.numeroPedido||'';
+      // Actualizar reales en la meta local INMEDIATAMENTE
+      // (el trigger del backend tarda hasta 1 hora en actualizar real_monto_usd)
+      meta.real_monto_usd = toNum(meta.real_monto_usd) + totalUSD;
+      meta.real_cajas     = toNum(meta.real_cajas)     + totalCajas;
+      meta.cumplimiento_pct = meta.meta_monto_usd > 0
+        ? Math.round((meta.real_monto_usd / meta.meta_monto_usd) * 10000) / 100
+        : 0;
+
       await persistirEstadoCliente(e);
       cerrarModalConvertir();
-      renderTabClientes();
-      mostrarToast('✓ Pedido '+(d.numeroPedido||'')+' creado correctamente.', 'ok-t');
+
+      // Repintar dashboard con los datos actualizados en memoria
+      aplicarFiltros();
+      // Luego recargar del backend en segundo plano para sincronizar
+      cargarMetas();
+
+      mostrarToast('✓ Pedido '+(d.numeroPedido||'')+' creado. KPIs actualizados.', 'ok-t');
     } else {
       mostrarToast('Error: '+(d.msg||'No se pudo crear el pedido.'), 'err-t');
     }
