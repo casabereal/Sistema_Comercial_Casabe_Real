@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
 :root {
   --rojo:   #C8181E;
@@ -368,40 +368,8 @@ footer{
     </div>
   </div>
 
-  <!-- TABS -->
-  <div class="tabs-bar">
-    <button class="tab-btn admin-tab" onclick="switchTab('tabDesglose',this)">📋 Desglose por Vendedor</button>
-    <button class="tab-btn" onclick="switchTab('tabClientes',this)">👥 Metas por Cliente</button>
-  </div>
-
-  
-  <!-- TAB: Desglose por Vendedor (visible solo gerente/admin) -->
-  <div id="tabDesglose" class="tab-panel">
-    <div class="card" style="margin:0" id="card-desglose">
-      <div class="card-title">Matriz de Desglose por Vendedor</div>
-      <div class="tbl-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Vendedor</th>
-              <th>Meta Asignada</th>
-              <th>Venta Acumulada</th>
-              <th>Brecha GAP</th>
-              <th>Ritmo Diario</th>
-              <th>% Cumpl.</th>
-              <th>Semáforo</th>
-            </tr>
-          </thead>
-          <tbody id="tabla-vendedores">
-            <tr><td colspan="7" class="estado-msg">Cargando…</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- TAB: Metas por Cliente -->
-  <div id="tabClientes" class="tab-panel">
+  <!-- Metas por Cliente -->
+  <div id="tabClientes">
     <div class="card" style="margin:0">
       <div class="card-title">
         Metas Asignadas por Cliente
@@ -712,44 +680,8 @@ function actualizarDashboard(metas) {
   semEl.textContent = sem.icono + ' ' + sem.texto;
   semEl.style.color = sem.color;
 
-  // ── Tabla LÍNEAS DE PRODUCTO: suma cajas y USD por producto
-  //    desde detalle_clientes de cada meta (JSON string)
-  const lineasMap = {};
-  metas.forEach(m => {
-    let clientes = [];
-    try {
-      const raw = m.detalle_clientes;
-      if (raw && String(raw).trim().startsWith('[')) clientes = JSON.parse(raw);
-    } catch(e) {}
-    clientes.forEach(c => {
-      (c.productos||[]).forEach(p => {
-        const k = p.nombre || p.id_producto || '—';
-        if (!lineasMap[k]) lineasMap[k] = {linea:k, meta_usd:0, meta_cajas:0};
-        lineasMap[k].meta_cajas += toNum(p.cajas);
-        lineasMap[k].meta_usd   += toNum(p.subtotal);
-      });
-    });
-  });
-  renderTablaLineas(Object.values(lineasMap), pre, suf, dim);
-
-  // ── Tabla VENDEDORES: agrupar metas por vendedor
-  //    real_monto_usd y real_cajas vienen del backend (trigger automático)
-  const vendMap = {};
-  metas.forEach(m => {
-    const k = m.vendedor || '—';
-    if (!vendMap[k]) vendMap[k] = {nombre:k, meta_usd:0, meta_cajas:0, real_monto_usd:0, real_cajas:0};
-    vendMap[k].meta_usd       += m.meta_monto_usd;
-    vendMap[k].meta_cajas     += m.meta_cajas;
-    vendMap[k].real_monto_usd += m.real_monto_usd;
-    vendMap[k].real_cajas     += m.real_cajas;
-  });
-  renderTablaVendedores(Object.values(vendMap), pre, suf, dim, diasRest);
-
-  renderChartRunRate(metaTotal, realTotal, runRate, diasTrans, diasTot, pre);
-
-  if (document.getElementById('tabClientes')?.classList.contains('activo')) {
-    renderTabClientes();
-  }
+  // Actualizar tab de clientes si está visible
+  renderTabClientes();
 }
 
 // ══════════════════════════════════════════════════════════
@@ -764,56 +696,7 @@ function getSemaforo(pct) {
 // ══════════════════════════════════════════════════════════
 //  TABLAS KPI
 // ══════════════════════════════════════════════════════════
-function renderTablaLineas(lineas, pre, suf, dim) {
-  const tbody = document.getElementById('tabla-lineas');
-  if (!lineas.length) {
-    tbody.innerHTML='<tr><td colspan="3" class="estado-msg">Sin datos de productos.</td></tr>';
-    return;
-  }
-  // El backend no tiene real por línea de producto — solo meta planificada
-  // El cumplimiento se muestra a nivel vendedor, no por línea
-  tbody.innerHTML = lineas.map(l => {
-    const val = dim==='USD' ? l.meta_usd : l.meta_cajas;
-    return `<tr>
-      <td><strong>${esc(l.linea)}</strong></td>
-      <td>${pre}${Math.round(val).toLocaleString('es-VE')}${suf}</td>
-      <td><span class="badge badge-azul">Planificado</span></td>
-    </tr>`;
-  }).join('');
-}
 
-function renderTablaVendedores(vends, pre, suf, dim, diasRest) {
-  const tbody = document.getElementById('tabla-vendedores');
-  if (!vends.length) { tbody.innerHTML='<tr><td colspan="7" class="estado-msg">Sin datos.</td></tr>'; return; }
-  // Calcular real por vendedor desde clientesMap (estado=convertido)
-  const realPorVendedor = {};
-  clientesMap.forEach(e => {
-    if (e.estado !== 'convertido') return;
-    const v = e.meta.vendedor || '—';
-    if (!realPorVendedor[v]) realPorVendedor[v] = {usd:0, cajas:0};
-    (e.cli.productos||[]).forEach(p => {
-      realPorVendedor[v].usd   += toNum(p.subtotal);
-      realPorVendedor[v].cajas += toNum(p.cajas);
-    });
-  });
-
-  tbody.innerHTML = vends.map(m => {
-    const metaV = dim==='USD' ? m.meta_usd : m.meta_cajas;
-    const rv    = realPorVendedor[m.nombre] || {usd:0, cajas:0};
-    const realV = dim==='USD' ? rv.usd : rv.cajas;
-    const pct   = metaV > 0 ? (realV/metaV)*100 : 0;
-    const gap   = Math.max(0, metaV-realV);
-    const sem   = getSemaforo(pct);
-    return `<tr>
-      <td><strong>${esc(m.nombre)}</strong></td>
-      <td>${pre}${Math.round(metaV).toLocaleString('es-VE')}${suf}</td>
-      <td style="color:var(--rojo);font-weight:700">${pre}${Math.round(realV).toLocaleString('es-VE')}${suf}</td>
-      <td>${pre}${Math.round(gap).toLocaleString('es-VE')}${suf}</td>
-      <td><span class="badge ${sem.badge}">${pct.toFixed(1)}%</span></td>
-      <td>${sem.icono}</td>
-    </tr>`;
-  }).join('');
-}
 
 // ══════════════════════════════════════════════════════════
 //  TAB CLIENTES
@@ -1086,35 +969,6 @@ function mostrarEstado(msg, esError=false) {
 // ══════════════════════════════════════════════════════════
 //  CHART
 // ══════════════════════════════════════════════════════════
-function renderChartRunRate(metaTotal, realTotal, runRate, diasTrans, diasTot, pre) {
-  const ctx = document.getElementById('chartRunRate').getContext('2d');
-  if (chartInstance) chartInstance.destroy();
-  const step = Math.max(1, Math.floor(diasTot/6));
-  const labels=[], reales=[], proyec=[];
-  for (let i=1; i<=6; i++) {
-    const d = step*i;
-    labels.push('D'+d);
-    reales.push(d<=diasTrans ? Math.round(realTotal*(d/Math.max(diasTrans,1))) : null);
-    proyec.push(null);
-  }
-  labels.push('Proy. Final'); reales.push(null); proyec.push(Math.round(runRate));
-  chartInstance = new Chart(ctx, {
-    type:'line',
-    data:{labels, datasets:[
-      {label:'Real', data:reales, borderColor:'#C8181E', backgroundColor:'rgba(200,24,30,.08)', fill:true, tension:.3, borderWidth:2.5, pointBackgroundColor:'#C8181E', pointRadius:4},
-      {label:'Proyección', data:proyec, borderColor:'#2563EB', borderDash:[5,5], borderWidth:2, pointBackgroundColor:'#2563EB', pointRadius:4},
-      {label:'Meta', data:Array(7).fill(metaTotal), borderColor:'#10B981', borderDash:[2,2], borderWidth:1.5, pointRadius:0}
-    ]},
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{
-        legend:{position:'bottom', labels:{font:{size:11}}},
-        tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${pre}${(c.parsed.y||0).toLocaleString('es-VE')}`}}
-      },
-      scales:{y:{grid:{color:'#F3F4F6'},ticks:{font:{size:11}}},x:{grid:{display:false},ticks:{font:{size:11}}}}
-    }
-  });
-}
 
 // ══════════════════════════════════════════════════════════
 //  CONTROLES UI
@@ -1127,11 +981,8 @@ function setDimension(dim) {
 }
 
 function switchTab(id, btn) {
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('activo'));
-  document.querySelectorAll('.tab-btn').forEach(b   => b.classList.remove('activo'));
-  document.getElementById(id).classList.add('activo');
-  btn.classList.add('activo');
-  if (id==='tabClientes') renderTabClientes();
+  // Solo queda el panel de clientes — función conservada para compatibilidad
+  renderTabClientes();
 }
 </script>
 </body>
