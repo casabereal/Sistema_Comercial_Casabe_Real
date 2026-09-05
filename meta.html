@@ -2,271 +2,126 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Casabe Real — Metas (SCCR v2.5.0)</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>SCCR — Metas Comerciales</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-
+<script src="assets/sccr-auth.js"></script>
 <style>
-:root {
-  --rojo:   #C8181E;
-  --rojo-d: #A01015;
-  --rojo-xs:#FEF2F2;
-  --naranja:#D97706;
-  --blanco: #FFFFFF;
-  --fondo:  #F5F7FA;
-  --borde:  #E5E7EB;
-  --texto:  #1F2937;
-  --sub:    #6B7280;
-  --verde:  #10B981;
-  --verde-xs:#ECFDF5;
-  --amarillo:#F59E0B;
-  --amarillo-xs:#FFFBEB;
-  --azul:   #2563EB;
-  --azul-xs:#EFF6FF;
-  --r: 14px;
-  --r-sm: 8px;
-  --sh: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --rojo:#C8181E;--rojo-xs:#FEF2F2;--blanco:#FFFFFF;--fondo:#F8F9FA;
+  --borde:#E0E0E0;--texto:#333333;--gris:#6B7280;--verde:#059669;--verde-xs:#ECFDF5;
+  --azul:#2563EB;--azul-xs:#EFF6FF;--amarillo:#D97706;--amarillo-xs:#FFFBEB;
+  --r:8px;--r-sm:6px;--sh:0 2px 6px rgba(0,0,0,.06)
 }
-
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-
-body{
-  font-family:'Inter',sans-serif;
-  background:var(--fondo);
-  color:var(--texto);
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-}
-
-/* ── HEADER / NAV — MISMO LAYOUT Y FUNCIONAMIENTO DE CLIENTES.HTML ── */
-header{
-  background-color:#D30000;
-  color:#FFFFFF;
-  height:60px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 18px;
-  box-shadow:0 2px 4px rgba(0,0,0,0.1);
-  position:sticky;
-  top:0;
-  z-index:1000;
-}
-.header-left{display:flex;align-items:center;gap:11px}
-.header-left img{width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25));display:block}
-.header-title{font-family:'League Spartan',sans-serif;font-size:0.95rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+body{font-family:'Open Sans',sans-serif;background:var(--fondo);color:var(--texto);display:flex;flex-direction:column;min-height:100vh;font-size:.75rem}
+/* HEADER */
+header{background:var(--rojo);color:#fff;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;position:sticky;top:0;z-index:1000;box-shadow:0 2px 4px rgba(0,0,0,.12)}
+.header-left{display:flex;align-items:center;gap:10px}
+.header-left img{width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 4px rgba(0,0,0,.2))}
+.header-title{font-family:'League Spartan',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
 .header-right{display:flex;align-items:center;gap:12px}
-.header-user-info{font-size:0.7rem;text-align:right;line-height:1.3}
-.header-user-info .user-name{font-weight:600}
-.header-user-info .user-role{font-size:0.65rem;opacity:.9}
-.btn-logout{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:5px 10px;cursor:pointer;color:rgba(255,255,255,.9);font-size:0.7rem;transition:background .2s;white-space:nowrap;font-family:'Open Sans',sans-serif;font-weight:600}
+.header-user-info{font-size:.7rem;text-align:right;line-height:1.4}
+.header-user-info .user-name{font-weight:700}
+.header-user-info .user-role{font-size:.65rem;opacity:.85}
+.btn-logout{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:5px 10px;color:#fff;font-size:.68rem;font-weight:600;cursor:pointer;font-family:'Open Sans',sans-serif}
 .btn-logout:hover{background:rgba(255,255,255,.22)}
-
-.nav-bar{background:#FFFFFF;border-bottom:1px solid #E0E0E0;padding:0 18px;display:flex;overflow-x:auto;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.05)}
-.nav-bar::-webkit-scrollbar{height:3px}
-.nav-bar::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px}
-.menu-item{display:inline-block;padding:12px 14px;font-size:0.7rem;color:#333333;text-decoration:none;transition:all .2s;border-bottom:3px solid transparent}
-.menu-item:hover{background:#F1F3F5;color:#D30000}
-.menu-item.active{font-family:'League Spartan',sans-serif;font-weight:700;color:#D30000;border-bottom-color:#D30000}
+/* NAV */
+.nav-bar{background:#fff;border-bottom:1px solid var(--borde);padding:0 18px;display:flex;overflow-x:auto;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.nav-bar::-webkit-scrollbar{height:3px}.nav-bar::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px}
+.menu-item{display:inline-block;padding:12px 14px;font-size:.7rem;color:var(--texto);text-decoration:none;border-bottom:3px solid transparent;transition:all .2s}
+.menu-item:hover{background:var(--fondo);color:var(--rojo)}
+.menu-item.active{font-family:'League Spartan',sans-serif;font-weight:700;color:var(--rojo);border-bottom-color:var(--rojo)}
 .admin-only{display:none}
-
-/* ── MAIN CONTAINER ── */
-main{flex:1;padding:24px 20px;max-width:1400px;width:100%;margin:0 auto}
-
-/* ── PAGE HEADER ── */
-.page-hd{
-  display:flex;justify-content:space-between;align-items:center;
-  flex-wrap:wrap;gap:12px;margin-bottom:20px;
-}
-.page-hd h1{font-size:1.45rem;font-weight:700;color:var(--texto)}
-.page-hd h1 span{color:var(--rojo)}
-.hd-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-
-/* Dimension toggle */
-.dim-toggle{
-  display:flex;background:var(--fondo);border:1px solid var(--borde);
-  padding:3px;border-radius:var(--r-sm);
-}
-.dim-btn{
-  padding:6px 14px;border:none;background:transparent;border-radius:5px;
-  cursor:pointer;font-size:.72rem;font-weight:700;color:var(--sub);
-  transition:all .2s;font-family:'Inter',sans-serif;
-}
-.dim-btn.activo{background:var(--rojo);color:var(--blanco)}
-
-/* ── BOTONES ── */
-.btn{
-  padding:8px 15px;border:none;border-radius:var(--r-sm);
-  font-size:.73rem;font-weight:700;cursor:pointer;
-  display:inline-flex;align-items:center;gap:7px;
-  transition:all .2s;font-family:'Inter',sans-serif;
-  text-decoration:none;
-}
-.btn-primary{background:var(--rojo);color:var(--blanco)}
-.btn-primary:hover{background:var(--rojo-d)}
-.btn-ghost{background:var(--blanco);border:1px solid var(--borde);color:var(--texto)}
-.btn-ghost:hover{background:var(--fondo)}
-
-/* ── FILTROS ── */
-.filtros{
-  background:var(--blanco);border:1px solid var(--borde);border-radius:var(--r);
-  padding:14px 18px;display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-  gap:12px;margin-bottom:20px;
-  box-shadow:var(--sh);
-}
-.fg label{display:block;font-size:.63rem;font-weight:700;color:var(--sub);text-transform:uppercase;margin-bottom:4px}
-.fg select,.fg input{
-  width:100%;padding:7px 10px;border:1px solid var(--borde);
-  border-radius:var(--r-sm);font-size:.74rem;font-family:'Inter',sans-serif;
-  color:var(--texto);outline:none;background:var(--blanco);
-}
-.fg select:focus,.fg input:focus{border-color:var(--rojo)}
-
-/* ── KPI GRID ── */
-.kpi-grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:16px;margin-bottom:22px;
-}
-.kpi-card{
-  background:var(--blanco);border:1px solid var(--borde);border-radius:var(--r);
-  padding:18px 20px;box-shadow:var(--sh);position:relative;overflow:hidden;
-}
-.kpi-card::before{
-  content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:var(--rojo);
-}
-.kpi-lbl{font-size:.65rem;font-weight:700;color:var(--sub);text-transform:uppercase;margin-bottom:6px}
-.kpi-val{font-size:1.8rem;font-weight:800;color:var(--texto);margin-bottom:4px;line-height:1}
-.kpi-sub{font-size:.68rem;color:var(--sub);display:flex;align-items:center;gap:6px;margin-top:6px}
-.progress-wrap{background:var(--fondo);height:5px;border-radius:3px;margin-top:10px;overflow:hidden}
-.progress-fill{height:100%;border-radius:3px;transition:width .5s ease}
-
-/* ── BADGE ── */
-.badge{
-  padding:3px 9px;border-radius:50px;font-size:.63rem;font-weight:700;
-  display:inline-flex;align-items:center;gap:4px;
-}
-.badge-verde{background:var(--verde-xs);color:var(--verde)}
-.badge-amarillo{background:var(--amarillo-xs);color:var(--amarillo)}
-.badge-rojo{background:var(--rojo-xs);color:#DC2626}
+/* MAIN */
+.main-container{width:100%;max-width:1400px;margin:0 auto;padding:22px 18px 40px}
+.page-header{margin-bottom:20px}
+.breadcrumb{font-size:.63rem;color:var(--gris);margin-bottom:4px}.breadcrumb span{color:var(--rojo);font-weight:700}
+.page-header h1{font-family:'League Spartan',sans-serif;font-size:1.55rem;font-weight:700}.highlight{color:var(--rojo)}
+.page-header p{font-size:.7rem;color:var(--gris);margin-top:5px}
+/* CARD */
+.card{background:#fff;border:1px solid var(--borde);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:16px}
+.card-header{padding:14px 16px;border-bottom:1px solid var(--borde);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.card-header h2{font-family:'League Spartan',sans-serif;font-size:.95rem;font-weight:700}
+.card-header p{font-size:.63rem;color:var(--gris);margin-top:2px}
+.card-body{padding:16px}
+/* FILTROS */
+.filtros-bar{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px}
+.filtros-bar label{font-size:.62rem;font-weight:700;color:var(--gris);text-transform:uppercase;display:block;margin-bottom:3px}
+.filtros-bar select,.filtros-bar input{padding:7px 10px;border:1.5px solid var(--borde);border-radius:var(--r-sm);font-size:.73rem;font-family:'Open Sans',sans-serif;background:#fff;color:var(--texto);outline:none}
+.filtros-bar select:focus,.filtros-bar input:focus{border-color:var(--rojo)}
+/* TABS */
+.tabs-bar{display:flex;gap:6px;margin-bottom:16px}
+.tab-btn{padding:7px 16px;border:1.5px solid var(--borde);border-radius:20px;font-size:.72rem;font-weight:700;cursor:pointer;background:#fff;color:var(--gris);font-family:'Open Sans',sans-serif;transition:all .2s}
+.tab-btn.on{background:var(--rojo);color:#fff;border-color:var(--rojo)}
+/* KPIs */
+.kpi-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.kpi-box{background:#fff;border:1px solid var(--borde);border-radius:var(--r);padding:12px 16px;min-width:130px;box-shadow:var(--sh)}
+.kpi-lbl{font-size:.62rem;font-weight:700;color:var(--gris);text-transform:uppercase}
+.kpi-val{font-family:'League Spartan',sans-serif;font-size:1.3rem;font-weight:700;color:var(--rojo);margin-top:3px}
+.kpi-sub{font-size:.6rem;color:var(--gris);margin-top:1px}
+/* TABLA */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{background:var(--fondo);font-size:.61rem;color:var(--gris);font-weight:700;text-transform:uppercase;letter-spacing:.25px;padding:9px 10px;border-bottom:1px solid var(--borde);white-space:nowrap;position:sticky;top:0;z-index:2;text-align:left}
+td{padding:10px 10px;border-bottom:1px solid var(--borde);font-size:.7rem;vertical-align:middle}
+td.center{text-align:center}td.right{text-align:right}
+tr:hover td{background:#fafafa}
+.tfoot-row td{background:var(--fondo);font-weight:700;border-top:2px solid var(--borde)}
+/* BADGES */
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.62rem;font-weight:600}
+.badge-verde{background:var(--verde-xs);color:#15803D}
 .badge-azul{background:var(--azul-xs);color:var(--azul)}
-
-/* ── TABS ── */
-.tabs-bar{
-  display:flex;gap:4px;border-bottom:2px solid var(--borde);margin-bottom:20px;
-}
-.tab-btn{
-  padding:10px 16px;font-size:.74rem;font-weight:600;
-  color:var(--sub);border:none;background:transparent;cursor:pointer;
-  border-bottom:3px solid transparent;transition:all .2s;font-family:'Inter',sans-serif;
-  margin-bottom:-2px;
-}
-.tab-btn:hover{color:var(--rojo)}
-.tab-btn.activo{color:var(--rojo);border-bottom-color:var(--rojo)}
-.tab-panel{display:none}
-.tab-panel.activo{display:block;animation:fadeIn .25s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-
-/* ── CARDS ── */
-.card{
-  background:var(--blanco);border:1px solid var(--borde);border-radius:var(--r);
-  box-shadow:var(--sh);padding:20px;margin-bottom:18px;
-}
-.card-title{
-  font-size:.88rem;font-weight:700;color:var(--texto);
-  margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;
-}
-
-/* ── GRID ── */
-.grid{display:grid;gap:16px;margin-bottom:18px}
-.g-8-4{grid-template-columns:2fr 1fr}
-.g-6-6{grid-template-columns:1fr 1fr}
-.g-full{grid-template-columns:1fr}
-@media(max-width:1024px){.g-8-4,.g-6-6{grid-template-columns:1fr}}
-
-/* ── TABLA ── */
-.tbl-wrap{width:100%;overflow-x:auto}
-table{width:100%;border-collapse:collapse;text-align:left;font-size:.74rem}
-th{background:var(--fondo);color:var(--sub);font-weight:700;padding:9px 13px;border-bottom:1px solid var(--borde);white-space:nowrap;text-transform:uppercase;font-size:.63rem}
-td{padding:11px 13px;border-bottom:1px solid var(--borde);color:var(--texto)}
-tbody tr:hover td{background:var(--rojo-xs)}
-
-/* ── SEMÁFORO KPI ── */
-.sem-val{font-size:1.4rem;font-weight:800}
-
-/* ── ESTADO: LOADING / ERROR ── */
-.estado-msg{
-  text-align:center;padding:40px 20px;color:var(--sub);font-size:.85rem;
-}
-.estado-msg .icon{font-size:2rem;margin-bottom:8px}
-
-/* ── SKELETON ── */
-.skel{
-  background:linear-gradient(90deg,#f0f0f0 25%,#e8e8e8 50%,#f0f0f0 75%);
-  background-size:200% 100%;
-  animation:skel .8s infinite;
-  border-radius:4px;height:18px;
-}
-@keyframes skel{0%{background-position:200% 0}100%{background-position:-200% 0}}
-
-/* ── FOOTER ── */
-footer{
-  background:var(--blanco);border-top:1px solid var(--borde);
-  text-align:center;padding:11px;font-size:.63rem;color:var(--sub);
-}
-/* ── TABLA DE CLIENTES META ── */
-.meta-cliente-card{background:var(--blanco);border:1px solid var(--borde);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:14px;overflow:hidden}
-.meta-cliente-hdr{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--fondo);border-bottom:1px solid var(--borde);flex-wrap:wrap;gap:8px}
-.meta-cliente-hdr h4{font-size:.82rem;font-weight:700;margin:0}
-.meta-cliente-hdr .sub{font-size:.67rem;color:var(--sub);margin-top:2px}
-.meta-acciones{display:flex;gap:6px;flex-shrink:0}
-.btn-convertir{padding:5px 11px;border-radius:6px;font-size:.67rem;font-weight:700;cursor:pointer;border:none;background:#DBEAFE;color:#1D4ED8}
-.btn-convertir:hover{background:#BFDBFE}
-.btn-anular{padding:5px 11px;border-radius:6px;font-size:.67rem;font-weight:700;cursor:pointer;border:none;background:var(--rojo-xs);color:#DC2626}
-.btn-anular:hover{background:#FECACA}
-.btn-anulado{padding:5px 11px;border-radius:6px;font-size:.67rem;font-weight:700;cursor:default;border:none;background:var(--fondo);color:var(--sub)}
-.prod-chips{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px}
-.prod-chip{background:var(--fondo);border:1px solid var(--borde);border-radius:6px;padding:6px 10px;font-size:.68rem;display:flex;flex-direction:column;gap:1px}
-.prod-chip .pc-nom{font-weight:700;color:var(--texto)}
-.prod-chip .pc-det{color:var(--sub);font-size:.62rem}
-.prod-chip.anulado{opacity:.45;text-decoration:line-through}
-/* ── MODAL ── */
+.badge-amarillo{background:var(--amarillo-xs);color:#B45309}
+.badge-rojo{background:var(--rojo-xs);color:#DC2626}
+.badge-gris{background:#F3F4F6;color:#6B7280}
+/* BOTONES DE ACCIÓN */
+.btn-acc{padding:5px 11px;border-radius:6px;font-size:.67rem;font-weight:700;cursor:pointer;border:none;font-family:'Open Sans',sans-serif;white-space:nowrap}
+.btn-convertir{background:#DBEAFE;color:#1D4ED8}.btn-convertir:hover{background:#BFDBFE}
+.btn-anular{background:var(--rojo-xs);color:#DC2626}.btn-anular:hover{background:#FECACA}
+.btn-anulado{background:var(--fondo);color:var(--gris);cursor:default;padding:5px 11px;border-radius:6px;font-size:.67rem;font-weight:600;border:1px solid var(--borde)}
+.btn-convertido{background:var(--verde-xs);color:#15803D;cursor:default;padding:5px 11px;border-radius:6px;font-size:.67rem;font-weight:600;border:none}
+/* CHIPS DE PRODUCTOS */
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{background:var(--fondo);border:1px solid var(--borde);border-radius:5px;padding:4px 8px;font-size:.65rem;line-height:1.3}
+.chip .c-nom{font-weight:700;display:block}
+.chip .c-det{color:var(--gris)}
+.chip.anulado{opacity:.4;text-decoration:line-through}
+/* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:2000;padding:16px}
 .modal-overlay.open{display:flex}
-.modal-box{background:#fff;border-radius:var(--r);box-shadow:0 20px 60px rgba(0,0,0,.25);width:min(480px,100%);padding:24px}
-.modal-box h3{font-size:1rem;font-weight:700;margin-bottom:6px}
-.modal-box p{font-size:.75rem;color:var(--sub);margin-bottom:14px}
-.modal-box textarea{width:100%;padding:10px;border:1.5px solid var(--borde);border-radius:8px;font-size:.78rem;font-family:inherit;resize:vertical;min-height:90px;outline:none}
+.modal-box{background:#fff;border-radius:var(--r);box-shadow:0 20px 50px rgba(0,0,0,.2);width:min(480px,100%);padding:22px}
+.modal-box h3{font-family:'League Spartan',sans-serif;font-size:1.05rem;margin-bottom:6px}
+.modal-box .modal-desc{font-size:.74rem;color:var(--gris);margin-bottom:14px}
+.modal-box label{font-size:.7rem;font-weight:700;display:block;margin-bottom:4px}
+.modal-box textarea{width:100%;padding:9px;border:1.5px solid var(--borde);border-radius:var(--r-sm);font-size:.75rem;font-family:'Open Sans',sans-serif;resize:vertical;min-height:90px;outline:none;transition:border-color .2s}
 .modal-box textarea:focus{border-color:var(--rojo)}
+.modal-box textarea.error{border-color:#DC2626}
+.modal-det{background:var(--fondo);border-radius:var(--r-sm);padding:11px;font-size:.72rem;margin-bottom:14px}
+.modal-det .det-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--borde)}
+.modal-det .det-row:last-child{border:none}
 .modal-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
-/* ── FILTROS CLIENTES META ── */
-.mc-filtros{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
-.mc-filtros select{padding:7px 10px;border:1px solid var(--borde);border-radius:var(--r-sm);font-size:.74rem;font-family:inherit;color:var(--texto);background:#fff;outline:none}
-.mc-filtros select:focus{border-color:var(--rojo)}
-/* ── ESTADO ANULADO en chip ── */
-.badge-anulado{background:#F3F4F6;color:var(--sub)}
-/* ── TOAST ── */
-.toast{position:fixed;right:18px;bottom:18px;background:#1F2937;color:#fff;border-radius:8px;padding:10px 14px;font-size:.72rem;z-index:3000;display:none;max-width:340px}
-.toast.show{display:block}
-.toast.ok-t{background:#065F46}
-.toast.err-t{background:#991B1B}
-
-/* ── RESPONSIVE ── */
-@media(max-width:768px){
-  header{padding:0 10px;height:50px}
-  .header-title{font-size:0.7rem}
-  main{padding:16px 12px}
-  .page-hd h1{font-size:1.1rem}
-  .kpi-val{font-size:1.4rem}
-}
+.btn-modal{padding:7px 16px;border-radius:var(--r-sm);font-size:.72rem;font-weight:700;cursor:pointer;font-family:'Open Sans',sans-serif;border:1.5px solid var(--borde)}
+.btn-modal-cancel{background:#fff;color:var(--texto)}
+.btn-modal-ok{background:var(--rojo);color:#fff;border-color:var(--rojo)}
+.btn-modal-ok:disabled{opacity:.5;cursor:not-allowed}
+/* TOAST */
+.toast{position:fixed;right:18px;bottom:20px;padding:10px 16px;border-radius:8px;font-size:.72rem;font-weight:600;color:#fff;z-index:3000;display:none;max-width:360px;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.toast.show{display:block}.toast.ok{background:#065F46}.toast.err{background:#991B1B}
+/* EMPTY */
+.empty{text-align:center;padding:40px 20px;color:var(--gris)}
+.empty .icon{font-size:2.4rem;margin-bottom:8px}
+.empty p{font-size:.78rem}
+/* LOADING */
+.loading-row td{text-align:center;padding:28px;color:var(--gris);font-style:italic}
+footer{background:#fff;border-top:1px solid var(--borde);text-align:center;padding:12px;font-size:.65rem;color:var(--gris);margin-top:auto}
+@media(max-width:768px){.header-user-info{display:none}.main-container{padding:14px 10px}}
 </style>
 </head>
 <body>
 
-<!-- ── HEADER ────────────────────────────────────────────────── -->
 <header>
   <div class="header-left">
     <img src="assets/logo-casabe-real.png" alt="Casabe Real" onerror="this.style.display='none'">
@@ -274,14 +129,13 @@ footer{
   </div>
   <div class="header-right">
     <div class="header-user-info">
-      <div class="user-name" id="user-name-display">Cargando...</div>
-      <div class="user-role" id="user-role-display">Portal Comercial</div>
+      <div class="user-name" id="user-name-display">—</div>
+      <div class="user-role" id="user-role-display">—</div>
     </div>
     <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
   </div>
 </header>
 
-<!-- ── NAV ───────────────────────────────────────────────────── -->
 <nav class="nav-bar">
   <a href="inicio.html"    class="menu-item">INICIO</a>
   <a href="clientes.html"  class="menu-item">CLIENTES</a>
@@ -297,175 +151,113 @@ footer{
   <a href="ccp.html"       class="menu-item admin-only">CCP</a>
 </nav>
 
-<main>
-
-  <!-- PAGE HEADER -->
-  <div class="page-hd">
-    <h1>Módulo de <span>Metas y GAP</span></h1>
-    <div class="hd-actions">
-      <div class="dim-toggle">
-        <button class="dim-btn activo" id="btnUSD" onclick="setDimension('USD')">$ USD</button>
-        <button class="dim-btn"        id="btnCajas" onclick="setDimension('CAJAS')">📦 Cajas</button>
-      </div>
-      <button class="btn btn-ghost" onclick="cargarMetas()" title="Refrescar datos">⟳ Actualizar</button>
-    </div>
+<main class="main-container">
+  <div class="page-header">
+    <div class="breadcrumb">Sistema / <span>Metas Comerciales</span></div>
+    <h1>Metas <span class="highlight">por Cliente</span></h1>
+    <p>Cajas planificadas por producto. Convierta a pedido o anule con justificación.</p>
   </div>
 
-  <!-- FILTROS (solo visibles para gerente/admin) -->
-  <div class="filtros" id="seccion-filtros" style="display:none">
-    <div class="fg">
-      <label>Vendedor / Asesor</label>
-      <select id="filtroVendedor" onchange="aplicarFiltros()">
-        <option value="">Todos los Asesores</option>
+  <!-- FILTROS -->
+  <div class="filtros-bar">
+    <div id="wrap-filtro-vendedor">
+      <label>Vendedor</label>
+      <select id="filtro-vendedor" onchange="renderTabla()">
+        <option value="">Todos los vendedores</option>
       </select>
     </div>
-    <div class="fg">
-      <label>Línea de Producto</label>
-      <select id="filtroLinea" onchange="aplicarFiltros()">
-        <option value="">Todas las Líneas</option>
-        <option value="Pasapalo">Pasapalo</option>
-        <option value="Restaurante">Restaurante</option>
-        <option value="Torta">Torta</option>
+    <div>
+      <label>Período</label>
+      <select id="filtro-periodo" onchange="renderTabla()">
+        <option value="">Todos los períodos</option>
       </select>
     </div>
-    <div class="fg">
-      <label>Mes / Ciclo</label>
-      <select id="filtroCiclo" onchange="aplicarFiltros()">
-        <option value="">Ciclo Actual</option>
+    <div>
+      <label>Estado</label>
+      <select id="filtro-estado" onchange="renderTabla()">
+        <option value="">Todos</option>
+        <option value="activo">Activos</option>
+        <option value="convertido">Convertidos</option>
+        <option value="anulado">Anulados</option>
       </select>
     </div>
-  </div>
-
-  <!-- KPI CARDS — Calculados desde pedidos convertidos en el tab de clientes -->
-  <div class="kpi-grid" id="kpi-grid-main">
-    <div class="kpi-card">
-      <div class="kpi-lbl">Venta Real (Pedidos Convertidos)</div>
-      <div class="kpi-val" id="kpi-real">—</div>
-      <div class="kpi-sub">Basado en pedidos confirmados de esta meta</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-lbl">Meta Asignada</div>
-      <div class="kpi-val" id="kpi-meta">—</div>
-      <div class="kpi-sub">
-        Cumplimiento: <span class="badge badge-azul" id="kpi-pct">—</span>
-        <div class="progress-wrap" style="margin-top:6px">
-          <div class="progress-fill" id="bar-pct" style="width:0%;background:var(--rojo)"></div>
-        </div>
-      </div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-lbl">Brecha GAP</div>
-      <div class="kpi-val" id="kpi-gap">—</div>
-      <div class="kpi-sub">Meta − Venta real convertida</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-lbl">Semáforo</div>
-      <div class="kpi-val sem-val" id="kpi-semaforo">—</div>
-      <div class="kpi-sub">
-        <span class="badge badge-amarillo">Hito 80%</span>
-        <span class="badge badge-verde">Hito 100%</span>
-      </div>
+    <div>
+      <label style="visibility:hidden;display:block">.</label>
+      <button class="btn-modal btn-modal-ok" onclick="cargarMetas()" style="padding:7px 14px">↻ Actualizar</button>
     </div>
   </div>
 
-  <!-- Metas por Cliente -->
-  <div id="tabClientes">
-    <div class="card" style="margin:0">
-      <div class="card-title">
-        Metas Asignadas por Cliente
-        <span style="font-size:.7rem;font-weight:400;color:var(--sub)">Cajas por producto · Acciones disponibles</span>
-      </div>
-
-      <div class="mc-filtros" id="mc-filtros-wrap">
-        <div>
-          <label style="font-size:.63rem;font-weight:700;color:var(--sub);text-transform:uppercase;display:block;margin-bottom:3px">Vendedor</label>
-          <select id="mc-filtro-vendedor" onchange="renderTabClientes()">
-            <option value="">Todos los vendedores</option>
-          </select>
-        </div>
-        <div>
-          <label style="font-size:.63rem;font-weight:700;color:var(--sub);text-transform:uppercase;display:block;margin-bottom:3px">Estado</label>
-          <select id="mc-filtro-estado" onchange="renderTabClientes()">
-            <option value="">Todos</option>
-            <option value="activo">Activos</option>
-            <option value="anulado">Anulados</option>
-            <option value="convertido">Convertidos</option>
-          </select>
-        </div>
-        <div>
-          <label style="font-size:.63rem;font-weight:700;color:var(--sub);text-transform:uppercase;display:block;margin-bottom:3px">Período</label>
-          <select id="mc-filtro-periodo" onchange="renderTabClientes()">
-            <option value="">Todos los períodos</option>
-          </select>
-        </div>
-      </div>
-
-      <div id="mc-kpis" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px"></div>
-      <div id="mc-contenido">
-        <div class="estado-msg"><div class="icon">📋</div>Cargando metas por cliente…</div>
-      </div>
-    </div>
+  <!-- TABS Vista -->
+  <div class="tabs-bar">
+    <button class="tab-btn on" onclick="cambiarVista('vendedor',this)">Por vendedor</button>
+    <button class="tab-btn"   onclick="cambiarVista('total',this)">Todos los clientes</button>
   </div>
 
+  <!-- KPIs -->
+  <div class="kpi-row" id="kpi-row"></div>
+
+  <!-- TABLA -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <h2>Clientes con meta asignada</h2>
+        <p id="tabla-subtitle">Cajas planificadas por producto · Convierta a pedido o anule</p>
+      </div>
+      <span id="badge-total" class="badge badge-azul">0 clientes</span>
+    </div>
+    <div class="tbl-wrap">
+      <table id="tabla-metas">
+        <thead id="tabla-thead"><tr><th colspan="6" style="text-align:center">Cargando…</th></tr></thead>
+        <tbody id="tabla-tbody"><tr class="loading-row"><td colspan="6">Cargando metas…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
 </main>
 
-<!-- ── MODAL ANULACIÓN ── -->
-<div class="modal-overlay" id="modal-anulacion">
-  <div class="modal-box">
-    <h3>🚫 Anular cliente de la meta</h3>
-    <p id="modal-anul-desc">Se marcará este cliente como anulado en la meta.</p>
-    <label style="font-size:.72rem;font-weight:700;display:block;margin-bottom:6px">Razón de la anulación <span style="color:var(--rojo)">*</span></label>
-    <textarea id="modal-anul-razon" placeholder="Describa el motivo de la anulación…"></textarea>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="cerrarModalAnulacion()">Cancelar</button>
-      <button class="btn btn-primary" onclick="confirmarAnulacion()">Confirmar anulación</button>
-    </div>
-  </div>
-</div>
+<footer>&copy; 2026 <strong>Sistema Comercial Casabe Real (SCCR)</strong> · v2.5.1</footer>
 
-<!-- ── MODAL CONVERTIR ── -->
-<div class="modal-overlay" id="modal-convertir">
+<!-- MODAL CONVERTIR -->
+<div class="modal-overlay" id="modal-conv">
   <div class="modal-box">
     <h3>🛒 Convertir a Pedido</h3>
-    <p id="modal-conv-desc">Se creará un pedido con las cajas de la meta para este cliente.</p>
-    <div id="modal-conv-detalle" style="background:var(--fondo);border-radius:8px;padding:12px;font-size:.74rem;margin-bottom:14px"></div>
+    <p class="modal-desc" id="conv-desc">Se creará un pedido con las cajas de esta meta.</p>
+    <div class="modal-det" id="conv-det"></div>
     <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="cerrarModalConvertir()">Cancelar</button>
-      <button class="btn btn-primary" onclick="confirmarConversion()">✓ Crear pedido</button>
+      <button class="btn-modal btn-modal-cancel" onclick="cerrarModal('modal-conv')">Cancelar</button>
+      <button class="btn-modal btn-modal-ok" id="btn-conv-ok" onclick="confirmarConversion()">✓ Crear pedido</button>
     </div>
   </div>
 </div>
 
-<!-- ── TOAST ── -->
+<!-- MODAL ANULAR -->
+<div class="modal-overlay" id="modal-anul">
+  <div class="modal-box">
+    <h3>🚫 Anular meta de cliente</h3>
+    <p class="modal-desc" id="anul-desc">Se marcará este cliente como anulado.</p>
+    <label>Razón de la anulación <span style="color:var(--rojo)">*</span></label>
+    <textarea id="anul-razon" placeholder="Describa el motivo de la anulación…"></textarea>
+    <div class="modal-footer">
+      <button class="btn-modal btn-modal-cancel" onclick="cerrarModal('modal-anul')">Cancelar</button>
+      <button class="btn-modal btn-modal-ok" onclick="confirmarAnulacion()">Confirmar anulación</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
-<footer>
-  &copy; 2026 Sistema Comercial Casabe Real (SCCR v2.5.0) — Todos los derechos reservados.
-</footer>
-
-<!-- ─────────────────────────────────────── SCRIPTS ─────────────────────────────────────── -->
-<script src="assets/sccr-auth.js"></script>
 <script>
-// ══════════════════════════════════════════════════════════
-//  CONFIGURACIÓN
-// ══════════════════════════════════════════════════════════
-const API_URL = 'https://script.google.com/macros/s/AKfycbyludOrnVw1jSCYJUWELTjPjhuR7N1uXdBO6mjR7XVE-SqmkP-pe3qieg5SX-8wRh2Dsg/exec';
+const API = 'https://script.google.com/macros/s/AKfycbyludOrnVw1jSCYJUWELTjPjhuR7N1uXdBO6mjR7XVE-SqmkP-pe3qieg5SX-8wRh2Dsg/exec';
 
-let sesion          = null;
-let dimensionActual = 'USD';
-let chartInstance   = null;
-let esDirectivo     = false;
+let sesion        = null;
+let esDirectivo   = false;
+let vistaActual   = 'vendedor';   // 'vendedor' | 'total'
+let metasRaw      = [];           // metas del backend
+let filasMapa     = [];           // lista plana [{meta, cli, estado, razon, pedidoNum}]
+let ctxConv       = null;         // contexto modal convertir
+let ctxAnul       = null;         // contexto modal anular
 
-let metasRaw    = [];
-let clientesMap = [];
-let _anulCtx    = null;
-let _convCtx    = null;
-
-// ══════════════════════════════════════════════════════════
-//  INIT — patrón idéntico a cargas.html
-// ══════════════════════════════════════════════════════════
+// ── INIT ─────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  // Mismo patrón que cargas.html: initSCCR con los roles permitidos
   sesion = SCCR.initSCCR(['admin','gerente','vendedor']);
   if (!sesion) return;
 
@@ -475,16 +267,14 @@ document.addEventListener('DOMContentLoaded', () => {
     rol === 'admin'   ? 'Administrador' :
     rol === 'gerente' ? 'Gerente de Ventas' : 'Asesor Comercial';
 
-  esDirectivo = (rol === 'admin' || rol === 'gerente');
+  esDirectivo = rol === 'admin' || rol === 'gerente';
 
-  // Mostrar elementos admin-only (nav + tab desglose)
   if (esDirectivo) {
     document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
-    document.getElementById('seccion-filtros').style.display = 'grid';
   } else {
-    // Vendedor: ocultar filtro de vendedor en tab clientes
-    const selV = document.getElementById('mc-filtro-vendedor');
-    if (selV) selV.closest('div').style.display = 'none';
+    // Vendedor: ocultar filtro de vendedor y tab "por vendedor"
+    document.getElementById('wrap-filtro-vendedor').style.display = 'none';
+    document.querySelector('.tabs-bar').style.display = 'none';
   }
 
   cargarMetas();
@@ -492,17 +282,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function cerrarSesion() { SCCR.cerrarSesion(); }
 
-// ══════════════════════════════════════════════════════════
-//  CARGA — action=metas devuelve { ok, data:[...metas] }
-//  Cada meta tiene: vendedor, periodo, mes, anio,
-//    meta_monto_usd, meta_cajas, real_monto_usd, real_cajas,
-//    cumplimiento_pct, detalle_clientes (JSON string)
-// ══════════════════════════════════════════════════════════
+// ── CARGA DESDE BACKEND ───────────────────────────────────────
 async function cargarMetas() {
-  mostrarEstado('Cargando datos…');
+  document.getElementById('tabla-tbody').innerHTML =
+    '<tr class="loading-row"><td colspan="20">Cargando metas…</td></tr>';
+
   try {
-    let url = API_URL + '?action=metas';
-    // Para vendedor: filtrar por su vendedor_id en el backend
+    let url = API + '?action=metas';
+    // Vendedor: filtrar en el backend
     if (!esDirectivo && sesion.vendedor_id) {
       url += '&vendedor=' + encodeURIComponent(sesion.vendedor_id);
     }
@@ -511,75 +298,41 @@ async function cargarMetas() {
     const raw  = await res.text();
     const json = JSON.parse(raw);
 
-    // action=metas → { ok:true, data:[{id_meta, vendedor, periodo, mes, anio,
-    //   meta_monto_usd, meta_cajas, real_monto_usd, real_cajas,
-    //   cumplimiento_pct, detalle_clientes:'[{...}]', ...}] }
     if (!json.ok) throw new Error(json.msg || 'Error del servidor');
     metasRaw = Array.isArray(json.data) ? json.data : [];
 
-    // Filtro local por vendedor (seguridad doble)
+    // Filtro local vendedor (doble seguridad)
     if (!esDirectivo && sesion.vendedor_id) {
       const vid = String(sesion.vendedor_id).toLowerCase();
       metasRaw = metasRaw.filter(m =>
-        String(m.vendedor || '').toLowerCase() === vid
-      );
+        String(m.vendedor || '').toLowerCase() === vid);
     }
 
-    // Normalizar campos numéricos — Sheets puede devolver strings
-    metasRaw = metasRaw.map(m => ({
-      ...m,
-      meta_monto_usd:       toNum(m.meta_monto_usd),
-      meta_cajas:           toNum(m.meta_cajas),
-      real_monto_usd:       toNum(m.real_monto_usd),
-      real_cajas:           toNum(m.real_cajas),
-      real_clientes_nuevos: toNum(m.real_clientes_nuevos),
-      cumplimiento_pct:     toNum(m.cumplimiento_pct),
-      // periodo normalizado
-      periodo: m.periodo || (m.mes + '/' + m.anio) || '—',
-    }));
-
-    construirClientesMap();
-    poblarFiltrosMC();
-    poblarFiltroKPI();
-    aplicarFiltros();
+    construirFilasMapa();
+    poblarFiltros();
+    renderTabla();
 
   } catch (err) {
-    console.error('Error cargarMetas:', err);
-    mostrarEstado('⚠️ No se pudieron cargar las metas: ' + err.message, true);
+    console.error('cargarMetas:', err);
+    document.getElementById('tabla-tbody').innerHTML =
+      `<tr class="loading-row"><td colspan="20" style="color:#DC2626">
+         ⚠️ No se pudieron cargar las metas: ${err.message}
+       </td></tr>`;
   }
 }
 
-// Convierte cualquier valor a número seguro
-function toNum(v) {
-  if (v === null || v === undefined || v === '') return 0;
-  const n = Number(String(v).replace(/[^0-9.\-]/g, ''));
-  return isNaN(n) ? 0 : n;
-}
-
-// ── Construir lista plana cliente × meta ──────────────────────
-// Cada entrada: { meta, cli, estado, razon, pedidoNum }
-// cli viene del detalle_clientes JSON de cada meta
-// Estructura cli: { id_cliente, cliente, tipo, total_cajas, total_usd,
-//   productos:[{id_producto, nombre, cajas, precio_usd, subtotal}],
-//   _estado, _razon, _pedido }
-function construirClientesMap() {
-  clientesMap = [];
-  metasRaw.forEach((meta, mi) => {
+// Construir lista plana de clientes a partir de detalle_clientes de cada meta
+function construirFilasMapa() {
+  filasMapa = [];
+  metasRaw.forEach((meta) => {
     let clientes = [];
     try {
-      const raw = meta.detalle_clientes;
-      if (raw && String(raw).trim().startsWith('[')) {
-        clientes = JSON.parse(raw);
-      }
-    } catch(e) {
-      console.warn('Error parseando detalle_clientes de meta', meta.id_meta, e);
-    }
+      const d = meta.detalle_clientes;
+      if (d && String(d).trim().startsWith('[')) clientes = JSON.parse(d);
+    } catch(e) {}
     if (!Array.isArray(clientes)) return;
-
-    clientes.forEach((cli, ci) => {
-      clientesMap.push({
-        metaIdx:   mi,
-        cliIdx:    ci,
+    clientes.forEach((cli) => {
+      filasMapa.push({
         meta,
         cli,
         estado:    cli._estado || 'activo',
@@ -590,399 +343,355 @@ function construirClientesMap() {
   });
 }
 
-// ══════════════════════════════════════════════════════════
-//  FILTROS
-// ══════════════════════════════════════════════════════════
-function poblarFiltroKPI() {
-  const vendedores = [...new Set(metasRaw.map(m => m.vendedor).filter(Boolean))].sort();
-  const selV = document.getElementById('filtroVendedor');
-  if (selV) selV.innerHTML = '<option value="">Todos los Asesores</option>' +
-    vendedores.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
+// ── FILTROS ───────────────────────────────────────────────────
+function poblarFiltros() {
+  // Vendedores
+  const vends = [...new Set(metasRaw.map(m => m.vendedor).filter(Boolean))].sort();
+  const selV  = document.getElementById('filtro-vendedor');
+  selV.innerHTML = '<option value="">Todos los vendedores</option>' +
+    vends.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
 
-  const periodos = [...new Set(metasRaw.map(m => m.periodo ||(m.mes+'/'+m.anio)).filter(Boolean))].sort().reverse();
-  const selC = document.getElementById('filtroCiclo');
-  if (selC) selC.innerHTML = '<option value="">Ciclo Actual</option>' +
-    periodos.map(p => `<option value="${esc(p)}">${esc(p)}</option>`).join('');
+  // Períodos
+  const pers  = [...new Set(metasRaw.map(m =>
+    m.periodo || (m.mes + '/' + m.anio)).filter(Boolean))].sort().reverse();
+  const selP  = document.getElementById('filtro-periodo');
+  selP.innerHTML = '<option value="">Todos los períodos</option>' +
+    pers.map(p => `<option value="${esc(p)}">${esc(p)}</option>`).join('');
 }
 
-function poblarFiltrosMC() {
-  const vendedores = [...new Set(metasRaw.map(m => m.vendedor).filter(Boolean))].sort();
-  const selV = document.getElementById('mc-filtro-vendedor');
-  if (selV) selV.innerHTML = '<option value="">Todos los vendedores</option>' +
-    vendedores.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
-
-  const periodos = [...new Set(metasRaw.map(m => m.periodo||(m.mes+'/'+m.anio)).filter(Boolean))].sort().reverse();
-  const selP = document.getElementById('mc-filtro-periodo');
-  if (selP) selP.innerHTML = '<option value="">Todos los períodos</option>' +
-    periodos.map(p => `<option value="${esc(p)}">${esc(p)}</option>`).join('');
+// ── VISTA ─────────────────────────────────────────────────────
+function cambiarVista(v, btn) {
+  vistaActual = v;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  renderTabla();
 }
 
-function aplicarFiltros() {
-  const fV = document.getElementById('filtroVendedor')?.value || '';
-  const fC = document.getElementById('filtroCiclo')?.value   || '';
-  const mFilt = metasRaw.filter(m => {
-    const per = m.periodo || (m.mes+'/'+m.anio) || '';
-    return (!fV || m.vendedor === fV) && (!fC || per === fC);
-  });
-  actualizarDashboard(mFilt);
-}
+// ── RENDER PRINCIPAL ──────────────────────────────────────────
+function renderTabla() {
+  const fV = document.getElementById('filtro-vendedor').value;
+  const fP = document.getElementById('filtro-periodo').value;
+  const fE = document.getElementById('filtro-estado').value;
 
-// ══════════════════════════════════════════════════════════
-//  DASHBOARD KPI
-// ══════════════════════════════════════════════════════════
-function actualizarDashboard(metas) {
-  metas = metas || metasRaw;
-  const dim = dimensionActual;
-
-  if (!metas.length) { mostrarEstado('Sin datos para los filtros seleccionados.'); return; }
-
-  // ── Meta total: suma de meta_monto_usd / meta_cajas de las metas filtradas
-  const metaTotal = metas.reduce((s,m) => s + (dim==='USD' ? m.meta_monto_usd : m.meta_cajas), 0);
-
-  // ── Venta real: calculada desde los clientes CONVERTIDOS a pedido
-  //    No usa real_monto_usd del backend (actualizado solo por trigger cada hora)
-  //    Suma el subtotal/cajas de todos los clientes con estado='convertido'
-  //    que pertenecen a las metas filtradas
-  const metasSet = new Set(metas.map(m => m.id_meta));
-  let realUSD = 0, realCajas = 0, clientesConvertidos = 0;
-
-  clientesMap.forEach(e => {
-    if (!metasSet.has(e.meta.id_meta)) return;
-    if (e.estado !== 'convertido') return;
-    clientesConvertidos++;
-    (e.cli.productos || []).forEach(p => {
-      realUSD   += toNum(p.subtotal);
-      realCajas += toNum(p.cajas);
-    });
+  let filas = filasMapa.filter(e => {
+    const per = e.meta.periodo || (e.meta.mes + '/' + e.meta.anio) || '';
+    return (!fV || e.meta.vendedor === fV) &&
+           (!fP || per === fP) &&
+           (!fE || e.estado === fE);
   });
 
-  const realTotal = dim === 'USD' ? realUSD : realCajas;
-  const pct       = metaTotal > 0 ? (realTotal / metaTotal) * 100 : 0;
-  const gap       = Math.max(0, metaTotal - realTotal);
-
-  const pre = dim === 'USD' ? '$ ' : '';
-  const suf = dim === 'USD' ? '' : ' Cj.';
-  const fmt = v => pre + Math.round(v).toLocaleString('es-VE') + suf;
-
-  // Pintar KPIs
-  document.getElementById('kpi-real').textContent = fmt(realTotal);
-  document.getElementById('kpi-meta').textContent = fmt(metaTotal);
-  document.getElementById('kpi-gap').textContent  = fmt(gap);
-
-  const sem   = getSemaforo(pct);
-  const pctEl = document.getElementById('kpi-pct');
-  pctEl.textContent = pct.toFixed(1) + '%';
-  pctEl.className   = 'badge ' + sem.badge;
-  document.getElementById('bar-pct').style.width      = Math.min(pct, 100) + '%';
-  document.getElementById('bar-pct').style.background = sem.color;
-
-  const semEl = document.getElementById('kpi-semaforo');
-  semEl.textContent = sem.icono + ' ' + sem.texto;
-  semEl.style.color = sem.color;
-
-  // Actualizar tab de clientes si está visible
-  renderTabClientes();
-}
-
-// ══════════════════════════════════════════════════════════
-//  SEMÁFORO
-// ══════════════════════════════════════════════════════════
-function getSemaforo(pct) {
-  if (pct >= 90) return {badge:'badge-verde',    color:'var(--verde)',   texto:'VERDE',    icono:'✅'};
-  if (pct >= 75) return {badge:'badge-amarillo', color:'var(--amarillo)',texto:'AMARILLO', icono:'⚠️'};
-  return             {badge:'badge-rojo',      color:'#DC2626',        texto:'ROJO',     icono:'🔴'};
-}
-
-// ══════════════════════════════════════════════════════════
-//  TABLAS KPI
-// ══════════════════════════════════════════════════════════
-
-
-// ══════════════════════════════════════════════════════════
-//  TAB CLIENTES
-// ══════════════════════════════════════════════════════════
-function renderTabClientes() {
-  const fV = document.getElementById('mc-filtro-vendedor')?.value || '';
-  const fE = document.getElementById('mc-filtro-estado')?.value   || '';
-  const fP = document.getElementById('mc-filtro-periodo')?.value  || '';
-
-  let filas = clientesMap.filter(e => {
-    const per = e.meta.periodo||(e.meta.mes+'/'+e.meta.anio)||'';
-    const okV = !fV || e.meta.vendedor === fV;
-    const okE = !fE || e.estado === fE;
-    const okP = !fP || per === fP;
-    return okV && okE && okP;
-  });
-
+  // Vendedor solo ve sus propios clientes
   if (!esDirectivo && sesion.vendedor_id) {
     const vid = String(sesion.vendedor_id).toLowerCase();
-    filas = filas.filter(e => String(e.meta.vendedor||'').toLowerCase() === vid);
+    filas = filas.filter(e =>
+      String(e.meta.vendedor || '').toLowerCase() === vid);
   }
 
   // KPIs
   const tC  = filas.length;
-  const tA  = filas.filter(e => e.estado==='activo').length;
-  const tCj = filas.reduce((s,e)=>s+(e.cli.productos||[]).reduce((ss,p)=>ss+(Number(p.cajas)||0),0),0);
-  const tU  = filas.reduce((s,e)=>s+(e.cli.productos||[]).reduce((ss,p)=>ss+(Number(p.subtotal)||0),0),0);
-  const tCv = filas.filter(e=>e.estado==='convertido').length;
+  const tA  = filas.filter(e => e.estado === 'activo').length;
+  const tCj = filas.reduce((s,e) =>
+    s + (e.cli.productos||[]).reduce((ss,p) => ss + (Number(p.cajas)||0), 0), 0);
+  const tU  = filas.reduce((s,e) =>
+    s + (e.cli.productos||[]).reduce((ss,p) => ss + (Number(p.subtotal)||0), 0), 0);
+  const tCv = filas.filter(e => e.estado === 'convertido').length;
+  const tAn = filas.filter(e => e.estado === 'anulado').length;
 
-  document.getElementById('mc-kpis').innerHTML = `
-    <div class="kpi-card" style="padding:12px 16px;min-width:120px">
-      <div class="kpi-lbl">Clientes</div><div class="kpi-val" style="font-size:1.4rem">${tC}</div>
+  document.getElementById('kpi-row').innerHTML = `
+    <div class="kpi-box">
+      <div class="kpi-lbl">Clientes</div>
+      <div class="kpi-val">${tC}</div>
       <div class="kpi-sub">${tA} activos</div>
     </div>
-    <div class="kpi-card" style="padding:12px 16px;min-width:120px">
-      <div class="kpi-lbl">Total Cajas</div><div class="kpi-val" style="font-size:1.4rem">${tCj.toLocaleString('es-VE')}</div>
+    <div class="kpi-box">
+      <div class="kpi-lbl">Total Cajas</div>
+      <div class="kpi-val">${tCj.toLocaleString('es-VE')}</div>
       <div class="kpi-sub">planificadas</div>
     </div>
-    <div class="kpi-card" style="padding:12px 16px;min-width:140px">
-      <div class="kpi-lbl">Total USD</div><div class="kpi-val" style="font-size:1.4rem">$ ${tU.toFixed(2)}</div>
+    <div class="kpi-box">
+      <div class="kpi-lbl">Total USD</div>
+      <div class="kpi-val">$ ${tU.toFixed(2)}</div>
       <div class="kpi-sub">valor meta</div>
     </div>
-    <div class="kpi-card" style="padding:12px 16px;min-width:130px">
-      <div class="kpi-lbl">Convertidos</div><div class="kpi-val" style="font-size:1.4rem;color:var(--verde)">${tCv}</div>
-      <div class="kpi-sub">en pedidos</div>
+    <div class="kpi-box">
+      <div class="kpi-lbl">Convertidos</div>
+      <div class="kpi-val" style="color:var(--verde)">${tCv}</div>
+      <div class="kpi-sub">pedidos creados</div>
+    </div>
+    <div class="kpi-box">
+      <div class="kpi-lbl">Anulados</div>
+      <div class="kpi-val" style="color:var(--gris)">${tAn}</div>
+      <div class="kpi-sub">con justificación</div>
     </div>`;
+
+  document.getElementById('badge-total').textContent = tC + ' cliente' + (tC !== 1 ? 's' : '');
 
   if (!filas.length) {
-    document.getElementById('mc-contenido').innerHTML =
-      '<div class="estado-msg"><div class="icon">📋</div>No hay clientes para los filtros seleccionados.</div>';
+    document.getElementById('tabla-thead').innerHTML =
+      '<tr><th colspan="6">Sin clientes</th></tr>';
+    document.getElementById('tabla-tbody').innerHTML =
+      `<tr><td colspan="6"><div class="empty"><div class="icon">📋</div>
+        <p>No hay metas asignadas para los filtros seleccionados.</p></div></td></tr>`;
     return;
   }
 
-  document.getElementById('mc-contenido').innerHTML = filas.map((e, i) => {
+  // Productos únicos en las filas visibles
+  const prodsUnicos = new Map();
+  filas.forEach(e =>
+    (e.cli.productos || []).forEach(p => {
+      if (!prodsUnicos.has(p.id_producto || p.nombre))
+        prodsUnicos.set(p.id_producto || p.nombre, p.nombre || p.id_producto);
+    })
+  );
+
+  // Cabecera
+  const colVend = (vistaActual === 'vendedor' && esDirectivo)
+    ? '<th>Vendedor</th>' : '';
+  let thead = `<tr>${colVend}<th>Cliente</th><th>Tipo</th><th>Período</th>`;
+  prodsUnicos.forEach(nom => thead += `<th class="center">${esc(nom)}</th>`);
+  thead += '<th class="center">Total Cajas</th><th class="right">Total USD</th><th class="center">Acciones</th></tr>';
+  document.getElementById('tabla-thead').innerHTML = thead;
+
+  // Filas
+  const idxMap = [...prodsUnicos.keys()];
+  let totalCajasGlobal = 0, totalUsdGlobal = 0;
+  const tdTotalesProds = new Array(idxMap.length).fill(0);
+
+  const tbody = filas.map((e, i) => {
     const cli    = e.cli;
+    const per    = e.meta.periodo || (e.meta.mes + '/' + e.meta.anio) || '—';
     const estado = e.estado;
-    const per    = e.meta.periodo||(e.meta.mes+'/'+e.meta.anio)||'—';
-    const tCjCli = (cli.productos||[]).reduce((s,p)=>s+(Number(p.cajas)||0),0);
-    const tUCli  = (cli.productos||[]).reduce((s,p)=>s+(Number(p.subtotal)||0),0);
 
-    const badgeEstado =
-      estado==='convertido' ? '<span class="badge badge-verde">✓ Convertido</span>' :
-      estado==='anulado'    ? '<span class="badge badge-rojo">✗ Anulado</span>' :
-                              '<span class="badge badge-azul">● Activo</span>';
+    let totalCajasF = 0, totalUsdF = 0;
+    let tdProds = '';
+    idxMap.forEach((prodKey, pi) => {
+      const p = (cli.productos || []).find(x =>
+        (x.id_producto || x.nombre) === prodKey);
+      const cajas = p ? Number(p.cajas) || 0 : 0;
+      const usd   = p ? Number(p.subtotal) || 0 : 0;
+      totalCajasF += cajas; totalUsdF += usd;
+      tdTotalesProds[pi] += cajas;
+      tdProds += `<td class="center" style="font-size:.72rem">
+        ${cajas > 0
+          ? `<strong>${cajas}</strong><br><span style="color:var(--gris);font-size:.62rem">$${usd.toFixed(2)}</span>`
+          : '<span style="color:#ccc">—</span>'}
+      </td>`;
+    });
+    totalCajasGlobal += totalCajasF;
+    totalUsdGlobal   += totalUsdF;
 
+    // Badge estado
+    const badgeE =
+      estado === 'convertido'
+        ? `<span class="badge badge-verde">✓ Convertido</span>` :
+      estado === 'anulado'
+        ? `<span class="badge badge-rojo">✗ Anulado</span>` :
+        `<span class="badge badge-azul">● Activo</span>`;
+
+    // Tipo
+    const badgeT = cli.tipo
+      ? `<span class="badge ${cli.tipo==='Nuevo'?'badge-amarillo':'badge-gris'}">${esc(cli.tipo)}</span>`
+      : '—';
+
+    // Botones
     let btns = '';
-    if (estado==='activo') {
-      btns = `<button class="btn-convertir" onclick="abrirModalConvertir(${i})">🛒 Convertir a Pedido</button>
-              <button class="btn-anular"    onclick="abrirModalAnulacion(${i})">🚫 Anular</button>`;
-    } else if (estado==='convertido') {
-      btns = `<span class="btn-anulado">📦 Pedido ${esc(e.pedidoNum||'generado')}</span>`;
+    if (estado === 'activo') {
+      btns = `
+        <button class="btn-acc btn-convertir" onclick="abrirConvertir(${i})">🛒 Convertir</button>
+        <button class="btn-acc btn-anular"    onclick="abrirAnular(${i})">🚫 Anular</button>`;
+    } else if (estado === 'convertido') {
+      btns = `<span class="btn-convertido">📦 ${esc(e.pedidoNum || 'Pedido OK')}</span>`;
     } else {
-      btns = `<span class="btn-anulado" title="${esc(e.razon)}">✗ ${esc(e.razon.substring(0,35))}${e.razon.length>35?'…':''}</span>`;
+      btns = `<span class="btn-anulado" title="${esc(e.razon)}">
+        ✗ ${esc(e.razon.length > 30 ? e.razon.substring(0,30)+'…' : e.razon)}
+      </span>`;
     }
 
-    const chips = (cli.productos||[]).map(p => `
-      <div class="prod-chip ${estado==='anulado'?'anulado':''}">
-        <span class="pc-nom">${esc(p.nombre||p.id_producto||'—')}</span>
-        <span class="pc-det">${Number(p.cajas)||0} cj · $ ${(Number(p.subtotal)||0).toFixed(2)}</span>
-      </div>`).join('');
+    const colVendTd = (vistaActual === 'vendedor' && esDirectivo)
+      ? `<td style="color:var(--gris);font-size:.68rem">${esc(e.meta.vendedor||'—')}</td>` : '';
 
-    return `
-    <div class="meta-cliente-card" id="mc-card-${i}">
-      <div class="meta-cliente-hdr">
-        <div>
-          <h4>${esc(cli.cliente||cli.nombre||'—')} &nbsp;${badgeEstado}</h4>
-          <div class="sub">
-            Vendedor: <strong>${esc(e.meta.vendedor||'—')}</strong> ·
-            Período: <strong>${esc(per)}</strong> ·
-            ${tCjCli} cajas · $ ${tUCli.toFixed(2)}
-          </div>
-        </div>
-        <div class="meta-acciones">${btns}</div>
-      </div>
-      <div class="prod-chips">${chips||'<span style="font-size:.72rem;color:var(--sub)">Sin productos asignados</span>'}</div>
-    </div>`;
+    return `<tr>
+      ${colVendTd}
+      <td><strong>${esc(cli.cliente||cli.nombre||'—')}</strong><br>
+        <span style="font-size:.62rem;color:var(--gris)">${badgeE}</span>
+      </td>
+      <td>${badgeT}</td>
+      <td style="color:var(--gris);font-size:.68rem">${esc(per)}</td>
+      ${tdProds}
+      <td class="center"><strong>${totalCajasF}</strong></td>
+      <td class="right"><strong>$ ${totalUsdF.toFixed(2)}</strong></td>
+      <td class="center" style="white-space:nowrap">${btns}</td>
+    </tr>`;
   }).join('');
+
+  // Fila de totales
+  const colVendTotTd = (vistaActual === 'vendedor' && esDirectivo) ? '<td></td>' : '';
+  const tdTotProdsCells = tdTotalesProds.map(t =>
+    `<td class="center"><strong>${t > 0 ? t : '—'}</strong></td>`).join('');
+
+  const tfootRow = `<tr class="tfoot-row">
+    ${colVendTotTd}
+    <td><strong>TOTAL</strong></td><td></td><td></td>
+    ${tdTotProdsCells}
+    <td class="center"><strong>${totalCajasGlobal}</strong></td>
+    <td class="right"><strong>$ ${totalUsdGlobal.toFixed(2)}</strong></td>
+    <td></td>
+  </tr>`;
+
+  document.getElementById('tabla-tbody').innerHTML = tbody + tfootRow;
 }
 
-// ══════════════════════════════════════════════════════════
-//  MODAL ANULACIÓN
-// ══════════════════════════════════════════════════════════
-function abrirModalAnulacion(idx) {
-  _anulCtx = idx;
-  const e  = clientesMap[idx];
-  const per= e.meta.periodo||(e.meta.mes+'/'+e.meta.anio)||'—';
-  document.getElementById('modal-anul-desc').textContent =
-    'Cliente: '+(e.cli.cliente||e.cli.nombre||'—')+' · Período: '+per;
-  document.getElementById('modal-anul-razon').value = '';
-  document.getElementById('modal-anul-razon').style.borderColor = '';
-  document.getElementById('modal-anulacion').classList.add('open');
-}
+// ── MODAL CONVERTIR ───────────────────────────────────────────
+function abrirConvertir(idx) {
+  ctxConv = idx;
+  const e   = filasMapa[idx];
+  const cli = e.cli;
+  const per = e.meta.periodo || (e.meta.mes + '/' + e.meta.anio) || '—';
 
-function cerrarModalAnulacion() {
-  document.getElementById('modal-anulacion').classList.remove('open');
-  _anulCtx = null;
-}
+  document.getElementById('conv-desc').textContent =
+    `Cliente: ${cli.cliente||cli.nombre||'—'}  ·  Período: ${per}`;
 
-async function confirmarAnulacion() {
-  const razon = document.getElementById('modal-anul-razon').value.trim();
-  if (!razon) {
-    document.getElementById('modal-anul-razon').style.borderColor = 'var(--rojo)';
-    return;
-  }
-  const e      = clientesMap[_anulCtx];
-  e.estado     = 'anulado';
-  e.razon      = razon;
-  e.cli._estado= 'anulado';
-  e.cli._razon = razon;
-  await persistirEstadoCliente(e);
-  cerrarModalAnulacion();
-  renderTabClientes();
-  mostrarToast('Cliente anulado correctamente.', 'ok-t');
-}
-
-// ══════════════════════════════════════════════════════════
-//  MODAL CONVERTIR A PEDIDO
-// ══════════════════════════════════════════════════════════
-function abrirModalConvertir(idx) {
-  _convCtx = idx;
-  const e  = clientesMap[idx];
-  const per= e.meta.periodo||(e.meta.mes+'/'+e.meta.anio)||'—';
-  document.getElementById('modal-conv-desc').textContent =
-    'Cliente: '+(e.cli.cliente||e.cli.nombre||'—')+' · Período: '+per;
-  document.getElementById('modal-conv-detalle').innerHTML =
-    (e.cli.productos||[]).map(p =>
-      `<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--borde)">
+  document.getElementById('conv-det').innerHTML =
+    (cli.productos || []).map(p => `
+      <div class="det-row">
         <span>${esc(p.nombre||p.id_producto||'—')}</span>
-        <strong>${Number(p.cajas)||0} cajas · $ ${(Number(p.subtotal)||0).toFixed(2)}</strong>
-      </div>`).join('') || '<span style="color:var(--sub);font-size:.72rem">Sin productos</span>';
-  document.getElementById('modal-convertir').classList.add('open');
-}
+        <strong>${Number(p.cajas)||0} cajas  ·  $ ${(Number(p.subtotal)||0).toFixed(2)}</strong>
+      </div>`).join('') ||
+    '<span style="color:var(--gris);font-size:.72rem">Sin productos</span>';
 
-function cerrarModalConvertir() {
-  document.getElementById('modal-convertir').classList.remove('open');
-  _convCtx = null;
+  document.getElementById('modal-conv').classList.add('open');
 }
 
 async function confirmarConversion() {
-  const e   = clientesMap[_convCtx];
+  const e   = filasMapa[ctxConv];
   const cli = e.cli;
   const meta= e.meta;
 
   const productos  = (cli.productos||[]).map(p => ({
-    nombre:   p.nombre||p.id_producto||'',
-    cajas:    Number(p.cajas)||0,
-    precio:   Number(p.precio_usd)||0,
-    subtotal: Number(p.subtotal)||0,
+    nombre:   p.nombre   || p.id_producto || '',
+    cajas:    Number(p.cajas)   || 0,
+    precio:   Number(p.precio_usd) || 0,
+    subtotal: Number(p.subtotal) || 0,
   }));
-  const totalCajas = productos.reduce((s,p)=>s+p.cajas, 0);
-  const totalUSD   = productos.reduce((s,p)=>s+p.subtotal, 0);
+  const totalCajas = productos.reduce((s,p) => s + p.cajas,   0);
+  const totalUSD   = productos.reduce((s,p) => s + p.subtotal, 0);
 
-  const payload = {
-    action:          'nuevoPedido',
-    vendedor:        meta.vendedor       || sesion.nombre      || '',
-    userVendedor:    meta.vendedor       || sesion.vendedor_id || '',
-    razonSocial:     cli.cliente         || cli.nombre         || '',
-    establecimiento: cli.establecimiento || cli.cliente        || '',
-    contacto:        cli.contacto        || '',
-    telefono:        cli.telefono        || '',
-    tipoCliente:     cli.tipo            || 'activo',
-    productos,
-    totalUSD,
-    totalCajas,
-    condicionPago:   '5 días',
-    observaciones:   'Convertido desde META período '+(meta.periodo||(meta.mes+'/'+meta.anio)||''),
-  };
+  const btn = document.getElementById('btn-conv-ok');
+  btn.disabled = true; btn.textContent = 'Creando…';
 
   try {
-    const r    = await fetch(API_URL, {method:'POST', body:JSON.stringify(payload), redirect:'follow'});
-    const raw2 = await r.text();
-    const d    = JSON.parse(raw2);
+    const payload = {
+      action:          'nuevoPedido',
+      vendedor:        meta.vendedor       || sesion.nombre      || '',
+      userVendedor:    meta.vendedor       || sesion.vendedor_id || '',
+      razonSocial:     cli.cliente         || cli.nombre         || '',
+      establecimiento: cli.establecimiento || cli.cliente        || '',
+      contacto:        cli.contacto        || '',
+      telefono:        cli.telefono        || '',
+      tipoCliente:     cli.tipo            || 'activo',
+      productos, totalUSD, totalCajas,
+      condicionPago:   '5 días',
+      observaciones:   'Convertido desde META · ' + (meta.periodo||(meta.mes+'/'+meta.anio)||''),
+    };
+
+    const r   = await fetch(API, { method:'POST', body:JSON.stringify(payload), redirect:'follow' });
+    const raw = await r.text();
+    const d   = JSON.parse(raw);
+
     if (d.ok) {
-      e.estado      = 'convertido';
-      e.pedidoNum   = d.numeroPedido||'';
-      e.cli._estado = 'convertido';
-      e.cli._pedido = d.numeroPedido||'';
-      await persistirEstadoCliente(e);
-      cerrarModalConvertir();
-
-      // Repintar: actualizarDashboard recalcula real desde clientesMap (estado=convertido)
-      aplicarFiltros();
-
-      mostrarToast('✓ Pedido '+(d.numeroPedido||'')+' creado. KPIs actualizados.', 'ok-t');
+      // Marcar en memoria
+      const f      = filasMapa[ctxConv];
+      f.estado     = 'convertido';
+      f.pedidoNum  = d.numeroPedido || '';
+      f.cli._estado= 'convertido';
+      f.cli._pedido= d.numeroPedido || '';
+      // Persistir en backend
+      await persistirEstado(f);
+      cerrarModal('modal-conv');
+      renderTabla();
+      toast(`✓ Pedido ${d.numeroPedido||''} creado correctamente.`, 'ok');
     } else {
-      mostrarToast('Error: '+(d.msg||'No se pudo crear el pedido.'), 'err-t');
+      toast('Error: ' + (d.msg || 'No se pudo crear el pedido.'), 'err');
     }
   } catch(err) {
-    mostrarToast('Error de conexión: '+err.message, 'err-t');
+    toast('Error de conexión: ' + err.message, 'err');
+  } finally {
+    btn.disabled = false; btn.textContent = '✓ Crear pedido';
   }
 }
 
-// ══════════════════════════════════════════════════════════
-//  PERSISTIR ESTADO EN BACKEND
-// ══════════════════════════════════════════════════════════
-async function persistirEstadoCliente(entrada) {
+// ── MODAL ANULAR ──────────────────────────────────────────────
+function abrirAnular(idx) {
+  ctxAnul = idx;
+  const e   = filasMapa[idx];
+  const cli = e.cli;
+  const per = e.meta.periodo || (e.meta.mes + '/' + e.meta.anio) || '—';
+  document.getElementById('anul-desc').textContent =
+    `Cliente: ${cli.cliente||cli.nombre||'—'}  ·  Período: ${per}`;
+  const ta = document.getElementById('anul-razon');
+  ta.value = ''; ta.classList.remove('error');
+  document.getElementById('modal-anul').classList.add('open');
+}
+
+async function confirmarAnulacion() {
+  const razon = document.getElementById('anul-razon').value.trim();
+  if (!razon) {
+    document.getElementById('anul-razon').classList.add('error');
+    document.getElementById('anul-razon').placeholder = '⚠ La razón es obligatoria.';
+    return;
+  }
+  const f      = filasMapa[ctxAnul];
+  f.estado     = 'anulado';
+  f.razon      = razon;
+  f.cli._estado= 'anulado';
+  f.cli._razon = razon;
+  await persistirEstado(f);
+  cerrarModal('modal-anul');
+  renderTabla();
+  toast('Cliente anulado con justificación guardada.', 'ok');
+}
+
+// ── PERSISTIR ESTADO EN BACKEND ───────────────────────────────
+async function persistirEstado(entrada) {
   const meta   = entrada.meta;
-  const periodo= meta.periodo||'';
+  const periodo= meta.periodo || '';
   const partes = periodo.split(' al ');
-  const desde  = partes[0]||'';
-  const hasta  = partes[1]||partes[0]||'';
-  const clis   = clientesMap.filter(e=>e.meta===meta).map(e=>e.cli);
+  const desde  = partes[0] || '';
+  const hasta  = partes[1] || partes[0] || '';
+  // Reconstruir todos los clientes de esa meta desde filasMapa
+  const clis   = filasMapa.filter(e => e.meta === meta).map(e => e.cli);
   const payload= {
-    action:'asignarMeta', vendedor_id:meta.vendedor||'',
-    fecha_desde:desde, fecha_hasta:hasta,
-    meta_usd:   clis.reduce((s,c)=>s+(Number(c.total_usd)||0),0),
-    meta_cajas: clis.reduce((s,c)=>s+(Number(c.total_cajas)||0),0),
+    action:               'asignarMeta',
+    vendedor_id:          meta.vendedor || '',
+    fecha_desde:          desde,
+    fecha_hasta:          hasta,
+    meta_usd:             clis.reduce((s,c)=>s+(Number(c.total_usd)||0),0),
+    meta_cajas:           clis.reduce((s,c)=>s+(Number(c.total_cajas)||0),0),
     meta_clientes_nuevos: clis.filter(c=>c.tipo==='Nuevo').length,
-    clientes:clis, productos:[],
+    clientes:             clis,
+    productos:            [],
   };
   try {
-    const r   = await fetch(API_URL, {method:'POST', body:JSON.stringify(payload), redirect:'follow'});
-    const raw3= await r.text();
-    const d   = JSON.parse(raw3);
-    if (!d.ok) console.warn('persistirEstadoCliente:', d.msg);
-  } catch(e) { console.warn('persistirEstadoCliente error:', e); }
+    const r = await fetch(API,{method:'POST',body:JSON.stringify(payload),redirect:'follow'});
+    const d = JSON.parse(await r.text());
+    if (!d.ok) console.warn('persistirEstado:', d.msg);
+  } catch(e) { console.warn('persistirEstado error:', e); }
 }
 
-// ══════════════════════════════════════════════════════════
-//  UTILIDADES
-// ══════════════════════════════════════════════════════════
+// ── UTILIDADES ────────────────────────────────────────────────
+function cerrarModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
 function esc(v) {
-  return String(v??'').replace(/[&<>"']/g, m =>
-    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  return String(v??'').replace(/[&<>"']/g,
+    m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 }
-
-function mostrarToast(msg, tipo) {
+function toast(msg, tipo) {
   const t = document.getElementById('toast');
   t.textContent = msg;
-  t.className   = 'toast show '+(tipo||'');
+  t.className   = 'toast show ' + (tipo||'');
   clearTimeout(window._toastT);
-  window._toastT = setTimeout(() => t.className='toast', 4500);
-}
-
-function mostrarEstado(msg, esError=false) {
-  const color = esError ? 'var(--rojo)' : 'var(--sub)';
-  ['kpi-real','kpi-meta','kpi-pct','kpi-gap','kpi-semaforo'].forEach(id => {
-    const el = document.getElementById(id); if (el) el.textContent = esError ? '—' : '…';
-  });
-  const barEl = document.getElementById('bar-pct');
-  if (barEl) barEl.style.width = '0%';
-  document.getElementById('tabla-lineas').innerHTML =
-    `<tr><td colspan="3" style="text-align:center;padding:20px;color:${color}">${msg}</td></tr>`;
-  document.getElementById('tabla-vendedores').innerHTML =
-    `<tr><td colspan="7" style="text-align:center;padding:20px;color:${color}">${msg}</td></tr>`;
-  const mc = document.getElementById('mc-contenido');
-  if (mc) mc.innerHTML = `<div class="estado-msg" style="color:${color}">${msg}</div>`;
-}
-
-// ══════════════════════════════════════════════════════════
-//  CHART
-// ══════════════════════════════════════════════════════════
-
-// ══════════════════════════════════════════════════════════
-//  CONTROLES UI
-// ══════════════════════════════════════════════════════════
-function setDimension(dim) {
-  dimensionActual = dim;
-  document.getElementById('btnUSD').classList.toggle('activo',   dim==='USD');
-  document.getElementById('btnCajas').classList.toggle('activo', dim==='CAJAS');
-  aplicarFiltros();
-}
-
-function switchTab(id, btn) {
-  // Solo queda el panel de clientes — función conservada para compatibilidad
-  renderTabClientes();
+  window._toastT = setTimeout(() => t.className = 'toast', 5000);
 }
 </script>
 </body>
