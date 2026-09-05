@@ -426,7 +426,7 @@ let etapas       = [];   // etapas recibidas del API
 //  INIT
 // ════════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
-  sesion = SCCR.initSCCR();
+  sesion = SCCR.initSCCR(['admin','gerente','vendedor']);
   if (!sesion) return;
 
   const rol = sesion.rol.toLowerCase();
@@ -464,8 +464,9 @@ async function cargarEmbudo() {
       url += '&vendedor=' + encodeURIComponent(sesion.vendedor_id);
     }
 
-    const r = await fetch(url, { redirect: 'follow' });
-    const d = await r.json();
+    const r   = await fetch(url, { redirect: 'follow' });
+    const raw = await r.text();
+    const d   = JSON.parse(raw);
 
     if (!d.ok) throw new Error(d.msg || 'Error al cargar embudo');
 
@@ -494,7 +495,8 @@ async function cargarEmbudo() {
 function actualizarKPIs() {
   const total  = todasOppDB.length;
   const valor  = todasOppDB.reduce((s, o) => s + (parseFloat(o.valor_estimado_usd) || 0), 0);
-  const cierre = todasOppDB.filter(o => ['Negociación','Pedido'].includes(o.etapa)).length;
+  // 'Activación' y 'Fidelización' son las etapas con pedidos reales → próximas a cerrar
+  const cierre = todasOppDB.filter(o => ['Activación','Fidelización'].includes(o.etapa)).length;
   const activos = todasOppDB.filter(o => o.etapa === 'Fidelización').length;
   const tasa   = total > 0 ? Math.round((activos / total) * 100) : 0;
 
@@ -508,7 +510,7 @@ function actualizarKPIs() {
   document.getElementById('kpi-cierre-sub').textContent= cierre === 1 ? 'Próxima a cerrar' : 'Próximas a cerrar';
 
   document.getElementById('kpi-tasa').textContent      = tasa + '%';
-  document.getElementById('kpi-tasa-sub').textContent  = `${activos} clientes activos / ${total} opp.`;
+  document.getElementById('kpi-tasa-sub').textContent  = `${activos} en Fidelización / ${total} opp.`;
 }
 
 // ════════════════════════════════════════════════════════════
@@ -654,12 +656,15 @@ async function guardarOportunidad() {
   };
 
   try {
-    await fetch(API, {
-      method:  'POST',
-      mode:    'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify(payload),
+    const res  = await fetch(API, {
+      method:   'POST',
+      body:     JSON.stringify(payload),
+      redirect: 'follow',
     });
+    const raw2 = await res.text();
+    const resp = JSON.parse(raw2);
+
+    if (!resp.ok) throw new Error(resp.msg || 'Error al guardar');
 
     // Actualizar en memoria
     const idx = todasOppDB.findIndex(o => o.id_oportunidad === id);
@@ -676,7 +681,7 @@ async function guardarOportunidad() {
 
   } catch (e) {
     console.error(e);
-    showToast('Error al guardar. Verifica tu conexión.', 'err');
+    showToast('Error al guardar: ' + e.message, 'err');
   } finally {
     btn.disabled = false;
     btn.innerHTML = 'Guardar';
