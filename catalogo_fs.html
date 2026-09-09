@@ -111,31 +111,6 @@ img{max-width:100%;display:block}
 .ben-h{font-size:15px;font-weight:700;color:#fff;margin-bottom:7px}
 .ben-p{font-size:13px;color:rgba(255,255,255,.58);line-height:1.6}
 
-/* SIMULADOR */
-.sec-sim{background:var(--negro)}
-.sec-sim .sec-tag{background:rgba(200,24,30,.3);color:#FCA5A5}
-.sec-sim .sec-h{color:#fff}
-.sec-sim .sec-sub{color:rgba(255,255,255,.58)}
-.sim-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}
-@media(max-width:680px){.sim-grid{grid-template-columns:1fr}}
-.sim-panel{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:26px}
-.sim-lbl{display:block;font-size:11.5px;font-weight:600;color:rgba(255,255,255,.65);margin-bottom:5px;letter-spacing:.2px}
-.sim-inp,.sim-sel{width:100%;padding:12px 14px;border:1.5px solid rgba(255,255,255,.14);border-radius:var(--r-sm);font-size:15px;font-family:"Inter",sans-serif;color:#fff;background:rgba(255,255,255,.08);outline:none;margin-bottom:16px;transition:border .2s;-webkit-appearance:none}
-.sim-inp:focus,.sim-sel:focus{border-color:var(--rojo);box-shadow:0 0 0 3px rgba(200,24,30,.22)}
-.sim-inp::placeholder{color:rgba(255,255,255,.3)}
-.sim-sel option{background:#1F2937;color:#fff}
-.sim-res{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:26px}
-.sim-res-ttl{font-size:11.5px;font-weight:700;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.7px;margin-bottom:18px}
-.sr{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.07)}
-.sr:last-of-type{border:none}
-.sr-k{font-size:13px;color:rgba(255,255,255,.6)}
-.sr-v{font-size:14px;font-weight:700;color:#fff}
-.sim-box{background:var(--rojo);border-radius:var(--r-sm);padding:18px;text-align:center;margin-top:18px}
-.sim-box-lbl{font-size:11.5px;font-weight:700;color:rgba(255,255,255,.72);text-transform:uppercase;letter-spacing:.5px}
-.sim-box-val{font-size:38px;font-weight:800;color:#fff;letter-spacing:-1.5px;margin:4px 0}
-.sim-box-roi{font-size:14px;color:rgba(255,255,255,.78);font-weight:600}
-.sim-nota{font-size:11px;color:rgba(255,255,255,.35);margin-top:16px;line-height:1.5;text-align:center}
-
 /* POR QUÉ */
 .pq-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px}
 .pq{text-align:center;padding:26px 18px;border:1.5px solid var(--borde);border-radius:var(--r);transition:all .2s}
@@ -153,28 +128,6 @@ img{max-width:100%;display:block}
 .cv{padding:15px 18px;font-size:13.5px;color:var(--gris)}
 .cv strong{color:var(--negro);font-weight:700}
 @media(max-width:500px){.crow{grid-template-columns:1fr}.ck{border-right:none;border-bottom:1px solid var(--borde)}}
-
-/* FORMULARIO */
-.sec-form{background:var(--rojo)}
-.sec-form .sec-tag{background:rgba(255,255,255,.2);color:#fff}
-.sec-form .sec-h{color:#fff}
-.sec-form .sec-sub{color:rgba(255,255,255,.75)}
-.form-card{background:#fff;border-radius:var(--r);padding:30px;box-shadow:var(--sh-md);max-width:620px;margin:0 auto}
-.ff{margin-bottom:15px}
-.ff label{display:block;font-size:11.5px;font-weight:600;color:var(--negro);margin-bottom:5px}
-.req{color:var(--rojo)}
-.ff input,.ff select,.ff textarea{width:100%;padding:12px 14px;border:1.5px solid var(--borde);border-radius:var(--r-sm);font-size:14px;font-family:"Inter",sans-serif;color:var(--negro);background:#fff;outline:none;transition:border .2s;-webkit-appearance:none}
-.ff input:focus,.ff select:focus,.ff textarea:focus{border-color:var(--rojo);box-shadow:0 0 0 3px rgba(200,24,30,.12)}
-.ff select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
-.ff textarea{resize:vertical;min-height:75px}
-.form-btns{display:flex;flex-direction:column;gap:9px;margin-top:18px}
-.btn-wa{width:100%;padding:14px;border:none;border-radius:var(--r-sm);background:#25D366;color:#fff;font-size:15px;font-weight:700;font-family:"Inter",sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s}
-.btn-wa:hover{background:#1AAB53}
-.btn-gs{width:100%;padding:12px;border:1.5px solid var(--borde);border-radius:var(--r-sm);background:#fff;color:var(--negro);font-size:14px;font-weight:600;font-family:"Inter",sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .2s}
-.btn-gs:hover{border-color:var(--negro)}
-.btn-gs:disabled{opacity:.5;cursor:not-allowed}
-.ok-box{display:none;background:var(--verde-xs);border:1px solid #A7F3D0;border-radius:var(--r-sm);padding:13px;text-align:center;margin-top:12px;font-size:13.5px;font-weight:600;color:var(--verde)}
-.ok-box.show{display:block}
 
 /* CONTACTO */
 .sec-ctc{background:var(--fondo)}
@@ -408,49 +361,6 @@ header{
   </div>
 </section>
 
-<!-- SIMULADOR -->
-<section class="sec sec-sim" id="simulador">
-  <div class="inner">
-    <div class="sec-hd">
-      <div class="sec-tag">Simulador de Rentabilidad</div>
-      <h2 class="sec-h">Calcule su ganancia en tiempo real</h2>
-      <p class="sec-sub">Ingrese los datos de su operaci&oacute;n y vea cu&aacute;nto puede ganar este mes.</p>
-    </div>
-    <div class="sim-grid">
-      <div class="sim-panel">
-        <label class="sim-lbl">Producto Casabe Real</label>
-        <select class="sim-sel" id="sim-prod" onchange="calcSim()">
-          <option value="restaurante">Tipo Restaurante ($260/caja &middot; 1.200 uds)</option>
-          <option value="pasapalo">Tipo Pasapalo ($220/caja &middot; 3.150 uds)</option>
-          <option value="torta">Tipo Torta ($200/caja &middot; 320 uds)</option>
-        </select>
-        <label class="sim-lbl">Servicios estimados por d&iacute;a</label>
-        <input class="sim-inp" type="number" id="sim-servicios" placeholder="Ej: 80" min="1" inputmode="numeric" oninput="calcSim()">
-        <label class="sim-lbl">Unidades de casabe por servicio</label>
-        <input class="sim-inp" type="number" id="sim-unidades" placeholder="Ej: 2" min="1" inputmode="numeric" oninput="calcSim()">
-        <label class="sim-lbl">D&iacute;as de trabajo al mes</label>
-        <input class="sim-inp" type="number" id="sim-dias" placeholder="Ej: 26" min="1" max="31" inputmode="numeric" oninput="calcSim()">
-        <label class="sim-lbl">Precio del servicio al comensal (USD)</label>
-        <input class="sim-inp" type="number" id="sim-precio" placeholder="Ej: 2.50" min="0.1" step="0.10" inputmode="decimal" oninput="calcSim()">
-      </div>
-      <div class="sim-res">
-        <div class="sim-res-ttl">Proyecci&oacute;n Mensual</div>
-        <div class="sr"><span class="sr-k">Servicios / mes</span><span class="sr-v" id="sr-serv">—</span></div>
-        <div class="sr"><span class="sr-k">Paquetes requeridos / mes</span><span class="sr-v" id="sr-paq">—</span></div>
-        <div class="sr"><span class="sr-k">Cajas requeridas / mes</span><span class="sr-v" id="sr-cajas">—</span></div>
-        <div class="sr"><span class="sr-k">Inversi&oacute;n mensual</span><span class="sr-v" id="sr-inv">—</span></div>
-        <div class="sr"><span class="sr-k">Ingresos por casabe</span><span class="sr-v" id="sr-ing">—</span></div>
-        <div class="sim-box">
-          <div class="sim-box-lbl">Ganancia Estimada / Mes</div>
-          <div class="sim-box-val" id="sr-gan">$—</div>
-          <div class="sim-box-roi" id="sr-roi">ROI: —%</div>
-        </div>
-        <div class="sim-nota">* Estimaci&oacute;n basada en los datos ingresados. Resultados pueden variar seg&uacute;n la operaci&oacute;n.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- POR QUÉ NOSOTROS -->
 <section class="sec" id="porque">
   <div class="inner">
@@ -481,61 +391,6 @@ header{
       <div class="crow"><div class="ck">Despacho</div><div class="cv">Coordinado directamente con su asesor comercial</div></div>
       <div class="crow"><div class="ck">Facturaci&oacute;n</div><div class="cv">Sistema digital &mdash; recibe su factura por correo</div></div>
       <div class="crow"><div class="ck">Primer Pedido</div><div class="cv">Nuevos clientes deben presentar <strong>RIF de la empresa y C&eacute;dula del dueño de la empresa</strong></div></div>
-    </div>
-  </div>
-</section>
-
-<!-- FORMULARIO PROPUESTA (solo logueado) -->
-<section class="sec sec-form" id="sec-propuesta">
-  <div class="inner">
-    <div class="sec-hd c">
-      <div class="sec-tag">Generar Propuesta</div>
-      <h2 class="sec-h">Personalice y env&iacute;e</h2>
-      <p class="sec-sub">Complete los datos del cliente para generar la propuesta personalizada.</p>
-    </div>
-    <div class="form-card">
-      <div class="ff"><label>Raz&oacute;n Social <span class="req">*</span></label><input type="text" id="f-razon" placeholder="Ej: Restaurante El Sabor C.A." required></div>
-      <div class="ff"><label>Nombre del Establecimiento <span class="req">*</span></label><input type="text" id="f-establ" placeholder="Ej: El Sabor Criollo" required></div>
-      <div class="ff"><label>Contacto / Decisor</label><input type="text" id="f-contacto" placeholder="Ej: Chef Martínez, Gerente de Compras"></div>
-      <div class="ff"><label>Tel&eacute;fono / WhatsApp del Cliente</label><input type="tel" id="f-telf" placeholder="04121234567" inputmode="tel"></div>
-      <div class="ff"><label>Tipo de Cliente <span class="req">*</span></label>
-        <select id="f-tipo" required>
-          <option value="">Seleccione...</option>
-          <option value="Prospecto / Oportunidad">Prospecto / Oportunidad (Nuevo)</option>
-          <option value="Cliente Recurrente">Cliente Recurrente</option>
-        </select>
-      </div>
-      <div class="ff"><label>Producto de Inter&eacute;s</label>
-        <select id="f-prod" onchange="calcularSubtotal()">
-          <option value="Tipo Restaurante ($260/caja)">Tipo Restaurante &mdash; $260/caja</option>
-          <option value="Tipo Pasapalo ($220/caja)">Tipo Pasapalo &mdash; $220/caja</option>
-          <option value="Tipo Torta ($200/caja)">Tipo Torta &mdash; $200/caja</option>
-          <option value="Combinaci&oacute;n de productos">Combinaci&oacute;n de productos</option>
-        </select>
-      </div>
-      <div class="ff"><label>Cantidad de Cajas <span class="req">*</span></label><input type="number" id="f-cantidad" placeholder="1" min="1" step="1" required oninput="calcularSubtotal()"></div>
-      <div class="ff"><label>Subtotal USD</label><input type="number" id="f-total-usd" placeholder="0.00" readonly style="background:#f3f4f6;cursor:default"></div>
-      <div class="ff"><label>Condici&oacute;n de Pago <span class="req">*</span></label>
-        <select id="f-condicion" required onchange="calcularSubtotal()">
-          <option value="">Seleccione...</option>
-          <option value="Contado">Contado (precio &minus;3%)</option>
-          <option value="Crédito 5 días">Cr&eacute;dito 5 d&iacute;as (precio real)</option>
-          <option value="Crédito 15 días">Cr&eacute;dito 15 d&iacute;as (precio +10%)</option>
-          <option value="Crédito 30 días">Cr&eacute;dito 30 d&iacute;as (precio +15%)</option>
-        </select>
-      </div>
-      <div class="ff"><label>Observaciones</label><textarea id="f-obs" placeholder="Notas adicionales para el cliente..."></textarea></div>
-      <div class="form-btns">
-        <button class="btn-wa" onclick="enviarWA()">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-          Enviar por WhatsApp
-        </button>
-        <button class="btn-gs" id="btn-gs" onclick="guardarProp()">
-          <span id="gs-txt">&#128190; Guardar en el Sistema</span>
-          <span class="sp" id="gs-sp"></span>
-        </button>
-      </div>
-      <div class="ok-box" id="ok-box">&#9989; Propuesta guardada y registrada en el sistema.</div>
     </div>
   </div>
 </section>
@@ -733,174 +588,6 @@ function filtrar(cat, btn) {
   });
 })();
 
-// ── SIMULADOR ────────────────────────────────────────────────
-const PROD_SIM = {
-  restaurante: {uds_paq:30, paq_caja:40, precio_caja:260},
-  torta:       {uds_paq: 8, paq_caja:40, precio_caja:200},
-  pasapalo:    {uds_paq:35, paq_caja:90, precio_caja:220},
-};
-
-function calcSim() {
-  const prod     = document.getElementById('sim-prod').value;
-  const servicios= parseInt(document.getElementById('sim-servicios').value)||0;
-  const uds_serv = parseInt(document.getElementById('sim-unidades').value)||0;
-  const dias     = parseInt(document.getElementById('sim-dias').value)||0;
-  const precio   = parseFloat(document.getElementById('sim-precio').value)||0;
-  const vacio=()=>{
-    ['sr-serv','sr-paq','sr-cajas','sr-inv','sr-ing'].forEach(id=>document.getElementById(id).textContent='—');
-    document.getElementById('sr-gan').textContent='$—';
-    document.getElementById('sr-roi').textContent='ROI: —%';
-    simData={};
-  };
-  if(!servicios||!uds_serv||!dias||!precio){vacio();return;}
-  const cfg          = PROD_SIM[prod];
-  const serviciosMes = servicios * dias;
-  const unidadesTot  = serviciosMes * uds_serv;
-  const paquetesMes  = Math.ceil(unidadesTot / cfg.uds_paq);
-  const cajasExactas = paquetesMes / cfg.paq_caja;
-  const cajasComprar = Math.ceil(cajasExactas);
-  const inversion    = cajasComprar * cfg.precio_caja;
-  const ingresos     = serviciosMes * precio;
-  const ganancia     = ingresos - inversion;
-  const roi          = inversion>0 ? Math.round((ganancia/inversion)*100) : 0;
-  simData = {serviciosMes,unidadesTot,paquetesMes,cajasExactas,cajasComprar,inversion,ingresos,ganancia,roi,prod};
-  document.getElementById('sr-serv').textContent  = fmt(serviciosMes)+' servicios';
-  document.getElementById('sr-paq').textContent   = fmt(paquetesMes)+' paquetes';
-  const cajaTxt = cajasExactas%1===0
-    ? cajasExactas+(cajasExactas===1?' caja':' cajas')
-    : cajasExactas.toFixed(1)+' cajas (compra '+cajasComprar+')';
-  document.getElementById('sr-cajas').textContent = cajaTxt;
-  document.getElementById('sr-inv').textContent   = '$'+fmt(inversion);
-  document.getElementById('sr-ing').textContent   = '$'+fmt(ingresos);
-  document.getElementById('sr-gan').textContent   = '$'+fmt(ganancia);
-  document.getElementById('sr-roi').textContent   = 'ROI: '+roi+'%';
-}
-
-// ── WHATSAPP ─────────────────────────────────────────────────
-function enviarWA() {
-  const razon  = document.getElementById('f-razon').value.trim();
-  const establ = document.getElementById('f-establ').value.trim();
-  const telf   = document.getElementById('f-telf').value.trim().replace(/[^0-9]/g,'');
-  if(!razon||!establ||!telf){toast('⚠️ Completa los campos obligatorios');return;}
-  const vend = SES ? SES.nombre : 'Asesor Casabe Real';
-  const fecha = new Date().toLocaleDateString('es-VE',{day:'2-digit',month:'long',year:'numeric'});
-  const prod  = document.getElementById('f-prod').value;
-  const obs   = document.getElementById('f-obs').value.trim();
-  let m=`🌿 *PROPUESTA COMERCIAL — CASABE REAL*
-📅 ${fecha}
-
-Estimado/a *${establ}*,
-
-Es un placer presentarle nuestra propuesta.
-
-📦 *Producto:* ${prod}
-
-`;
-  if(simData.ganancia!==undefined){
-    m+=`📊 *Simulación de Rentabilidad:*
-`;
-    m+=`• Servicios/mes: ${fmt(simData.serviciosMes)}
-`;
-    m+=`• Paquetes requeridos/mes: ${fmt(simData.paquetesMes)}
-`;
-    m+=`• Cajas/mes: ${simData.cajasExactas%1===0?simData.cajasExactas:simData.cajasExactas.toFixed(1)} (se compran ${simData.cajasComprar})
-`;
-    m+=`• Inversión mensual: $${fmt(simData.inversion)}
-`;
-    m+=`• Ingresos por casabe: $${fmt(simData.ingresos)}
-`;
-    m+=`• *Ganancia estimada: $${fmt(simData.ganancia)}/mes*
-`;
-    m+=`• ROI: ${simData.roi}%
-
-`;
-  }
-  m+=`✅ *Condiciones:*
-• Precio en USD (Bs. a tasa del día)
-• Crédito 5 días
-• Pedido mínimo: 1 caja
-
-`;
-  if(obs) m+=`📝 ${obs}
-
-`;
-  m+=`📱 Casabe Real: 0412.290.58.33
-👤 ${vend}
-
-¡Quedamos atentos!`;
-  window.open(`https://wa.me/${telf}?text=${encodeURIComponent(m)}`,'_blank');
-}
-
-// ── GUARDAR ───────────────────────────────────────────────────
-// ── Subtotal automático: cajas × precio base ajustado por condición de pago ──
-function calcularSubtotal() {
-  const prod      = document.getElementById('f-prod').value;
-  const cajas     = parseFloat(document.getElementById('f-cantidad').value) || 0;
-  const condicion = document.getElementById('f-condicion').value;
-
-  // Precio base por producto
-  const precios = {
-    'Tipo Restaurante ($260/caja)': 260,
-    'Tipo Pasapalo ($220/caja)':    220,
-    'Tipo Torta ($200/caja)':       200,
-    'Combinación de productos':     0,   // precio libre, no calcula
-  };
-  const precioBase = precios[prod] ?? 0;
-  if (!precioBase || !cajas) { document.getElementById('f-total-usd').value = ''; return; }
-
-  // Factor según condición de pago
-  const factor = condicion === 'Contado'          ? 0.97
-               : condicion === 'Crédito 5 días'   ? 1.00
-               : condicion === 'Crédito 15 días'  ? 1.10
-               : condicion === 'Crédito 30 días'  ? 1.15
-               : 1.00;
-
-  const subtotal = (cajas * precioBase * factor).toFixed(2);
-  document.getElementById('f-total-usd').value = subtotal;
-}
-
-async function guardarProp() {
-  const sesion = SCCR.getSesion ? SCCR.getSesion() : SES;
-  const razon  = document.getElementById('f-razon').value.trim();
-  const establ = document.getElementById('f-establ').value.trim();
-  if(!razon||!establ){toast('⚠️ Completa los campos obligatorios');return;}
-  if(!sesion){toast('⚠️ Debes estar logueado para guardar');return;}
-  const btn=document.getElementById('btn-gs');
-  const sp=document.getElementById('gs-sp');
-  btn.disabled=true; sp.classList.add('on');
-
-  // Payload alineado con HEADERS.propuestas del Script:
-  // numero_propuesta | fecha | fecha_formateada | vendedor | user_vendedor |
-  // razon_social | establecimiento | contacto | telefono |
-  // tipo_cliente | productos_detalle | total_cajas | total_usd |
-  // condicion_pago | estado_propuesta | observaciones
-  const payload={
-    action:            'nuevaPropuesta',
-    fecha:             new Date().toISOString(),
-    vendedor:          sesion.nombre || sesion.user || '',
-    user_vendedor:     sesion.user   || '',
-    razon_social:      razon,
-    establecimiento:   establ,
-    contacto:          document.getElementById('f-contacto').value.trim(),
-    telefono:          document.getElementById('f-telf').value.trim(),
-    tipo_cliente:      document.getElementById('f-tipo').value,
-    productos_detalle: document.getElementById('f-prod').value,
-    total_cajas:       parseFloat(document.getElementById('f-cantidad').value)  || 0,
-    total_usd:         parseFloat(document.getElementById('f-total-usd').value) || 0,
-    condicion_pago:    document.getElementById('f-condicion').value,
-    estado_propuesta:  'enviada',
-    observaciones:     document.getElementById('f-obs').value.trim(),
-  };
-  try{
-    await fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-    document.getElementById('ok-box').classList.add('show');
-    toast('✅ Propuesta guardada');
-  }catch(e){
-    toast('❌ Error al guardar. Verifica tu conexión.');
-  }
-  btn.disabled=false; sp.classList.remove('on');
-}
-
 // ── INIT ──────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded',()=>{
   try{
@@ -909,7 +596,6 @@ window.addEventListener('DOMContentLoaded',()=>{
       SES=JSON.parse(raw);
       document.getElementById('barra').classList.add('show');
       document.getElementById('bv-nombre').textContent=SES.nombre;
-      document.getElementById('sec-propuesta').style.display='';
       document.getElementById('ctc-vend').textContent=SES.nombre;
     }
   }catch(e){}
