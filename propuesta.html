@@ -208,18 +208,14 @@ tbody td{padding:10px 11px;vertical-align:middle}
       <div class="sim-grid">
         <div class="sim-panel">
           <h3>Datos de la Operación</h3>
-          <label class="sim-lbl">Producto Casabe Real</label>
+          <label class="sim-lbl">Producto Casabe Real - Condición de pago 30 días</label>
           <select class="sim-sel" id="sim-prod" onchange="calcSim()">
-            <option value="restaurante">Tipo Restaurante ($260/caja · 1.200 uds)</option>
-            <option value="pasapalo">Tipo Pasapalo ($220/caja · 3.150 uds)</option>
-            <option value="torta">Tipo Torta ($200/caja · 320 uds)</option>
+            <option value="restaurante">Tipo Restaurante ($312/caja · 1.200 uds)</option>
+            <option value="pasapalo">Tipo Pasapalo ($264/caja · 3.150 uds)</option>
+            <option value="torta">Tipo Torta ($240/caja · 320 uds)</option>
           </select>
           <label class="sim-lbl">Total tiendas / locales del establecimiento</label>
           <input class="sim-inp" type="number" id="sim-tiendas" placeholder="Ej: 1" min="1" inputmode="numeric" oninput="calcSim()">
-          <label class="sim-lbl">Total mesas del local</label>
-          <input class="sim-inp" type="number" id="sim-mesas" placeholder="Ej: 20" min="1" inputmode="numeric" oninput="calcSim()">
-          <label class="sim-lbl">% estimado de venta Casabe Real</label>
-          <input class="sim-inp" type="number" id="sim-pct" placeholder="Ej: 30" min="1" max="100" inputmode="numeric" oninput="calcSim()">
           <label class="sim-lbl">Servicios estimados por día</label>
           <input class="sim-inp" type="number" id="sim-servicios" placeholder="Ej: 15" min="1" inputmode="numeric" oninput="calcSim()">
           <label class="sim-lbl">Unidades de casabe por servicio</label>
@@ -278,9 +274,9 @@ tbody td{padding:10px 11px;vertical-align:middle}
       <div class="sec-lbl">📦 Detalle del Pedido</div>
       <div class="ff"><label>Producto de Interés</label>
         <select id="f-prod" onchange="calcularSubtotal()">
-          <option value="Tipo Restaurante ($260/caja)">Tipo Restaurante — $260/caja</option>
-          <option value="Tipo Pasapalo ($220/caja)">Tipo Pasapalo — $220/caja</option>
-          <option value="Tipo Torta ($200/caja)">Tipo Torta — $200/caja</option>
+          <option value="Tipo Restaurante ($312/caja)">Tipo Restaurante — $312/caja</option>
+          <option value="Tipo Pasapalo ($264/caja)">Tipo Pasapalo — $264/caja</option>
+          <option value="Tipo Torta ($240/caja)">Tipo Torta — $240/caja</option>
           <option value="Combinación de productos">Combinación de productos</option>
         </select>
       </div>
@@ -289,10 +285,10 @@ tbody td{padding:10px 11px;vertical-align:middle}
         <div class="ff"><label>Condición de Pago <span class="req">*</span></label>
           <select id="f-condicion" required onchange="calcularSubtotal()">
             <option value="">Seleccione...</option>
-            <option value="Contado">Contado (−3%)</option>
-            <option value="Crédito 5 días">Crédito 5 días</option>
-            <option value="Crédito 15 días">Crédito 15 días (+10%)</option>
-            <option value="Crédito 30 días">Crédito 30 días (+15%)</option>
+            <option value="Crédito 30 días">Crédito 30 días</option>
+            <option value="Crédito 15 días">Crédito 15 días (-4%)</option>
+            <option value="Crédito 5 días">Crédito 5 días (-17%)</option>
+            <option value="Contado">Contado (−20%)</option>
           </select>
         </div>
       </div>
