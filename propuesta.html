@@ -414,22 +414,33 @@ function calcSim(){
   };
   if(!servicios||!uds_serv||!dias||!precio){vacio();return;}
   const cfg=PROD_SIM[prod];
-  const serviciosMes=servicios*dias;
-  const unidadesTot =serviciosMes*uds_serv;
-  const paquetesMes =Math.ceil(unidadesTot/cfg.uds_paq);
-  const cajasExactas=paquetesMes/cfg.paq_caja;
-  const cajasComprar=Math.ceil(cajasExactas);
-  const inversion   =cajasComprar*cfg.precio_caja;
-  const ingresos    =serviciosMes*precio;
-  const ganancia    =ingresos-inversion;
-  const roi         =inversion>0?Math.round((ganancia/inversion)*100):0;
+  // ── FÓRMULAS CORREGIDAS ──────────────────────────────────────────────────
+  // 1. Total Servicios/mes = Total Tiendas × Servicios/día × Días/mes
+  const tiendasEfectivas = tiendas || 1;
+  const serviciosMes = tiendasEfectivas * servicios * dias;
+  // 2. Total Unidades/mes = Total Servicios × Unidades de casabe por servicio
+  const unidadesTot  = serviciosMes * uds_serv;
+  // 3. Paquetes requeridos/mes = Total Unidades / Unidades por paquete
+  const paquetesMes  = Math.ceil(unidadesTot / cfg.uds_paq);
+  // ────────────────────────────────────────────────────────────────────────
+  const cajasExactas = paquetesMes / cfg.paq_caja;
+  const cajasComprar = Math.ceil(cajasExactas);
+  const inversion    = cajasComprar * cfg.precio_caja;
+  const ingresos     = serviciosMes * precio;
+  const ganancia     = ingresos - inversion;
+  const roi          = inversion > 0 ? Math.round((ganancia / inversion) * 100) : 0;
   simData={serviciosMes,unidadesTot,paquetesMes,cajasExactas,cajasComprar,inversion,ingresos,ganancia,roi,prod,
            nombreProd:cfg.nombre,precioCaja:cfg.precio_caja,paqCaja:cfg.paq_caja,udsPaq:cfg.uds_paq,
            serviciosDia:servicios,udsServicio:uds_serv,diasMes:dias,precioServicio:precio,
-           totalTiendas:tiendas,totalMesas:mesas,pctVenta:pct};
+           totalTiendas:tiendasEfectivas,totalMesas:mesas,pctVenta:pct};
   document.getElementById('sr-serv').textContent=fmt(serviciosMes)+' servicios';
+  // Mostrar unidades en el panel de resultados (si existe el elemento)
+  const elUnidades=document.getElementById('sr-unidades');
+  if(elUnidades) elUnidades.textContent=fmt(unidadesTot)+' unidades';
   document.getElementById('sr-paq').textContent=fmt(paquetesMes)+' paquetes';
-  const cajaTxt=cajasExactas%1===0?cajasExactas+(cajasExactas===1?' caja':' cajas'):cajasExactas.toFixed(2)+' cajas (compra '+cajasComprar+')';
+  const cajaTxt=cajasExactas%1===0
+    ? cajasExactas+(cajasExactas===1?' caja':' cajas')
+    : cajasExactas.toFixed(2)+' cajas (compra '+cajasComprar+')';
   document.getElementById('sr-cajas').textContent=cajaTxt;
   document.getElementById('sr-inv').textContent='$'+fmt(inversion);
   document.getElementById('sr-ing').textContent='$'+fmt(ingresos);
@@ -444,14 +455,29 @@ function calcSim(){
 
 /* ── SUBTOTAL ── */
 function calcularSubtotal(){
-  const prod=document.getElementById('f-prod').value;
-  const cajas=parseFloat(document.getElementById('f-cantidad').value)||0;
-  const cond=document.getElementById('f-condicion').value;
-  const precios={'Tipo Restaurante ($260/caja)':260,'Tipo Pasapalo ($220/caja)':220,'Tipo Torta ($200/caja)':200,'Combinación de productos':0};
-  const pb=precios[prod]??0;
-  if(!pb||!cajas){document.getElementById('f-total-usd').value='';return;}
-  const f=cond==='Contado'?0.97:cond==='Crédito 5 días'?1.00:cond==='Crédito 15 días'?1.10:cond==='Crédito 30 días'?1.15:1.00;
-  document.getElementById('f-total-usd').value=(cajas*pb*f).toFixed(2);
+  const prod  = document.getElementById('f-prod').value;
+  const cajas = parseFloat(document.getElementById('f-cantidad').value) || 0;
+  const cond  = document.getElementById('f-condicion').value;
+  // Precios base = Crédito 30 días (precio lista)
+  const precios = {
+    'Tipo Restaurante ($312/caja)': 312,
+    'Tipo Pasapalo ($264/caja)'   : 264,
+    'Tipo Torta ($240/caja)'      : 240,
+    'Combinación de productos'    : 0
+  };
+  const pb = precios[prod] ?? 0;
+  if (!pb || !cajas) { document.getElementById('f-total-usd').value = ''; return; }
+  // Factores de descuento sobre el precio base (30 días = 1.00)
+  // Crédito 30 días: precio lista (sin descuento)
+  // Crédito 15 días: −4%  → ×0.96
+  // Crédito 5 días:  −17% → ×0.83
+  // Contado:         −20% → ×0.80
+  const factor = cond === 'Crédito 30 días' ? 1.00
+               : cond === 'Crédito 15 días' ? 0.96
+               : cond === 'Crédito 5 días'  ? 0.83
+               : cond === 'Contado'         ? 0.80
+               : 1.00;
+  document.getElementById('f-total-usd').value = (cajas * pb * factor).toFixed(2);
 }
 
 /* ── GENERAR PDF ── */
@@ -634,10 +660,16 @@ function generarPDF(datosOverride){
   // ── CONDICIONES DE PAGO ───────────────────────────
   y=hdr('CONDICIONES DE PAGO',y);
   // Calcular precios para cada condición a partir del precio base (crédito 30d = base)
-  const preciosProd={'Tipo Restaurante ($260/caja)':260,'Tipo Pasapalo ($220/caja)':220,'Tipo Torta ($200/caja)':200,'Combinación de productos':0};
-  const fProd=document.getElementById('f-prod')?.value||'';
-  const fCajas=parseFloat(document.getElementById('f-cantidad')?.value)||0;
-  const pb30=(preciosProd[fProd]||0)*fCajas; // precio base crédito 30 días (sin descuento)
+  // Precio base = crédito 30 días (precio lista sin descuento)
+  const preciosProd={
+    'Tipo Restaurante ($312/caja)':312,
+    'Tipo Pasapalo ($264/caja)'   :264,
+    'Tipo Torta ($240/caja)'      :240,
+    'Combinación de productos'    :0
+  };
+  const fProd  = document.getElementById('f-prod')?.value||'';
+  const fCajas = parseFloat(document.getElementById('f-cantidad')?.value)||0;
+  const pb30   = (preciosProd[fProd]||0) * fCajas; // precio base crédito 30 días
   doc.autoTable({startY:y,
     head:[['CREDITO 30 DIAS','CREDITO 15 DIAS (DESCUENTO)','CREDITO 5 DIAS (DESCUENTO)','CONTADO (DESCUENTO)']],
     body:[
@@ -699,31 +731,71 @@ function leerFormulario(){
 
 /* ── GUARDAR ── */
 async function guardarProp(){
-  const d=leerFormulario();
-  if(!d.razon||!d.establ){toast('⚠️ Completa Razón Social y Establecimiento');return;}
-  if(!SES){toast('⚠️ Debes estar logueado para guardar');return;}
-  const btn=document.getElementById('btn-gs'),sp=document.getElementById('gs-sp');
-  btn.disabled=true;sp.classList.add('on');
-  const now=new Date(),vence=new Date(now);vence.setDate(vence.getDate()+7);
-  const id='PROP-'+Date.now();
-  const payload={
-    action:'nuevaPropuesta',id,
-    fecha:now.toISOString(),fecha_vencimiento:vence.toISOString(),
-    vendedor:SES.nombre||SES.user||'',user_vendedor:SES.user||'',
-    razon_social:d.razon,establecimiento:d.establ,
-    contacto:d.contacto,telefono:d.telf,tipo_cliente:d.tipo,
-    productos_detalle:d.prod,total_cajas:parseFloat(d.cajas)||0,
-    total_usd:parseFloat(d.total)||0,condicion_pago:d.condicion,
-    estado_propuesta:'activa',observaciones:d.obs,
-    sim_inversion:simData.inversion||0,sim_ingresos:simData.ingresos||0,
-    sim_ganancia:simData.ganancia||0,sim_roi:simData.roi||0,
+  const d = leerFormulario();
+  if (!d.razon || !d.establ) { toast('⚠️ Completa Razón Social y Establecimiento'); return; }
+  if (!SES) { toast('⚠️ Debes estar logueado para guardar'); return; }
+
+  const btn = document.getElementById('btn-gs');
+  const sp  = document.getElementById('gs-sp');
+  btn.disabled = true; sp.classList.add('on');
+
+  const now   = new Date();
+  const vence = new Date(now); vence.setDate(vence.getDate() + 7);
+  // ID único: prefijo + timestamp para que el script lo use como clave
+  const id = 'PROP-' + now.getTime();
+
+  // Payload alineado con los campos que escribe el Apps Script en la hoja "propuestas"
+  const payload = {
+    action           : 'nuevaPropuesta',
+    id               : id,
+    fecha            : now.toISOString(),
+    fecha_vencimiento: vence.toISOString(),
+    vendedor         : SES.nombre || SES.user || '',
+    user_vendedor    : SES.user   || '',
+    razon_social     : d.razon,
+    establecimiento  : d.establ,
+    contacto         : d.contacto,
+    telefono         : d.telf,
+    tipo_cliente     : d.tipo,
+    productos_detalle: d.prod,
+    total_cajas      : parseFloat(d.cajas)  || 0,
+    total_usd        : parseFloat(d.total)  || 0,
+    condicion_pago   : d.condicion,
+    estado_propuesta : 'activa',
+    observaciones    : d.obs,
+    // Datos del simulador
+    sim_servicios_mes: simData.serviciosMes  || 0,
+    sim_unidades_mes : simData.unidadesTot   || 0,
+    sim_paquetes_mes : simData.paquetesMes   || 0,
+    sim_cajas_mes    : simData.cajasExactas  || 0,
+    sim_cajas_comprar: simData.cajasComprar  || 0,
+    sim_inversion    : simData.inversion     || 0,
+    sim_ingresos     : simData.ingresos      || 0,
+    sim_ganancia     : simData.ganancia      || 0,
+    sim_roi          : simData.roi           || 0,
   };
-  propuestas.unshift(payload);
-  guardarLocal();actualizarBadge();
-  try{await fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});}catch(e){}
+
+  // Guardar en memoria local inmediatamente (no esperar la red)
+  propuestas.unshift({ ...payload });
+  guardarLocal();
+  actualizarBadge();
+
+  // Enviar al Apps Script (no-cors: no hay respuesta leíble, pero sí escribe en Sheets)
+  try {
+    await fetch(API, {
+      method : 'POST',
+      mode   : 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body   : JSON.stringify(payload)
+    });
+  } catch(e) {
+    // Fallo de red: queda en local, se sincronizará al recargar
+    toast('⚠️ Sin conexión — guardado localmente');
+  }
+
   document.getElementById('ok-box').classList.add('show');
   toast('✅ Propuesta guardada con éxito');
-  btn.disabled=false;sp.classList.remove('on');
+  btn.disabled = false; sp.classList.remove('on');
 }
 
 /* ── PERSISTENCIA LOCAL ── */
@@ -740,14 +812,42 @@ function estadoProp(p){
 function diasRestantes(p){return Math.ceil((new Date(p.fecha_vencimiento)-new Date())/86400000);}
 
 async function cargarListado(){
+  // 1. Mostrar lo que hay en local mientras carga la red
   cargarLocal();
-  try{
-    const rol=(SES?.rol||'').toLowerCase(),user=SES?.user||'';
-    const url=API+'?action=getPropuestas&user='+encodeURIComponent(user)+'&rol='+encodeURIComponent(rol);
-    const resp=await fetch(url);
-    if(resp.ok){const data=await resp.json();if(Array.isArray(data)){propuestas=data;guardarLocal();}}
-  }catch(e){}
   renderListado();
+
+  // 2. Intentar sincronizar desde el Apps Script
+  try {
+    const rol  = (SES?.rol  || '').toLowerCase();
+    const user = SES?.user  || '';
+    const url  = API + '?action=getPropuestas'
+               + '&user='    + encodeURIComponent(user)
+               + '&rol='     + encodeURIComponent(rol);
+
+    const resp = await fetch(url, { method: 'GET' });
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+
+    const raw = await resp.json();
+
+    // El script puede devolver: [] directo, {data:[...]}, o {result:[...]}
+    let lista = null;
+    if (Array.isArray(raw))           lista = raw;
+    else if (Array.isArray(raw?.data)) lista = raw.data;
+    else if (Array.isArray(raw?.result)) lista = raw.result;
+
+    if (lista && lista.length > 0) {
+      // Merge: mantener los locales que no vinieron del servidor
+      //        (propuestas recién guardadas que aún no llegaron a Sheets)
+      const idsServidor = new Set(lista.map(p => p.id));
+      const soloLocales = propuestas.filter(p => !idsServidor.has(p.id));
+      propuestas = [...soloLocales, ...lista];
+      guardarLocal();
+      renderListado();
+    }
+  } catch(e) {
+    // Sin red o script con error: se trabaja con los datos locales ya pintados
+    console.warn('cargarListado: sin respuesta del servidor, usando datos locales.', e);
+  }
 }
 
 function renderListado(){
