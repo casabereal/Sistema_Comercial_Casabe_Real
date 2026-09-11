@@ -391,66 +391,105 @@ function switchTab(tab){
 }
 
 /* ── SIMULADOR ── */
+// precio_caja = precio Crédito 30 días (precio lista base)
+// uds_paq     = unidades por paquete
+// paq_caja    = paquetes por caja
 const PROD_SIM={
-  restaurante:{uds_paq:6, paq_caja:200,precio_caja:260,nombre:'Casabe Real tipo Restaurante',paq_txt:200,uds_txt:6},
-  torta:      {uds_paq:8, paq_caja:40, precio_caja:200,nombre:'Casabe Real tipo Torta',     paq_txt:40, uds_txt:8},
-  pasapalo:   {uds_paq:35,paq_caja:90, precio_caja:220,nombre:'Casabe Real tipo Pasapalo',  paq_txt:90, uds_txt:35},
+  restaurante:{uds_paq:30, paq_caja:40, precio_caja:312, nombre:'Casabe Real tipo Restaurante'},
+  pasapalo:   {uds_paq:35, paq_caja:90, precio_caja:264, nombre:'Casabe Real tipo Pasapalo'},
+  torta:      {uds_paq:8,  paq_caja:40, precio_caja:240, nombre:'Casabe Real tipo Torta'},
 };
 function calcSim(){
-  const prod    =document.getElementById('sim-prod').value;
-  const tiendas =parseInt(document.getElementById('sim-tiendas').value)||0;
-  const mesas   =parseInt(document.getElementById('sim-mesas').value)||0;
-  const pct     =parseInt(document.getElementById('sim-pct').value)||0;
-  const servicios=parseInt(document.getElementById('sim-servicios').value)||0;
-  const uds_serv =parseInt(document.getElementById('sim-unidades').value)||0;
-  const dias     =parseInt(document.getElementById('sim-dias').value)||0;
-  const precio   =parseFloat(document.getElementById('sim-precio').value)||0;
-  const vacio=()=>{
-    ['sr-serv','sr-paq','sr-cajas','sr-inv','sr-ing'].forEach(id=>document.getElementById(id).textContent='—');
-    document.getElementById('sr-gan').textContent='$—';
-    document.getElementById('sr-roi').textContent='ROI: —%';
+  const prod     = document.getElementById('sim-prod').value;
+  const tiendas  = parseInt(document.getElementById('sim-tiendas').value)  || 0;
+  const mesas    = parseInt(document.getElementById('sim-mesas')  ?.value) || 0;
+  const pct      = parseInt(document.getElementById('sim-pct')    ?.value) || 0;
+  const servicios= parseInt(document.getElementById('sim-servicios').value)|| 0;
+  const uds_serv = parseInt(document.getElementById('sim-unidades').value) || 0;
+  const dias     = parseInt(document.getElementById('sim-dias').value)     || 0;
+  const precio   = parseFloat(document.getElementById('sim-precio').value) || 0;
+
+  const limpiar=()=>{
+    ['sr-serv','sr-unidades','sr-paq','sr-cajas','sr-inv','sr-ing'].forEach(id=>{
+      const el=document.getElementById(id); if(el) el.textContent='—';
+    });
+    const g=document.getElementById('sr-gan'); if(g) g.textContent='$—';
+    const r=document.getElementById('sr-roi'); if(r) r.textContent='ROI: —%';
     document.getElementById('sim-resumen').style.display='none';
     simData={};
   };
-  if(!servicios||!uds_serv||!dias||!precio){vacio();return;}
-  const cfg=PROD_SIM[prod];
-  // ── FÓRMULAS CORREGIDAS ──────────────────────────────────────────────────
-  // 1. Total Servicios/mes = Total Tiendas × Servicios/día × Días/mes
-  const tiendasEfectivas = tiendas || 1;
-  const serviciosMes = tiendasEfectivas * servicios * dias;
+
+  // Calcular en cuanto haya al menos servicios + unidades + días + precio
+  if(!servicios || !uds_serv || !dias || !precio){ limpiar(); return; }
+
+  const cfg = PROD_SIM[prod];
+  if(!cfg){ limpiar(); return; }
+
+  // ── FÓRMULAS ────────────────────────────────────────────────────────────
+  // 1. Total Servicios/mes = Tiendas × Servicios/día × Días/mes
+  const tiendasEfectivas = (tiendas > 0) ? tiendas : 1;
+  const serviciosMes     = tiendasEfectivas * servicios * dias;
+
   // 2. Total Unidades/mes = Total Servicios × Unidades de casabe por servicio
-  const unidadesTot  = serviciosMes * uds_serv;
-  // 3. Paquetes requeridos/mes = Total Unidades / Unidades por paquete
-  const paquetesMes  = Math.ceil(unidadesTot / cfg.uds_paq);
+  const unidadesTot      = serviciosMes * uds_serv;
+
+  // 3. Paquetes requeridos/mes = Total Unidades ÷ Unidades por paquete  (↑)
+  const paquetesMes      = Math.ceil(unidadesTot / cfg.uds_paq);
+
+  // 4. Cajas requeridas/mes = Paquetes ÷ Paquetes por caja
+  const cajasExactas     = paquetesMes / cfg.paq_caja;
+  const cajasComprar     = Math.ceil(cajasExactas);
+
+  // 5. Inversión = Cajas a comprar × Precio por caja (base 30 días)
+  const inversion        = cajasComprar * cfg.precio_caja;
+
+  // 6. Ingresos = Total Servicios × Precio del servicio al comensal
+  const ingresos         = serviciosMes * precio;
+
+  const ganancia = ingresos - inversion;
+  const roi      = inversion > 0 ? Math.round((ganancia / inversion) * 100) : 0;
   // ────────────────────────────────────────────────────────────────────────
-  const cajasExactas = paquetesMes / cfg.paq_caja;
-  const cajasComprar = Math.ceil(cajasExactas);
-  const inversion    = cajasComprar * cfg.precio_caja;
-  const ingresos     = serviciosMes * precio;
-  const ganancia     = ingresos - inversion;
-  const roi          = inversion > 0 ? Math.round((ganancia / inversion) * 100) : 0;
-  simData={serviciosMes,unidadesTot,paquetesMes,cajasExactas,cajasComprar,inversion,ingresos,ganancia,roi,prod,
-           nombreProd:cfg.nombre,precioCaja:cfg.precio_caja,paqCaja:cfg.paq_caja,udsPaq:cfg.uds_paq,
-           serviciosDia:servicios,udsServicio:uds_serv,diasMes:dias,precioServicio:precio,
-           totalTiendas:tiendasEfectivas,totalMesas:mesas,pctVenta:pct};
-  document.getElementById('sr-serv').textContent=fmt(serviciosMes)+' servicios';
-  // Mostrar unidades en el panel de resultados (si existe el elemento)
-  const elUnidades=document.getElementById('sr-unidades');
-  if(elUnidades) elUnidades.textContent=fmt(unidadesTot)+' unidades';
-  document.getElementById('sr-paq').textContent=fmt(paquetesMes)+' paquetes';
-  const cajaTxt=cajasExactas%1===0
-    ? cajasExactas+(cajasExactas===1?' caja':' cajas')
-    : cajasExactas.toFixed(2)+' cajas (compra '+cajasComprar+')';
-  document.getElementById('sr-cajas').textContent=cajaTxt;
-  document.getElementById('sr-inv').textContent='$'+fmt(inversion);
-  document.getElementById('sr-ing').textContent='$'+fmt(ingresos);
-  document.getElementById('sr-gan').textContent='$'+fmt(ganancia);
-  document.getElementById('sr-roi').textContent='ROI: '+roi+'%';
-  document.getElementById('chip-inv').textContent='$'+fmt(inversion);
-  document.getElementById('chip-ing').textContent='$'+fmt(ingresos);
-  document.getElementById('chip-gan').textContent='$'+fmt(ganancia);
-  document.getElementById('chip-roi').textContent=roi+'%';
-  document.getElementById('sim-resumen').style.display='';
+
+  simData = {
+    serviciosMes, unidadesTot, paquetesMes, cajasExactas, cajasComprar,
+    inversion, ingresos, ganancia, roi, prod,
+    nombreProd : cfg.nombre,
+    precioCaja : cfg.precio_caja,
+    paqCaja    : cfg.paq_caja,
+    udsPaq     : cfg.uds_paq,
+    serviciosDia    : servicios,
+    udsServicio     : uds_serv,
+    diasMes         : dias,
+    precioServicio  : precio,
+    totalTiendas    : tiendasEfectivas,
+    totalMesas      : mesas,
+    pctVenta        : pct,
+  };
+
+  // ── ACTUALIZAR PANTALLA ─────────────────────────────────────────────────
+  document.getElementById('sr-serv').textContent = fmt(serviciosMes) + ' servicios';
+
+  const elU = document.getElementById('sr-unidades');
+  if(elU) elU.textContent = fmt(unidadesTot) + ' unidades';
+
+  document.getElementById('sr-paq').textContent = fmt(paquetesMes) + ' paquetes';
+
+  const cajaTxt = cajasExactas % 1 === 0
+    ? cajasExactas + (cajasExactas === 1 ? ' caja' : ' cajas')
+    : cajasExactas.toFixed(2) + ' cajas (compra ' + cajasComprar + ')';
+  document.getElementById('sr-cajas').textContent = cajaTxt;
+
+  document.getElementById('sr-inv').textContent = '$' + fmt(inversion);
+  document.getElementById('sr-ing').textContent = '$' + fmt(ingresos);
+  document.getElementById('sr-gan').textContent = '$' + fmt(ganancia);
+  document.getElementById('sr-roi').textContent = 'ROI: ' + roi + '%';
+
+  // chips del formulario
+  document.getElementById('chip-inv').textContent = '$' + fmt(inversion);
+  document.getElementById('chip-ing').textContent = '$' + fmt(ingresos);
+  document.getElementById('chip-gan').textContent = '$' + fmt(ganancia);
+  document.getElementById('chip-roi').textContent = roi + '%';
+  document.getElementById('sim-resumen').style.display = '';
 }
 
 /* ── SUBTOTAL ── */
@@ -662,10 +701,10 @@ function generarPDF(datosOverride){
   // Calcular precios para cada condición a partir del precio base (crédito 30d = base)
   // Precio base = crédito 30 días (precio lista sin descuento)
   const preciosProd={
-    'Tipo Restaurante ($312/caja)':312,
-    'Tipo Pasapalo ($264/caja)'   :264,
-    'Tipo Torta ($240/caja)'      :240,
-    'Combinación de productos'    :0
+    'Tipo Restaurante ($312/caja)': 312,
+    'Tipo Pasapalo ($264/caja)'   : 264,
+    'Tipo Torta ($240/caja)'      : 240,
+    'Combinación de productos'    : 0
   };
   const fProd  = document.getElementById('f-prod')?.value||'';
   const fCajas = parseFloat(document.getElementById('f-cantidad')?.value)||0;
@@ -741,13 +780,53 @@ async function guardarProp(){
 
   const now   = new Date();
   const vence = new Date(now); vence.setDate(vence.getDate() + 7);
-  // ID único: prefijo + timestamp para que el script lo use como clave
-  const id = 'PROP-' + now.getTime();
 
-  // Payload alineado con los campos que escribe el Apps Script en la hoja "propuestas"
+  // Serializar productos igual que el script espera (formato texto) 
+  // El script usa body.productos (array) o lo deja vacío — enviamos productosTexto
+  const cajas       = parseFloat(d.cajas) || 0;
+  const totalUSD    = parseFloat(d.total) || 0;
+  const productoTxt = cajas > 0 && d.prod
+    ? cajas + 'x ' + d.prod + ' ($' + totalUSD.toFixed(2) + ')'
+    : d.prod || '';
+
+  // ── PAYLOAD: nombres de campo exactamente como los lee actionNuevaPropuesta ──
+  // El script lee: vendedor, userVendedor, razonSocial, establecimiento,
+  // contacto, telefono, tipoCliente, totalUSD, condicionPago, observaciones
+  // y genera internamente: numeroPropuesta, fecha_formateada, estado_propuesta
   const payload = {
-    action           : 'nuevaPropuesta',
-    id               : id,
+    action          : 'nuevaPropuesta',
+    fecha           : now.toISOString(),
+    dias_vigencia   : 7,                          // vencimiento 7 días
+
+    // ── Vendedor (camelCase según el script) ──
+    vendedor        : SES.nombre || SES.user || '',
+    userVendedor    : SES.user   || '',
+
+    // ── Cliente (camelCase según el script) ──
+    razonSocial     : d.razon,
+    establecimiento : d.establ,
+    contacto        : d.contacto,
+    telefono        : d.telf,
+    tipoCliente     : d.tipo || 'potencial',
+
+    // ── Productos (array vacío + texto serializado) ──
+    productos       : [],                         // el script reduce este array
+    productosTexto  : productoTxt,                // texto directo para la celda
+
+    // ── Montos ──
+    totalUSD        : totalUSD,
+    totalCajas      : cajas,
+    condicionPago   : d.condicion,
+
+    // ── Estado y notas ──
+    observaciones   : d.obs,
+  };
+
+  // Guardar en memoria local con estructura normalizada para el listado
+  const localId = 'PROP-LOCAL-' + now.getTime();
+  const localReg = {
+    id               : localId,
+    numero_propuesta : localId,
     fecha            : now.toISOString(),
     fecha_vencimiento: vence.toISOString(),
     vendedor         : SES.nombre || SES.user || '',
@@ -757,44 +836,35 @@ async function guardarProp(){
     contacto         : d.contacto,
     telefono         : d.telf,
     tipo_cliente     : d.tipo,
-    productos_detalle: d.prod,
-    total_cajas      : parseFloat(d.cajas)  || 0,
-    total_usd        : parseFloat(d.total)  || 0,
+    productos_detalle: productoTxt,
+    total_cajas      : cajas,
+    total_usd        : totalUSD,
     condicion_pago   : d.condicion,
     estado_propuesta : 'activa',
     observaciones    : d.obs,
-    // Datos del simulador
-    sim_servicios_mes: simData.serviciosMes  || 0,
-    sim_unidades_mes : simData.unidadesTot   || 0,
-    sim_paquetes_mes : simData.paquetesMes   || 0,
-    sim_cajas_mes    : simData.cajasExactas  || 0,
-    sim_cajas_comprar: simData.cajasComprar  || 0,
-    sim_inversion    : simData.inversion     || 0,
-    sim_ingresos     : simData.ingresos      || 0,
-    sim_ganancia     : simData.ganancia      || 0,
-    sim_roi          : simData.roi           || 0,
+    _pendiente_sync  : true,  // marcador: aún no confirmado por el servidor
   };
-
-  // Guardar en memoria local inmediatamente (no esperar la red)
-  propuestas.unshift({ ...payload });
+  propuestas.unshift(localReg);
   guardarLocal();
   actualizarBadge();
 
-  // Enviar al Apps Script (no-cors: no hay respuesta leíble, pero sí escribe en Sheets)
+  // Enviar al Apps Script
   try {
-    await fetch(API, {
+    const resp = await fetch(API, {
       method : 'POST',
-      mode   : 'no-cors',
+      mode   : 'no-cors',   // CORS bloqueado por Google — no hay respuesta leíble
       headers: { 'Content-Type': 'application/json' },
       body   : JSON.stringify(payload)
     });
+    // Con no-cors la respuesta siempre es opaque (status 0), no podemos leerla.
+    // El script sí escribe en Sheets; confirmamos con el reload del listado.
+    document.getElementById('ok-box').classList.add('show');
+    toast('✅ Propuesta guardada en el sistema');
   } catch(e) {
-    // Fallo de red: queda en local, se sincronizará al recargar
-    toast('⚠️ Sin conexión — guardado localmente');
+    toast('⚠️ Sin conexión — guardado localmente, se sincronizará al abrir el listado');
+    document.getElementById('ok-box').classList.add('show');
   }
 
-  document.getElementById('ok-box').classList.add('show');
-  toast('✅ Propuesta guardada con éxito');
   btn.disabled = false; sp.classList.remove('on');
 }
 
@@ -812,41 +882,61 @@ function estadoProp(p){
 function diasRestantes(p){return Math.ceil((new Date(p.fecha_vencimiento)-new Date())/86400000);}
 
 async function cargarListado(){
-  // 1. Mostrar lo que hay en local mientras carga la red
+  // 1. Mostrar datos locales inmediatamente
   cargarLocal();
   renderListado();
 
-  // 2. Intentar sincronizar desde el Apps Script
+  // 2. Sincronizar desde el Apps Script
+  // El script tiene: doGet → case 'propuestas' → actionGetPropuestas(e.parameter.vendedor)
+  // Parámetro: vendedor (filtra por user_vendedor si es vendedor; admin recibe todo)
   try {
-    const rol  = (SES?.rol  || '').toLowerCase();
-    const user = SES?.user  || '';
-    const url  = API + '?action=getPropuestas'
-               + '&user='    + encodeURIComponent(user)
-               + '&rol='     + encodeURIComponent(rol);
+    const rol      = (SES?.rol || '').toLowerCase();
+    const isAdmin  = rol === 'admin' || rol === 'gerente';
+    // Admin no filtra (vendedor vacío = todas); vendedor filtra por su user
+    const vendedor = isAdmin ? '' : (SES?.user || '');
+
+    const url = API + '?action=propuestas'
+              + (vendedor ? '&vendedor=' + encodeURIComponent(vendedor) : '');
 
     const resp = await fetch(url, { method: 'GET' });
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
 
     const raw = await resp.json();
-
-    // El script puede devolver: [] directo, {data:[...]}, o {result:[...]}
-    let lista = null;
-    if (Array.isArray(raw))           lista = raw;
-    else if (Array.isArray(raw?.data)) lista = raw.data;
-    else if (Array.isArray(raw?.result)) lista = raw.result;
+    // El script devuelve { ok: true, data: [...] }
+    const lista = raw?.data || (Array.isArray(raw) ? raw : null);
 
     if (lista && lista.length > 0) {
-      // Merge: mantener los locales que no vinieron del servidor
-      //        (propuestas recién guardadas que aún no llegaron a Sheets)
-      const idsServidor = new Set(lista.map(p => p.id));
-      const soloLocales = propuestas.filter(p => !idsServidor.has(p.id));
-      propuestas = [...soloLocales, ...lista];
+      // Normalizar campos del servidor al esquema local
+      const del_servidor = lista.map(p => ({
+        id               : p.numero_propuesta || p.id || '',
+        numero_propuesta : p.numero_propuesta  || '',
+        fecha            : p.fecha             || '',
+        fecha_vencimiento: p.fecha_vencimiento || '',
+        vendedor         : p.vendedor          || '',
+        user_vendedor    : p.user_vendedor      || '',
+        razon_social     : p.razon_social       || '',
+        establecimiento  : p.establecimiento    || '',
+        contacto         : p.contacto           || '',
+        telefono         : p.telefono           || '',
+        tipo_cliente     : p.tipo_cliente       || '',
+        productos_detalle: p.productos_detalle  || '',
+        total_cajas      : p.total_cajas        || 0,
+        total_usd        : p.total_usd          || 0,
+        condicion_pago   : p.condicion_pago     || '',
+        estado_propuesta : p.estado_propuesta   || 'activa',
+        observaciones    : p.observaciones      || '',
+        _pendiente_sync  : false,
+      }));
+
+      // Merge: conservar registros locales pendientes de sync que aún no llegaron al servidor
+      const idsServidor  = new Set(del_servidor.map(p => p.numero_propuesta).filter(Boolean));
+      const soloLocales  = propuestas.filter(p => p._pendiente_sync && !idsServidor.has(p.numero_propuesta));
+      propuestas = [...soloLocales, ...del_servidor];
       guardarLocal();
       renderListado();
     }
   } catch(e) {
-    // Sin red o script con error: se trabaja con los datos locales ya pintados
-    console.warn('cargarListado: sin respuesta del servidor, usando datos locales.', e);
+    console.warn('cargarListado: usando datos locales.', e.message);
   }
 }
 
@@ -933,11 +1023,48 @@ async function confirmarAccion(){
   if(!accionPendiente)return;
   const{accion,id}=accionPendiente;cerrarModal();
   const idx=propuestas.findIndex(x=>x.id===id);if(idx===-1)return;
-  if(accion==='convertir'){propuestas[idx].estado_propuesta='convertida';guardarLocal();renderListado();toast('✅ Propuesta convertida a pedido');syncEstado(id,'convertida');}
-  else if(accion==='anular'){propuestas[idx].estado_propuesta='anulada';guardarLocal();renderListado();toast('🚫 Propuesta anulada');syncEstado(id,'anulada');}
-  else if(accion==='modificar'){const p=propuestas[idx];switchTab('nueva');precargarFormulario(p);toast('✏️ Datos cargados — modifica y guarda de nuevo');}
+
+  if(accion==='convertir'){
+    propuestas[idx].estado_propuesta='convertida';
+    guardarLocal();renderListado();
+    toast('✅ Propuesta convertida a pedido');
+    // El script convierte la propuesta y crea un pedido real
+    try{
+      await fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'convertirPropuesta',numero_propuesta:id})});
+    }catch(e){}
+  }
+  else if(accion==='anular'){
+    propuestas[idx].estado_propuesta='anulada';
+    guardarLocal();renderListado();
+    toast('🚫 Propuesta anulada');
+    syncEstado(id,'anulada');
+  }
+  else if(accion==='modificar'){
+    const p=propuestas[idx];switchTab('nueva');precargarFormulario(p);
+    toast('✏️ Datos cargados — modifica y guarda de nuevo');
+  }
 }
-async function syncEstado(id,estado){try{await fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'updatePropuesta',id,estado_propuesta:estado})});}catch(e){}}
+async function syncEstado(id, estado){
+  // El script tiene action 'actualizarEstadoPropuesta' con numero_propuesta y estado
+  // Los estados válidos del script son: pendiente | aprobada | rechazada | vencida
+  // Mapeamos los estados del frontend al vocabulario del script:
+  const estadoScript = estado === 'convertida' ? 'aprobada'
+                     : estado === 'anulada'    ? 'rechazada'
+                     : estado;
+  try {
+    await fetch(API, {
+      method : 'POST',
+      mode   : 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body   : JSON.stringify({
+        action           : 'actualizarEstadoPropuesta',
+        numero_propuesta : id,
+        estado           : estadoScript,
+      })
+    });
+  } catch(e) { console.warn('syncEstado error:', e.message); }
+}
 function precargarFormulario(p){
   const set=(id,v)=>{const e=document.getElementById(id);if(e)e.value=v||'';};
   set('f-razon',p.razon_social);set('f-establ',p.establecimiento);set('f-contacto',p.contacto);
