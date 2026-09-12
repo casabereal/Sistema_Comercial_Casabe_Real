@@ -104,6 +104,8 @@ header{background:var(--rojo);color:#fff;height:60px;display:flex;align-items:ce
 .filtro-sel{padding:7px 11px;border:1.5px solid var(--borde);border-radius:8px;font-size:12px;font-family:'Inter',sans-serif;color:var(--negro);background:#fff;outline:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;padding-right:26px}
 .filtro-inp{padding:7px 11px;border:1.5px solid var(--borde);border-radius:8px;font-size:12px;font-family:'Inter',sans-serif;color:var(--negro);background:#fff;outline:none;min-width:170px}
 .filtro-inp:focus,.filtro-sel:focus{border-color:var(--rojo)}
+.btn-limpiar{padding:7px 11px;border:1.5px solid #FECACA;border-radius:8px;background:var(--rojo-xs);color:var(--rojo);font-size:12px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;white-space:nowrap;transition:all .2s}
+.btn-limpiar:hover{background:#FECACA}
 .tbl-wrap{overflow-x:auto;border-radius:var(--r);border:1.5px solid var(--borde);background:#fff}
 table{width:100%;border-collapse:collapse;min-width:1000px;font-size:12px}
 thead tr{background:var(--negro)}
@@ -328,6 +330,9 @@ tbody td{padding:10px 11px;vertical-align:middle}
           <select class="filtro-sel admin-only" id="filtro-vendedor" onchange="renderListado()">
             <option value="">Todos los vendedores</option>
           </select>
+          <button class="btn-limpiar" onclick="limpiarCache()" title="Borra los registros locales que no llegaron a la base de datos y recarga desde el servidor">
+            🗑️ Limpiar caché
+          </button>
         </div>
       </div>
       <div class="tbl-wrap">
@@ -378,7 +383,7 @@ tbody td{padding:10px 11px;vertical-align:middle}
 </div>
 
 <script>
-const API='https://script.google.com/macros/s/AKfycbyludOrnVw1jSCYJUWELTjPjhuR7N1uXdBO6mjR7XVE-SqmkP-pe3qieg5SX-8wRh2Dsg/exec';
+const API='https://script.google.com/macros/s/AKfycbxJFV3cnwBhDiKT0gFREu5m-OAYH_DlWqHjcfqPKcWUlNIv7BNOH4bGGJ0vLx0t7_S/exec';
 let SES=null, simData={}, propuestas=[], accionPendiente=null;
 
 /* ── TABS ── */
@@ -781,13 +786,16 @@ async function guardarProp(){
   const now   = new Date();
   const vence = new Date(now); vence.setDate(vence.getDate() + 7);
 
-  // Serializar productos igual que el script espera (formato texto) 
-  // El script usa body.productos (array) o lo deja vacío — enviamos productosTexto
-  const cajas       = parseFloat(d.cajas) || 0;
-  const totalUSD    = parseFloat(d.total) || 0;
-  const productoTxt = cajas > 0 && d.prod
-    ? cajas + 'x ' + d.prod + ' ($' + totalUSD.toFixed(2) + ')'
-    : d.prod || '';
+  // ── Construir array de productos que el script sí lee ──────────────────
+  // El script procesa: body.productos[].cajas, .nombre, .subtotal
+  // y calcula total_cajas = suma de p.cajas
+  const cajas    = parseFloat(d.cajas)  || 0;
+  const totalUSD = parseFloat(d.total)  || 0;
+  const precioUnitario = cajas > 0 ? totalUSD / cajas : 0;
+
+  const productosArray = (cajas > 0 && d.prod)
+    ? [{ nombre: d.prod, cajas: cajas, precio: precioUnitario, subtotal: totalUSD }]
+    : [];
 
   // ── PAYLOAD: nombres de campo exactamente como los lee actionNuevaPropuesta ──
   // El script lee: vendedor, userVendedor, razonSocial, establecimiento,
@@ -796,34 +804,37 @@ async function guardarProp(){
   const payload = {
     action          : 'nuevaPropuesta',
     fecha           : now.toISOString(),
-    dias_vigencia   : 7,                          // vencimiento 7 días
+    dias_vigencia   : 7,
 
-    // ── Vendedor (camelCase según el script) ──
+    // ── Vendedor ──
     vendedor        : SES.nombre || SES.user || '',
     userVendedor    : SES.user   || '',
 
-    // ── Cliente (camelCase según el script) ──
+    // ── Cliente ──
     razonSocial     : d.razon,
     establecimiento : d.establ,
     contacto        : d.contacto,
     telefono        : d.telf,
     tipoCliente     : d.tipo || 'potencial',
 
-    // ── Productos (array vacío + texto serializado) ──
-    productos       : [],                         // el script reduce este array
-    productosTexto  : productoTxt,                // texto directo para la celda
+    // ── Productos: array que el script itera para serializar y sumar cajas ──
+    productos       : productosArray,
 
-    // ── Montos ──
+    // ── Montos totales (el script también los usa directamente) ──
     totalUSD        : totalUSD,
-    totalCajas      : cajas,
     condicionPago   : d.condicion,
 
-    // ── Estado y notas ──
+    // ── Notas ──
     observaciones   : d.obs,
   };
 
+  // Texto serializado igual que el script lo escribe en Sheets
+  const productoTxtLocal = productosArray
+    .map(p => p.cajas + 'x ' + p.nombre + ' ($' + p.subtotal.toFixed(2) + ')')
+    .join(' | ');
+
   // Guardar en memoria local con estructura normalizada para el listado
-  const localId = 'PROP-LOCAL-' + now.getTime();
+  const localId  = 'LOCAL-' + now.getTime();
   const localReg = {
     id               : localId,
     numero_propuesta : localId,
@@ -836,13 +847,13 @@ async function guardarProp(){
     contacto         : d.contacto,
     telefono         : d.telf,
     tipo_cliente     : d.tipo,
-    productos_detalle: productoTxt,
+    productos_detalle: productoTxtLocal,
     total_cajas      : cajas,
     total_usd        : totalUSD,
     condicion_pago   : d.condicion,
     estado_propuesta : 'activa',
     observaciones    : d.obs,
-    _pendiente_sync  : true,  // marcador: aún no confirmado por el servidor
+    _pendiente_sync  : true,
   };
   propuestas.unshift(localReg);
   guardarLocal();
@@ -868,7 +879,33 @@ async function guardarProp(){
   btn.disabled = false; sp.classList.remove('on');
 }
 
-/* ── PERSISTENCIA LOCAL ── */
+/* ── LIMPIAR CACHÉ LOCAL ── */
+function limpiarCache(){
+  // Contar cuántos registros pendientes hay antes de borrar
+  cargarLocal();
+  const pendientes = propuestas.filter(p => p._pendiente_sync);
+  const total      = propuestas.length;
+
+  if (total === 0) {
+    toast('ℹ️ El caché ya está vacío');
+    return;
+  }
+
+  const msg = pendientes.length > 0
+    ? `Se eliminarán ${pendientes.length} registro(s) local(es) que NO están en la base de datos.\n\nLos ${total - pendientes.length} registro(s) del servidor se recargarán.\n\n¿Continuar?`
+    : `Se limpiará el caché local (${total} registro(s)) y se recargará todo desde el servidor.\n\n¿Continuar?`;
+
+  if (!confirm(msg)) return;
+
+  // Borrar TODO el caché local de este usuario
+  try { localStorage.removeItem(STORE_KEY()); } catch(e){}
+  propuestas = [];
+
+  toast('🗑️ Caché limpiado — recargando desde el servidor...');
+
+  // Recargar desde el servidor inmediatamente
+  cargarListado();
+}
 const STORE_KEY=()=>'sccr_prop_'+(SES?.user||'guest');
 function guardarLocal(){try{localStorage.setItem(STORE_KEY(),JSON.stringify(propuestas));}catch(e){}}
 function cargarLocal(){try{const r=localStorage.getItem(STORE_KEY());propuestas=r?JSON.parse(r):[];}catch(e){propuestas=[];}}
