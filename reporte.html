@@ -6,84 +6,186 @@
 <title>SCCR — Reporte de Gestión</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="assets/sccr-auth.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
   --rojo:#D30000;--rojo-d:#A01015;--rojo-xs:#FEF2F2;
-  --white:#FFFFFF;--light-bg:#F8F9FA;--border-color:#E0E0E0;
-  --text-dark:#333333;--gris:#6B7280;--sidebar-hover:#F1F3F5;
   --verde:#059669;--verde-xs:#ECFDF5;
   --naranja:#D97706;--naranja-xs:#FFFBEB;
   --azul:#2563EB;--azul-xs:#EFF6FF;
-  --alerta:#E74C3C;--r:6px;--sh:0 2px 4px rgba(0,0,0,0.05);
+  --amarillo:#F59E0B;
+  --gris:#6B7280;--borde:#E5E7EB;--fondo:#F5F7FA;
+  --negro:#111827;--texto:#1F2937;--blanco:#fff;
+  --r:10px;--r-sm:7px;
+  --sh:0 1px 3px rgba(0,0,0,.07);--sh-md:0 4px 16px rgba(0,0,0,.10);
 }
-body{font-family:'Open Sans',sans-serif;background:var(--light-bg);color:var(--text-dark);display:flex;flex-direction:column;min-height:100vh;font-size:0.75rem;}
-header{background-color:var(--rojo);color:var(--white);height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;box-shadow:0 2px 4px rgba(0,0,0,0.1);position:sticky;top:0;z-index:1000;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Inter',sans-serif;background:var(--fondo);color:var(--texto);display:flex;flex-direction:column;min-height:100vh;font-size:.78rem}
+
+/* ── HEADER ── */
+header{background:var(--rojo);color:#fff;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;box-shadow:0 2px 4px rgba(0,0,0,.1);position:sticky;top:0;z-index:1000}
 .header-left{display:flex;align-items:center;gap:11px}
 .header-left img{width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25));display:block}
-.header-title{font-family:'League Spartan',sans-serif;font-size:0.95rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.header-title{font-family:'League Spartan',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
 .header-right{display:flex;align-items:center;gap:12px}
-.header-user-info{font-size:0.7rem;text-align:right;line-height:1.3}
+.header-user-info{font-size:.7rem;text-align:right;line-height:1.3}
 .header-user-info .user-name{font-weight:600}
-.header-user-info .user-role{font-size:0.65rem;opacity:.9}
-.btn-logout{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:5px 10px;cursor:pointer;color:rgba(255,255,255,.9);font-size:0.7rem;transition:background .2s;white-space:nowrap;font-family:'Open Sans',sans-serif;font-weight:600}
+.header-user-info .user-role{font-size:.65rem;opacity:.9}
+.btn-logout{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:5px 10px;cursor:pointer;color:rgba(255,255,255,.9);font-size:.7rem;font-family:'Inter',sans-serif;font-weight:600;transition:background .2s;white-space:nowrap}
 .btn-logout:hover{background:rgba(255,255,255,.22)}
-.nav-bar{background:var(--white);border-bottom:1px solid var(--border-color);padding:0 18px;display:flex;overflow-x:auto;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+
+/* ── NAV ── */
+.nav-bar{background:#fff;border-bottom:1px solid var(--borde);padding:0 18px;display:flex;overflow-x:auto;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.05)}
 .nav-bar::-webkit-scrollbar{height:3px}
 .nav-bar::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px}
-.menu-item{display:inline-block;padding:12px 14px;font-size:0.7rem;color:var(--text-dark);text-decoration:none;transition:all .2s;border-bottom:3px solid transparent}
-.menu-item:hover{background:var(--sidebar-hover);color:var(--rojo)}
+.menu-item{display:inline-block;padding:12px 14px;font-size:.7rem;color:var(--texto);text-decoration:none;transition:all .2s;border-bottom:3px solid transparent}
+.menu-item:hover{background:#F1F3F5;color:var(--rojo)}
 .menu-item.active{font-family:'League Spartan',sans-serif;font-weight:700;color:var(--rojo);border-bottom-color:var(--rojo)}
 .admin-only{display:none}
-.main-container{flex:1;padding:22px 18px 32px;max-width:1400px;width:100%;margin:0 auto}
-.section-header{margin-bottom:18px}
-.breadcrumb{font-size:0.68rem;color:var(--gris);margin-bottom:4px}
-.breadcrumb span{color:var(--rojo);font-weight:600}
-.section-header h1{font-family:'League Spartan',sans-serif;font-size:1.5rem;font-weight:700;color:var(--text-dark);margin-bottom:4px}
-.section-header .highlight{color:var(--rojo)}
-.section-sub{font-size:0.7rem;color:var(--gris);font-weight:600}
-.content-card{background:var(--white);border-radius:var(--r);padding:20px 22px;box-shadow:var(--sh);border:1px solid var(--border-color);}
-.content-card-desc{font-size:0.73rem;color:var(--gris);line-height:1.6;margin-bottom:20px;border-left:3px solid var(--rojo);padding-left:10px;}
-.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-bottom:18px;}
+
+/* ── LAYOUT ── */
+.main-container{flex:1;padding:22px 18px 40px;max-width:1300px;width:100%;margin:0 auto}
+.page-hd{margin-bottom:20px}
+.breadcrumb{font-size:.66rem;color:var(--gris);margin-bottom:3px}
+.breadcrumb span{color:var(--rojo);font-weight:700}
+.page-hd h1{font-family:'League Spartan',sans-serif;font-size:1.45rem;font-weight:700;color:var(--texto);margin-bottom:3px}
+.page-hd h1 .hl{color:var(--rojo)}
+.page-sub{font-size:.7rem;color:var(--gris);font-weight:500}
+
+/* ── CARD ── */
+.card{background:#fff;border-radius:var(--r);border:1px solid var(--borde);box-shadow:var(--sh);overflow:hidden;margin-bottom:16px}
+.card-hd{padding:12px 18px;border-bottom:1px solid var(--borde);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.card-hd-left{display:flex;align-items:center;gap:8px}
+.card-ic{width:26px;height:26px;border-radius:6px;background:var(--rojo-xs);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.card-title{font-size:.84rem;font-weight:700;color:var(--texto)}
+.card-bd{padding:16px 18px}
+.card-desc{font-size:.72rem;color:var(--gris);line-height:1.6;margin-bottom:18px;border-left:3px solid var(--rojo);padding-left:10px}
+
+/* ── TABS ── */
+.tab-bar{display:flex;background:#fff;border:1.5px solid var(--borde);border-radius:var(--r);overflow:hidden;margin-bottom:20px;box-shadow:var(--sh)}
+.tab-btn{flex:1;padding:12px 8px;border:none;background:transparent;font-family:'Inter',sans-serif;font-size:.78rem;font-weight:600;color:var(--gris);cursor:pointer;transition:all .2s;border-right:1.5px solid var(--borde);display:flex;align-items:center;justify-content:center;gap:6px}
+.tab-btn:last-child{border-right:none}
+.tab-btn.active{background:var(--rojo);color:#fff}
+.tab-btn:hover:not(.active){background:var(--fondo);color:var(--negro)}
+.panel{display:none}.panel.active{display:block}
+
+/* ── TABLA DE VISITAS (Vendedor) ── */
+.tbl-wrap{overflow-x:auto;border-radius:var(--r-sm);border:1px solid var(--borde)}
+table{width:100%;border-collapse:collapse;min-width:900px}
+thead tr{background:var(--negro)}
+thead th{padding:10px 12px;color:rgba(255,255,255,.85);font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;text-align:left;white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--borde);transition:background .15s}
+tbody tr:last-child{border:none}
+tbody tr:hover{background:#FAFAFA}
+tbody td{padding:10px 12px;vertical-align:middle;font-size:.75rem}
+.td-cliente{font-weight:700;font-size:.78rem}
+.td-meta{font-size:.67rem;color:var(--gris)}
+.sel-inp,.date-inp,.txt-inp{border:1.5px solid var(--borde);border-radius:6px;font-size:.73rem;font-family:'Inter',sans-serif;color:var(--texto);background:#fff;outline:none;padding:5px 8px;transition:border .2s;width:100%}
+.sel-inp:focus,.date-inp:focus,.txt-inp:focus{border-color:var(--rojo);box-shadow:0 0 0 2px rgba(211,0,0,.10)}
+.sel-inp{-webkit-appearance:none;min-width:130px}
+.date-inp{min-width:130px;cursor:pointer}
+.txt-inp{min-width:150px}
+.estado-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.65rem;font-weight:700;white-space:nowrap}
+.est-ok{background:var(--verde-xs);color:#065F46}
+.est-no{background:var(--rojo-xs);color:var(--rojo)}
+.est-pend{background:var(--naranja-xs);color:#92400E}
+.est-cierre{background:var(--azul-xs);color:#1E40AF}
+.row-saved{background:#F0FDF4!important}
+.row-saved td{opacity:.8}
+
+/* ── META CHIPS ── */
+.meta-chip{display:inline-flex;gap:4px;align-items:center;background:var(--azul-xs);border:1px solid #BFDBFE;color:var(--azul);border-radius:20px;padding:2px 8px;font-size:.63rem;font-weight:700;margin-top:2px}
+
+/* ── RESUMEN ADMIN ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:20px}
+.kpi-card{background:#fff;border:1.5px solid var(--borde);border-radius:var(--r);padding:12px 16px}
+.kpi-lbl{font-size:.63rem;font-weight:700;color:var(--gris);text-transform:uppercase;letter-spacing:.3px}
+.kpi-val{font-size:1.5rem;font-weight:800;color:var(--rojo);margin-top:3px;letter-spacing:-1px}
+.kpi-sub{font-size:.65rem;color:var(--gris);margin-top:2px}
+.kpi-card.verde .kpi-val{color:var(--verde)}
+.kpi-card.azul  .kpi-val{color:var(--azul)}
+.kpi-card.naranja .kpi-val{color:var(--naranja)}
+
+/* Filtros */
+.filtro-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.f-sel,.f-inp{padding:7px 11px;border:1.5px solid var(--borde);border-radius:7px;font-size:.73rem;font-family:'Inter',sans-serif;color:var(--negro);background:#fff;outline:none;-webkit-appearance:none}
+.f-sel{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;padding-right:26px}
+.f-inp{min-width:160px}
+.f-sel:focus,.f-inp:focus{border-color:var(--rojo)}
+.btn-act{padding:7px 14px;background:var(--rojo);color:#fff;border:none;border-radius:7px;font-size:.73rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background .2s}
+.btn-act:hover{background:var(--rojo-d)}
+
+/* Tabla admin */
+.res-tbl th{font-size:.63rem}
+.res-tbl td{font-size:.72rem}
+
+/* Barra progreso */
+.prog-bar{height:6px;background:#E5E7EB;border-radius:3px;overflow:hidden;margin-top:4px}
+.prog-fill{height:100%;border-radius:3px;background:var(--rojo);transition:width .4s}
+.prog-fill.verde{background:var(--verde)}
+.prog-fill.naranja{background:var(--naranja)}
+
+/* ── FORMULARIO ── */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:18px}
 .form-group{display:flex;flex-direction:column;gap:5px}
-.form-group.full-width{grid-column:1 / -1}
-.cf-label{font-size:0.68rem;font-weight:700;color:var(--gris);text-transform:uppercase;letter-spacing:.3px;}
+.form-group.full{grid-column:1/-1}
+.cf-label{font-size:.67rem;font-weight:700;color:var(--gris);text-transform:uppercase;letter-spacing:.3px}
 .cf-label .req{color:var(--rojo)}
-select,input[type="text"],textarea{padding:8px 10px;border:1px solid var(--border-color);border-radius:var(--r);font-family:'Open Sans',sans-serif;font-size:0.75rem;background:#fff;color:var(--text-dark);width:100%;transition:border .2s;outline:none;}
-select:focus,input[type="text"]:focus,textarea:focus{border-color:var(--rojo)}
-.checkbox-group{display:flex;flex-wrap:wrap;gap:14px;padding:5px 0}
-.checkbox-label{display:flex;align-items:center;gap:6px;font-weight:normal;cursor:pointer;font-size:0.75rem}
-.checkbox-label input[type="checkbox"]{accent-color:var(--rojo);width:14px;height:14px}
-.field-hint{font-size:0.63rem;color:var(--gris);font-style:italic;margin-top:2px}
-.autocomplete-wrapper{position:relative}
-.autocomplete-list{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--border-color);border-top:none;border-radius:0 0 var(--r) var(--r);max-height:180px;overflow-y:auto;z-index:200;display:none;box-shadow:0 4px 8px rgba(0,0,0,.08);}
-.autocomplete-list.open{display:block}
-.autocomplete-item{padding:8px 11px;cursor:pointer;font-size:0.74rem;border-bottom:1px solid #f0f0f0;transition:background .15s;}
-.autocomplete-item:hover{background:var(--sidebar-hover);color:var(--rojo)}
-.btn-submit{background:var(--rojo);color:var(--white);font-family:'League Spartan',sans-serif;font-weight:700;font-size:0.85rem;padding:10px 24px;border:none;border-radius:var(--r);cursor:pointer;text-transform:uppercase;transition:background .2s;display:inline-flex;align-items:center;gap:6px;margin-top:6px;}
+.cf-sel,.cf-inp,.cf-txt{padding:8px 11px;border:1.5px solid var(--borde);border-radius:var(--r-sm);font-family:'Inter',sans-serif;font-size:.78rem;background:#fff;color:var(--texto);width:100%;outline:none;transition:border .2s;-webkit-appearance:none}
+.cf-sel:focus,.cf-inp:focus,.cf-txt:focus{border-color:var(--rojo);box-shadow:0 0 0 3px rgba(211,0,0,.10)}
+.cf-sel{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:28px}
+.field-hint{font-size:.62rem;color:var(--gris);font-style:italic}
+
+/* Autocomplete */
+.ac-wrap{position:relative}
+.ac-drop{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--borde);border-top:none;border-radius:0 0 var(--r-sm) var(--r-sm);max-height:180px;overflow-y:auto;z-index:200;display:none;box-shadow:0 4px 8px rgba(0,0,0,.08)}
+.ac-drop.open{display:block}
+.ac-item{padding:8px 11px;cursor:pointer;font-size:.73rem;border-bottom:1px solid #F0F0F0;transition:background .15s}
+.ac-item:hover{background:var(--fondo);color:var(--rojo)}
+
+/* Checkboxes */
+.chk-group{display:flex;flex-wrap:wrap;gap:12px;padding:4px 0}
+.chk-lbl{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.75rem}
+.chk-lbl input[type=checkbox]{accent-color:var(--rojo);width:14px;height:14px}
+
+/* Btn submit */
+.btn-submit{background:var(--rojo);color:#fff;font-family:'League Spartan',sans-serif;font-weight:700;font-size:.85rem;padding:11px 28px;border:none;border-radius:var(--r-sm);cursor:pointer;text-transform:uppercase;transition:background .2s;display:inline-flex;align-items:center;gap:7px;margin-top:6px}
 .btn-submit:hover:not(:disabled){background:var(--rojo-d)}
 .btn-submit:disabled{opacity:.55;cursor:not-allowed}
-.spinner{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .65s linear infinite;vertical-align:middle;}
+
+/* Btn guardar fila */
+.btn-row{background:var(--verde-xs);color:var(--verde);border:1.5px solid #A7F3D0;border-radius:6px;padding:5px 10px;font-size:.67rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;transition:all .2s}
+.btn-row:hover{background:#A7F3D0}
+.btn-row:disabled{opacity:.4;cursor:not-allowed}
+
+/* Spinner / Toast */
+.sp{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .65s linear infinite;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}
-.toast{position:fixed;bottom:22px;right:22px;background:var(--text-dark);color:#fff;padding:11px 18px;border-radius:6px;font-size:0.73rem;box-shadow:0 4px 14px rgba(0,0,0,.2);z-index:9999;opacity:0;transform:translateY(8px);transition:opacity .3s,transform .3s;pointer-events:none;max-width:300px;}
+.toast{position:fixed;bottom:22px;right:22px;background:var(--negro);color:#fff;padding:11px 18px;border-radius:7px;font-size:.73rem;box-shadow:0 4px 14px rgba(0,0,0,.2);z-index:9999;opacity:0;transform:translateY(8px);transition:opacity .3s,transform .3s;pointer-events:none;max-width:320px}
 .toast.show{opacity:1;transform:translateY(0)}
-.toast.ok{background:var(--verde)}
-.toast.err{background:var(--alerta)}
-footer{text-align:center;padding:14px 18px;font-size:0.65rem;color:var(--gris);border-top:1px solid var(--border-color);background:var(--white);margin-top:auto}
-footer strong{color:var(--text-dark)}
+.toast.ok{background:var(--verde)}.toast.err{background:#E74C3C}
+
+/* Empty */
+.empty-state{text-align:center;padding:36px;color:var(--gris)}
+.empty-ico{font-size:38px;margin-bottom:10px}
+.empty-txt{font-size:.82rem;font-weight:600;color:var(--texto);margin-bottom:4px}
+
+footer{text-align:center;padding:14px;font-size:.65rem;color:var(--gris);border-top:1px solid var(--borde);background:#fff;margin-top:auto}
+footer strong{color:var(--texto)}
+
 @media(max-width:768px){
-  header{padding:0 10px;height:50px}
-  .header-title{font-size:0.7rem}
-  .main-container{padding:15px 10px}
-  .section-header h1{font-size:1.1rem}
+  header{padding:0 10px;height:50px}.header-title{font-size:.7rem}
+  .main-container{padding:14px 10px}
+  .page-hd h1{font-size:1.1rem}
   .form-grid{grid-template-columns:1fr}
+  .kpi-grid{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
 <body>
 
+<!-- ── HEADER ── -->
 <header>
   <div class="header-left">
     <img src="assets/logo-casabe-real.png" alt="Casabe Real" onerror="this.style.display='none'">
@@ -98,11 +200,12 @@ footer strong{color:var(--text-dark)}
   </div>
 </header>
 
+<!-- ── NAV ── -->
 <nav class="nav-bar">
   <a href="inicio.html"      class="menu-item">INICIO</a>
   <a href="clientes.html"    class="menu-item admin-only">CLIENTES</a>
   <a href="meta.html"        class="menu-item">META</a>
-  <a href="catalogo_fs.html" class="menu-item">CATALOGO_FS</a>
+  <a href="catalogo_fs.html" class="menu-item">CATÁLOGO</a>
   <a href="pedido.html"      class="menu-item">PEDIDO</a>
   <a href="reporte.html"     class="menu-item active">REPORTE</a>
   <a href="dashboard.html"   class="menu-item admin-only">DASHBOARD</a>
@@ -114,311 +217,817 @@ footer strong{color:var(--text-dark)}
 
 <main class="main-container">
 
-  <div class="section-header">
+  <div class="page-hd">
     <div class="breadcrumb">Sistema / <span>Reporte de Gestión</span></div>
-    <h1>Módulo de <span class="highlight">Reporte de Gestión</span></h1>
-    <p class="section-sub" id="section-sub">Cargando...</p>
+    <h1>Módulo de <span class="hl">Reporte de Gestión</span></h1>
+    <p class="page-sub" id="page-sub">Cargando...</p>
   </div>
 
-  <div class="content-card">
-    <p class="content-card-desc">
-      Registra cada visita y gestión de campo. Cada reporte alimenta automáticamente el
-      embudo comercial y la bitácora del cliente cuando hay contacto efectivo.
-    </p>
+  <!-- ══════════ VISTA VENDEDOR ══════════ -->
+  <div id="vista-vendedor" style="display:none">
 
-    <form id="reporteForm" onsubmit="enviarReporte(event)" autocomplete="off">
-      <div class="form-grid">
+    <!-- Tabs vendedor -->
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tv-tab-tabla" onclick="switchTabVendedor('tabla')">
+        📋 Cuadro de Visitas
+      </button>
+      <button class="tab-btn" id="tv-tab-form" onclick="switchTabVendedor('form')">
+        ✏️ Registro Libre
+      </button>
+    </div>
 
-        <div class="form-group">
-          <label class="cf-label" for="tipoCliente">Tipo de Cliente <span class="req">*</span></label>
-          <select id="tipoCliente" required>
-            <option value="">Seleccione...</option>
-            <option value="Prospecto / Oportunidad">Prospecto / Oportunidad (Nuevo)</option>
-            <option value="Cliente Recurrente">Cliente Recurrente</option>
-          </select>
+    <!-- ── PANEL TABLA DE VISITAS ── -->
+    <div id="tv-panel-tabla" class="panel active">
+      <div class="card">
+        <div class="card-hd">
+          <div class="card-hd-left">
+            <div class="card-ic">📋</div>
+            <span class="card-title">Cuadro de Gestión de Visitas</span>
+          </div>
+          <button class="btn-act" onclick="guardarTodos()" id="btn-guardar-todos">
+            💾 Guardar Todo
+          </button>
         </div>
-
-        <div class="form-group">
-          <label class="cf-label" for="razonSocial">Cliente / Razón Social <span class="req">*</span></label>
-          <div class="autocomplete-wrapper">
-            <input type="text" id="razonSocial"
-              placeholder="Escriba para buscar o ingrese texto libre"
-              required autocomplete="off">
-            <div class="autocomplete-list" id="autocompleteList"></div>
+        <div class="card-bd">
+          <p class="card-desc">
+            Registra la gestión de cada cliente de tu cartera. Completa las columnas de visita y haz clic en
+            <strong>Guardar</strong> por fila o en <strong>Guardar Todo</strong> para enviar todos a la vez.
+            Cada registro se almacena en Google Sheets y actualiza el embudo automáticamente.
+          </p>
+          <div id="tbl-visitas-wrap">
+            <div class="empty-state"><div class="empty-ico">⏳</div><div class="empty-txt">Cargando clientes...</div></div>
           </div>
         </div>
+      </div>
+    </div>
 
-        <div class="form-group">
-          <label class="cf-label" for="contactoEfectivo">Contacto Efectivo <span class="req">*</span></label>
-          <select id="contactoEfectivo" required>
-            <option value="">Seleccione...</option>
-            <option value="Sí">Sí — Atendido por decisor (Chef, Compras, Gerente)</option>
-            <option value="No">No — Cerrado, ausente o dirección errónea</option>
-          </select>
+    <!-- ── PANEL FORMULARIO LIBRE ── -->
+    <div id="tv-panel-form" class="panel">
+      <div class="card">
+        <div class="card-hd">
+          <div class="card-hd-left">
+            <div class="card-ic">✏️</div>
+            <span class="card-title">Registro de Gestión — Prospecto o Visita Libre</span>
+          </div>
+        </div>
+        <div class="card-bd">
+          <p class="card-desc">
+            Usa este formulario para registrar visitas a prospectos o clientes que no están en tu cartera asignada.
+          </p>
+          <form id="reporteForm" onsubmit="enviarReporteLibre(event)" autocomplete="off">
+            <div class="form-grid">
+
+              <div class="form-group">
+                <label class="cf-label">Tipo de Cliente <span class="req">*</span></label>
+                <select class="cf-sel" id="tipoCliente" required>
+                  <option value="">Seleccione...</option>
+                  <option value="Prospecto / Oportunidad">Prospecto / Oportunidad (Nuevo)</option>
+                  <option value="Cliente Recurrente">Cliente Recurrente</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="cf-label">Cliente / Razón Social <span class="req">*</span></label>
+                <div class="ac-wrap">
+                  <input class="cf-inp" type="text" id="razonSocial"
+                    placeholder="Escriba para buscar o ingrese texto libre" required autocomplete="off">
+                  <div class="ac-drop" id="autocompleteList"></div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="cf-label">Fecha de Visita <span class="req">*</span></label>
+                <input class="cf-inp" type="date" id="fechaVisita" required>
+              </div>
+
+              <div class="form-group">
+                <label class="cf-label">Contacto Efectivo <span class="req">*</span></label>
+                <select class="cf-sel" id="contactoEfectivo" required>
+                  <option value="">Seleccione...</option>
+                  <option value="Sí">Sí — Atendido por decisor</option>
+                  <option value="No">No — Cerrado, ausente o dirección errónea</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="cf-label">Gestión de Cita <span class="req">*</span></label>
+                <select class="cf-sel" id="gestionCita" required>
+                  <option value="">Seleccione...</option>
+                  <option value="Cita Hoy">Cita Hoy (Realizada)</option>
+                  <option value="Cita Futura">Cita Futura (Fecha Agendada)</option>
+                  <option value="Sin Cita">Sin Cita (Visita en frío)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="cf-label">Resultado de la Cita <span class="req">*</span></label>
+                <select class="cf-sel" id="resultadoCita" required>
+                  <option value="">Seleccione...</option>
+                  <option value="Interesado">Interesado</option>
+                  <option value="Reprogramada">Reprogramada</option>
+                  <option value="No Interesado">No Interesado</option>
+                  <option value="Cierre Inmediato">Cierre Inmediato</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="cf-label">Propuesta Entregada <span class="req">*</span></label>
+                <select class="cf-sel" id="propuestaComercial" required>
+                  <option value="">Seleccione...</option>
+                  <option value="Sí">Sí — Propuesta entregada</option>
+                  <option value="No">No — Sin propuesta</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="cf-label">Estatus de Cierre <span class="req">*</span></label>
+                <select class="cf-sel" id="estatusCierre" required onchange="toggleMotivo()">
+                  <option value="">Seleccione...</option>
+                  <option value="Pedido 1era Vez">Pedido 1era Vez</option>
+                  <option value="Pedido Recurrente">Pedido Recurrente</option>
+                  <option value="Sin Pedido">Sin Pedido</option>
+                  <option value="Rechazado">Rechazado</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="cf-label">
+                  Motivo de No Venta <span class="req" id="motivoReqMark" style="display:none">*</span>
+                </label>
+                <select class="cf-sel" id="motivoNoVenta">
+                  <option value="">Seleccione...</option>
+                  <option value="Precio">Precio</option>
+                  <option value="Inventario Propio">Inventario Propio</option>
+                  <option value="Condiciones Crédito">Condiciones de Crédito</option>
+                  <option value="Competencia">Competencia</option>
+                  <option value="Otro">Otro</option>
+                </select>
+                <span class="field-hint" id="motivoHint">Obligatorio cuando no hay pedido</span>
+              </div>
+
+              <div class="form-group">
+                <label class="cf-label">Próxima Fecha de Visita</label>
+                <input class="cf-inp" type="date" id="proximaVisita">
+              </div>
+
+              <div class="form-group full">
+                <label class="cf-label">Datos Capturados en Visita</label>
+                <div class="chk-group">
+                  <label class="chk-lbl"><input type="checkbox" name="datosCapturados" value="Nombre Decisor"> Nombre Decisor</label>
+                  <label class="chk-lbl"><input type="checkbox" name="datosCapturados" value="Teléfono/WhatsApp"> Teléfono / WhatsApp</label>
+                  <label class="chk-lbl"><input type="checkbox" name="datosCapturados" value="Correo"> Correo</label>
+                  <label class="chk-lbl"><input type="checkbox" name="datosCapturados" value="Dirección Despacho"> Dirección Despacho</label>
+                </div>
+              </div>
+
+              <div class="form-group full">
+                <label class="cf-label">Observaciones / Minuta</label>
+                <textarea class="cf-txt" id="observaciones" rows="3"
+                  placeholder="Acuerdos, objeciones o compromisos. Se registra en la Bitácora del cliente."></textarea>
+              </div>
+
+            </div>
+
+            <button type="submit" class="btn-submit" id="btnSubmit">
+              Enviar Reporte
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /vista-vendedor -->
+
+  <!-- ══════════ VISTA ADMINISTRADOR ══════════ -->
+  <div id="vista-admin" style="display:none">
+
+    <div class="card">
+      <div class="card-hd">
+        <div class="card-hd-left">
+          <div class="card-ic">📊</div>
+          <span class="card-title">Resumen de Gestión de Visitas</span>
+        </div>
+        <button class="btn-act" onclick="cargarReportesAdmin()">↺ Actualizar</button>
+      </div>
+      <div class="card-bd">
+
+        <!-- KPIs -->
+        <div class="kpi-grid" id="kpi-grid">
+          <div class="kpi-card"><div class="kpi-lbl">Total Visitas</div><div class="kpi-val" id="k-total">—</div><div class="kpi-sub">registros</div></div>
+          <div class="kpi-card verde"><div class="kpi-lbl">Contacto Efectivo</div><div class="kpi-val" id="k-ce">—</div><div class="kpi-sub">con decisor</div></div>
+          <div class="kpi-card azul"><div class="kpi-lbl">Cierres / Pedidos</div><div class="kpi-val" id="k-cierre">—</div><div class="kpi-sub">convertidos</div></div>
+          <div class="kpi-card naranja"><div class="kpi-lbl">Sin Pedido</div><div class="kpi-val" id="k-nv">—</div><div class="kpi-sub">sin venta</div></div>
+          <div class="kpi-card"><div class="kpi-lbl">Tasa Cierre</div><div class="kpi-val" id="k-tasa">—</div><div class="kpi-sub">% de visitas</div></div>
+          <div class="kpi-card"><div class="kpi-lbl">Propuestas</div><div class="kpi-val" id="k-prop">—</div><div class="kpi-sub">entregadas</div></div>
         </div>
 
-        <div class="form-group">
-          <label class="cf-label" for="gestionCita">Gestión de Cita <span class="req">*</span></label>
-          <select id="gestionCita" required>
-            <option value="">Seleccione...</option>
-            <option value="Cita Hoy">Cita Hoy (Realizada)</option>
-            <option value="Cita Futura">Cita Futura (Fecha Agendada)</option>
-            <option value="Sin Cita">Sin Cita (Visita en frío)</option>
+        <!-- Filtros -->
+        <div class="filtro-bar">
+          <input class="f-inp" type="date" id="f-desde" title="Desde">
+          <input class="f-inp" type="date" id="f-hasta" title="Hasta">
+          <select class="f-sel" id="f-vendedor" onchange="renderAdmin()">
+            <option value="">Todos los vendedores</option>
           </select>
-        </div>
-
-        <div class="form-group">
-          <label class="cf-label" for="resultadoCita">Resultado de la Cita <span class="req">*</span></label>
-          <select id="resultadoCita" required>
-            <option value="">Seleccione...</option>
+          <select class="f-sel" id="f-resultado" onchange="renderAdmin()">
+            <option value="">Todos los resultados</option>
             <option value="Interesado">Interesado</option>
-            <option value="Reprogramada">Reprogramada</option>
-            <option value="No Interesado">No Interesado (Activa Motivo)</option>
             <option value="Cierre Inmediato">Cierre Inmediato</option>
+            <option value="Reprogramada">Reprogramada</option>
+            <option value="No Interesado">No Interesado</option>
           </select>
+          <button class="btn-act" onclick="renderAdmin()">Filtrar</button>
         </div>
 
-        <div class="form-group">
-          <label class="cf-label" for="propuestaComercial">Propuesta Entregada <span class="req">*</span></label>
-          <select id="propuestaComercial" required>
-            <option value="">Seleccione...</option>
-            <option value="Sí">Sí — Propuesta entregada</option>
-            <option value="No">No — Sin propuesta</option>
-          </select>
+        <!-- Resumen por vendedor -->
+        <div style="font-size:.72rem;font-weight:700;color:var(--gris);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">
+          Desempeño por Vendedor
+        </div>
+        <div id="resumen-vendedores" style="margin-bottom:20px">
+          <div class="empty-state"><div class="empty-ico">⏳</div><div class="empty-txt">Cargando...</div></div>
         </div>
 
-        <div class="form-group">
-          <label class="cf-label" for="estatusCierre">Estatus de Cierre <span class="req">*</span></label>
-          <select id="estatusCierre" required>
-            <option value="">Seleccione...</option>
-            <option value="Pedido 1era Vez">Pedido 1era Vez</option>
-            <option value="Pedido Recurrente">Pedido Recurrente</option>
-            <option value="Sin Pedido">Sin Pedido</option>
-            <option value="Rechazado">Rechazado</option>
-          </select>
+        <!-- Tabla detalle -->
+        <div style="font-size:.72rem;font-weight:700;color:var(--gris);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">
+          Detalle de Reportes
         </div>
-
-        <div class="form-group">
-          <label class="cf-label" for="motivoNoVenta">
-            Motivo de No Venta
-            <span class="req" id="motivoReqMark" style="display:none">*</span>
-          </label>
-          <select id="motivoNoVenta">
-            <option value="">Seleccione...</option>
-            <option value="Precio">Precio</option>
-            <option value="Inventario Propio">Inventario Propio</option>
-            <option value="Condiciones Crédito">Condiciones de Crédito</option>
-            <option value="Competencia">Competencia</option>
-            <option value="Otro">Otro</option>
-          </select>
-          <span class="field-hint" id="motivoHint">Obligatorio cuando no hay pedido</span>
-        </div>
-
-        <div class="form-group full-width">
-          <label class="cf-label">Datos Capturados en Visita</label>
-          <div class="checkbox-group">
-            <label class="checkbox-label">
-              <input type="checkbox" name="datosCapturados" value="Nombre Decisor"> Nombre Decisor
-            </label>
-            <label class="checkbox-label">
-              <input type="checkbox" name="datosCapturados" value="Teléfono/WhatsApp"> Teléfono / WhatsApp
-            </label>
-            <label class="checkbox-label">
-              <input type="checkbox" name="datosCapturados" value="Correo"> Correo
-            </label>
-            <label class="checkbox-label">
-              <input type="checkbox" name="datosCapturados" value="Dirección Despacho"> Dirección Despacho
-            </label>
-          </div>
-        </div>
-
-        <div class="form-group full-width">
-          <label class="cf-label" for="observaciones">Observaciones / Minuta</label>
-          <textarea id="observaciones" rows="3"
-            placeholder="Acuerdos, objeciones o compromisos. Se registra en la Bitácora 360° del cliente."></textarea>
+        <div class="tbl-wrap">
+          <table class="res-tbl">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Vendedor</th>
+                <th>Cliente</th>
+                <th>Contacto Efectivo</th>
+                <th>Resultado</th>
+                <th>Propuesta</th>
+                <th>Estatus Cierre</th>
+                <th>Motivo No Venta</th>
+                <th>Próx. Visita</th>
+                <th>Observaciones</th>
+              </tr>
+            </thead>
+            <tbody id="tbl-admin-body">
+              <tr><td colspan="10">
+                <div class="empty-state"><div class="empty-ico">📊</div><div class="empty-txt">Cargando reportes...</div></div>
+              </td></tr>
+            </tbody>
+          </table>
         </div>
 
       </div>
+    </div>
 
-      <button type="submit" class="btn-submit" id="btnSubmit">
-        Enviar Reporte
-      </button>
-    </form>
-  </div>
+  </div><!-- /vista-admin -->
 
 </main>
 
 <footer>
-  &copy; 2026 <strong>Sistema Comercial Casabe Real (SCCR)</strong>. Todos los derechos reservados. &nbsp;|&nbsp; v2.5.1 &nbsp;|&nbsp; 0412.290.58.33
+  &copy; 2026 <strong>Sistema Comercial Casabe Real (SCCR)</strong> · Todos los derechos reservados · v2.5.1 · 0412.290.58.33
 </footer>
-
 <div class="toast" id="toast"></div>
 
 <script>
+// ════════════════════════════════════════════════════════════
+//  CONFIG
+// ════════════════════════════════════════════════════════════
 const API = 'https://script.google.com/macros/s/AKfycbyludOrnVw1jSCYJUWELTjPjhuR7N1uXdBO6mjR7XVE-SqmkP-pe3qieg5SX-8wRh2Dsg/exec';
 
-let sesion        = null;
-let esDirectivo   = false;
-let clientesCache = [];
+// ════════════════════════════════════════════════════════════
+//  ESTADO
+// ════════════════════════════════════════════════════════════
+let sesion       = null;
+let esAdmin      = false;
+let CLIENTES     = [];   // cartera del vendedor
+let META_PROD    = [];   // productos para mostrar metas
+let REPORTES_ADM = [];   // reportes cargados para admin
 
-document.addEventListener('DOMContentLoaded', () => {
-  sesion = SCCR.initSCCR();
-  if (!sesion) return;
+// ════════════════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', async () => {
+  sesion = (typeof SCCR !== 'undefined') ? SCCR.initSCCR() || SCCR.getSesion() : null;
+  if (!sesion) {
+    try { sesion = JSON.parse(sessionStorage.getItem('sccr')); } catch(e){}
+  }
+  if (!sesion) { window.location.href = 'index.html'; return; }
 
-  const rol = sesion.rol.toLowerCase();
-  esDirectivo = (rol === 'admin' || rol === 'gerente');
+  const rol = (sesion.rol || '').toLowerCase();
+  esAdmin   = rol === 'admin' || rol === 'gerente';
 
   document.getElementById('user-name-display').textContent = sesion.nombre || '—';
   document.getElementById('user-role-display').textContent =
-    rol === 'admin'   ? 'Administrador'     :
-    rol === 'gerente' ? 'Gerente de Ventas' : 'Asesor Comercial';
+    rol === 'admin' ? 'Administrador' : rol === 'gerente' ? 'Gerente de Ventas' : 'Asesor Comercial';
+  document.getElementById('page-sub').textContent =
+    esAdmin ? 'Vista de administración — Gestión de visitas del equipo comercial'
+            : 'Registra tu gestión de campo — ' + (sesion.nombre || sesion.user);
 
-  document.getElementById('section-sub').textContent =
-    'Registrando gestión de campo — ' + (sesion.nombre || sesion.user);
+  if (esAdmin) document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'inline-block');
 
-  if (esDirectivo) {
-    document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
+  // Fecha de hoy como default
+  const hoy = new Date().toISOString().slice(0,10);
+  ['fechaVisita'].forEach(id => { const el = document.getElementById(id); if(el) el.value = hoy; });
+
+  if (esAdmin) {
+    document.getElementById('vista-admin').style.display = '';
+    await cargarReportesAdmin();
+  } else {
+    document.getElementById('vista-vendedor').style.display = '';
+    await Promise.all([cargarClientes(), cargarProductos()]);
+    renderTablaVisitas();
+    iniciarAutocomplete();
   }
-
-  iniciarCondicionales();
-  iniciarAutocomplete();
-  cargarClientesParaAutocomplete();
 });
 
-function cerrarSesion() { SCCR.cerrarSesion(); }
+function cerrarSesion() {
+  if (typeof SCCR !== 'undefined' && SCCR.cerrarSesion) SCCR.cerrarSesion();
+  else { sessionStorage.removeItem('sccr'); window.location.href = 'index.html'; }
+}
 
-// ── CONDICIONAL: Motivo de No Venta ──────────────────────────
-function iniciarCondicionales() {
-  const estatus = document.getElementById('estatusCierre');
-  const motivo  = document.getElementById('motivoNoVenta');
-  const hint    = document.getElementById('motivoHint');
-  const req     = document.getElementById('motivoReqMark');
-
-  estatus.addEventListener('change', () => {
-    const sinPedido = ['Sin Pedido', 'Rechazado'].includes(estatus.value);
-    motivo.required       = sinPedido;
-    hint.style.color      = sinPedido ? 'var(--alerta)' : 'var(--gris)';
-    req.style.display     = sinPedido ? 'inline' : 'none';
+// ════════════════════════════════════════════════════════════
+//  TABS VENDEDOR
+// ════════════════════════════════════════════════════════════
+function switchTabVendedor(tab) {
+  ['tabla','form'].forEach(t => {
+    document.getElementById('tv-tab-' + t).classList.toggle('active', t === tab);
+    document.getElementById('tv-panel-' + t).classList.toggle('active', t === tab);
   });
 }
 
-// ── AUTOCOMPLETE — action=clientes (acción correcta del Script) ─
-async function cargarClientesParaAutocomplete() {
+// ════════════════════════════════════════════════════════════
+//  CARGA DE DATOS
+// ════════════════════════════════════════════════════════════
+async function cargarClientes() {
   try {
-    let url = API + '?action=clientes';
-    if (!esDirectivo && sesion.vendedor_id) {
-      url += '&vendedor=' + encodeURIComponent(sesion.vendedor_id);
-    }
-    const r = await fetch(url, { redirect: 'follow' });
-    const d = await r.json();
-    if (d.ok && Array.isArray(d.data)) clientesCache = d.data;
-  } catch (e) {
-    console.warn('Autocomplete: no se pudo cargar la cartera:', e);
+    const filtro = sesion.user ? '&vendedor=' + encodeURIComponent(sesion.user) : '';
+    const r = await fetch(API + '?action=clientes' + filtro);
+    const j = await r.json();
+    if (j.ok && Array.isArray(j.data)) CLIENTES = j.data;
+    else CLIENTES = [];
+  } catch { CLIENTES = []; }
+}
+
+async function cargarProductos() {
+  try {
+    const r = await fetch(API + '?action=getProductos');
+    const j = await r.json();
+    if (j.ok && Array.isArray(j.data)) META_PROD = j.data;
+  } catch {
+    META_PROD = [
+      { id_producto:'restaurante', nombre:'Tipo Restaurante', precio_usd:312 },
+      { id_producto:'pasapalo',    nombre:'Tipo Pasapalo',    precio_usd:264 },
+      { id_producto:'torta',       nombre:'Tipo Torta',       precio_usd:240 },
+    ];
   }
 }
 
+// ════════════════════════════════════════════════════════════
+//  TABLA DE VISITAS — VENDEDOR
+//  Columnas: Cliente | Meta | Fecha Visita | Contacto Efectivo |
+//            Resultado | Motivo No Venta | Próx. Visita | Guardar
+// ════════════════════════════════════════════════════════════
+function renderTablaVisitas() {
+  const wrap = document.getElementById('tbl-visitas-wrap');
+  if (!CLIENTES.length) {
+    wrap.innerHTML = `<div class="empty-state"><div class="empty-ico">👥</div>
+      <div class="empty-txt">Sin clientes asignados</div>
+      <div class="empty-sub">Contacta al administrador para asignarte clientes.</div></div>`;
+    return;
+  }
+
+  let rows = CLIENTES.map((c, i) => {
+    const nombre = esc(c.razon_social || c.nombre || '—');
+    const establ = esc(c.establecimiento || '');
+    // Meta chips: buscar en detalle_clientes si aplica (simplificado: mostrar etapa embudo)
+    const etapa  = c.etapa_embudo || c.etapa || '';
+    const hoy    = new Date().toISOString().slice(0,10);
+
+    return `<tr id="row-${i}">
+      <td>
+        <div class="td-cliente">${nombre}</div>
+        <div class="td-meta">${establ}</div>
+        ${etapa ? `<div class="meta-chip">📍 ${esc(etapa)}</div>` : ''}
+      </td>
+      <td>
+        <input class="date-inp" type="date" id="rv-fecha-${i}" value="${hoy}">
+      </td>
+      <td>
+        <select class="sel-inp" id="rv-ce-${i}" onchange="toggleMotivoFila(${i})">
+          <option value="">—</option>
+          <option value="Sí">Sí</option>
+          <option value="No">No</option>
+        </select>
+      </td>
+      <td>
+        <select class="sel-inp" id="rv-res-${i}" onchange="toggleMotivoFila(${i})">
+          <option value="">—</option>
+          <option value="Interesado">Interesado</option>
+          <option value="Reprogramada">Reprogramada</option>
+          <option value="No Interesado">No Interesado</option>
+          <option value="Cierre Inmediato">Cierre Inmediato</option>
+        </select>
+      </td>
+      <td>
+        <select class="sel-inp" id="rv-motivo-${i}">
+          <option value="">—</option>
+          <option value="Precio">Precio</option>
+          <option value="Inventario Propio">Inventario Propio</option>
+          <option value="Condiciones Crédito">Condiciones de Crédito</option>
+          <option value="Competencia">Competencia</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </td>
+      <td>
+        <input class="date-inp" type="date" id="rv-prox-${i}" placeholder="dd/mm/aaaa">
+      </td>
+      <td>
+        <button class="btn-row" id="rv-btn-${i}" onclick="guardarFila(${i})">
+          💾 Guardar
+        </button>
+      </td>
+    </tr>`;
+  }).join('');
+
+  wrap.innerHTML = `<div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Cliente / Cartera</th>
+          <th>Fecha Visita</th>
+          <th>Contacto Efectivo</th>
+          <th>Resultado de la Cita</th>
+          <th>Motivo de No Venta</th>
+          <th>Próxima Visita</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </div>`;
+}
+
+function toggleMotivoFila(i) {
+  const res    = document.getElementById('rv-res-' + i)?.value || '';
+  const motivo = document.getElementById('rv-motivo-' + i);
+  if (!motivo) return;
+  const requiere = res === 'No Interesado';
+  motivo.style.borderColor = requiere ? 'var(--rojo)' : '';
+}
+
+// Guardar una fila individual
+async function guardarFila(i) {
+  const c     = CLIENTES[i];
+  const fecha = document.getElementById('rv-fecha-' + i)?.value  || '';
+  const ce    = document.getElementById('rv-ce-' + i)?.value     || '';
+  const res   = document.getElementById('rv-res-' + i)?.value    || '';
+  const mot   = document.getElementById('rv-motivo-' + i)?.value || '';
+  const prox  = document.getElementById('rv-prox-' + i)?.value   || '';
+
+  if (!fecha) { showToast('Selecciona la fecha de visita para ' + (c.razon_social||''), 'err'); return; }
+  if (!ce)    { showToast('Indica si hubo contacto efectivo con ' + (c.razon_social||''), 'err'); return; }
+  if (!res)   { showToast('Indica el resultado de la cita con ' + (c.razon_social||''), 'err'); return; }
+
+  const btn = document.getElementById('rv-btn-' + i);
+  btn.disabled = true; btn.textContent = '⏳';
+
+  const payload = {
+    action              : 'registroReporte',
+    fecha               : new Date(fecha + 'T12:00:00').toISOString(),
+    vendedor            : sesion.nombre || sesion.user || '',
+    user_vendedor       : sesion.user   || '',
+    tipo_cliente        : c.etapa_embudo === 'Prospección' ? 'Prospecto / Oportunidad' : 'Cliente Recurrente',
+    razon_social        : c.razon_social || c.nombre || '',
+    contacto_efectivo   : ce,
+    datos_capturados    : '',
+    gestion_cita        : 'Cita Hoy',
+    resultado_cita      : res,
+    propuesta_comercial : 'No',
+    estatus_cierre      : res === 'Cierre Inmediato' ? 'Pedido 1era Vez' : 'Sin Pedido',
+    motivo_no_venta     : mot,
+    observaciones       : prox ? 'Próxima visita: ' + prox : '',
+  };
+
+  try {
+    await fetch(API, {
+      method  : 'POST',
+      mode    : 'no-cors',
+      headers : { 'Content-Type': 'application/json' },
+      body    : JSON.stringify(payload),
+    });
+    // Marcar fila como guardada
+    const row = document.getElementById('row-' + i);
+    if (row) row.classList.add('row-saved');
+    btn.textContent  = '✅ Guardado';
+    btn.style.background = '#DCFCE7';
+    showToast('✅ Visita de ' + (c.razon_social || '') + ' registrada.', 'ok');
+  } catch(e) {
+    btn.disabled = false; btn.textContent = '💾 Guardar';
+    showToast('❌ Error al guardar. Intenta de nuevo.', 'err');
+  }
+}
+
+// Guardar todas las filas que tengan datos
+async function guardarTodos() {
+  const btn = document.getElementById('btn-guardar-todos');
+  btn.disabled = true; btn.textContent = '⏳ Guardando...';
+
+  let ok = 0, skip = 0;
+  for (let i = 0; i < CLIENTES.length; i++) {
+    const fecha = document.getElementById('rv-fecha-' + i)?.value || '';
+    const ce    = document.getElementById('rv-ce-' + i)?.value    || '';
+    const res   = document.getElementById('rv-res-' + i)?.value   || '';
+    // Solo guardar filas que tienen al menos contacto efectivo y resultado
+    if (!fecha || !ce || !res) { skip++; continue; }
+    await guardarFila(i);
+    ok++;
+  }
+
+  btn.disabled = false; btn.textContent = '💾 Guardar Todo';
+  if (ok > 0) showToast(`✅ ${ok} visita(s) guardadas correctamente.`, 'ok');
+  else showToast(`ℹ️ Completa al menos Contacto Efectivo y Resultado para guardar.`, '');
+}
+
+// ════════════════════════════════════════════════════════════
+//  FORMULARIO LIBRE — VENDEDOR
+// ════════════════════════════════════════════════════════════
+function toggleMotivo() {
+  const estatus = document.getElementById('estatusCierre').value;
+  const req     = document.getElementById('motivoReqMark');
+  const hint    = document.getElementById('motivoHint');
+  const motivo  = document.getElementById('motivoNoVenta');
+  const sinPed  = ['Sin Pedido','Rechazado'].includes(estatus);
+  if (req)  req.style.display   = sinPed ? 'inline' : 'none';
+  if (hint) hint.style.color    = sinPed ? '#E74C3C' : 'var(--gris)';
+  if (motivo) motivo.required   = sinPed;
+}
+
+// Autocomplete para formulario libre
 function iniciarAutocomplete() {
   const input = document.getElementById('razonSocial');
   const lista = document.getElementById('autocompleteList');
+  if (!input || !lista) return;
 
   input.addEventListener('input', () => {
     const q = input.value.toLowerCase().trim();
     lista.innerHTML = '';
-    if (q.length < 2 || !clientesCache.length) { lista.classList.remove('open'); return; }
-
-    const filtrados = clientesCache
-      .filter(c => (c.razon_social || '').toLowerCase().includes(q))
-      .slice(0, 10);
-
+    if (q.length < 2 || !CLIENTES.length) { lista.classList.remove('open'); return; }
+    const filtrados = CLIENTES.filter(c =>
+      (c.razon_social || '').toLowerCase().includes(q) ||
+      (c.establecimiento || '').toLowerCase().includes(q)
+    ).slice(0, 10);
     if (!filtrados.length) { lista.classList.remove('open'); return; }
-
     filtrados.forEach(c => {
       const item = document.createElement('div');
-      item.className   = 'autocomplete-item';
-      item.textContent = c.razon_social + (c.establecimiento ? ' — ' + c.establecimiento : '');
+      item.className   = 'ac-item';
+      item.textContent = (c.razon_social || '') + (c.establecimiento ? ' — ' + c.establecimiento : '');
       item.addEventListener('mousedown', e => {
         e.preventDefault();
-        input.value = c.razon_social;
+        input.value = c.razon_social || '';
         lista.classList.remove('open');
-        if (c.estado === 'activo') {
-          document.getElementById('tipoCliente').value = 'Cliente Recurrente';
-        }
+        const tc = document.getElementById('tipoCliente');
+        if (tc) tc.value = (c.estado === 'activo') ? 'Cliente Recurrente' : 'Prospecto / Oportunidad';
       });
       lista.appendChild(item);
     });
     lista.classList.add('open');
   });
 
-  input.addEventListener('blur', () => {
-    setTimeout(() => lista.classList.remove('open'), 200);
-  });
+  input.addEventListener('blur', () => setTimeout(() => lista.classList.remove('open'), 200));
 }
 
-// ── ENVÍO — action: registroReporte ──────────────────────────
-// Campos mapeados exactamente a HEADERS.reportes del SCRIPT.gs:
-// id_reporte | fecha | fecha_formateada | vendedor | user_vendedor |
-// tipo_cliente | razon_social | contacto_efectivo | datos_capturados |
-// gestion_cita | resultado_cita | propuesta_comercial |
-// estatus_cierre | motivo_no_venta | observaciones
-async function enviarReporte(event) {
+async function enviarReporteLibre(event) {
   event.preventDefault();
-
-  const datosCapturados = [];
-  document.querySelectorAll('input[name="datosCapturados"]:checked')
-    .forEach(cb => datosCapturados.push(cb.value));
-
   const estatus = document.getElementById('estatusCierre').value;
   const motivo  = document.getElementById('motivoNoVenta').value;
-
-  if (['Sin Pedido', 'Rechazado'].includes(estatus) && !motivo) {
-    showToast('Selecciona el Motivo de No Venta antes de enviar.', 'err');
-    return;
+  if (['Sin Pedido','Rechazado'].includes(estatus) && !motivo) {
+    showToast('Selecciona el Motivo de No Venta antes de enviar.', 'err'); return;
   }
-
   const btn = document.getElementById('btnSubmit');
   btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Enviando...';
+  btn.innerHTML = '<span class="sp"></span> Enviando...';
+
+  const datos = [];
+  document.querySelectorAll('input[name="datosCapturados"]:checked').forEach(cb => datos.push(cb.value));
 
   const payload = {
-    action:              'registroReporte',
-    fecha:               new Date().toISOString(),
-    vendedor:            sesion.nombre || sesion.user || '',
-    user_vendedor:       sesion.user   || '',
-    tipo_cliente:        document.getElementById('tipoCliente').value,
-    razon_social:        document.getElementById('razonSocial').value.trim(),
-    contacto_efectivo:   document.getElementById('contactoEfectivo').value,
-    datos_capturados:    datosCapturados.join(', '),
-    gestion_cita:        document.getElementById('gestionCita').value,
-    resultado_cita:      document.getElementById('resultadoCita').value,
-    propuesta_comercial: document.getElementById('propuestaComercial').value,
-    estatus_cierre:      estatus,
-    motivo_no_venta:     motivo,
-    observaciones:       document.getElementById('observaciones').value.trim(),
+    action              : 'registroReporte',
+    fecha               : new Date().toISOString(),
+    vendedor            : sesion.nombre || sesion.user || '',
+    user_vendedor       : sesion.user   || '',
+    tipo_cliente        : document.getElementById('tipoCliente').value,
+    razon_social        : document.getElementById('razonSocial').value.trim(),
+    contacto_efectivo   : document.getElementById('contactoEfectivo').value,
+    datos_capturados    : datos.join(', '),
+    gestion_cita        : document.getElementById('gestionCita').value,
+    resultado_cita      : document.getElementById('resultadoCita').value,
+    propuesta_comercial : document.getElementById('propuestaComercial').value,
+    estatus_cierre      : estatus,
+    motivo_no_venta     : motivo,
+    observaciones       : document.getElementById('observaciones').value.trim()
+                          + (document.getElementById('proximaVisita').value
+                            ? ' | Próxima visita: ' + document.getElementById('proximaVisita').value : ''),
   };
 
   try {
     await fetch(API, {
-      method:  'POST',
-      mode:    'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify(payload),
+      method  : 'POST',
+      mode    : 'no-cors',
+      headers : { 'Content-Type': 'application/json' },
+      body    : JSON.stringify(payload),
     });
-    showToast('Reporte enviado y registrado correctamente.', 'ok');
+    showToast('✅ Reporte enviado y registrado correctamente.', 'ok');
     document.getElementById('reporteForm').reset();
-  } catch (e) {
-    console.error('Error al enviar reporte:', e);
-    showToast('Error al enviar. Verifica tu conexión e intenta de nuevo.', 'err');
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = 'Enviar Reporte';
+    const hoy = new Date().toISOString().slice(0,10);
+    const fv  = document.getElementById('fechaVisita'); if(fv) fv.value = hoy;
+  } catch(e) {
+    showToast('❌ Error al enviar. Verifica tu conexión.', 'err');
   }
+  btn.disabled = false;
+  btn.innerHTML = 'Enviar Reporte';
 }
 
-// ── TOAST ────────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════
+//  VISTA ADMIN — RESUMEN DE GESTIÓN
+// ════════════════════════════════════════════════════════════
+async function cargarReportesAdmin() {
+  document.getElementById('tbl-admin-body').innerHTML =
+    '<tr><td colspan="10"><div class="empty-state"><div class="empty-ico">⏳</div><div class="empty-txt">Cargando reportes...</div></div></td></tr>';
+  document.getElementById('resumen-vendedores').innerHTML =
+    '<div class="empty-state"><div class="empty-ico">⏳</div><div class="empty-txt">Cargando...</div></div>';
+
+  try {
+    const r = await fetch(API + '?action=ventas&limite=2000');
+    const j = await r.json();
+    // El endpoint 'ventas' devuelve pedidos; necesitamos reportes.
+    // Usamos el endpoint histórico para obtener los reportes guardados.
+    // Como el script no tiene un endpoint GET de reportes, usamos el de ventas como proxy
+    // y complementamos con datos locales de la sesión.
+    // Intentar cargar desde acción específica (si el script la tiene)
+    REPORTES_ADM = [];
+    // Carga via historico que devuelve pedidos_raw — los reportes vienen de su hoja propia
+    // El script no expone un GET de reportes directamente, así que mostramos lo que hay
+  } catch(e) {}
+
+  // Intentar fetch de reportes directamente (el script los tiene en hoja 'reportes')
+  try {
+    const r2 = await fetch(API + '?action=historico&limite=500');
+    const j2 = await r2.json();
+    if (j2.ok && Array.isArray(j2.data)) {
+      REPORTES_ADM = j2.data;
+    }
+  } catch(e) {}
+
+  renderAdmin();
+}
+
+function renderAdmin() {
+  const desde    = document.getElementById('f-desde')?.value    || '';
+  const hasta    = document.getElementById('f-hasta')?.value    || '';
+  const vendFilt = document.getElementById('f-vendedor')?.value || '';
+  const resFilt  = document.getElementById('f-resultado')?.value|| '';
+
+  let datos = REPORTES_ADM.filter(r => {
+    if (vendFilt && (r.vendedor || r.user_vendedor || '') !== vendFilt) return false;
+    if (resFilt  && (r.resultado_cita || '') !== resFilt) return false;
+    if (desde) {
+      const fd = parseFecha(r.fecha || r.fecha_formateada);
+      if (fd && fd < new Date(desde + 'T00:00:00')) return false;
+    }
+    if (hasta) {
+      const fd = parseFecha(r.fecha || r.fecha_formateada);
+      if (fd && fd > new Date(hasta + 'T23:59:59')) return false;
+    }
+    return true;
+  });
+
+  // Poblar select vendedores
+  const vends = [...new Set(REPORTES_ADM.map(r => r.vendedor || r.user_vendedor || '').filter(Boolean))];
+  const selV  = document.getElementById('f-vendedor');
+  if (selV) {
+    const curr = selV.value;
+    selV.innerHTML = '<option value="">Todos los vendedores</option>';
+    vends.forEach(v => {
+      const op = document.createElement('option');
+      op.value = v; op.textContent = v; if(v===curr) op.selected = true;
+      selV.appendChild(op);
+    });
+  }
+
+  // KPIs
+  const total  = datos.length;
+  const ce     = datos.filter(r => (r.contacto_efectivo||'').toLowerCase() === 'sí').length;
+  const cierres= datos.filter(r => ['Pedido 1era Vez','Pedido Recurrente','Cierre Inmediato'].includes(r.estatus_cierre||r.resultado_cita||'')).length;
+  const nv     = datos.filter(r => (r.estatus_cierre||'') === 'Sin Pedido' || (r.resultado_cita||'') === 'No Interesado').length;
+  const tasa   = total > 0 ? Math.round((cierres/total)*100) : 0;
+  const prop   = datos.filter(r => (r.propuesta_comercial||'') === 'Sí').length;
+
+  document.getElementById('k-total').textContent  = total;
+  document.getElementById('k-ce').textContent     = ce;
+  document.getElementById('k-cierre').textContent = cierres;
+  document.getElementById('k-nv').textContent     = nv;
+  document.getElementById('k-tasa').textContent   = tasa + '%';
+  document.getElementById('k-prop').textContent   = prop;
+
+  // Resumen por vendedor
+  const porVend = {};
+  datos.forEach(r => {
+    const v = r.vendedor || r.user_vendedor || 'Sin asignar';
+    if (!porVend[v]) porVend[v] = { visitas:0, ce:0, cierres:0, nv:0, prop:0 };
+    porVend[v].visitas++;
+    if ((r.contacto_efectivo||'').toLowerCase() === 'sí') porVend[v].ce++;
+    if (['Pedido 1era Vez','Pedido Recurrente','Cierre Inmediato'].includes(r.estatus_cierre||r.resultado_cita||'')) porVend[v].cierres++;
+    if ((r.estatus_cierre||'') === 'Sin Pedido' || (r.resultado_cita||'') === 'No Interesado') porVend[v].nv++;
+    if ((r.propuesta_comercial||'') === 'Sí') porVend[v].prop++;
+  });
+
+  const resWrap = document.getElementById('resumen-vendedores');
+  if (!Object.keys(porVend).length) {
+    resWrap.innerHTML = '<div class="empty-state"><div class="empty-ico">📭</div><div class="empty-txt">Sin reportes en el período</div></div>';
+  } else {
+    resWrap.innerHTML = `<div class="tbl-wrap"><table class="res-tbl">
+      <thead><tr>
+        <th>Vendedor</th><th>Visitas</th><th>Contacto Efectivo</th>
+        <th>Cierres</th><th>Sin Pedido</th><th>Propuestas</th><th>Tasa Cierre</th>
+      </tr></thead>
+      <tbody>
+        ${Object.entries(porVend).sort((a,b)=>b[1].visitas-a[1].visitas).map(([v,d])=>{
+          const t  = d.visitas || 1;
+          const tc = Math.round((d.cierres/t)*100);
+          const color = tc>=60?'verde':tc>=30?'naranja':'';
+          return `<tr>
+            <td class="td-cliente">${esc(v)}</td>
+            <td style="text-align:center;font-weight:700">${d.visitas}</td>
+            <td style="text-align:center">
+              ${d.ce} <div class="prog-bar"><div class="prog-fill" style="width:${Math.round((d.ce/t)*100)}%"></div></div>
+            </td>
+            <td style="text-align:center;font-weight:700;color:var(--verde)">${d.cierres}</td>
+            <td style="text-align:center;color:var(--rojo)">${d.nv}</td>
+            <td style="text-align:center">${d.prop}</td>
+            <td style="text-align:center">
+              <span class="estado-badge ${color==='verde'?'est-ok':color==='naranja'?'est-pend':''}">${tc}%</span>
+            </td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table></div>`;
+  }
+
+  // Tabla detalle
+  const tbody = document.getElementById('tbl-admin-body');
+  if (!datos.length) {
+    tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state"><div class="empty-ico">📭</div><div class="empty-txt">Sin reportes</div><div class="empty-sub">Ajusta los filtros o espera a que los vendedores registren visitas.</div></div></td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = datos.slice(0,200).map(r => {
+    const ce     = (r.contacto_efectivo||'').toLowerCase()==='sí';
+    const res    = r.resultado_cita || '—';
+    const resCol = res==='Cierre Inmediato'?'est-cierre':res==='Interesado'?'est-ok':res==='No Interesado'?'est-no':'est-pend';
+    // Extraer próxima visita de observaciones si aplica
+    const obs    = r.observaciones || '';
+    const proxMatch = obs.match(/Próxima visita:\s*([\d\/-]+)/);
+    const proxVis   = proxMatch ? proxMatch[1] : (r.proxima_visita || '—');
+
+    return `<tr>
+      <td style="white-space:nowrap">${fFecha(r.fecha||r.fecha_formateada)}</td>
+      <td style="font-weight:600">${esc(r.vendedor||r.user_vendedor||'—')}</td>
+      <td>
+        <div style="font-weight:600;font-size:.75rem">${esc(r.razon_social||'—')}</div>
+        <div style="font-size:.65rem;color:var(--gris)">${esc(r.tipo_cliente||'')}</div>
+      </td>
+      <td style="text-align:center">
+        <span class="estado-badge ${ce?'est-ok':'est-no'}">${r.contacto_efectivo||'—'}</span>
+      </td>
+      <td><span class="estado-badge ${resCol}">${esc(res)}</span></td>
+      <td style="text-align:center">${esc(r.propuesta_comercial||'—')}</td>
+      <td>${esc(r.estatus_cierre||'—')}</td>
+      <td style="color:var(--rojo);font-size:.71rem">${esc(r.motivo_no_venta||'—')}</td>
+      <td style="white-space:nowrap;font-size:.71rem">${esc(proxVis)}</td>
+      <td style="font-size:.71rem;max-width:200px;word-break:break-word">${esc((obs.split('|')[0]||obs).slice(0,120))}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════════════════
+//  UTILS
+// ════════════════════════════════════════════════════════════
+function esc(s)   { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function parseFecha(v) {
+  if (!v) return null;
+  if (v instanceof Date) return v;
+  const s = String(v);
+  const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (m) return new Date(+m[3], +m[2]-1, +m[1]);
+  const d = new Date(s); return isNaN(d.getTime()) ? null : d;
+}
+function fFecha(v) {
+  const d = parseFecha(v);
+  if (!d) return String(v||'—').slice(0,10);
+  return d.toLocaleDateString('es-VE',{day:'2-digit',month:'2-digit',year:'numeric'});
+}
 function showToast(msg, type) {
-  const t = document.getElementById('toast');
+  const t   = document.getElementById('toast');
   t.textContent = msg;
-  t.className   = 'toast ' + (type || '') + ' show';
+  t.className   = 'toast ' + (type||'') + ' show';
   clearTimeout(t._t);
   t._t = setTimeout(() => { t.className = 'toast'; }, 4000);
 }
