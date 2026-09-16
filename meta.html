@@ -457,7 +457,12 @@ function renderTabla() {
   let totalCajasGlobal = 0, totalUsdGlobal = 0;
   const tdTotalesProds = new Array(idxMap.length).fill(0);
 
-  const tbody = filas.map((e, i) => {
+  const tbody = filas.map((e) => {
+    // ── ÍNDICE REAL en filasMapa (no el del array filtrado) ──────────────
+    // Este es el fix del bug: i era el índice de "filas" (filtrado),
+    // pero abrirConvertir/abrirAnular usan filasMapa (sin filtrar).
+    // Al haber filtros activos los índices diferían y se abría el cliente incorrecto.
+    const idxReal = filasMapa.indexOf(e);
     const cli    = e.cli;
     const per    = e.meta.periodo || (e.meta.mes + '/' + e.meta.anio) || '—';
     const estado = e.estado;
@@ -497,8 +502,8 @@ function renderTabla() {
     let btns = '';
     if (estado === 'activo') {
       btns = `
-        <button class="btn-acc btn-convertir" onclick="abrirConvertir(${i})">🛒 Convertir</button>
-        <button class="btn-acc btn-anular"    onclick="abrirAnular(${i})">🚫 Anular</button>`;
+        <button class="btn-acc btn-convertir" onclick="abrirConvertir(${idxReal})">🛒 Convertir</button>
+        <button class="btn-acc btn-anular"    onclick="abrirAnular(${idxReal})">🚫 Anular</button>`;
     } else if (estado === 'convertido') {
       btns = `<span class="btn-convertido">📦 ${esc(e.pedidoNum || 'Pedido OK')}</span>`;
     } else {
