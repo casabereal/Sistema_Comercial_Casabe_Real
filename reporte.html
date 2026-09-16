@@ -324,30 +324,11 @@ footer strong{color:var(--texto)}
                 <label class="cf-label">Resultado de la Cita <span class="req">*</span></label>
                 <select class="cf-sel" id="resultadoCita" required>
                   <option value="">Seleccione...</option>
-                  <option value="Interesado">Interesado</option>
+                  <option value="Realizó un pedido">Realizó un pedido</option>
+                  <option value="Solicitó una propuesta">Solicitó una propuesta</option>
+                  <option value="Se presentó una propuesta">Se presentó una propuesta</option>
+                  <option value="No interesado">No interesado</option>
                   <option value="Reprogramada">Reprogramada</option>
-                  <option value="No Interesado">No Interesado</option>
-                  <option value="Cierre Inmediato">Cierre Inmediato</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label class="cf-label">Propuesta Entregada <span class="req">*</span></label>
-                <select class="cf-sel" id="propuestaComercial" required>
-                  <option value="">Seleccione...</option>
-                  <option value="Sí">Sí — Propuesta entregada</option>
-                  <option value="No">No — Sin propuesta</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label class="cf-label">Estatus de Cierre <span class="req">*</span></label>
-                <select class="cf-sel" id="estatusCierre" required onchange="toggleMotivo()">
-                  <option value="">Seleccione...</option>
-                  <option value="Pedido 1era Vez">Pedido 1era Vez</option>
-                  <option value="Pedido Recurrente">Pedido Recurrente</option>
-                  <option value="Sin Pedido">Sin Pedido</option>
-                  <option value="Rechazado">Rechazado</option>
                 </select>
               </div>
 
@@ -358,10 +339,11 @@ footer strong{color:var(--texto)}
                 <select class="cf-sel" id="motivoNoVenta">
                   <option value="">Seleccione...</option>
                   <option value="Precio">Precio</option>
-                  <option value="Inventario Propio">Inventario Propio</option>
-                  <option value="Condiciones Crédito">Condiciones de Crédito</option>
-                  <option value="Competencia">Competencia</option>
-                  <option value="Otro">Otro</option>
+                  <option value="Tiene Inventario">Tiene Inventario</option>
+                  <option value="Condiciones de pago">Condiciones de pago</option>
+                  <option value="Compra otra marca">Compra otra marca</option>
+                  <option value="Encargado Ausente">Encargado Ausente</option>
+                  <option value="Fuera de hora">Fuera de hora</option>
                 </select>
                 <span class="field-hint" id="motivoHint">Obligatorio cuando no hay pedido</span>
               </div>
@@ -621,20 +603,23 @@ function renderTablaVisitas() {
       <td>
         <select class="sel-inp" id="rv-res-${i}" onchange="toggleMotivoFila(${i})">
           <option value="">—</option>
-          <option value="Interesado">Interesado</option>
-          <option value="Reprogramada">Reprogramada</option>
-          <option value="No Interesado">No Interesado</option>
-          <option value="Cierre Inmediato">Cierre Inmediato</option>
-        </select>
+          <option value="Precio">Precio</option>
+          <option value="Tiene Inventario">Tiene Inventario</option>
+          <option value="Condiciones de pago">Condiciones de pago</option>
+          <option value="Compra otra marca">Compra otra marca</option>
+          <option value="Encargado Ausente">Encargado Ausente</option>
+          <option value="Fuera de hora">Fuera de hora</option>
+       </select>
       </td>
       <td>
         <select class="sel-inp" id="rv-motivo-${i}">
           <option value="">—</option>
           <option value="Precio">Precio</option>
-          <option value="Inventario Propio">Inventario Propio</option>
-          <option value="Condiciones Crédito">Condiciones de Crédito</option>
-          <option value="Competencia">Competencia</option>
-          <option value="Otro">Otro</option>
+          <option value="Tiene Inventario">Tiene Inventario</option>
+          <option value="Condiciones de pago">Condiciones de pago</option>
+          <option value="Compra otra marca">Compra otra marca</option>
+          <option value="Encargado Ausente">Encargado Ausente</option>
+          <option value="Fuera de hora">Fuera de hora</option>
         </select>
       </td>
       <td>
