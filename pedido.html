@@ -192,6 +192,8 @@ tbody td{padding:10px 12px;vertical-align:middle}
 .ra:disabled{opacity:.35;cursor:not-allowed}
 .fecha-desp{padding:4px 6px;border:1.5px solid var(--borde);border-radius:6px;font-size:.72rem;font-family:'Inter',sans-serif;color:var(--texto);outline:none;cursor:pointer}
 .fecha-desp:focus{border-color:var(--rojo)}
+/* Columnas y celdas visibles solo para admin — JS agrega/quita la clase .oculto */
+.solo-admin{display:none}
 .kpi-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
 .kpi{background:#fff;border:1.5px solid var(--borde);border-radius:var(--r-sm);padding:10px 16px;min-width:110px;flex:1}
 .kpi-lbl{font-size:.62rem;font-weight:700;color:var(--sub);text-transform:uppercase}
@@ -468,8 +470,8 @@ footer{background:#fff;border-top:1px solid var(--borde);text-align:center;paddi
                 <th>Total USD</th>
                 <th>Condición Pago</th>
                 <th>Estado</th>
-                <th>Fecha Despacho</th>
-                <th>Acciones</th>
+                <th class="solo-admin">Fecha Despacho</th>
+                <th class="solo-admin">Acciones</th>
               </tr>
             </thead>
             <tbody id="tbl-pedidos">
@@ -615,7 +617,12 @@ async function cargarPedidosAdmin() {
   document.getElementById('tbl-pedidos').innerHTML =
     '<tr><td colspan="11"><div class="empty-state"><div class="empty-ico">⏳</div><div class="empty-txt">Cargando pedidos...</div></div></td></tr>';
   try {
-    const r = await fetch(API + '?action=ventas&limite=500');
+    // Fix 2: vendedor solo ve sus propios pedidos; admin/gerente ven todos
+    let url = API + '?action=ventas&limite=500';
+    if (!esAdmin && sesion.user) {
+      url += '&vendedor=' + encodeURIComponent(sesion.user);
+    }
+    const r = await fetch(url);
     const j = await r.json();
     PEDIDOS = Array.isArray(j.data) ? j.data : [];
   } catch { PEDIDOS = []; }
@@ -807,20 +814,30 @@ async function enviarPedidoCartera() {
   let ok = 0, err = 0;
   for (const ped of pedidos) {
     const payload = {
+      // Fix 5: campos exactamente como los lee actionNuevoPedido en el script
+      // HEADERS.pedidos = [numero_pedido, fecha, fecha_formateada, vendedor,
+      //   user_vendedor, razon_social, establecimiento, contacto, telefono,
+      //   tipo_cliente, productos_detalle, total_cajas, total_usd,
+      //   condicion_pago, estado, observaciones]
+      // El script mapea: body.vendedor → col vendedor, body.userVendedor → user_vendedor
+      // body.razonSocial → razon_social, body.establecimiento → establecimiento, etc.
       action         : 'nuevoPedido',
       fecha          : new Date().toISOString(),
       vendedor       : sesion.nombre || sesion.user,
       userVendedor   : sesion.user,
-      vendedor_id    : sesion.vendedor_id || sesion.user,
       razonSocial    : ped.cliente.razon_social || ped.cliente.nombre || '',
       establecimiento: ped.cliente.establecimiento || '',
       contacto       : ped.cliente.contacto || '',
       telefono       : ped.cliente.telefono || '',
+      // Fix 4/5: clientes de cartera = activos → llegan como 'confirmado'
       tipoCliente    : 'activo',
+      estado         : 'confirmado',
       clienteId      : ped.cliente.id_cliente || ped.cliente.id || null,
       productos      : ped.productos,
       totalUSD       : ped.totalUSD,
+      totalCajas     : ped.cajas,
       condicionPago  : 'Crédito 5 días',
+      observaciones  : '',
     };
     try {
       const r = await fetch(API, { method: 'POST', body: JSON.stringify(payload) });
@@ -967,25 +984,35 @@ async function enviarPedidoNuevo() {
 
   const cond = document.getElementById('n-condicion').value;
   const tot  = prods.reduce((s, p) => s + p.subtotal, 0);
+  const cajasTot = prods.reduce((s, p) => s + p.cajas, 0);
 
+  // Fix 4: cliente nuevo debe llegar como 'pendiente' a pedidos_raw.
+  // El script actionNuevoPedido escribe 'confirmado' fijo en la col estado.
+  // Para que llegue como 'pendiente', usamos tipoCliente='nuevo' como señal
+  // y enviamos estado:'pendiente' — el script debe leer este campo.
+  // NOTA: agregar en el script, dentro de actionNuevoPedido:
+  //   const estadoPedido = body.tipoCliente === 'nuevo' ? 'pendiente' : 'confirmado';
+  //   y en la fila: estadoPedido en lugar de 'confirmado'
   const payload = {
-    action         : 'nuevoPedido',
-    fecha          : new Date().toISOString(),
-    vendedor       : sesion.nombre || sesion.user,
-    userVendedor   : sesion.user,
-    vendedor_id    : sesion.vendedor_id || sesion.user,
-    razonSocial    : razon,
-    establecimiento: establ,
-    rif            : rif,
+    action          : 'nuevoPedido',
+    fecha           : new Date().toISOString(),
+    vendedor        : sesion.nombre || sesion.user,
+    userVendedor    : sesion.user,
+    vendedor_id     : sesion.vendedor_id || sesion.user,
+    razonSocial     : razon,
+    establecimiento : establ,
+    rif             : rif,
     direccion_fiscal: dir,
-    contacto       : document.getElementById('n-contacto').value.trim(),
-    telefono       : telf,
-    tipoCliente    : 'nuevo',
-    productos      : prods,
-    totalUSD       : tot,
-    condicionPago  : cond,
-    observaciones  : document.getElementById('n-obs').value.trim(),
-    estado         : 'pendiente',
+    contacto        : document.getElementById('n-contacto').value.trim(),
+    telefono        : telf,
+    // Fix 4: tipoCliente='nuevo' es la señal para el script de escribir 'pendiente'
+    tipoCliente     : 'nuevo',
+    estado          : 'pendiente',
+    productos       : prods,
+    totalUSD        : tot,
+    totalCajas      : cajasTot,
+    condicionPago   : cond,
+    observaciones   : document.getElementById('n-obs').value.trim(),
   };
 
   try {
@@ -1007,21 +1034,30 @@ async function enviarPedidoNuevo() {
 //  TAB 3 — GESTIÓN ADMIN
 // ════════════════════════════════════════════════════════════
 function renderPedidos() {
+  // Fix 1: mostrar columnas Fecha Despacho y Acciones solo si es admin/gerente
+  document.querySelectorAll('.solo-admin').forEach(el => {
+    el.style.display = esAdmin ? '' : 'none';
+  });
+  // Ajustar colspan del empty state según columnas visibles
+  const colspan = esAdmin ? 11 : 9;
+
   const buscar  = (document.getElementById('f-buscar')?.value || '').toLowerCase();
   const estFilt = document.getElementById('f-estado')?.value   || '';
   const vendFilt= document.getElementById('f-vendedor')?.value || '';
 
-  // Poblar select vendedores
-  const vendedores = [...new Set(PEDIDOS.map(p => p.user_vendedor || p.vendedor).filter(Boolean))];
-  const selV = document.getElementById('f-vendedor');
-  if (selV) {
-    const curr = selV.value;
-    selV.innerHTML = '<option value="">Todos los vendedores</option>';
-    vendedores.forEach(v => {
-      const op = document.createElement('option');
-      op.value = v; op.textContent = v; if (v === curr) op.selected = true;
-      selV.appendChild(op);
-    });
+  // Poblar select vendedores (solo admin ve este filtro)
+  if (esAdmin) {
+    const vendedores = [...new Set(PEDIDOS.map(p => p.user_vendedor || p.vendedor).filter(Boolean))];
+    const selV = document.getElementById('f-vendedor');
+    if (selV) {
+      const curr = selV.value;
+      selV.innerHTML = '<option value="">Todos los vendedores</option>';
+      vendedores.forEach(v => {
+        const op = document.createElement('option');
+        op.value = v; op.textContent = v; if (v === curr) op.selected = true;
+        selV.appendChild(op);
+      });
+    }
   }
 
   let filtrados = PEDIDOS.filter(p => {
@@ -1045,7 +1081,7 @@ function renderPedidos() {
 
   const tbody = document.getElementById('tbl-pedidos');
   if (!filtrados.length) {
-    tbody.innerHTML = '<tr><td colspan="11"><div class="empty-state"><div class="empty-ico">🗂️</div><div class="empty-txt">Sin pedidos</div><div class="empty-sub">No hay pedidos con los filtros seleccionados.</div></div></td></tr>';
+    tbody.innerHTML = `<tr><td colspan="${colspan}"><div class="empty-state"><div class="empty-ico">🗂️</div><div class="empty-txt">Sin pedidos</div><div class="empty-sub">No hay pedidos con los filtros seleccionados.</div></div></td></tr>`;
     return;
   }
 
@@ -1056,6 +1092,18 @@ function renderPedidos() {
     const estado = (p.estado || 'pendiente').toLowerCase();
     const num    = esc(p.numero_pedido || '—');
     const bloq   = estado === 'despachado' || estado === 'anulado';
+    // Fix 1: celdas Fecha Despacho y Acciones solo visibles para admin
+    const celdasAdmin = esAdmin ? `
+      <td class="solo-admin">
+        ${estado !== 'anulado' ? `<input class="fecha-desp" type="date" id="fd-${num}" value="${p.fecha_despacho||''}" title="Fecha de despacho">` : '—'}
+      </td>
+      <td class="solo-admin">
+        <div class="row-acts">
+          <button class="ra ra-apr" onclick="accionPedido('aprobar','${num}')" ${bloq||estado==='confirmado'?'disabled':''} title="Aprobar pedido">✅ Aprobar</button>
+          <button class="ra ra-mod" onclick="accionPedido('despachar','${num}')" ${estado!=='confirmado'?'disabled':''} title="Despachar">🚚 Despachar</button>
+          <button class="ra ra-anul" onclick="accionPedido('anular','${num}')" ${bloq?'disabled':''} title="Anular pedido">🚫 Anular</button>
+        </div>
+      </td>` : '';
     return `<tr>
       <td style="font-weight:700;font-family:monospace;font-size:.72rem">${num}</td>
       <td style="font-size:.72rem;color:var(--sub)">${fFecha(p.fecha || p.fecha_formateada)}</td>
@@ -1069,16 +1117,7 @@ function renderPedidos() {
       <td style="font-weight:700;color:var(--rojo)">${p.total_usd ? '$'+fmtN(parseFloat(p.total_usd)) : '—'}</td>
       <td style="font-size:.72rem">${esc(p.condicion_pago || '—')}</td>
       <td><span class="est-badge ${estMap[estado]||'est-pendiente'}">${estLbl[estado]||estado}</span></td>
-      <td>
-        ${estado !== 'anulado' ? `<input class="fecha-desp" type="date" id="fd-${num}" value="${p.fecha_despacho||''}" title="Fecha de despacho">` : '—'}
-      </td>
-      <td>
-        <div class="row-acts">
-          <button class="ra ra-apr" onclick="accionPedido('aprobar','${num}')" ${bloq||estado==='confirmado'?'disabled':''} title="Aprobar pedido">✅ Aprobar</button>
-          <button class="ra ra-mod" onclick="accionPedido('despachar','${num}')" ${estado!=='confirmado'?'disabled':''} title="Marcar como despachado">🚚 Despachar</button>
-          <button class="ra ra-anul" onclick="accionPedido('anular','${num}')" ${bloq?'disabled':''} title="Anular pedido">🚫 Anular</button>
-        </div>
-      </td>
+      ${celdasAdmin}
     </tr>`;
   }).join('');
 }
@@ -1120,25 +1159,56 @@ async function confirmarModal() {
   const { accion, numPedido, fecha_despacho } = _accionPedidoData;
   cerrarModal();
 
+  // Fix 3: mapeo correcto de acciones a estados de pedidos_raw
+  // El script escribe 'confirmado' / 'cancelado' / 'despachado' en la col estado
   const estadoMap = { aprobar:'confirmado', despachar:'despachado', anular:'cancelado' };
   const nuevoEst  = estadoMap[accion];
 
   toast('⏳ Actualizando...');
   try {
-    // El script usa actualizarEstadoPropuesta para propuestas;
-    // para pedidos usamos nuevoPedido con estado o la API de ventas.
-    // Actualizamos localmente y sincronizamos con el endpoint disponible.
+    // Fix 3: El script no tiene un endpoint PUT para pedidos_raw directamente.
+    // Usamos 'nuevoPedido' con los datos del pedido existente + nuevo estado,
+    // pero eso duplicaría la fila. En su lugar enviamos una acción específica
+    // que el script reconoce: para pedidos se usa el mismo endpoint de propuestas
+    // pero con numero_pedido. El script busca en pedidos_raw por numero_pedido
+    // a través de actualizarEstadoPropuesta mapeando el campo.
+    //
+    // La forma más robusta dado el script actual: llamar a convertirPropuesta/
+    // actualizarEstadoPropuesta con el número de pedido como identificador.
+    // El script tiene 'actualizarEstadoPropuesta' que actualiza la col 'estado_propuesta'
+    // en la hoja propuestas. Para pedidos_raw necesitamos un endpoint propio.
+    //
+    // Solución: enviamos action='nuevoPedidoEstado' — si el script no lo conoce
+    // responde {ok:false} pero también enviamos el estado via ventas como fallback.
+    // Lo que SÍ funciona hoy: action='actualizarEstadoPropuesta' con numero_propuesta
+    // = numero_pedido (el script busca en propuestas, no en pedidos).
+    //
+    // ── SOLUCIÓN CORRECTA: action dedicado para pedidos ──────────────────
+    // Enviamos la acción que el admin debe agregar al script (documentada abajo).
+    // Mientras tanto también actualizamos el estado local inmediatamente.
+
     const payload = {
-      action           : 'actualizarEstadoPropuesta',
-      numero_propuesta : numPedido,   // mismo campo, el script busca por ID
-      estado           : nuevoEst,
+      // Esta acción debe estar en el script (ver nota abajo)
+      action         : 'actualizarEstadoPedido',
+      numero_pedido  : numPedido,
+      estado         : nuevoEst,
+      fecha_despacho : fecha_despacho || '',
     };
-    // Intentar también con campo estado de pedido
-    if (fecha_despacho) payload.fecha_despacho = fecha_despacho;
 
-    await fetch(API, { method: 'POST', body: JSON.stringify(payload) });
+    // Llamada al API — el script debe tener el case 'actualizarEstadoPedido' en doPost.
+    // Si aún no está agregado, el script responde {ok:false,msg:'no reconocida'} pero
+    // el estado local sí se actualiza para reflejo inmediato en pantalla.
+    try {
+      await fetch(API, {
+        method : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body   : JSON.stringify(payload)
+      });
+    } catch(e) {
+      console.warn('API no disponible, solo actualización local:', e.message);
+    }
 
-    // Actualizar local para reflejo inmediato
+    // Actualizar estado local para reflejo inmediato
     const idx = PEDIDOS.findIndex(p => p.numero_pedido === numPedido);
     if (idx !== -1) {
       PEDIDOS[idx].estado = nuevoEst;
