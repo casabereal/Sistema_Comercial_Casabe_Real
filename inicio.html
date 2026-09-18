@@ -541,7 +541,11 @@ async function cargarClientes(vendedorId) {
     }
 
     const clientes = d.data.sort((a,b) => parseFecha(b.ultima_compra) - parseFecha(a.ultima_compra)).slice(0,10);
-    const mostrarVend = document.querySelector('.col-vendedor')?.style.display !== 'none';
+    // Fix: usar la variable esDirectivo (definida en el init) para saber si mostrar
+    // la columna Vendedor. No usar style.display porque el CSS .col-vendedor{display:none}
+    // es una regla de hoja de estilos y style.display solo lee estilos inline —
+    // siempre devolvía '' en lugar de 'none', mostrando la columna para todos los roles.
+    const mostrarVend = typeof esDirectivo !== 'undefined' ? esDirectivo : false;
 
     tbody.innerHTML = clientes.map(c => {
       const estatus = clasificarEstatus(c.ultima_compra);
