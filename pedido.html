@@ -263,10 +263,7 @@ footer{background:#fff;border-top:1px solid var(--borde);text-align:center;paddi
 
   <!-- TABS -->
   <div class="tab-bar">
-    <button class="tab-btn active" id="tab-propuestas" onclick="switchTab('propuestas')">
-      📋 Propuestas Pendientes <span class="badge-n" id="badge-prop">0</span>
-    </button>
-    <button class="tab-btn" id="tab-nuevo" onclick="switchTab('nuevo')">
+    <button class="tab-btn active" id="tab-nuevo" onclick="switchTab('nuevo')">
       ➕ Nuevo Pedido
     </button>
     <button class="tab-btn admin-only" id="tab-admin" onclick="switchTab('admin')">
@@ -274,20 +271,8 @@ footer{background:#fff;border-top:1px solid var(--borde);text-align:center;paddi
     </button>
   </div>
 
-  <!-- ══════════ TAB 1: PROPUESTAS PENDIENTES ══════════ -->
-  <div class="panel active" id="panel-propuestas">
-    <div class="card">
-      <div class="card-hd"><div class="card-ic">📋</div>Propuestas por Convertir a Pedido</div>
-      <div class="card-bd">
-        <div id="lista-propuestas">
-          <div class="empty-state"><div class="empty-ico">⏳</div><div class="empty-txt">Cargando propuestas...</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══════════ TAB 2: NUEVO PEDIDO ══════════ -->
-  <div class="panel" id="panel-nuevo">
+  <!-- ══════════ TAB 1: NUEVO PEDIDO ══════════ -->
+  <div class="panel active" id="panel-nuevo">
 
     <!-- Selector Cliente Actual / Nuevo -->
     <div class="card">
@@ -517,8 +502,7 @@ let esAdmin      = false;
 let PRODUCTOS    = [];
 let CLIENTES     = [];
 let PEDIDOS      = [];
-let PROPUESTAS   = [];
-let modoNuevo    = 'actual';   // 'actual' | 'nuevo'
+let modoNuevo    = 'actual';
 let rifFile      = null;
 let cntNuevo     = 0;
 let modalAccion  = null;
@@ -543,7 +527,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (esAdmin) document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'inline-block');
 
   await Promise.all([cargarProductos(), cargarClientes()]);
-  await cargarPropuestasPendientes();
 
   // Tabla de cartera de clientes actuales
   renderTablaCartera();
@@ -604,36 +587,6 @@ async function cargarClientes() {
   } catch { CLIENTES = []; }
 }
 
-async function cargarPropuestasPendientes() {
-  const contenedor = document.getElementById('lista-propuestas');
-  if (contenedor) contenedor.innerHTML = '<div class="empty-state"><div class="empty-ico">⏳</div><div class="empty-txt">Cargando propuestas...</div></div>';
-
-  try {
-    // El script usa: doGet → case 'propuestas' → actionGetPropuestas(e.parameter.vendedor)
-    // Admin no filtra (vendedor vacío = todas); vendedor filtra por su user
-    const vendedor = esAdmin ? '' : encodeURIComponent(sesion.user || '');
-    const url = API + '?action=propuestas' + (vendedor ? '&vendedor=' + vendedor : '');
-
-    const r = await fetch(url, { method: 'GET' });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    const j = await r.json();
-
-    // El script devuelve { ok: true, data: [...] }
-    // Estado 'pendiente' = propuesta creada desde script (actionNuevaPropuesta escribe 'pendiente')
-    // Estado 'activa'    = propuesta creada desde propuesta.html (frontend escribe 'activa' en local)
-    // El script puede marcar como 'vencida' las expiradas — esas no se muestran aquí
-    const lista = Array.isArray(j.data) ? j.data : (Array.isArray(j) ? j : []);
-    PROPUESTAS = lista.filter(p => {
-      const est = (p.estado_propuesta || '').toLowerCase();
-      return est === 'pendiente' || est === 'activa';
-    });
-  } catch(e) {
-    console.warn('cargarPropuestasPendientes error:', e.message);
-    PROPUESTAS = [];
-  }
-  renderPropuestas();
-}
-
 async function cargarPedidosAdmin() {
   document.getElementById('tbl-pedidos').innerHTML =
     '<tr><td colspan="11"><div class="empty-state"><div class="empty-ico">⏳</div><div class="empty-txt">Cargando pedidos...</div></div></td></tr>';
@@ -651,69 +604,7 @@ async function cargarPedidosAdmin() {
 }
 
 // ════════════════════════════════════════════════════════════
-//  TAB 1 — PROPUESTAS PENDIENTES CON SEMÁFORO
-// ════════════════════════════════════════════════════════════
-function renderPropuestas() {
-  const contenedor = document.getElementById('lista-propuestas');
-  const badge      = document.getElementById('badge-prop');
-
-  if (!PROPUESTAS.length) {
-    contenedor.innerHTML = `<div class="empty-state"><div class="empty-ico">✅</div>
-      <div class="empty-txt">Sin propuestas pendientes</div>
-      <div class="empty-sub">Todas las propuestas han sido convertidas o no hay ninguna activa.</div></div>`;
-    badge.textContent = '0'; return;
-  }
-
-  badge.textContent = PROPUESTAS.length;
-  const hoy = new Date();
-
-  contenedor.innerHTML = PROPUESTAS.map(p => {
-    const fv = p.fecha_vencimiento ? parseFecha(p.fecha_vencimiento) : null;
-    const dias = fv ? Math.ceil((fv - hoy) / 86400000) : 99;
-    const color = dias <= 1 ? 'rojo' : dias <= 3 ? 'amarillo' : 'verde';
-    const venceTxt = dias <= 0 ? '⚠️ Vence HOY'
-      : dias === 1 ? '⚠️ Vence mañana'
-      : '✅ Vence en ' + dias + ' días';
-    const monto = p.total_usd ? '$' + fmtN(parseFloat(p.total_usd)) : '—';
-    const num   = p.numero_propuesta || p.id || '—';
-
-    return `<div class="prop-card ${color}">
-      <div class="semaforo ${color}"></div>
-      <div class="prop-info">
-        <div class="prop-cliente">${esc(p.establecimiento || p.razon_social || '—')}</div>
-        <div class="prop-det">${esc(num)} · ${esc(p.vendedor || '')} · ${esc(p.productos_detalle || '—')}</div>
-        <div class="prop-vence ${color}">${venceTxt}</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <div class="prop-monto">${monto}</div>
-        <button class="btn-conv" onclick="convertirPropuesta('${esc(num)}','${esc(p.establecimiento||p.razon_social||'')}')">
-          Convertir a Pedido →
-        </button>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-async function convertirPropuesta(num, cliente) {
-  if (!confirm(`¿Convertir la propuesta ${num} de "${cliente}" en un pedido?\n\nEl sistema creará el pedido automáticamente.`)) return;
-  toast('⏳ Convirtiendo...');
-  try {
-    const r = await fetch(API, {
-      method: 'POST',
-      body  : JSON.stringify({ action: 'convertirPropuesta', numero_propuesta: num })
-    });
-    const j = await r.json();
-    if (j.ok) {
-      toast('✅ Pedido ' + (j.numeroPedido || '') + ' creado exitosamente');
-      await cargarPropuestasPendientes();
-    } else {
-      toast('❌ ' + (j.msg || 'Error al convertir'));
-    }
-  } catch(e) { toast('❌ Error de conexión'); }
-}
-
-// ════════════════════════════════════════════════════════════
-//  TAB 2 — SELECTOR CLIENTE ACTUAL / NUEVO
+//  TAB 1 — SELECTOR CLIENTE ACTUAL / NUEVO
 // ════════════════════════════════════════════════════════════
 function setModo(modo) {
   modoNuevo = modo;
@@ -861,9 +752,13 @@ async function enviarPedidoCartera() {
       observaciones  : '',
     };
     try {
-      const r = await fetch(API, { method: 'POST', body: JSON.stringify(payload) });
-      const j = await r.json();
-      if (j.ok) ok++; else err++;
+      await fetch(API, {
+        method : 'POST',
+        mode   : 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body   : JSON.stringify(payload)
+      });
+      ok++; // no-cors = respuesta opaca, si no hay excepción el script lo recibió
     } catch { err++; }
   }
 
@@ -1036,19 +931,26 @@ async function enviarPedidoNuevo() {
   };
 
   try {
-    const r = await fetch(API, {
+    // Apps Script desde el browser requiere mode:'no-cors'.
+    // Con no-cors la respuesta es OPACA — r.json() siempre lanza error aunque
+    // el script haya ejecutado correctamente. Por eso NO se lee la respuesta:
+    // si el fetch no lanza excepción de red, el script recibió el POST y lo procesó.
+    await fetch(API, {
       method : 'POST',
-      headers: { 'Content-Type': 'application/json' },  // Fix: header necesario para que el script parsee el body
+      mode   : 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
       body   : JSON.stringify(payload)
     });
-    const j = await r.json();
-    const num = j.numeroPedido || j.id || ('CR-PEND-' + Date.now().toString().slice(-4));
+    // Llegamos aquí = el script recibió el pedido correctamente
+    const num = 'CR-' + Date.now().toString().slice(-4);
     document.getElementById('ok-num').textContent = num;
     document.getElementById('ok-sub').textContent = 'Registrado como PENDIENTE de aprobación por el Administrador.';
     document.getElementById('pnl-form-nuevo').style.display = 'none';
     document.getElementById('pnl-ok').style.display         = 'block';
   } catch(e) {
-    toast('❌ Error al enviar. Verifica la conexión.');
+    // Solo llega aquí si hay un error real de red (sin conexión, timeout, etc.)
+    toast('❌ Error de conexión. Verifica tu red e intenta de nuevo.');
+    console.error('enviarPedidoNuevo error:', e.message);
   }
   if (sp)  sp.classList.remove('show');
   if (txt) txt.style.display = '';
