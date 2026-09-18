@@ -363,7 +363,10 @@ footer{background:#fff;border-top:1px solid var(--borde);text-align:center;paddi
             </div>
             <div class="cf">
               <label>Imagen del RIF <span class="req">*</span></label>
-              <div class="rif-area" onclick="document.getElementById('rif-inp').click()">
+              <!-- Fix 2A: el div NO debe tener onclick. El <input type=file> ya ocupa
+                   todo el área (position:absolute;inset:0) y captura el click directamente.
+                   Tener también onclick en el div padre disparaba el diálogo dos veces. -->
+              <div class="rif-area">
                 <input type="file" id="rif-inp" accept="image/*,application/pdf" onchange="onRif(this)">
                 <div style="font-size:26px;margin-bottom:6px">📄</div>
                 <p>Toca para cargar el RIF</p>
@@ -602,14 +605,32 @@ async function cargarClientes() {
 }
 
 async function cargarPropuestasPendientes() {
+  const contenedor = document.getElementById('lista-propuestas');
+  if (contenedor) contenedor.innerHTML = '<div class="empty-state"><div class="empty-ico">⏳</div><div class="empty-txt">Cargando propuestas...</div></div>';
+
   try {
-    const filtro = esAdmin ? '' : '&vendedor=' + encodeURIComponent(sesion.user);
-    const r = await fetch(API + '?action=propuestas' + filtro);
+    // El script usa: doGet → case 'propuestas' → actionGetPropuestas(e.parameter.vendedor)
+    // Admin no filtra (vendedor vacío = todas); vendedor filtra por su user
+    const vendedor = esAdmin ? '' : encodeURIComponent(sesion.user || '');
+    const url = API + '?action=propuestas' + (vendedor ? '&vendedor=' + vendedor : '');
+
+    const r = await fetch(url, { method: 'GET' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
     const j = await r.json();
-    PROPUESTAS = (j.data || []).filter(p =>
-      p.estado_propuesta === 'pendiente' || p.estado_propuesta === 'activa'
-    );
-  } catch { PROPUESTAS = []; }
+
+    // El script devuelve { ok: true, data: [...] }
+    // Estado 'pendiente' = propuesta creada desde script (actionNuevaPropuesta escribe 'pendiente')
+    // Estado 'activa'    = propuesta creada desde propuesta.html (frontend escribe 'activa' en local)
+    // El script puede marcar como 'vencida' las expiradas — esas no se muestran aquí
+    const lista = Array.isArray(j.data) ? j.data : (Array.isArray(j) ? j : []);
+    PROPUESTAS = lista.filter(p => {
+      const est = (p.estado_propuesta || '').toLowerCase();
+      return est === 'pendiente' || est === 'activa';
+    });
+  } catch(e) {
+    console.warn('cargarPropuestasPendientes error:', e.message);
+    PROPUESTAS = [];
+  }
   renderPropuestas();
 }
 
@@ -986,13 +1007,13 @@ async function enviarPedidoNuevo() {
   const tot  = prods.reduce((s, p) => s + p.subtotal, 0);
   const cajasTot = prods.reduce((s, p) => s + p.cajas, 0);
 
-  // Fix 4: cliente nuevo debe llegar como 'pendiente' a pedidos_raw.
-  // El script actionNuevoPedido escribe 'confirmado' fijo en la col estado.
-  // Para que llegue como 'pendiente', usamos tipoCliente='nuevo' como señal
-  // y enviamos estado:'pendiente' — el script debe leer este campo.
-  // NOTA: agregar en el script, dentro de actionNuevoPedido:
-  //   const estadoPedido = body.tipoCliente === 'nuevo' ? 'pendiente' : 'confirmado';
+  // Fix 2B: el script actionNuevoPedido escribe 'confirmado' fijo en la col estado.
+  // Para que llegue como 'pendiente' SE REQUIERE modificar el script, agregando en
+  // actionNuevoPedido (línea que escribe 'confirmado'):
+  //   const estadoPedido = (body.tipoCliente === 'nuevo' || body.estado === 'pendiente')
+  //                        ? 'pendiente' : 'confirmado';
   //   y en la fila: estadoPedido en lugar de 'confirmado'
+  // Enviamos ambas señales: tipoCliente='nuevo' Y estado='pendiente'
   const payload = {
     action          : 'nuevoPedido',
     fecha           : new Date().toISOString(),
@@ -1005,9 +1026,8 @@ async function enviarPedidoNuevo() {
     direccion_fiscal: dir,
     contacto        : document.getElementById('n-contacto').value.trim(),
     telefono        : telf,
-    // Fix 4: tipoCliente='nuevo' es la señal para el script de escribir 'pendiente'
-    tipoCliente     : 'nuevo',
-    estado          : 'pendiente',
+    tipoCliente     : 'nuevo',    // señal principal para el script
+    estado          : 'pendiente',// señal de respaldo
     productos       : prods,
     totalUSD        : tot,
     totalCajas      : cajasTot,
@@ -1016,7 +1036,11 @@ async function enviarPedidoNuevo() {
   };
 
   try {
-    const r = await fetch(API, { method: 'POST', body: JSON.stringify(payload) });
+    const r = await fetch(API, {
+      method : 'POST',
+      headers: { 'Content-Type': 'application/json' },  // Fix: header necesario para que el script parsee el body
+      body   : JSON.stringify(payload)
+    });
     const j = await r.json();
     const num = j.numeroPedido || j.id || ('CR-PEND-' + Date.now().toString().slice(-4));
     document.getElementById('ok-num').textContent = num;
