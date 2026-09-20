@@ -83,36 +83,18 @@ header{
 .section-header .highlight{color:var(--rojo)}
 .section-sub{font-size:0.7rem;color:var(--gris);font-weight:600}
 
-/* ── KPIs ────────────────────────────────────────────────── */
-.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:22px}
-.kpi-card{
-  background:var(--white);padding:18px;border-radius:var(--r);
-  box-shadow:var(--sh);border:1px solid var(--border-color);
-  cursor:pointer;transition:transform .2s,border-color .2s;
-  position:relative;overflow:hidden;
-}
-.kpi-card::before{content:'';position:absolute;top:0;left:0;bottom:0;width:4px;background:var(--rojo);border-radius:4px 0 0 4px}
-.kpi-card:hover{transform:translateY(-2px);border-color:var(--rojo)}
-.kpi-card.active-filter{border-color:var(--rojo);background:var(--rojo-xs)}
-.kpi-title{font-size:0.65rem;color:var(--gris);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
-.kpi-value{font-size:1.6rem;font-weight:800;color:var(--text-dark);font-family:'League Spartan',sans-serif;margin-bottom:4px}
-.kpi-sub{font-size:0.65rem;font-weight:600;color:var(--verde)}
-
-/* barras de progreso */
-.progress-container{margin-top:8px}
-.progress-label{font-size:0.63rem;font-weight:600;color:var(--gris);display:flex;justify-content:space-between;margin-bottom:3px}
-.progress-bar-bg{width:100%;background:var(--light-bg);height:6px;border-radius:3px;margin-bottom:7px;overflow:hidden}
-.progress-bar-fill{height:100%;background:var(--verde);border-radius:3px;transition:width .6s ease}
-.progress-bar-fill.cajas{background:var(--naranja)}
-
-/* semáforo en KPI */
-.semaforo-row{display:flex;gap:14px;margin-top:6px;align-items:center}
-.sem-item{text-align:center}
-.sem-dot{width:11px;height:11px;border-radius:50%;display:inline-block;margin-bottom:3px}
-.sem-dot.verde{background:var(--verde)}
-.sem-dot.amarillo{background:var(--naranja)}
-.sem-dot.rojo{background:var(--alerta)}
-.sem-num{font-size:1rem;font-weight:700;font-family:'League Spartan',sans-serif;color:var(--text-dark)}
+/* ── SEMÁFORO RESUMEN ────────────────────────────────────── */
+.sem-bar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.sem-chip{display:flex;align-items:center;gap:7px;background:var(--white);border:1px solid var(--border-color);border-radius:20px;padding:6px 14px;font-size:.72rem;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:var(--sh)}
+.sem-chip:hover{border-color:var(--rojo)}
+.sem-chip.active{border-color:var(--rojo);background:var(--rojo-xs)}
+.sem-dot-chip{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.sem-dot-chip.verde{background:var(--verde)}
+.sem-dot-chip.amarillo{background:var(--naranja)}
+.sem-dot-chip.rojo{background:var(--alerta);animation:pulso .9s ease-in-out infinite}
+@keyframes pulso{0%,100%{opacity:1}50%{opacity:.4}}
+.sem-chip-num{font-family:'League Spartan',sans-serif;font-size:.95rem}
+.sem-chip-lbl{color:var(--gris);font-weight:400}
 
 /* ── TABLA ───────────────────────────────────────────────── */
 .content-card{background:var(--white);border-radius:var(--r);padding:18px;box-shadow:var(--sh);border:1px solid var(--border-color)}
@@ -177,10 +159,8 @@ footer{text-align:center;padding:14px 18px;font-size:0.65rem;color:var(--gris);b
 footer strong{color:var(--text-dark)}
 
 @media(max-width:900px){
-  .kpi-grid{grid-template-columns:repeat(2,1fr)}
   .drawer{width:100%;right:-100%}
 }
-@media(max-width:500px){.kpi-grid{grid-template-columns:1fr}}
 @media(max-width:768px){
   header{padding:0 10px;height:50px}
   .header-title{font-size:0.7rem}
@@ -230,64 +210,28 @@ footer strong{color:var(--text-dark)}
     <p class="section-sub" id="section-sub">Cargando...</p>
   </div>
 
-  <!-- KPIs -->
-  <div class="kpi-grid">
-
-    <!-- KPI 1: Meta -->
-    <div class="kpi-card" id="kpi-meta" onclick="filtrarClientes('todos')">
-      <div class="kpi-title">Meta de Ventas vs. Real</div>
-      <div class="progress-container">
-        <div class="progress-label">
-          <span id="kpi-meta-usd-pct">$ USD —%</span>
-          <span id="kpi-meta-usd-val">—</span>
-        </div>
-        <div class="progress-bar-bg">
-          <div class="progress-bar-fill" id="bar-usd" style="width:0%"></div>
-        </div>
-        <div class="progress-label">
-          <span id="kpi-meta-cajas-pct">Cajas —%</span>
-          <span id="kpi-meta-cajas-val">—</span>
-        </div>
-        <div class="progress-bar-bg">
-          <div class="progress-bar-fill cajas" id="bar-cajas" style="width:0%"></div>
-        </div>
-      </div>
+  <!-- Semáforo resumen (reemplaza los KPIs) -->
+  <div class="sem-bar" id="sem-bar">
+    <div class="sem-chip active" id="chip-todos" onclick="filtrarClientes('todos')">
+      <span class="sem-dot-chip" style="background:var(--gris)"></span>
+      <span class="sem-chip-num" id="chip-todos-num">—</span>
+      <span class="sem-chip-lbl">Total cartera</span>
     </div>
-
-    <!-- KPI 2: Propuestas -->
-    <div class="kpi-card" id="kpi-prop" onclick="filtrarClientes('propuestas')">
-      <div class="kpi-title">Propuestas Pendientes</div>
-      <div class="kpi-value" id="kpi-prop-val">—</div>
-      <div class="kpi-sub" style="color:var(--naranja)" id="kpi-prop-sub">Esperando respuesta</div>
+    <div class="sem-chip" id="chip-verde" onclick="filtrarClientes('verde')">
+      <span class="sem-dot-chip verde"></span>
+      <span class="sem-chip-num" id="chip-verde-num">—</span>
+      <span class="sem-chip-lbl">Al día</span>
     </div>
-
-    <!-- KPI 3: Semáforo -->
-    <div class="kpi-card" id="kpi-sem" onclick="filtrarClientes('riesgo')">
-      <div class="kpi-title">Semáforo de Recompra</div>
-      <div class="semaforo-row">
-        <div class="sem-item">
-          <div class="sem-dot verde"></div>
-          <div class="sem-num" id="sem-verde">—</div>
-        </div>
-        <div class="sem-item">
-          <div class="sem-dot amarillo"></div>
-          <div class="sem-num" id="sem-amarillo">—</div>
-        </div>
-        <div class="sem-item">
-          <div class="sem-dot rojo"></div>
-          <div class="sem-num" id="sem-rojo">—</div>
-        </div>
-      </div>
-      <div style="font-size:0.63rem;color:var(--gris);margin-top:6px">Al día · Por vencer · En riesgo</div>
+    <div class="sem-chip" id="chip-amarillo" onclick="filtrarClientes('amarillo')">
+      <span class="sem-dot-chip amarillo"></span>
+      <span class="sem-chip-num" id="chip-amarillo-num">—</span>
+      <span class="sem-chip-lbl">Por vencer</span>
     </div>
-
-    <!-- KPI 4: Total cartera -->
-    <div class="kpi-card" id="kpi-total" onclick="filtrarClientes('todos')">
-      <div class="kpi-title">Total en Cartera</div>
-      <div class="kpi-value" id="kpi-total-val">—</div>
-      <div class="kpi-sub" id="kpi-total-sub">Clientes activos</div>
+    <div class="sem-chip" id="chip-rojo" onclick="filtrarClientes('rojo')">
+      <span class="sem-dot-chip rojo"></span>
+      <span class="sem-chip-num" id="chip-rojo-num">—</span>
+      <span class="sem-chip-lbl">En riesgo</span>
     </div>
-
   </div>
 
   <!-- Tabla de clientes -->
@@ -295,7 +239,11 @@ footer strong{color:var(--text-dark)}
     <div class="filters-bar">
       <input type="text" class="search-input" id="searchInput"
              placeholder="Buscar por Nombre, RIF o Contacto…" oninput="filtrarPorTexto()">
-      <button class="btn btn-outline" onclick="filtrarClientes('todos')">Limpiar filtros</button>
+      <!-- Filtro por vendedor: solo admin/gerente -->
+      <select id="filtro-vendedor" class="search-input" style="flex:0;min-width:180px;display:none" onchange="filtrarPorTexto()">
+        <option value="">Todos los vendedores</option>
+      </select>
+      <button class="btn btn-outline" onclick="limpiarFiltros()">Limpiar filtros</button>
     </div>
     <div class="active-filter-label" id="activeFilterLabel"></div>
 
@@ -440,7 +388,7 @@ async function cargarClientes() {
       _semaforo: calcularSemaforo(c.ultima_compra)
     }));
 
-    actualizarKPIs();
+    actualizarSemaforo();
     filtrarClientes('todos');
 
   } catch(e) {
@@ -466,86 +414,73 @@ function diasDesde(str) {
   return Math.floor((new Date() - fecha) / 86400000);
 }
 
-// ── KPIs CALCULADOS DESDE DATOS REALES ───────────────────────
-async function actualizarKPIs() {
-  // Semáforo de recompra
-  const verdes   = clientesDB.filter(c => c._semaforo === 'verde').length;
+// ── SEMÁFORO RESUMEN ──────────────────────────────────────────
+function actualizarSemaforo() {
+  const verdes    = clientesDB.filter(c => c._semaforo === 'verde').length;
   const amarillos = clientesDB.filter(c => c._semaforo === 'amarillo').length;
-  const rojos    = clientesDB.filter(c => c._semaforo === 'rojo').length;
-  document.getElementById('sem-verde').textContent   = verdes;
-  document.getElementById('sem-amarillo').textContent = amarillos;
-  document.getElementById('sem-rojo').textContent    = rojos;
+  const rojos     = clientesDB.filter(c => c._semaforo === 'rojo').length;
+  document.getElementById('chip-todos-num').textContent    = clientesDB.length;
+  document.getElementById('chip-verde-num').textContent    = verdes;
+  document.getElementById('chip-amarillo-num').textContent = amarillos;
+  document.getElementById('chip-rojo-num').textContent     = rojos;
 
-  // Propuestas pendientes (campo propuesta_activa o propuesta del cliente)
-  const conPropuesta = clientesDB.filter(c => c.propuesta_activa || c.tiene_propuesta).length;
-  document.getElementById('kpi-prop-val').textContent = conPropuesta || '0';
-  document.getElementById('kpi-prop-sub').textContent = conPropuesta
-    ? 'Esperando respuesta del cliente'
-    : 'Sin propuestas pendientes';
-
-  // Total cartera
-  document.getElementById('kpi-total-val').textContent = clientesDB.length;
-  document.getElementById('kpi-total-sub').textContent = esDirectivo
-    ? 'Clientes en toda la cartera'
-    : 'Clientes en tu cartera';
-
-  // Meta: consultar endpoint de metas si está disponible
-  try {
-    let urlMeta = API + '?action=getMeta';
-    if (!esDirectivo && sesion.vendedor_id) {
-      urlMeta += '&vendedor=' + encodeURIComponent(sesion.vendedor_id);
-      const hoy = new Date();
-      urlMeta += '&periodo=' + hoy.getFullYear() + '-' + String(hoy.getMonth()+1).padStart(2,'0');
+  // Poblar filtro de vendedores (solo directivos)
+  if (esDirectivo) {
+    const sel = document.getElementById('filtro-vendedor');
+    if (sel) {
+      sel.style.display = '';
+      const vendedores = [...new Set(clientesDB.map(c => c.vendedor_asignado || c.vendedor || '').filter(Boolean))].sort();
+      const curr = sel.value;
+      sel.innerHTML = '<option value="">Todos los vendedores</option>';
+      vendedores.forEach(v => {
+        const op = document.createElement('option');
+        op.value = v; op.textContent = v;
+        if (v === curr) op.selected = true;
+        sel.appendChild(op);
+      });
     }
-    const rm = await fetch(urlMeta, { redirect: 'follow' });
-    const dm = await rm.json();
-    if (dm.ok && dm.data) {
-      const meta = dm.data;
-      const pctUsd   = meta.meta_usd   > 0 ? Math.min(100, Math.round((meta.real_usd   / meta.meta_usd)   * 100)) : 0;
-      const pctCajas = meta.meta_cajas > 0 ? Math.min(100, Math.round((meta.real_cajas / meta.meta_cajas) * 100)) : 0;
-
-      document.getElementById('kpi-meta-usd-pct').textContent   = `$ USD ${pctUsd}%`;
-      document.getElementById('kpi-meta-usd-val').textContent   = `$${fmt(meta.real_usd)} / $${fmt(meta.meta_usd)}`;
-      document.getElementById('bar-usd').style.width            = pctUsd + '%';
-      document.getElementById('kpi-meta-cajas-pct').textContent = `Cajas ${pctCajas}%`;
-      document.getElementById('kpi-meta-cajas-val').textContent = `${fmt(meta.real_cajas)} / ${fmt(meta.meta_cajas)}`;
-      document.getElementById('bar-cajas').style.width          = pctCajas + '%';
-    } else {
-      setMetaPlaceholder();
-    }
-  } catch(e) {
-    setMetaPlaceholder();
   }
-}
-
-function setMetaPlaceholder() {
-  document.getElementById('kpi-meta-usd-pct').textContent   = '$ USD — sin meta';
-  document.getElementById('kpi-meta-usd-val').textContent   = '';
-  document.getElementById('kpi-meta-cajas-pct').textContent = 'Cajas — sin meta';
-  document.getElementById('kpi-meta-cajas-val').textContent = '';
 }
 
 // ── FILTROS ───────────────────────────────────────────────────
+function limpiarFiltros() {
+  filtroActivo = 'todos';
+  document.getElementById('searchInput').value = '';
+  const selV = document.getElementById('filtro-vendedor');
+  if (selV) selV.value = '';
+  document.querySelectorAll('.sem-chip').forEach(c => c.classList.remove('active'));
+  document.getElementById('chip-todos').classList.add('active');
+  document.getElementById('activeFilterLabel').style.display = 'none';
+  renderTabla(clientesDB);
+}
+
 function filtrarClientes(filtro) {
   filtroActivo = filtro;
+  document.querySelectorAll('.sem-chip').forEach(c => c.classList.remove('active'));
+  const chipId = filtro === 'todos' ? 'chip-todos'
+               : filtro === 'verde' ? 'chip-verde'
+               : filtro === 'amarillo' ? 'chip-amarillo'
+               : 'chip-rojo';
+  document.getElementById(chipId)?.classList.add('active');
+
   const label = document.getElementById('activeFilterLabel');
-  document.querySelectorAll('.kpi-card').forEach(c => c.classList.remove('active-filter'));
-
+  const base  = getBaseFiltro();
   if (filtro === 'todos') {
-    clientesFiltros = [...clientesDB];
     label.style.display = 'none';
-  } else if (filtro === 'propuestas') {
-    clientesFiltros = clientesDB.filter(c => c.propuesta_activa || c.tiene_propuesta);
-    document.getElementById('kpi-prop').classList.add('active-filter');
-    setLabel(`Propuestas pendientes — ${clientesFiltros.length} clientes`);
-  } else if (filtro === 'riesgo') {
-    clientesFiltros = clientesDB.filter(c => c._semaforo !== 'verde');
-    document.getElementById('kpi-sem').classList.add('active-filter');
-    setLabel(`En riesgo / por vencer — ${clientesFiltros.length} clientes`);
+  } else {
+    const lblTxt = filtro === 'verde' ? 'Al día' : filtro === 'amarillo' ? 'Por vencer' : 'En riesgo';
+    setLabel(`${lblTxt} — ${base.length} clientes`);
   }
-
-  renderTabla(clientesFiltros);
   document.getElementById('searchInput').value = '';
+  renderTabla(base);
+}
+
+function getBaseFiltro() {
+  const vendFilt = document.getElementById('filtro-vendedor')?.value || '';
+  let base = [...clientesDB];
+  if (vendFilt) base = base.filter(c => (c.vendedor_asignado || c.vendedor || '') === vendFilt);
+  if (filtroActivo !== 'todos') base = base.filter(c => c._semaforo === filtroActivo);
+  return base;
 }
 
 function setLabel(txt) {
@@ -556,10 +491,8 @@ function setLabel(txt) {
 
 function filtrarPorTexto() {
   const q = document.getElementById('searchInput').value.toLowerCase();
-  const base = filtroActivo === 'todos' ? clientesDB :
-               filtroActivo === 'propuestas' ? clientesDB.filter(c => c.propuesta_activa || c.tiene_propuesta) :
-               clientesDB.filter(c => c._semaforo !== 'verde');
-  renderTabla(base.filter(c =>
+  const base = getBaseFiltro();
+  renderTabla(!q ? base : base.filter(c =>
     (c.razon_social  || '').toLowerCase().includes(q) ||
     (c.nombre        || '').toLowerCase().includes(q) ||
     (c.rif           || '').toLowerCase().includes(q) ||
