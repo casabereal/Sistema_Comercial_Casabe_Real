@@ -192,8 +192,9 @@ tbody td{padding:10px 12px;vertical-align:middle}
 .ra:disabled{opacity:.35;cursor:not-allowed}
 .fecha-desp{padding:4px 6px;border:1.5px solid var(--borde);border-radius:6px;font-size:.72rem;font-family:'Inter',sans-serif;color:var(--texto);outline:none;cursor:pointer}
 .fecha-desp:focus{border-color:var(--rojo)}
-/* Columnas y celdas visibles solo para admin — JS agrega/quita la clase .oculto */
-.solo-admin{display:none}
+/* Columnas visibles solo para admin/gerente */
+.solo-admin{display:none !important}
+.solo-admin.visible{display:table-cell !important}
 .kpi-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
 .kpi{background:#fff;border:1.5px solid var(--borde);border-radius:var(--r-sm);padding:10px 16px;min-width:110px;flex:1}
 .kpi-lbl{font-size:.62rem;font-weight:700;color:var(--sub);text-transform:uppercase}
@@ -525,8 +526,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (esAdmin) {
     document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'inline-block');
-    // Mostrar columnas Fecha Despacho y Acciones desde el inicio para admin/gerente
-    document.querySelectorAll('.solo-admin').forEach(e => e.style.display = '');
+    // Agregar clase 'visible' a todas las columnas solo-admin para admin/gerente
+    document.querySelectorAll('.solo-admin').forEach(e => e.classList.add('visible'));
   }
 
   await Promise.all([cargarProductos(), cargarClientes()]);
@@ -963,9 +964,10 @@ async function enviarPedidoNuevo() {
 //  TAB 3 — GESTIÓN ADMIN
 // ════════════════════════════════════════════════════════════
 function renderPedidos() {
-  // Fix 1: mostrar columnas Fecha Despacho y Acciones solo si es admin/gerente
+  // Mostrar columnas solo-admin para admin/gerente usando clase CSS
   document.querySelectorAll('.solo-admin').forEach(el => {
-    el.style.display = esAdmin ? '' : 'none';
+    if (esAdmin) el.classList.add('visible');
+    else el.classList.remove('visible');
   });
   // Ajustar colspan del empty state según columnas visibles
   const colspan = esAdmin ? 11 : 9;
