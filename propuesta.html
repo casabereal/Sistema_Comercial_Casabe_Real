@@ -528,7 +528,14 @@ async function cargarListado(){
     const isAdmin=rol==='admin'||rol==='gerente';
     const vendedor=isAdmin?'':(SES?.user||'');
     const url=API+'?action=propuestas'+(vendedor?'&vendedor='+encodeURIComponent(vendedor):'');
-    const resp=await fetch(url,{method:'GET'});
+    // Google Apps Script hace un redirect 302 → script.googleusercontent.com
+    // Se necesita redirect:'follow' y el header correcto para que el browser
+    // siga el redirect y reciba el JSON correctamente
+    const resp=await fetch(url,{
+      method   :'GET',
+      redirect :'follow',
+      headers  :{'Accept':'application/json'}
+    });
     if(!resp.ok)throw new Error('HTTP '+resp.status);
     const raw=await resp.json();
     const lista=Array.isArray(raw?.data)?raw.data:(Array.isArray(raw)?raw:[]);
