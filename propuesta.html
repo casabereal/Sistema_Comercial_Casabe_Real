@@ -15,6 +15,7 @@
   --negro:#111827;--gris:#6B7280;--fondo:#F3F4F6;--borde:#E5E7EB;
   --white:#fff;--verde:#059669;--verde-xs:#ECFDF5;
   --naranja:#D97706;--naranja-xs:#FFFBEB;
+  --azul:#2563EB;
   --border-color:#E5E7EB;--text-dark:#111827;--sidebar-hover:#F9FAFB;
   --r:12px;--r-sm:8px;
   --sh:0 2px 8px rgba(0,0,0,.08);--sh-md:0 8px 32px rgba(0,0,0,.12);
@@ -104,8 +105,6 @@ header{background:var(--rojo);color:#fff;height:60px;display:flex;align-items:ce
 .filtro-sel{padding:7px 11px;border:1.5px solid var(--borde);border-radius:8px;font-size:12px;font-family:'Inter',sans-serif;color:var(--negro);background:#fff;outline:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;padding-right:26px}
 .filtro-inp{padding:7px 11px;border:1.5px solid var(--borde);border-radius:8px;font-size:12px;font-family:'Inter',sans-serif;color:var(--negro);background:#fff;outline:none;min-width:170px}
 .filtro-inp:focus,.filtro-sel:focus{border-color:var(--rojo)}
-.btn-limpiar{padding:7px 11px;border:1.5px solid #FECACA;border-radius:8px;background:var(--rojo-xs);color:var(--rojo);font-size:12px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;white-space:nowrap;transition:all .2s}
-.btn-limpiar:hover{background:#FECACA}
 .tbl-wrap{overflow-x:auto;border-radius:var(--r);border:1.5px solid var(--borde);background:#fff}
 table{width:100%;border-collapse:collapse;min-width:1000px;font-size:12px}
 thead tr{background:var(--negro)}
@@ -126,15 +125,10 @@ tbody td{padding:10px 11px;vertical-align:middle}
 .vence-chip.urgente{color:#DC2626;font-weight:700}
 .row-actions{display:flex;gap:4px;white-space:nowrap}
 .ra-btn{border:none;border-radius:5px;padding:5px 9px;font-size:10.5px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:3px}
-.ra-conv{background:#DBEAFE;color:#1D4ED8}
-.ra-conv:hover{background:#BFDBFE}
-.ra-mod{background:var(--naranja-xs);color:#92400E}
-.ra-mod:hover{background:#FDE68A}
-.ra-anul{background:var(--rojo-xs);color:var(--rojo)}
-.ra-anul:hover{background:#FECACA}
+.ra-conv{background:#DBEAFE;color:#1D4ED8}.ra-conv:hover{background:#BFDBFE}
+.ra-mod{background:var(--naranja-xs);color:#92400E}.ra-mod:hover{background:#FDE68A}
+.ra-anul{background:var(--rojo-xs);color:var(--rojo)}.ra-anul:hover{background:#FECACA}
 .ra-btn:disabled{opacity:.35;cursor:not-allowed}
-.ra-pdf{background:#F0FDF4;color:#166534}
-.ra-pdf:hover{background:#DCFCE7}
 .empty-state{text-align:center;padding:48px 24px;color:var(--gris)}
 .empty-ico{font-size:40px;margin-bottom:10px}
 .empty-txt{font-size:15px;font-weight:600;color:var(--negro);margin-bottom:5px}
@@ -144,15 +138,26 @@ tbody td{padding:10px 11px;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--negro);color:#fff;padding:10px 20px;border-radius:24px;font-size:13px;font-weight:600;z-index:9999;transition:transform .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.22)}
 .toast.on{transform:translateX(-50%) translateY(0)}
+/* Modal genérico */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;align-items:center;justify-content:center}
 .modal-overlay.show{display:flex}
-.modal{background:#fff;border-radius:var(--r);padding:26px;max-width:400px;width:90%;box-shadow:var(--sh-md)}
+.modal{background:#fff;border-radius:var(--r);padding:26px;max-width:480px;width:94%;box-shadow:var(--sh-md)}
 .modal h3{font-size:16px;font-weight:800;margin-bottom:9px}
-.modal p{font-size:13.5px;color:var(--gris);margin-bottom:20px;line-height:1.55}
-.modal-btns{display:flex;gap:9px;justify-content:flex-end}
+.modal p{font-size:13.5px;color:var(--gris);margin-bottom:16px;line-height:1.55}
+.modal-btns{display:flex;gap:9px;justify-content:flex-end;margin-top:16px}
 .modal-cancel{padding:9px 16px;border:1.5px solid var(--borde);border-radius:8px;background:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
 .modal-confirm{padding:9px 16px;border:none;border-radius:8px;background:var(--rojo);color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background .2s}
-.modal-confirm:hover{filter:brightness(0.9)}
+.modal-confirm:hover{filter:brightness(.9)}
+/* Modal edición */
+.modal-edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px}
+@media(max-width:500px){.modal-edit-grid{grid-template-columns:1fr}}
+.mef{display:flex;flex-direction:column;gap:4px}
+.mef label{font-size:10.5px;font-weight:700;color:var(--gris);text-transform:uppercase}
+.mef input,.mef select,.mef textarea{padding:9px 11px;border:1.5px solid var(--borde);border-radius:var(--r-sm);font-size:13px;font-family:"Inter",sans-serif;color:var(--negro);background:#fff;outline:none;-webkit-appearance:none}
+.mef input:focus,.mef select:focus,.mef textarea:focus{border-color:var(--rojo);box-shadow:0 0 0 3px rgba(200,24,30,.12)}
+.mef select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:28px}
+.mef textarea{resize:vertical;min-height:60px}
+.mef.full{grid-column:1/-1}
 .footer{background:var(--negro);padding:22px;text-align:center}
 .footer img{width:40px;margin:0 auto 8px}
 .footer p{color:rgba(255,255,255,.35);font-size:11.5px}
@@ -160,7 +165,6 @@ tbody td{padding:10px 11px;vertical-align:middle}
 </style>
 </head>
 <body>
-
 <header>
   <div class="header-left">
     <img src="assets/logo-casabe-real.png" alt="Casabe Real" onerror="this.style.display='none'">
@@ -174,7 +178,6 @@ tbody td{padding:10px 11px;vertical-align:middle}
     <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
   </div>
 </header>
-
 <nav class="nav-bar">
   <a href="inicio.html"      class="menu-item">INICIO</a>
   <a href="clientes.html"    class="menu-item admin-only">CLIENTES</a>
@@ -188,25 +191,18 @@ tbody td{padding:10px 11px;vertical-align:middle}
   <a href="historico.html"   class="menu-item admin-only">HISTÓRICO</a>
   <a href="ccp.html"         class="menu-item admin-only">CCP</a>
 </nav>
-
 <div class="page-wrap">
-
   <div class="tab-bar">
-    <button class="tab-btn active" id="tab-nueva" onclick="switchTab('nueva')">
-      ➕ Nueva Propuesta
-    </button>
-    <button class="tab-btn" id="tab-listado" onclick="switchTab('listado')">
-      📋 Listado de Propuestas <span class="badge-count" id="badge-count">0</span>
-    </button>
+    <button class="tab-btn active" id="tab-nueva" onclick="switchTab('nueva')">➕ Nueva Propuesta</button>
+    <button class="tab-btn" id="tab-listado" onclick="switchTab('listado')">📋 Listado de Propuestas <span class="badge-count" id="badge-count">0</span></button>
   </div>
 
-  <!-- ══ PANEL NUEVA PROPUESTA ══ -->
+  <!-- PANEL NUEVA -->
   <div class="panel active" id="panel-nueva">
-
     <div class="sim-dark">
       <div class="sec-tag">Paso 1 — Simulador de Rentabilidad</div>
       <h2 class="sec-h">Calcule la ganancia en tiempo real</h2>
-      <p class="sec-sub">Ingrese los datos operativos del cliente. Los resultados se incluirán automáticamente en el PDF de la propuesta.</p>
+      <p class="sec-sub">Ingrese los datos operativos del cliente. Los resultados se incluirán automáticamente en el PDF.</p>
       <div class="sim-grid">
         <div class="sim-panel">
           <h3>Datos de la Operación</h3>
@@ -240,14 +236,12 @@ tbody td{padding:10px 11px;vertical-align:middle}
             <div class="sim-box-val" id="sr-gan">$—</div>
             <div class="sim-box-roi" id="sr-roi">ROI: —%</div>
           </div>
-          <div class="sim-nota">* Estimación basada en los datos ingresados. Resultados pueden variar según la operación.</div>
+          <div class="sim-nota">* Estimación basada en los datos ingresados. Resultados pueden variar.</div>
         </div>
       </div>
     </div>
-
     <div class="card">
       <div class="card-title">📄 Paso 2 — Datos de la Propuesta</div>
-
       <div id="sim-resumen" style="display:none">
         <div class="sim-chips">
           <div class="chip"><div class="chip-lbl">Inversión/mes</div><div class="chip-val" id="chip-inv">—</div></div>
@@ -256,7 +250,6 @@ tbody td{padding:10px 11px;vertical-align:middle}
           <div class="chip g"><div class="chip-lbl">ROI</div><div class="chip-val" id="chip-roi">—</div></div>
         </div>
       </div>
-
       <div class="sec-lbl">🏢 Datos del Cliente</div>
       <div class="form-row">
         <div class="ff"><label>Razón Social <span class="req">*</span></label><input type="text" id="f-razon" placeholder="Ej: Restaurante El Sabor C.A." required></div>
@@ -273,7 +266,6 @@ tbody td{padding:10px 11px;vertical-align:middle}
           <option value="Cliente Recurrente">Cliente Recurrente</option>
         </select>
       </div>
-
       <div class="sec-lbl">📦 Detalle del Pedido</div>
       <div class="ff"><label>Producto de Interés</label>
         <select id="f-prod" onchange="calcularSubtotal()">
@@ -296,21 +288,20 @@ tbody td{padding:10px 11px;vertical-align:middle}
         </div>
       </div>
       <div class="ff"><label>Total USD (calculado automáticamente)</label><input type="number" id="f-total-usd" placeholder="0.00" readonly></div>
-      <div class="ff"><label>Observaciones</label><textarea id="f-obs" placeholder="Notas adicionales, ofertas especiales, condiciones particulares..."></textarea></div>
-
+      <div class="ff"><label>Observaciones</label><textarea id="f-obs" placeholder="Notas adicionales..."></textarea></div>
       <button class="btn-pdf" onclick="generarPDF()">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         Generar y Descargar Propuesta PDF
       </button>
       <button class="btn-save" id="btn-gs" onclick="guardarProp()">
-        <span id="gs-txt">💾 Guardar en el Sistema</span>
+        <span id="gs-txt">💾 Guardar en SCCR - Base de Datos</span>
         <span class="sp" id="gs-sp"></span>
       </button>
-      <div class="ok-box" id="ok-box">✅ Propuesta guardada con vigencia de 7 días. Visible en el listado.</div>
+      <div class="ok-box" id="ok-box">✅ Propuesta guardada en SCCR - Base de Datos con vigencia de 7 días.</div>
     </div>
   </div>
 
-  <!-- ══ PANEL LISTADO ══ -->
+  <!-- PANEL LISTADO -->
   <div class="panel" id="panel-listado">
     <div class="card">
       <div class="listado-head">
@@ -330,28 +321,17 @@ tbody td{padding:10px 11px;vertical-align:middle}
           <select class="filtro-sel admin-only" id="filtro-vendedor" onchange="renderListado()">
             <option value="">Todos los vendedores</option>
           </select>
-          <button class="btn-limpiar" onclick="limpiarCache()" title="Borra los registros locales que no llegaron a la base de datos y recarga desde el servidor">
-            🗑️ Limpiar caché
-          </button>
+          <button class="btn-save" style="margin:0;padding:7px 12px;font-size:12px" onclick="cargarListado()">↺ Actualizar</button>
         </div>
       </div>
       <div class="tbl-wrap">
         <table>
           <thead>
             <tr>
-              <th>ID Propuesta</th>
-              <th>Fecha Creación</th>
-              <th>Fecha Vencimiento</th>
-              <th>Cliente</th>
-              <th>Vendedor</th>
-              <th>Producto(s)</th>
-              <th>Cajas</th>
-              <th>Inversión $</th>
-              <th>Condición Pago</th>
-              <th>Contacto</th>
-              <th>Teléfono</th>
-              <th>Estado</th>
-              <th>Acciones</th>
+              <th>ID Propuesta</th><th>Fecha Creación</th><th>Vencimiento</th>
+              <th>Cliente</th><th>Vendedor</th><th>Producto(s)</th>
+              <th>Cajas</th><th>Total $</th><th>Condición Pago</th>
+              <th>Contacto</th><th>Teléfono</th><th>Estado</th><th>Acciones</th>
             </tr>
           </thead>
           <tbody id="tbl-body">
@@ -361,20 +341,19 @@ tbody td{padding:10px 11px;vertical-align:middle}
       </div>
     </div>
   </div>
-
 </div>
 
 <footer class="footer">
   <img src="assets/logo-casabe-real.png" alt="Casabe Real" onerror="this.style.display='none'">
   <p>© 2025 Casabe Real — Sistema Comercial SCCR</p>
 </footer>
-
 <div class="toast" id="toast"></div>
 
+<!-- Modal confirmación (anular / convertir) -->
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal">
-    <h3 id="modal-title">Confirmar acción</h3>
-    <p id="modal-msg">¿Está seguro?</p>
+    <h3 id="modal-title">Confirmar</h3>
+    <p id="modal-msg"></p>
     <div class="modal-btns">
       <button class="modal-cancel" onclick="cerrarModal()">Cancelar</button>
       <button class="modal-confirm" id="modal-confirm-btn" onclick="confirmarAccion()">Confirmar</button>
@@ -382,11 +361,51 @@ tbody td{padding:10px 11px;vertical-align:middle}
   </div>
 </div>
 
+<!-- Modal edición inline -->
+<div class="modal-overlay" id="modal-edit">
+  <div class="modal" style="max-width:560px">
+    <h3>✏️ Modificar Propuesta <span id="edit-num" style="font-size:13px;color:var(--gris);font-weight:400"></span></h3>
+    <p style="margin-bottom:14px">Edita los campos que deseas actualizar. Los demás se mantienen como están.</p>
+    <div class="modal-edit-grid">
+      <div class="mef"><label>Razón Social</label><input type="text" id="e-razon"></div>
+      <div class="mef"><label>Establecimiento</label><input type="text" id="e-establ"></div>
+      <div class="mef"><label>Contacto</label><input type="text" id="e-contacto"></div>
+      <div class="mef"><label>Teléfono</label><input type="tel" id="e-telf"></div>
+      <div class="mef"><label>Producto</label>
+        <select id="e-prod" onchange="calcEditSubtotal()">
+          <option value="Tipo Restaurante ($312/caja)">Tipo Restaurante — $312/caja</option>
+          <option value="Tipo Pasapalo ($264/caja)">Tipo Pasapalo — $264/caja</option>
+          <option value="Tipo Torta ($240/caja)">Tipo Torta — $240/caja</option>
+          <option value="Combinación de productos">Combinación de productos</option>
+        </select>
+      </div>
+      <div class="mef"><label>Cajas</label><input type="number" id="e-cajas" min="1" oninput="calcEditSubtotal()"></div>
+      <div class="mef"><label>Condición de Pago</label>
+        <select id="e-condicion" onchange="calcEditSubtotal()">
+          <option value="Crédito 30 días">Crédito 30 días</option>
+          <option value="Crédito 15 días">Crédito 15 días (-4%)</option>
+          <option value="Crédito 5 días">Crédito 5 días (-17%)</option>
+          <option value="Contado">Contado (−20%)</option>
+        </select>
+      </div>
+      <div class="mef"><label>Total USD</label><input type="number" id="e-total" readonly></div>
+      <div class="mef full"><label>Observaciones</label><textarea id="e-obs"></textarea></div>
+    </div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="cerrarModalEdit()">Cancelar</button>
+      <button class="modal-confirm" id="btn-edit-save" onclick="guardarEdicion()" style="background:var(--naranja)">
+        <span id="edit-save-txt">💾 Guardar cambios</span>
+        <span class="sp" id="edit-sp" style="border-top-color:#fff"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
 <script>
 const API='https://script.google.com/macros/s/AKfycbyludOrnVw1jSCYJUWELTjPjhuR7N1uXdBO6mjR7XVE-SqmkP-pe3qieg5SX-8wRh2Dsg/exec';
-let SES=null, simData={}, propuestas=[], accionPendiente=null;
+let SES=null, simData={}, propuestas=[], accionPendiente=null, propEditando=null;
 
-/* ── TABS ── */
+// ── TABS ──────────────────────────────────────────────────────
 function switchTab(tab){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
@@ -395,630 +414,202 @@ function switchTab(tab){
   if(tab==='listado') cargarListado();
 }
 
-/* ── SIMULADOR ── */
-// precio_caja = precio Crédito 30 días (precio lista base)
-// uds_paq     = unidades por paquete
-// paq_caja    = paquetes por caja
+// ── SIMULADOR ─────────────────────────────────────────────────
 const PROD_SIM={
-  restaurante:{uds_paq:30, paq_caja:40, precio_caja:312, nombre:'Casabe Real tipo Restaurante'},
-  pasapalo:   {uds_paq:35, paq_caja:90, precio_caja:264, nombre:'Casabe Real tipo Pasapalo'},
-  torta:      {uds_paq:8,  paq_caja:40, precio_caja:240, nombre:'Casabe Real tipo Torta'},
+  restaurante:{uds_paq:30,paq_caja:40,precio_caja:312,nombre:'Casabe Real tipo Restaurante'},
+  pasapalo:   {uds_paq:35,paq_caja:90,precio_caja:264,nombre:'Casabe Real tipo Pasapalo'},
+  torta:      {uds_paq:8, paq_caja:40,precio_caja:240,nombre:'Casabe Real tipo Torta'},
 };
 function calcSim(){
-  const prod     = document.getElementById('sim-prod').value;
-  const tiendas  = parseInt(document.getElementById('sim-tiendas').value)  || 0;
-  const mesas    = parseInt(document.getElementById('sim-mesas')  ?.value) || 0;
-  const pct      = parseInt(document.getElementById('sim-pct')    ?.value) || 0;
-  const servicios= parseInt(document.getElementById('sim-servicios').value)|| 0;
-  const uds_serv = parseInt(document.getElementById('sim-unidades').value) || 0;
-  const dias     = parseInt(document.getElementById('sim-dias').value)     || 0;
-  const precio   = parseFloat(document.getElementById('sim-precio').value) || 0;
-
+  const prod=document.getElementById('sim-prod').value;
+  const tiendas=parseInt(document.getElementById('sim-tiendas').value)||0;
+  const servicios=parseInt(document.getElementById('sim-servicios').value)||0;
+  const uds_serv=parseInt(document.getElementById('sim-unidades').value)||0;
+  const dias=parseInt(document.getElementById('sim-dias').value)||0;
+  const precio=parseFloat(document.getElementById('sim-precio').value)||0;
   const limpiar=()=>{
-    ['sr-serv','sr-unidades','sr-paq','sr-cajas','sr-inv','sr-ing'].forEach(id=>{
-      const el=document.getElementById(id); if(el) el.textContent='—';
-    });
-    const g=document.getElementById('sr-gan'); if(g) g.textContent='$—';
-    const r=document.getElementById('sr-roi'); if(r) r.textContent='ROI: —%';
-    document.getElementById('sim-resumen').style.display='none';
-    simData={};
+    ['sr-serv','sr-unidades','sr-paq','sr-cajas','sr-inv','sr-ing'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='—';});
+    const g=document.getElementById('sr-gan');if(g)g.textContent='$—';
+    const r=document.getElementById('sr-roi');if(r)r.textContent='ROI: —%';
+    document.getElementById('sim-resumen').style.display='none';simData={};
   };
-
-  // Calcular en cuanto haya al menos servicios + unidades + días + precio
-  if(!servicios || !uds_serv || !dias || !precio){ limpiar(); return; }
-
-  const cfg = PROD_SIM[prod];
-  if(!cfg){ limpiar(); return; }
-
-  // ── FÓRMULAS ────────────────────────────────────────────────────────────
-  // 1. Total Servicios/mes = Tiendas × Servicios/día × Días/mes
-  const tiendasEfectivas = (tiendas > 0) ? tiendas : 1;
-  const serviciosMes     = tiendasEfectivas * servicios * dias;
-
-  // 2. Total Unidades/mes = Total Servicios × Unidades de casabe por servicio
-  const unidadesTot      = serviciosMes * uds_serv;
-
-  // 3. Paquetes requeridos/mes = Total Unidades ÷ Unidades por paquete  (↑)
-  const paquetesMes      = Math.ceil(unidadesTot / cfg.uds_paq);
-
-  // 4. Cajas requeridas/mes = Paquetes ÷ Paquetes por caja
-  const cajasExactas     = paquetesMes / cfg.paq_caja;
-  const cajasComprar     = Math.ceil(cajasExactas);
-
-  // 5. Inversión = Cajas a comprar × Precio por caja (base 30 días)
-  const inversion        = cajasComprar * cfg.precio_caja;
-
-  // 6. Ingresos = Total Servicios × Precio del servicio al comensal
-  const ingresos         = serviciosMes * precio;
-
-  const ganancia = ingresos - inversion;
-  const roi      = inversion > 0 ? Math.round((ganancia / inversion) * 100) : 0;
-  // ────────────────────────────────────────────────────────────────────────
-
-  simData = {
-    serviciosMes, unidadesTot, paquetesMes, cajasExactas, cajasComprar,
-    inversion, ingresos, ganancia, roi, prod,
-    nombreProd : cfg.nombre,
-    precioCaja : cfg.precio_caja,
-    paqCaja    : cfg.paq_caja,
-    udsPaq     : cfg.uds_paq,
-    serviciosDia    : servicios,
-    udsServicio     : uds_serv,
-    diasMes         : dias,
-    precioServicio  : precio,
-    totalTiendas    : tiendasEfectivas,
-    totalMesas      : mesas,
-    pctVenta        : pct,
-  };
-
-  // ── ACTUALIZAR PANTALLA ─────────────────────────────────────────────────
-  document.getElementById('sr-serv').textContent = fmt(serviciosMes) + ' servicios';
-
-  const elU = document.getElementById('sr-unidades');
-  if(elU) elU.textContent = fmt(unidadesTot) + ' unidades';
-
-  document.getElementById('sr-paq').textContent = fmt(paquetesMes) + ' paquetes';
-
-  const cajaTxt = cajasExactas % 1 === 0
-    ? cajasExactas + (cajasExactas === 1 ? ' caja' : ' cajas')
-    : cajasExactas.toFixed(2) + ' cajas (compra ' + cajasComprar + ')';
-  document.getElementById('sr-cajas').textContent = cajaTxt;
-
-  document.getElementById('sr-inv').textContent = '$' + fmt(inversion);
-  document.getElementById('sr-ing').textContent = '$' + fmt(ingresos);
-  document.getElementById('sr-gan').textContent = '$' + fmt(ganancia);
-  document.getElementById('sr-roi').textContent = 'ROI: ' + roi + '%';
-
-  // chips del formulario
-  document.getElementById('chip-inv').textContent = '$' + fmt(inversion);
-  document.getElementById('chip-ing').textContent = '$' + fmt(ingresos);
-  document.getElementById('chip-gan').textContent = '$' + fmt(ganancia);
-  document.getElementById('chip-roi').textContent = roi + '%';
-  document.getElementById('sim-resumen').style.display = '';
+  if(!servicios||!uds_serv||!dias||!precio){limpiar();return;}
+  const cfg=PROD_SIM[prod];if(!cfg){limpiar();return;}
+  const tiendasEfectivas=(tiendas>0)?tiendas:1;
+  const serviciosMes=tiendasEfectivas*servicios*dias;
+  const unidadesTot=serviciosMes*uds_serv;
+  const paquetesMes=Math.ceil(unidadesTot/cfg.uds_paq);
+  const cajasExactas=paquetesMes/cfg.paq_caja;
+  const cajasComprar=Math.ceil(cajasExactas);
+  const inversion=cajasComprar*cfg.precio_caja;
+  const ingresos=serviciosMes*precio;
+  const ganancia=ingresos-inversion;
+  const roi=inversion>0?Math.round((ganancia/inversion)*100):0;
+  simData={serviciosMes,unidadesTot,paquetesMes,cajasExactas,cajasComprar,inversion,ingresos,ganancia,roi,prod,
+           nombreProd:cfg.nombre,precioCaja:cfg.precio_caja,paqCaja:cfg.paq_caja,udsPaq:cfg.uds_paq,
+           serviciosDia:servicios,udsServicio:uds_serv,diasMes:dias,precioServicio:precio,
+           totalTiendas:tiendasEfectivas};
+  document.getElementById('sr-serv').textContent=fmt(serviciosMes)+' servicios';
+  const elU=document.getElementById('sr-unidades');if(elU)elU.textContent=fmt(unidadesTot)+' unidades';
+  document.getElementById('sr-paq').textContent=fmt(paquetesMes)+' paquetes';
+  const cajaTxt=cajasExactas%1===0?cajasExactas+(cajasExactas===1?' caja':' cajas'):cajasExactas.toFixed(2)+' cajas (compra '+cajasComprar+')';
+  document.getElementById('sr-cajas').textContent=cajaTxt;
+  document.getElementById('sr-inv').textContent='$'+fmt(inversion);
+  document.getElementById('sr-ing').textContent='$'+fmt(ingresos);
+  document.getElementById('sr-gan').textContent='$'+fmt(ganancia);
+  document.getElementById('sr-roi').textContent='ROI: '+roi+'%';
+  document.getElementById('chip-inv').textContent='$'+fmt(inversion);
+  document.getElementById('chip-ing').textContent='$'+fmt(ingresos);
+  document.getElementById('chip-gan').textContent='$'+fmt(ganancia);
+  document.getElementById('chip-roi').textContent=roi+'%';
+  document.getElementById('sim-resumen').style.display='';
 }
 
-/* ── SUBTOTAL ── */
+// ── SUBTOTAL ──────────────────────────────────────────────────
 function calcularSubtotal(){
-  const prod  = document.getElementById('f-prod').value;
-  const cajas = parseFloat(document.getElementById('f-cantidad').value) || 0;
-  const cond  = document.getElementById('f-condicion').value;
-  // Precios base = Crédito 30 días (precio lista)
-  const precios = {
-    'Tipo Restaurante ($312/caja)': 312,
-    'Tipo Pasapalo ($264/caja)'   : 264,
-    'Tipo Torta ($240/caja)'      : 240,
-    'Combinación de productos'    : 0
-  };
-  const pb = precios[prod] ?? 0;
-  if (!pb || !cajas) { document.getElementById('f-total-usd').value = ''; return; }
-  // Factores de descuento sobre el precio base (30 días = 1.00)
-  // Crédito 30 días: precio lista (sin descuento)
-  // Crédito 15 días: −4%  → ×0.96
-  // Crédito 5 días:  −17% → ×0.83
-  // Contado:         −20% → ×0.80
-  const factor = cond === 'Crédito 30 días' ? 1.00
-               : cond === 'Crédito 15 días' ? 0.96
-               : cond === 'Crédito 5 días'  ? 0.83
-               : cond === 'Contado'         ? 0.80
-               : 1.00;
-  document.getElementById('f-total-usd').value = (cajas * pb * factor).toFixed(2);
+  const prod=document.getElementById('f-prod').value;
+  const cajas=parseFloat(document.getElementById('f-cantidad').value)||0;
+  const cond=document.getElementById('f-condicion').value;
+  const precios={'Tipo Restaurante ($312/caja)':312,'Tipo Pasapalo ($264/caja)':264,'Tipo Torta ($240/caja)':240,'Combinación de productos':0};
+  const pb=precios[prod]??0;
+  if(!pb||!cajas){document.getElementById('f-total-usd').value='';return;}
+  const f=cond==='Crédito 30 días'?1.00:cond==='Crédito 15 días'?0.96:cond==='Crédito 5 días'?0.83:cond==='Contado'?0.80:1.00;
+  document.getElementById('f-total-usd').value=(cajas*pb*f).toFixed(2);
 }
 
-/* ── GENERAR PDF ── */
-function generarPDF(datosOverride){
-  const d=datosOverride||leerFormulario();
+// ── GUARDAR (sin localStorage — directo a Sheets) ─────────────
+async function guardarProp(){
+  const d=leerFormulario();
   if(!d.razon||!d.establ){toast('⚠️ Completa Razón Social y Establecimiento');return;}
-
-  const {jsPDF}=window.jspdf;
-  const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-  const W=doc.internal.pageSize.getWidth();    // 210
-  const ML=14, MR=14, IW=W-ML-MR;             // márgenes y ancho interior
-  const ROJO=[200,24,30], NEGRO=[17,24,39], BLANCO=[255,255,255], GRIS=[107,114,128], GRIS_C=[229,231,235];
-
-  // ── Helpers ─────────────────────────────────────
-  const hdr=(txt,startY)=>{
-    doc.autoTable({startY,head:[[txt]],body:[],
-      styles:{cellPadding:2.8},
-      headStyles:{fillColor:ROJO,textColor:BLANCO,fontStyle:'bold',fontSize:9.5,halign:'center'},
-      margin:{left:ML,right:MR},theme:'grid',tableWidth:IW});
-    return doc.lastAutoTable.finalY;
+  if(!SES){toast('⚠️ Debes estar logueado para guardar');return;}
+  const btn=document.getElementById('btn-gs'),sp=document.getElementById('gs-sp');
+  btn.disabled=true;sp.classList.add('on');
+  const cajas=parseFloat(d.cajas)||0,totalUSD=parseFloat(d.total)||0;
+  const productosArray=(cajas>0&&d.prod)?[{nombre:d.prod,cajas,precio:cajas>0?totalUSD/cajas:0,subtotal:totalUSD}]:[];
+  const payload={
+    action:'nuevaPropuesta',fecha:new Date().toISOString(),dias_vigencia:7,
+    vendedor:SES.nombre||SES.user||'',userVendedor:SES.user||'',
+    razonSocial:d.razon,establecimiento:d.establ,contacto:d.contacto,
+    telefono:d.telf,tipoCliente:d.tipo||'potencial',
+    productos:productosArray,totalUSD,condicionPago:d.condicion,observaciones:d.obs,
   };
-
-  // ── LOGO: intentar cargar desde assets, si no, dibujar shape ──
-  let y=10;
   try{
-    const logoEl=document.querySelector('header .header-left img');
-    if(logoEl&&logoEl.complete&&logoEl.naturalWidth>0){
-      const cv=document.createElement('canvas');cv.width=120;cv.height=120;
-      const cx=cv.getContext('2d');cx.drawImage(logoEl,0,0,120,120);
-      const imgData=cv.toDataURL('image/png');
-      doc.addImage(imgData,'PNG',W/2-15,y,30,30);
-      y+=34;
-    } else { throw new Error('sin logo'); }
-  }catch(e){
-    // Fallback: círculo rojo con texto
-    doc.setFillColor(...ROJO);
-    doc.circle(W/2,y+15,15,'F');
-    doc.setFontSize(7);doc.setFont('helvetica','bold');doc.setTextColor(...BLANCO);
-    doc.text('CASABE',W/2,y+13,{align:'center'});
-    doc.text('REAL',W/2,y+18,{align:'center'});
-    y+=34;
-  }
-
-  // ── TÍTULO ───────────────────────────────────────
-  doc.setFontSize(13);doc.setFont('helvetica','bold');doc.setTextColor(...NEGRO);
-  doc.text('PROPUESTA COMERCIAL',W/2,y+4,{align:'center'});
-  y+=10;
-
-  // ── TABLA CLIENTE ─────────────────────────────────
-  doc.autoTable({startY:y,
-    head:[['NOMBRE DEL ESTABLECIMIENTO','CONTACTO','TELEFONO','TIPO DE CLIENTE']],
-    body:[[d.establ||d.razon||'—', d.contacto||'—', d.telf||'—', (d.tipo||'PROSPECTO').toUpperCase()]],
-    styles:{fontSize:8.8,cellPadding:2.8,textColor:NEGRO,lineColor:GRIS_C,lineWidth:.3},
-    headStyles:{fillColor:ROJO,textColor:BLANCO,fontStyle:'bold',fontSize:8,halign:'center'},
-    bodyStyles:{halign:'center'},
-    columnStyles:{0:{cellWidth:IW*0.32},1:{cellWidth:IW*0.24},2:{cellWidth:IW*0.22},3:{cellWidth:IW*0.22}},
-    margin:{left:ML,right:MR},theme:'grid',tableWidth:IW});
-  y=doc.lastAutoTable.finalY+3;
-
-  // ── SECCIÓN PROYECCIÓN MENSUAL ────────────────────
-  if(simData&&simData.nombreProd){
-
-    // Encabezado PROYECCIÓN MENSUAL
-    y=hdr('PROYECCIÓN MENSUAL',y);
-
-    // Sub-nota en cursiva
-    doc.setFontSize(7.5);doc.setFont('helvetica','italic');doc.setTextColor(...GRIS);
-    doc.setFillColor(255,255,255);
-    doc.rect(ML,y,IW,6,'F');
-    doc.setDrawColor(...GRIS_C);doc.rect(ML,y,IW,6,'S');
-    doc.text('* Estimación basada en los datos ingresados. Resultados pueden variar según la operación.',ML+IW/2,y+4,{align:'center'});
-    y+=6;
-
-    // Fila producto: cabecera roja
-    const colP=[IW*0.34,IW*0.22,IW*0.22,IW*0.22];
-    const hdrP=['Producto:','Precio / caja:','Paquetes / caja:','Unidades / paquete:'];
-    const datP=[simData.nombreProd,'$'+fmtN(simData.precioCaja),String(simData.paqCaja),String(simData.udsPaq)];
-    let cx2=ML;
-    // cabecera
-    doc.setFillColor(...ROJO);doc.rect(ML,y,IW,6,'F');
-    doc.setDrawColor(...GRIS_C);doc.rect(ML,y,IW,6,'S');
-    doc.setFont('helvetica','bold');doc.setFontSize(7.8);doc.setTextColor(...ROJO);
-    hdrP.forEach((h,i)=>{
-      doc.setFillColor(...ROJO);doc.rect(cx2,y,colP[i],6,'F');
-      doc.setTextColor(...BLANCO);doc.text(h,cx2+colP[i]/2,y+4,{align:'center'});
-      cx2+=colP[i];
-    });
-    y+=6;
-    // datos producto — resetear colores explícitamente para evitar herencia del rojo de cabecera
-    cx2=ML;
-    datP.forEach((v,i)=>{
-      // Fix: setFillColor blanco y setTextColor negro en CADA celda, no solo antes del loop
-      doc.setFillColor(255,255,255);
-      doc.setDrawColor(...GRIS_C);
-      doc.rect(cx2,y,colP[i],7,'FD');
-      doc.setFont('helvetica',i===0?'normal':'bold');
-      doc.setFontSize(8.5);
-      doc.setTextColor(...NEGRO);   // ← Fix: forzar negro en cada celda
-      doc.text(v,cx2+colP[i]/2,y+5,{align:'center'});
-      cx2+=colP[i];
-    });
-    y+=7;
-
-    // Tabla doble columna (izq: datos del local / der: proyección)
-    // Exactamente como el PDF de referencia
-    const halfw=(IW-1)/2;
-    const x1=ML, x2=ML+halfw+1;
-    const RH=6.8; // alto de fila
-
-    const izq=[
-      simData.totalTiendas?['Total tiendas que posee el establecimiento', String(simData.totalTiendas)]:null,
-      simData.totalMesas?  ['Total mesas del local',                       String(simData.totalMesas)]:null,
-      simData.pctVenta?    ['Porcentaje de venta Casabe Real',              simData.pctVenta+'%']:null,
-      ['Servicios estimados por día',        String(simData.serviciosDia)],
-      ['Unidades de casabe por servicio',    String(simData.udsServicio)],
-      ['Dias de mayor trabajo al mes',       String(simData.diasMes)],
-      ['Precio del servicio al comensal (USD)', '$'+simData.precioServicio.toFixed(2)],
-    ].filter(Boolean);
-
-    const der=[
-      ['Servicios / mes:',            fmt(simData.serviciosMes)],
-      ['Paquetes requeridos / mes:',  fmt(simData.paquetesMes)],
-      ['Cajas requeridas / mes:',     simData.cajasExactas.toFixed(1)],
-      ['venta sugerida / cajas',      String(simData.cajasComprar)],
-      ['Inversión mensual:',          '$'+fmtN(simData.inversion)],
-      ['Ingresos por casabe:',        '$'+fmtN(simData.ingresos)],
-    ];
-
-    const rows=Math.max(izq.length,der.length);
-    doc.setFontSize(8.2);
-    for(let i=0;i<rows;i++){
-      const ry=y+i*RH;
-      // izquierda
-      doc.setFillColor(255,255,255);doc.setDrawColor(...GRIS_C);
-      doc.rect(x1,ry,halfw,RH,'FD');
-      if(izq[i]){
-        doc.setFont('helvetica','normal');doc.setTextColor(...NEGRO);
-        doc.text(izq[i][0],x1+2,ry+RH-2);
-        doc.setFont('helvetica','bold');
-        doc.text(izq[i][1],x1+halfw-2,ry+RH-2,{align:'right'});
-      }
-      // derecha
-      doc.setFillColor(255,255,255);
-      doc.rect(x2,ry,halfw,RH,'FD');
-      if(der[i]){
-        doc.setFont('helvetica','normal');doc.setTextColor(...NEGRO);
-        doc.text(der[i][0],x2+2,ry+RH-2);
-        doc.setFont('helvetica','bold');
-        // valores de la derecha en negrita alineados a la derecha
-        doc.text(der[i][1],x2+halfw-2,ry+RH-2,{align:'right'});
-      }
-    }
-    y+=rows*RH;
-
-    // Fila GANANCIA ESTIMADA / MES — fondo rojo, ocupa todo el ancho
-    const GH=10;
-    doc.setFillColor(...ROJO);doc.rect(ML,y,IW,GH,'F');
-    doc.setDrawColor(...GRIS_C);doc.rect(ML,y,IW,GH,'S');
-    doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...BLANCO);
-    doc.text('GANANCIA ESTIMADA / MES:',ML+4,y+4.5);
-    // Columna derecha: $ y ROI
-    doc.setFontSize(8.5);
-    doc.text('$:',x2+2,y+3.8);
-    doc.text('$'+fmtN(simData.ganancia),x2+halfw-2,y+3.8,{align:'right'});
-    doc.text('ROI:',x2+2,y+8.5);
-    doc.text(simData.roi+'%',x2+halfw-2,y+8.5,{align:'right'});
-    y+=GH+3;
-  }
-
-  // ── CONDICIONES COMERCIALES ───────────────────────
-  y=hdr('CONDICIONES COMERCIALES',y);
-  doc.autoTable({startY:y,
-    head:[['FACTURACION','PEDIDO MINIMO','DESPACHO','PRIMER PEDIDO']],
-    body:[['En dólares americanos — pagadero en bolívares a tasa BCV del día del pago',
-           '1 caja por referencia — sin mínimo general',
-           'Coordinado directamente con su asesor comercial',
-           'Nuevos clientes deben presentar RIF de la empresa y Cédula del dueño de la empresa']],
-    styles:{fontSize:7.5,cellPadding:2.8,textColor:NEGRO,valign:'top'},
-    headStyles:{fillColor:ROJO,textColor:BLANCO,fontStyle:'bold',fontSize:7.5,halign:'center'},
-    columnStyles:{0:{cellWidth:IW*0.26},1:{cellWidth:IW*0.26},2:{cellWidth:IW*0.24},3:{cellWidth:IW*0.24}},
-    margin:{left:ML,right:MR},theme:'grid',tableWidth:IW});
-  y=doc.lastAutoTable.finalY+3;
-
-  // ── CONDICIONES DE PAGO ───────────────────────────
-  y=hdr('CONDICIONES DE PAGO',y);
-  // Calcular precios para cada condición a partir del precio base (crédito 30d = base)
-  // Precio base = crédito 30 días (precio lista sin descuento)
-  const preciosProd={
-    'Tipo Restaurante ($312/caja)': 312,
-    'Tipo Pasapalo ($264/caja)'   : 264,
-    'Tipo Torta ($240/caja)'      : 240,
-    'Combinación de productos'    : 0
-  };
-  const fProd  = document.getElementById('f-prod')?.value||'';
-  const fCajas = parseFloat(document.getElementById('f-cantidad')?.value)||0;
-  const pb30   = (preciosProd[fProd]||0) * fCajas; // precio base crédito 30 días
-  doc.autoTable({startY:y,
-    head:[['CREDITO 30 DIAS','CREDITO 15 DIAS (DESCUENTO)','CREDITO 5 DIAS (DESCUENTO)','CONTADO (DESCUENTO)']],
-    body:[
-      ['--','4%','17%','20%'],
-      [pb30>0?'$'+fmtN(pb30):'—', pb30>0?'$'+fmtN(pb30*0.96):'—', pb30>0?'$'+fmtN(pb30*0.83):'—', pb30>0?'$'+fmtN(pb30*0.80):'—']
-    ],
-    styles:{fontSize:8.5,cellPadding:3,halign:'center',textColor:NEGRO},
-    headStyles:{fillColor:ROJO,textColor:BLANCO,fontStyle:'bold',fontSize:7.8,halign:'center'},
-    columnStyles:{0:{cellWidth:IW/4},1:{cellWidth:IW/4},2:{cellWidth:IW/4},3:{cellWidth:IW/4}},
-    margin:{left:ML,right:MR},theme:'grid',tableWidth:IW});
-  y=doc.lastAutoTable.finalY+3;
-
-  // ── RESUMEN DE LA PROPUESTA ───────────────────────
-  y=hdr('RESUMEN DE LA PROPUESTA',y);
-  const fProdVal=document.getElementById('f-prod')?.value||'—';
-  const fCajasVal=document.getElementById('f-cantidad')?.value||'—';
-  const fTotalVal=parseFloat(document.getElementById('f-total-usd')?.value)||0;
-  const fCondVal=(document.getElementById('f-condicion')?.value||'—').toUpperCase();
-  doc.autoTable({startY:y,
-    head:[['PRODUCTO','CAJAS','TOTAL','CONDICION DE PAGO']],
-    body:[[fProdVal, fCajasVal, fTotalVal>0?'$'+fmtN(fTotalVal):'—', fCondVal]],
-    styles:{fontSize:8.8,cellPadding:3,halign:'center',textColor:NEGRO},
-    headStyles:{fillColor:ROJO,textColor:BLANCO,fontStyle:'bold',fontSize:8,halign:'center'},
-    bodyStyles:{fontStyle:'bold'},
-    columnStyles:{0:{cellWidth:IW*0.40,halign:'left'},1:{cellWidth:IW*0.15},2:{cellWidth:IW*0.20},3:{cellWidth:IW*0.25}},
-    margin:{left:ML,right:MR},theme:'grid',tableWidth:IW});
-  y=doc.lastAutoTable.finalY+3;
-
-  // ── OBSERVACIONES ─────────────────────────────────
-  if(d.obs){
-    y=hdr('OBSERVACIONES',y);
-    doc.autoTable({startY:y,
-      head:[],body:[[d.obs]],
-      styles:{fontSize:8,cellPadding:3,textColor:NEGRO,lineColor:GRIS_C,lineWidth:.3},
-      margin:{left:ML,right:MR},theme:'grid',tableWidth:IW});
-  }
-
-  // ── GUARDAR ───────────────────────────────────────
-  const slug=(d.establ||'PROPUESTA').replace(/[^a-zA-Z0-9]/g,'_').toUpperCase();
-  const fecha=new Date().toISOString().slice(0,10).replace(/-/g,'');
-  doc.save('PROPUESTA_'+slug+'_'+fecha+'.pdf');
-  toast('✅ PDF generado y descargado');
+    // no-cors: respuesta opaca pero el script sí escribe en Sheets
+    await fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    document.getElementById('ok-box').classList.add('show');
+    toast('✅ Propuesta guardada en SCCR - Base de Datos');
+    actualizarBadge();
+  }catch(e){toast('❌ Error de conexión. Verifica tu red.');}
+  btn.disabled=false;sp.classList.remove('on');
 }
 
+// ── LEER FORMULARIO ───────────────────────────────────────────
 function leerFormulario(){
   return{
-    razon:   (document.getElementById('f-razon')?.value||'').trim(),
-    establ:  (document.getElementById('f-establ')?.value||'').trim(),
+    razon:(document.getElementById('f-razon')?.value||'').trim(),
+    establ:(document.getElementById('f-establ')?.value||'').trim(),
     contacto:(document.getElementById('f-contacto')?.value||'').trim(),
-    telf:    (document.getElementById('f-telf')?.value||'').trim(),
-    tipo:    document.getElementById('f-tipo')?.value||'',
-    prod:    document.getElementById('f-prod')?.value||'',
-    cajas:   document.getElementById('f-cantidad')?.value||'',
-    total:   document.getElementById('f-total-usd')?.value||'',
+    telf:(document.getElementById('f-telf')?.value||'').trim(),
+    tipo:document.getElementById('f-tipo')?.value||'',
+    prod:document.getElementById('f-prod')?.value||'',
+    cajas:document.getElementById('f-cantidad')?.value||'',
+    total:document.getElementById('f-total-usd')?.value||'',
     condicion:document.getElementById('f-condicion')?.value||'',
-    obs:     (document.getElementById('f-obs')?.value||'').trim()
+    obs:(document.getElementById('f-obs')?.value||'').trim()
   };
 }
 
-/* ── GUARDAR ── */
-async function guardarProp(){
-  const d = leerFormulario();
-  if (!d.razon || !d.establ) { toast('⚠️ Completa Razón Social y Establecimiento'); return; }
-  if (!SES) { toast('⚠️ Debes estar logueado para guardar'); return; }
-
-  const btn = document.getElementById('btn-gs');
-  const sp  = document.getElementById('gs-sp');
-  btn.disabled = true; sp.classList.add('on');
-
-  const now   = new Date();
-  const vence = new Date(now); vence.setDate(vence.getDate() + 7);
-
-  // ── Construir array de productos que el script sí lee ──────────────────
-  // El script procesa: body.productos[].cajas, .nombre, .subtotal
-  // y calcula total_cajas = suma de p.cajas
-  const cajas    = parseFloat(d.cajas)  || 0;
-  const totalUSD = parseFloat(d.total)  || 0;
-  const precioUnitario = cajas > 0 ? totalUSD / cajas : 0;
-
-  const productosArray = (cajas > 0 && d.prod)
-    ? [{ nombre: d.prod, cajas: cajas, precio: precioUnitario, subtotal: totalUSD }]
-    : [];
-
-  // ── PAYLOAD: nombres de campo exactamente como los lee actionNuevaPropuesta ──
-  // El script lee: vendedor, userVendedor, razonSocial, establecimiento,
-  // contacto, telefono, tipoCliente, totalUSD, condicionPago, observaciones
-  // y genera internamente: numeroPropuesta, fecha_formateada, estado_propuesta
-  const payload = {
-    action          : 'nuevaPropuesta',
-    fecha           : now.toISOString(),
-    dias_vigencia   : 7,
-
-    // ── Vendedor ──
-    vendedor        : SES.nombre || SES.user || '',
-    userVendedor    : SES.user   || '',
-
-    // ── Cliente ──
-    razonSocial     : d.razon,
-    establecimiento : d.establ,
-    contacto        : d.contacto,
-    telefono        : d.telf,
-    tipoCliente     : d.tipo || 'potencial',
-
-    // ── Productos: array que el script itera para serializar y sumar cajas ──
-    productos       : productosArray,
-
-    // ── Montos totales (el script también los usa directamente) ──
-    totalUSD        : totalUSD,
-    condicionPago   : d.condicion,
-
-    // ── Notas ──
-    observaciones   : d.obs,
-  };
-
-  // Texto serializado igual que el script lo escribe en Sheets
-  const productoTxtLocal = productosArray
-    .map(p => p.cajas + 'x ' + p.nombre + ' ($' + p.subtotal.toFixed(2) + ')')
-    .join(' | ');
-
-  // Guardar en memoria local con estructura normalizada para el listado
-  const localId  = 'LOCAL-' + now.getTime();
-  const localReg = {
-    id               : localId,
-    numero_propuesta : localId,
-    fecha            : now.toISOString(),
-    fecha_vencimiento: vence.toISOString(),
-    vendedor         : SES.nombre || SES.user || '',
-    user_vendedor    : SES.user   || '',
-    razon_social     : d.razon,
-    establecimiento  : d.establ,
-    contacto         : d.contacto,
-    telefono         : d.telf,
-    tipo_cliente     : d.tipo,
-    productos_detalle: productoTxtLocal,
-    total_cajas      : cajas,
-    total_usd        : totalUSD,
-    condicion_pago   : d.condicion,
-    estado_propuesta : 'activa',
-    observaciones    : d.obs,
-    _pendiente_sync  : true,
-  };
-  propuestas.unshift(localReg);
-  guardarLocal();
-  actualizarBadge();
-
-  // Enviar al Apps Script
-  try {
-    const resp = await fetch(API, {
-      method : 'POST',
-      mode   : 'no-cors',   // CORS bloqueado por Google — no hay respuesta leíble
-      headers: { 'Content-Type': 'application/json' },
-      body   : JSON.stringify(payload)
-    });
-    // Con no-cors la respuesta siempre es opaque (status 0), no podemos leerla.
-    // El script sí escribe en Sheets; confirmamos con el reload del listado.
-    document.getElementById('ok-box').classList.add('show');
-    toast('✅ Propuesta guardada en el sistema');
-  } catch(e) {
-    toast('⚠️ Sin conexión — guardado localmente, se sincronizará al abrir el listado');
-    document.getElementById('ok-box').classList.add('show');
-  }
-
-  btn.disabled = false; sp.classList.remove('on');
-}
-
-/* ── LIMPIAR CACHÉ LOCAL ── */
-function limpiarCache(){
-  // Contar cuántos registros pendientes hay antes de borrar
-  cargarLocal();
-  const pendientes = propuestas.filter(p => p._pendiente_sync);
-  const total      = propuestas.length;
-
-  if (total === 0) {
-    toast('ℹ️ El caché ya está vacío');
-    return;
-  }
-
-  const msg = pendientes.length > 0
-    ? `Se eliminarán ${pendientes.length} registro(s) local(es) que NO están en la base de datos.\n\nLos ${total - pendientes.length} registro(s) del servidor se recargarán.\n\n¿Continuar?`
-    : `Se limpiará el caché local (${total} registro(s)) y se recargará todo desde el servidor.\n\n¿Continuar?`;
-
-  if (!confirm(msg)) return;
-
-  // Borrar TODO el caché local de este usuario
-  try { localStorage.removeItem(STORE_KEY()); } catch(e){}
-  propuestas = [];
-
-  toast('🗑️ Caché limpiado — recargando desde el servidor...');
-
-  // Recargar desde el servidor inmediatamente
-  cargarListado();
-}
-const STORE_KEY=()=>'sccr_prop_'+(SES?.user||'guest');
-function guardarLocal(){try{localStorage.setItem(STORE_KEY(),JSON.stringify(propuestas));}catch(e){}}
-function cargarLocal(){try{const r=localStorage.getItem(STORE_KEY());propuestas=r?JSON.parse(r):[];}catch(e){propuestas=[];}}
-
-function estadoProp(p){
-  if(p.estado_propuesta==='anulada') return 'anulada';
-  if(p.estado_propuesta==='convertida') return 'convertida';
-  if(new Date(p.fecha_vencimiento)<new Date()) return 'vencida';
-  return p.estado_propuesta||'activa';
-}
-function diasRestantes(p){return Math.ceil((new Date(p.fecha_vencimiento)-new Date())/86400000);}
-
+// ── CARGAR LISTADO DESDE SCCR BASE DE DATOS ──────────────────
 async function cargarListado(){
-  // 1. Mostrar datos locales inmediatamente
-  cargarLocal();
-  renderListado();
-
-  // 2. Sincronizar desde el Apps Script
-  // El script tiene: doGet → case 'propuestas' → actionGetPropuestas(e.parameter.vendedor)
-  // Parámetro: vendedor (filtra por user_vendedor si es vendedor; admin recibe todo)
-  try {
-    const rol      = (SES?.rol || '').toLowerCase();
-    const isAdmin  = rol === 'admin' || rol === 'gerente';
-    // Admin no filtra (vendedor vacío = todas); vendedor filtra por su user
-    const vendedor = isAdmin ? '' : (SES?.user || '');
-
-    const url = API + '?action=propuestas'
-              + (vendedor ? '&vendedor=' + encodeURIComponent(vendedor) : '');
-
-    const resp = await fetch(url, { method: 'GET' });
-    if (!resp.ok) throw new Error('HTTP ' + resp.status);
-
-    const raw = await resp.json();
-    // El script devuelve { ok: true, data: [...] }
-    const lista = raw?.data || (Array.isArray(raw) ? raw : null);
-
-    if (lista && lista.length > 0) {
-      // Normalizar campos del servidor al esquema local
-      const del_servidor = lista.map(p => ({
-        id               : p.numero_propuesta || p.id || '',
-        numero_propuesta : p.numero_propuesta  || '',
-        fecha            : p.fecha             || '',
-        fecha_vencimiento: p.fecha_vencimiento || '',
-        vendedor         : p.vendedor          || '',
-        user_vendedor    : p.user_vendedor      || '',
-        razon_social     : p.razon_social       || '',
-        establecimiento  : p.establecimiento    || '',
-        contacto         : p.contacto           || '',
-        telefono         : p.telefono           || '',
-        tipo_cliente     : p.tipo_cliente       || '',
-        productos_detalle: p.productos_detalle  || '',
-        total_cajas      : p.total_cajas        || 0,
-        total_usd        : p.total_usd          || 0,
-        condicion_pago   : p.condicion_pago     || '',
-        estado_propuesta : p.estado_propuesta   || 'activa',
-        observaciones    : p.observaciones      || '',
-        _pendiente_sync  : false,
-      }));
-
-      // Merge: conservar registros locales pendientes de sync que aún no llegaron al servidor
-      const idsServidor  = new Set(del_servidor.map(p => p.numero_propuesta).filter(Boolean));
-      const soloLocales  = propuestas.filter(p => p._pendiente_sync && !idsServidor.has(p.numero_propuesta));
-      propuestas = [...soloLocales, ...del_servidor];
-      guardarLocal();
-      renderListado();
-    }
-  } catch(e) {
-    console.warn('cargarListado: usando datos locales.', e.message);
+  const tbody=document.getElementById('tbl-body');
+  if(tbody)tbody.innerHTML='<tr><td colspan="13"><div class="empty-state"><div class="empty-ico">⏳</div><div class="empty-txt">Cargando desde SCCR - Base de Datos...</div></div></td></tr>';
+  try{
+    const rol=(SES?.rol||'').toLowerCase();
+    const isAdmin=rol==='admin'||rol==='gerente';
+    const vendedor=isAdmin?'':(SES?.user||'');
+    const url=API+'?action=propuestas'+(vendedor?'&vendedor='+encodeURIComponent(vendedor):'');
+    const resp=await fetch(url,{method:'GET'});
+    if(!resp.ok)throw new Error('HTTP '+resp.status);
+    const raw=await resp.json();
+    const lista=Array.isArray(raw?.data)?raw.data:(Array.isArray(raw)?raw:[]);
+    // Normalizar campos del script (snake_case) al esquema del frontend
+    propuestas=lista.map(p=>({
+      id               :p.numero_propuesta||p.id||'',
+      numero_propuesta :p.numero_propuesta||'',
+      fecha            :p.fecha||'',
+      fecha_vencimiento:p.fecha_vencimiento||'',
+      vendedor         :p.vendedor||'',
+      user_vendedor    :p.user_vendedor||'',
+      razon_social     :p.razon_social||'',
+      establecimiento  :p.establecimiento||'',
+      contacto         :p.contacto||'',
+      telefono         :p.telefono||'',
+      tipo_cliente     :p.tipo_cliente||'',
+      productos_detalle:p.productos_detalle||'',
+      total_cajas      :p.total_cajas||0,
+      total_usd        :p.total_usd||0,
+      condicion_pago   :p.condicion_pago||'',
+      estado_propuesta :p.estado_propuesta||'pendiente',
+      observaciones    :p.observaciones||'',
+    }));
+  }catch(e){
+    console.warn('cargarListado:',e.message);
+    propuestas=[];
+    if(tbody)tbody.innerHTML='<tr><td colspan="13"><div class="empty-state"><div class="empty-ico">⚠️</div><div class="empty-txt">Error al cargar. Verifica tu conexión.</div></div></td></tr>';
   }
+  renderListado();
 }
 
+// ── PARSEAR FECHA dd/MM/yyyy que devuelve el script ───────────
+function parseFechaVenc(str){
+  if(!str)return null;
+  const m=String(str).match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if(m)return new Date(+m[3],+m[2]-1,+m[1]);
+  const d=new Date(str);return isNaN(d.getTime())?null:d;
+}
+function estadoProp(p){
+  if(p.estado_propuesta==='anulada'||p.estado_propuesta==='rechazada')return 'anulada';
+  if(p.estado_propuesta==='convertida'||p.estado_propuesta==='aprobada')return 'convertida';
+  const fv=parseFechaVenc(p.fecha_vencimiento);
+  if(fv&&fv<new Date())return 'vencida';
+  return 'activa';
+}
+function diasRestantes(p){
+  const fv=parseFechaVenc(p.fecha_vencimiento);
+  if(!fv)return 99;
+  return Math.ceil((fv-new Date())/86400000);
+}
+
+// ── RENDER LISTADO ────────────────────────────────────────────
 function renderListado(){
   const buscar=(document.getElementById('filtro-buscar')?.value||'').toLowerCase();
   const estFilt=document.getElementById('filtro-estado')?.value||'';
   const vendFilt=document.getElementById('filtro-vendedor')?.value||'';
   const rol=(SES?.rol||'').toLowerCase();
   const isAdmin=rol==='admin'||rol==='gerente';
-
   let filtradas=propuestas.filter(p=>{
-    if(!isAdmin&&p.user_vendedor!==SES?.user) return false;
-    if(vendFilt&&p.user_vendedor!==vendFilt) return false;
+    if(!isAdmin&&p.user_vendedor!==SES?.user)return false;
+    if(vendFilt&&p.user_vendedor!==vendFilt)return false;
     const estado=estadoProp(p);
-    if(estFilt&&estado!==estFilt) return false;
+    if(estFilt&&estado!==estFilt)return false;
     if(buscar){const h=((p.establecimiento||'')+(p.razon_social||'')+(p.id||'')).toLowerCase();if(!h.includes(buscar))return false;}
     return true;
   });
-
   if(isAdmin){
     const vendedores=[...new Set(propuestas.map(p=>p.user_vendedor).filter(Boolean))];
     const sel=document.getElementById('filtro-vendedor');
     if(sel){const curr=sel.value;sel.innerHTML='<option value="">Todos los vendedores</option>';vendedores.forEach(v=>{const op=document.createElement('option');op.value=v;op.textContent=v;if(v===curr)op.selected=true;sel.appendChild(op);});}
   }
-
   actualizarBadge(filtradas.length);
-
   const tbody=document.getElementById('tbl-body');
-  if(!filtradas.length){
-    tbody.innerHTML='<tr><td colspan="13"><div class="empty-state"><div class="empty-ico">📋</div><div class="empty-txt">No hay propuestas</div><div class="empty-sub">Las propuestas nuevas aparecerán aquí.</div></div></td></tr>';
-    return;
-  }
-
+  if(!filtradas.length){tbody.innerHTML='<tr><td colspan="13"><div class="empty-state"><div class="empty-ico">📋</div><div class="empty-txt">No hay propuestas</div><div class="empty-sub">Crea una nueva propuesta o ajusta los filtros.</div></div></td></tr>';return;}
   const bmap={activa:'est-activa',vencida:'est-vencida',convertida:'est-convertida',anulada:'est-anulada'};
   const elmap={activa:'Activa',vencida:'Vencida',convertida:'Convertida',anulada:'Anulada'};
-
   tbody.innerHTML=filtradas.map(p=>{
     const estado=estadoProp(p);
     const dias=diasRestantes(p);
     const bloq=estado==='anulada'||estado==='convertida'||estado==='vencida';
-    const pId=esc(p.id||'—');
+    const pId=esc(p.id||p.numero_propuesta||'—');
     const urgente=dias<=2&&estado==='activa';
     const venceText=estado==='activa'?(dias<=0?'Vence hoy':dias===1?'Mañana':dias+' días'):'';
     return `<tr>
@@ -1049,80 +640,281 @@ function actualizarBadge(total){
   const b2=document.getElementById('badge-count2');if(b2)b2.textContent=total!=null?total:propuestas.length;
 }
 
-/* ── ACCIONES ── */
+// ── ACCIONES DE FILA ──────────────────────────────────────────
 function accionFila(accion,id){
-  const p=propuestas.find(x=>x.id===id);if(!p)return;
+  const p=propuestas.find(x=>(x.id===id||x.numero_propuesta===id));if(!p)return;
   accionPendiente={accion,id};
+  if(accion==='modificar'){abrirModalEdit(p);return;}
   const tit=document.getElementById('modal-title'),msg=document.getElementById('modal-msg'),btn=document.getElementById('modal-confirm-btn');
-  if(accion==='convertir'){tit.textContent='Convertir a Pedido';msg.innerHTML=`¿Marcar la propuesta <strong>${id}</strong> de <strong>${esc(p.establecimiento)}</strong> como convertida a pedido?`;btn.style.background='#1D4ED8';btn.textContent='Convertir';}
-  else if(accion==='modificar'){tit.textContent='Modificar Propuesta';msg.innerHTML=`Se cargarán los datos de la propuesta <strong>${id}</strong> en el formulario para su edición.`;btn.style.background='var(--naranja)';btn.textContent='Modificar';}
-  else if(accion==='anular'){tit.textContent='Anular Propuesta';msg.innerHTML=`¿Confirmas anular la propuesta <strong>${id}</strong> de <strong>${esc(p.establecimiento)}</strong>? Esta acción no se puede deshacer.`;btn.style.background='var(--rojo)';btn.textContent='Anular';}
+  if(accion==='convertir'){
+    tit.textContent='Convertir a Pedido';
+    msg.innerHTML=`¿Convertir la propuesta <strong>${id}</strong> de <strong>${esc(p.establecimiento||p.razon_social)}</strong> en un pedido?<br><br>El pedido llegará a SCCR - Base de Datos como <strong>Pendiente</strong> de aprobación.`;
+    btn.style.background='#1D4ED8';btn.textContent='Convertir';
+  }else if(accion==='anular'){
+    tit.textContent='Anular Propuesta';
+    msg.innerHTML=`¿Anular la propuesta <strong>${id}</strong> de <strong>${esc(p.establecimiento||p.razon_social)}</strong>?<br><br>El registro se mantiene en la base de datos con estado <strong>Anulada</strong>.`;
+    btn.style.background='var(--rojo)';btn.textContent='Anular';
+  }
   document.getElementById('modal-overlay').classList.add('show');
 }
 function cerrarModal(){document.getElementById('modal-overlay').classList.remove('show');accionPendiente=null;}
+
 async function confirmarAccion(){
   if(!accionPendiente)return;
   const{accion,id}=accionPendiente;cerrarModal();
-  const idx=propuestas.findIndex(x=>x.id===id);if(idx===-1)return;
 
   if(accion==='convertir'){
-    propuestas[idx].estado_propuesta='convertida';
-    guardarLocal();renderListado();
-    toast('✅ Propuesta convertida a pedido');
-    // El script convierte la propuesta y crea un pedido real
+    // 1. Marcar como convertida localmente para reflejo inmediato
+    const idx=propuestas.findIndex(x=>x.id===id||x.numero_propuesta===id);
+    if(idx!==-1)propuestas[idx].estado_propuesta='convertida';
+    renderListado();
+    toast('⏳ Convirtiendo propuesta a pedido...');
+    // 2. El script convertirPropuesta: marca la propuesta como aprobada Y crea el pedido
+    // El pedido llega como tipoCliente='nuevo' → estado='pendiente' en pedidos_raw
     try{
       await fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
         body:JSON.stringify({action:'convertirPropuesta',numero_propuesta:id})});
-    }catch(e){}
-  }
-  else if(accion==='anular'){
-    propuestas[idx].estado_propuesta='anulada';
-    guardarLocal();renderListado();
+      toast('✅ Propuesta convertida — Pedido creado como Pendiente en SCCR');
+    }catch(e){toast('❌ Error de conexión al convertir.');}
+    // 3. Actualizar estado de la propuesta en la hoja propuestas
+    await syncEstado(id,'aprobada');
+
+  }else if(accion==='anular'){
+    // 1. Marcar localmente
+    const idx=propuestas.findIndex(x=>x.id===id||x.numero_propuesta===id);
+    if(idx!==-1)propuestas[idx].estado_propuesta='anulada';
+    renderListado();
     toast('🚫 Propuesta anulada');
-    syncEstado(id,'anulada');
+    // 2. Actualizar en Sheets: estado → 'rechazada' (vocabulario del script)
+    await syncEstado(id,'rechazada');
   }
-  else if(accion==='modificar'){
-    const p=propuestas[idx];switchTab('nueva');precargarFormulario(p);
-    toast('✏️ Datos cargados — modifica y guarda de nuevo');
-  }
-}
-async function syncEstado(id, estado){
-  // El script tiene action 'actualizarEstadoPropuesta' con numero_propuesta y estado
-  // Los estados válidos del script son: pendiente | aprobada | rechazada | vencida
-  // Mapeamos los estados del frontend al vocabulario del script:
-  const estadoScript = estado === 'convertida' ? 'aprobada'
-                     : estado === 'anulada'    ? 'rechazada'
-                     : estado;
-  try {
-    await fetch(API, {
-      method : 'POST',
-      mode   : 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body   : JSON.stringify({
-        action           : 'actualizarEstadoPropuesta',
-        numero_propuesta : id,
-        estado           : estadoScript,
-      })
-    });
-  } catch(e) { console.warn('syncEstado error:', e.message); }
-}
-function precargarFormulario(p){
-  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.value=v||'';};
-  set('f-razon',p.razon_social);set('f-establ',p.establecimiento);set('f-contacto',p.contacto);
-  set('f-telf',p.telefono);set('f-tipo',p.tipo_cliente);set('f-prod',p.productos_detalle);
-  set('f-cantidad',p.total_cajas);set('f-condicion',p.condicion_pago);
-  set('f-total-usd',p.total_usd);set('f-obs',p.observaciones);
-  document.getElementById('ok-box')?.classList.remove('show');
 }
 
-/* ── UTILS ── */
+// ── SYNC ESTADO EN SHEETS ─────────────────────────────────────
+async function syncEstado(numeroPropuesta,estadoScript){
+  // El script acepta: pendiente | aprobada | rechazada | vencida
+  try{
+    await fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'actualizarEstadoPropuesta',numero_propuesta:numeroPropuesta,estado:estadoScript})});
+  }catch(e){console.warn('syncEstado error:',e.message);}
+}
+
+// ── MODAL EDICIÓN INLINE ──────────────────────────────────────
+function abrirModalEdit(p){
+  propEditando=p;
+  document.getElementById('edit-num').textContent='#'+(p.numero_propuesta||p.id||'');
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v||'';};
+  set('e-razon',   p.razon_social);
+  set('e-establ',  p.establecimiento);
+  set('e-contacto',p.contacto);
+  set('e-telf',    p.telefono);
+  set('e-prod',    p.productos_detalle);
+  set('e-cajas',   p.total_cajas);
+  set('e-condicion',p.condicion_pago);
+  set('e-total',   p.total_usd);
+  set('e-obs',     p.observaciones);
+  document.getElementById('modal-edit').classList.add('show');
+}
+function cerrarModalEdit(){document.getElementById('modal-edit').classList.remove('show');propEditando=null;accionPendiente=null;}
+
+function calcEditSubtotal(){
+  const prod=document.getElementById('e-prod').value;
+  const cajas=parseFloat(document.getElementById('e-cajas').value)||0;
+  const cond=document.getElementById('e-condicion').value;
+  const precios={'Tipo Restaurante ($312/caja)':312,'Tipo Pasapalo ($264/caja)':264,'Tipo Torta ($240/caja)':240,'Combinación de productos':0};
+  const pb=precios[prod]??0;
+  if(!pb||!cajas){document.getElementById('e-total').value='';return;}
+  const f=cond==='Crédito 30 días'?1.00:cond==='Crédito 15 días'?0.96:cond==='Crédito 5 días'?0.83:cond==='Contado'?0.80:1.00;
+  document.getElementById('e-total').value=(cajas*pb*f).toFixed(2);
+}
+
+async function guardarEdicion(){
+  if(!propEditando)return;
+  const btn=document.getElementById('btn-edit-save'),sp=document.getElementById('edit-sp'),txt=document.getElementById('edit-save-txt');
+  btn.disabled=true;sp.classList.add('on');txt.style.display='none';
+
+  const razon  =(document.getElementById('e-razon').value||'').trim();
+  const establ =(document.getElementById('e-establ').value||'').trim();
+  if(!razon||!establ){toast('⚠️ Razón Social y Establecimiento son obligatorios');btn.disabled=false;sp.classList.remove('on');txt.style.display='';return;}
+
+  const cajas    =parseFloat(document.getElementById('e-cajas').value)||0;
+  const totalUSD =parseFloat(document.getElementById('e-total').value)||0;
+  const prod     =document.getElementById('e-prod').value||'';
+  const cond     =document.getElementById('e-condicion').value||'';
+  const contacto =(document.getElementById('e-contacto').value||'').trim();
+  const telf     =(document.getElementById('e-telf').value||'').trim();
+  const obs      =(document.getElementById('e-obs').value||'').trim();
+
+  const productosArray=(cajas>0&&prod)?[{nombre:prod,cajas,precio:cajas>0?totalUSD/cajas:0,subtotal:totalUSD}]:[];
+
+  // Payload para actualizarEstadoPropuesta no sirve para modificar campos.
+  // Usamos una nueva propuesta con la misma data actualizada (el script no tiene
+  // un endpoint de UPDATE por campos). La solución correcta es anular la anterior
+  // y crear una nueva, o usar el endpoint de actualización si existe.
+  // Con el script actual, enviamos los datos actualizados como nueva propuesta
+  // y luego anulamos la anterior — el listado mostrará solo la nueva.
+  const numeroPropuesta=propEditando.numero_propuesta||propEditando.id;
+  const payloadNueva={
+    action:'nuevaPropuesta',fecha:new Date().toISOString(),dias_vigencia:7,
+    vendedor:propEditando.vendedor||SES.nombre||SES.user||'',
+    userVendedor:propEditando.user_vendedor||SES.user||'',
+    razonSocial:razon,establecimiento:establ,
+    contacto,telefono:telf,
+    tipoCliente:propEditando.tipo_cliente||'potencial',
+    productos:productosArray,totalUSD,condicionPago:cond,
+    observaciones:obs,
+  };
+
+  try{
+    // 1. Crear propuesta actualizada en Sheets
+    await fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payloadNueva)});
+    // 2. Anular la propuesta anterior en Sheets (mantiene el registro marcado como rechazada)
+    await syncEstado(numeroPropuesta,'rechazada');
+    // 3. Actualizar localmente
+    const idx=propuestas.findIndex(x=>x.id===numeroPropuesta||x.numero_propuesta===numeroPropuesta);
+    if(idx!==-1){
+      propuestas[idx]={...propuestas[idx],razon_social:razon,establecimiento:establ,
+        contacto,telefono:telf,productos_detalle:prod,total_cajas:cajas,
+        total_usd:totalUSD,condicion_pago:cond,observaciones:obs};
+    }
+    cerrarModalEdit();renderListado();
+    toast('✅ Propuesta actualizada en SCCR - Base de Datos');
+  }catch(e){toast('❌ Error al guardar cambios. Verifica tu conexión.');}
+  btn.disabled=false;sp.classList.remove('on');txt.style.display='';
+}
+
+// ── PDF (igual al original) ───────────────────────────────────
+function generarPDF(datosOverride){
+  const d=datosOverride||leerFormulario();
+  if(!d.razon||!d.establ){toast('⚠️ Completa Razón Social y Establecimiento');return;}
+  const{jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  const W=doc.internal.pageSize.getWidth();
+  const ML=14,MR=14,IW=W-ML-MR;
+  const ROJO=[200,24,30],NEGRO=[17,24,39],BLANCO=[255,255,255],GRIS=[107,114,128],GRIS_C=[229,231,235];
+  const hdr=(txt,startY)=>{
+    doc.autoTable({startY,head:[[txt]],body:[],styles:{cellPadding:2.8},
+      headStyles:{fillColor:ROJO,textColor:BLANCO,fontStyle:'bold',fontSize:9.5,halign:'center'},
+      margin:{left:ML,right:MR},theme:'grid',tableWidth:IW});
+    return doc.lastAutoTable.finalY;
+  };
+  let y=10;
+  try{
+    const logoEl=document.querySelector('header .header-left img');
+    if(logoEl&&logoEl.complete&&logoEl.naturalWidth>0){
+      const cv=document.createElement('canvas');cv.width=120;cv.height=120;
+      const cx=cv.getContext('2d');cx.drawImage(logoEl,0,0,120,120);
+      doc.addImage(cv.toDataURL('image/png'),'PNG',W/2-15,y,30,30);y+=34;
+    }else throw new Error();
+  }catch(e){doc.setFillColor(...ROJO);doc.circle(W/2,y+15,15,'F');doc.setFontSize(7);doc.setFont('helvetica','bold');doc.setTextColor(...BLANCO);doc.text('CASABE',W/2,y+13,{align:'center'});doc.text('REAL',W/2,y+18,{align:'center'});y+=34;}
+  doc.setFontSize(13);doc.setFont('helvetica','bold');doc.setTextColor(...NEGRO);
+  doc.text('PROPUESTA COMERCIAL',W/2,y+4,{align:'center'});y+=10;
+  doc.autoTable({startY:y,head:[['NOMBRE DEL ESTABLECIMIENTO','CONTACTO','TELEFONO','TIPO DE CLIENTE']],
+    body:[[d.establ||d.razon||'—',d.contacto||'—',d.telf||'—',(d.tipo||'PROSPECTO').toUpperCase()]],
+    styles:{fontSize:8.8,cellPadding:2.8,textColor:NEGRO,lineColor:GRIS_C,lineWidth:.3},
+    headStyles:{fillColor:ROJO,textColor:BLANCO,fontStyle:'bold',fontSize:8,halign:'center'},
+    bodyStyles:{halign:'center'},
+    columnStyles:{0:{cellWidth:IW*0.32},1:{cellWidth:IW*0.24},2:{cellWidth:IW*0.22},3:{cellWidth:IW*0.22}},
+    margin:{left:ML,right:MR},theme:'grid',tableWidth:IW});
+  y=doc.lastAutoTable.finalY+3;
+  if(simData&&simData.nombreProd){
+    y=hdr('PROYECCIÓN MENSUAL',y);
+    doc.setFontSize(7.5);doc.setFont('helvetica','italic');doc.setTextColor(...GRIS);
+    doc.setFillColor(255,255,255);doc.rect(ML,y,IW,6,'F');doc.setDrawColor(...GRIS_C);doc.rect(ML,y,IW,6,'S');
+    doc.text('* Estimación basada en los datos ingresados. Resultados pueden variar según la operación.',ML+IW/2,y+4,{align:'center'});y+=6;
+    const colP=[IW*0.34,IW*0.22,IW*0.22,IW*0.22];
+    const hdrP=['Producto:','Precio / caja:','Paquetes / caja:','Unidades / paquete:'];
+    const datP=[simData.nombreProd,'$'+fmtN(simData.precioCaja),String(simData.paqCaja),String(simData.udsPaq)];
+    let cx2=ML;
+    doc.setFillColor(...ROJO);doc.rect(ML,y,IW,6,'F');doc.setDrawColor(...GRIS_C);doc.rect(ML,y,IW,6,'S');
+    doc.setFont('helvetica','bold');doc.setFontSize(7.8);
+    hdrP.forEach((h,i)=>{doc.setFillColor(...ROJO);doc.rect(cx2,y,colP[i],6,'F');doc.setTextColor(...BLANCO);doc.text(h,cx2+colP[i]/2,y+4,{align:'center'});cx2+=colP[i];});
+    y+=6;cx2=ML;
+    datP.forEach((v,i)=>{
+      doc.setFillColor(255,255,255);doc.setDrawColor(...GRIS_C);doc.rect(cx2,y,colP[i],7,'FD');
+      doc.setFont('helvetica',i===0?'normal':'bold');doc.setFontSize(8.5);
+      doc.setTextColor(...NEGRO);doc.text(v,cx2+colP[i]/2,y+5,{align:'center'});cx2+=colP[i];
+    });
+    y+=7;
+    const halfw=(IW-1)/2;const x1=ML,x2=ML+halfw+1;const RH=6.8;
+    const izq=[[simData.totalTiendas?'Total tiendas que posee el establecimiento':null,simData.totalTiendas?String(simData.totalTiendas):null],['Servicios estimados por día',String(simData.serviciosDia)],['Unidades de casabe por servicio',String(simData.udsServicio)],['Dias de mayor trabajo al mes',String(simData.diasMes)],['Precio del servicio al comensal (USD)','$'+simData.precioServicio.toFixed(2)]].filter(r=>r[0]);
+    const der=[['Servicios / mes:',fmt(simData.serviciosMes)],['Paquetes requeridos / mes:',fmt(simData.paquetesMes)],['Cajas requeridas / mes:',simData.cajasExactas.toFixed(1)],['venta sugerida / cajas',String(simData.cajasComprar)],['Inversión mensual:','$'+fmtN(simData.inversion)],['Ingresos por casabe:','$'+fmtN(simData.ingresos)]];
+    const rows=Math.max(izq.length,der.length);
+    doc.setFontSize(8.2);
+    for(let i=0;i<rows;i++){
+      const ry=y+i*RH;
+      doc.setFillColor(255,255,255);doc.setDrawColor(...GRIS_C);doc.rect(x1,ry,halfw,RH,'FD');
+      if(izq[i]){doc.setFont('helvetica','normal');doc.setTextColor(...NEGRO);doc.text(izq[i][0],x1+2,ry+RH-2);doc.setFont('helvetica','bold');doc.text(izq[i][1],x1+halfw-2,ry+RH-2,{align:'right'});}
+      doc.setFillColor(255,255,255);doc.rect(x2,ry,halfw,RH,'FD');
+      if(der[i]){doc.setFont('helvetica','normal');doc.setTextColor(...NEGRO);doc.text(der[i][0],x2+2,ry+RH-2);doc.setFont('helvetica','bold');doc.text(der[i][1],x2+halfw-2,ry+RH-2,{align:'right'});}
+    }
+    y+=rows*RH;
+    const GH=10;doc.setFillColor(...ROJO);doc.rect(ML,y,IW,GH,'F');doc.setDrawColor(...GRIS_C);doc.rect(ML,y,IW,GH,'S');
+    doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...BLANCO);
+    doc.text('GANANCIA ESTIMADA / MES:',ML+4,y+4.5);
+    doc.setFontSize(8.5);doc.text('$:',x2+2,y+3.8);doc.text('$'+fmtN(simData.ganancia),x2+halfw-2,y+3.8,{align:'right'});
+    doc.text('ROI:',x2+2,y+8.5);doc.text(simData.roi+'%',x2+halfw-2,y+8.5,{align:'right'});
+    y+=GH+3;
+  }
+  y=hdr('CONDICIONES COMERCIALES',y);
+  doc.autoTable({startY:y,head:[['FACTURACION','PEDIDO MINIMO','DESPACHO','PRIMER PEDIDO']],
+    body:[['En dólares americanos — pagadero en bolívares a tasa BCV del día del pago','1 caja por referencia — sin mínimo general','Coordinado directamente con su asesor comercial','Nuevos clientes deben presentar RIF de la empresa y Cédula del dueño de la empresa']],
+    styles:{fontSize:7.5,cellPadding:2.8,textColor:NEGRO,valign:'top'},
+    headStyles:{fillColor:ROJO,textColor:BLANCO,fontStyle:'bold',fontSize:7.5,halign:'center'},
+    columnStyles:{0:{cellWidth:IW*0.26},1:{cellWidth:IW*0.26},2:{cellWidth:IW*0.24},3:{cellWidth:IW*0.24}},
+    margin:{left:ML,right:MR},theme:'grid',tableWidth:IW});
+  y=doc.lastAutoTable.finalY+3;
+  const preciosProd={'Tipo Restaurante ($312/caja)':312,'Tipo Pasapalo ($264/caja)':264,'Tipo Torta ($240/caja)':240,'Combinación de productos':0};
+  const fProd=document.getElementById('f-prod')?.value||'';
+  const fCajas=parseFloat(document.getElementById('f-cantidad')?.value)||0;
+  const pb30=(preciosProd[fProd]||0)*fCajas;
+  y=hdr('CONDICIONES DE PAGO',y);
+  doc.autoTable({startY:y,head:[['CREDITO 30 DIAS','CREDITO 15 DIAS (DESCUENTO)','CREDITO 5 DIAS (DESCUENTO)','CONTADO (DESCUENTO)']],
+    body:[['--','4%','17%','20%'],[pb30>0?'$'+fmtN(pb30):'—',pb30>0?'$'+fmtN(pb30*0.96):'—',pb30>0?'$'+fmtN(pb30*0.83):'—',pb30>0?'$'+fmtN(pb30*0.80):'—']],
+    styles:{fontSize:8.5,cellPadding:3,halign:'center',textColor:NEGRO},
+    headStyles:{fillColor:ROJO,textColor:BLANCO,fontStyle:'bold',fontSize:7.8,halign:'center'},
+    columnStyles:{0:{cellWidth:IW/4},1:{cellWidth:IW/4},2:{cellWidth:IW/4},3:{cellWidth:IW/4}},
+    margin:{left:ML,right:MR},theme:'grid',tableWidth:IW});
+  y=doc.lastAutoTable.finalY+3;
+  const fProdVal=document.getElementById('f-prod')?.value||'—';
+  const fCajasVal=document.getElementById('f-cantidad')?.value||'—';
+  const fTotalVal=parseFloat(document.getElementById('f-total-usd')?.value)||0;
+  const fCondVal=(document.getElementById('f-condicion')?.value||'—').toUpperCase();
+  y=hdr('RESUMEN DE LA PROPUESTA',y);
+  doc.autoTable({startY:y,head:[['PRODUCTO','CAJAS','TOTAL','CONDICION DE PAGO']],
+    body:[[fProdVal,fCajasVal,fTotalVal>0?'$'+fmtN(fTotalVal):'—',fCondVal]],
+    styles:{fontSize:8.8,cellPadding:3,halign:'center',textColor:NEGRO},
+    headStyles:{fillColor:ROJO,textColor:BLANCO,fontStyle:'bold',fontSize:8,halign:'center'},
+    bodyStyles:{fontStyle:'bold'},
+    columnStyles:{0:{cellWidth:IW*0.40,halign:'left'},1:{cellWidth:IW*0.15},2:{cellWidth:IW*0.20},3:{cellWidth:IW*0.25}},
+    margin:{left:ML,right:MR},theme:'grid',tableWidth:IW});
+  y=doc.lastAutoTable.finalY+3;
+  if(d.obs){
+    y=hdr('OBSERVACIONES',y);
+    doc.autoTable({startY:y,head:[],body:[[d.obs]],
+      styles:{fontSize:8,cellPadding:3,textColor:NEGRO,lineColor:GRIS_C,lineWidth:.3},
+      margin:{left:ML,right:MR},theme:'grid',tableWidth:IW});
+  }
+  const slug=(d.establ||'PROPUESTA').replace(/[^a-zA-Z0-9]/g,'_').toUpperCase();
+  const fecha=new Date().toISOString().slice(0,10).replace(/-/g,'');
+  doc.save('PROPUESTA_'+slug+'_'+fecha+'.pdf');
+  toast('✅ PDF generado y descargado');
+}
+
+// ── UTILS ─────────────────────────────────────────────────────
 function fmt(n){return Number(n||0).toLocaleString('es-VE');}
 function fmtN(n){return Number(n||0).toLocaleString('es-VE',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function fFecha(iso){if(!iso)return'—';try{return new Date(iso).toLocaleDateString('es-VE',{day:'2-digit',month:'2-digit',year:'numeric'});}catch(e){return String(iso).slice(0,10);}}
+function fFecha(v){
+  if(!v)return'—';
+  // Formato dd/MM/yyyy del script
+  const m=String(v).match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if(m)return m[0].slice(0,10);
+  try{return new Date(v).toLocaleDateString('es-VE',{day:'2-digit',month:'2-digit',year:'numeric'});}catch(e){return String(v).slice(0,10);}
+}
 function toast(msg,ms=2800){const t=document.getElementById('toast');t.innerHTML=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),ms);}
 
-/* ── INIT ── */
+// ── INIT ──────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded',()=>{
   try{const r=sessionStorage.getItem('sccr');if(r)SES=JSON.parse(r);}catch(e){}
   if(typeof SCCR!=='undefined'){
@@ -1139,7 +931,8 @@ window.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('user-role-display').textContent=rol==='admin'?'Administrador':rol==='gerente'?'Gerente de Ventas':'Asesor Comercial';
     if(rol==='admin'||rol==='gerente')document.querySelectorAll('.admin-only').forEach(e=>e.style.display='inline-block');
   }
-  cargarLocal();actualizarBadge();
+  // Sin localStorage — el badge se actualiza solo al cargar el listado
+  actualizarBadge(0);
 });
 function cerrarSesion(){if(typeof SCCR!=='undefined')SCCR.cerrarSesion();else{sessionStorage.removeItem('sccr');window.location.href='index.html';}}
 </script>
