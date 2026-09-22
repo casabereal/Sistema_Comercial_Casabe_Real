@@ -1018,17 +1018,18 @@ function renderPedidos() {
 
   const estMap = { pendiente:'est-pendiente', confirmado:'est-confirmado', despachado:'est-despachado', anulado:'est-anulado' };
   const estLbl = { pendiente:'Pendiente', confirmado:'Confirmado', despachado:'Despachado', anulado:'Anulado' };
+  // Clase extra para las td generadas dinámicamente: si esAdmin ya llevan 'visible'
+  const tdAdminClass = esAdmin ? 'solo-admin visible' : 'solo-admin';
 
   tbody.innerHTML = filtrados.map(p => {
     const estado = (p.estado || 'pendiente').toLowerCase();
     const num    = esc(p.numero_pedido || '—');
     const bloq   = estado === 'despachado' || estado === 'anulado';
-    // Fix 1: celdas Fecha Despacho y Acciones solo visibles para admin
     const celdasAdmin = esAdmin ? `
-      <td class="solo-admin">
+      <td class="${tdAdminClass}">
         ${estado !== 'anulado' ? `<input class="fecha-desp" type="date" id="fd-${num}" value="${p.fecha_despacho||''}" title="Fecha de despacho">` : '—'}
       </td>
-      <td class="solo-admin">
+      <td class="${tdAdminClass}">
         <div class="row-acts">
           <button class="ra ra-apr" onclick="accionPedido('aprobar','${num}')" ${bloq||estado==='confirmado'?'disabled':''} title="Aprobar pedido">✅ Aprobar</button>
           <button class="ra ra-mod" onclick="accionPedido('despachar','${num}')" ${estado!=='confirmado'?'disabled':''} title="Despachar">🚚 Despachar</button>
