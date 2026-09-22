@@ -1120,19 +1120,16 @@ async function confirmarModal() {
     // Mientras tanto también actualizamos el estado local inmediatamente.
 
     const payload = {
-      // Esta acción debe estar en el script (ver nota abajo)
       action         : 'actualizarEstadoPedido',
       numero_pedido  : numPedido,
       estado         : nuevoEst,
       fecha_despacho : fecha_despacho || '',
     };
 
-    // Llamada al API — el script debe tener el case 'actualizarEstadoPedido' en doPost.
-    // Si aún no está agregado, el script responde {ok:false,msg:'no reconocida'} pero
-    // el estado local sí se actualiza para reflejo inmediato en pantalla.
     try {
       await fetch(API, {
         method : 'POST',
+        mode   : 'no-cors',
         headers: { 'Content-Type': 'application/json' },
         body   : JSON.stringify(payload)
       });
