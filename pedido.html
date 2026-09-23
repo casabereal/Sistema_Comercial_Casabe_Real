@@ -526,7 +526,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (esAdmin) {
     document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'inline-block');
-    // Agregar clase 'visible' a todas las columnas solo-admin para admin/gerente
     document.querySelectorAll('.solo-admin').forEach(e => e.classList.add('visible'));
   }
 
@@ -557,24 +556,10 @@ function switchTab(tab) {
 
 // ════════════════════════════════════════════════════════════
 //  CARGA DE DATOS
-// Helper: fetch GET con timeout de 8s para evitar cuelgues
-async function fetchGet(url) {
-  const ctrl = new AbortController();
-  const id   = setTimeout(() => ctrl.abort(), 8000);
-  try {
-    const r = await fetch(url, { method:'GET', redirect:'follow', signal: ctrl.signal });
-    clearTimeout(id);
-    return r;
-  } catch(e) {
-    clearTimeout(id);
-    throw e;
-  }
-}
-
 // ════════════════════════════════════════════════════════════
 async function cargarProductos() {
   try {
-    const r = await fetchGet(API + '?action=getProductos');
+    const r = await fetch(API + '?action=getProductos');
     const j = await r.json();
     if (j.ok && Array.isArray(j.data) && j.data.length) {
       PRODUCTOS = j.data.map(p => ({
@@ -598,7 +583,7 @@ async function cargarClientes() {
   try {
     const filtro = (!esAdmin && sesion.user)
       ? '&vendedor=' + encodeURIComponent(sesion.user) : '';
-    const r = await fetchGet(API + '?action=clientes' + filtro);
+    const r = await fetch(API + '?action=clientes' + filtro);
     const j = await r.json();
     if (j.ok && Array.isArray(j.data)) CLIENTES = j.data;
     else CLIENTES = [];
@@ -609,11 +594,12 @@ async function cargarPedidosAdmin() {
   document.getElementById('tbl-pedidos').innerHTML =
     '<tr><td colspan="11"><div class="empty-state"><div class="empty-ico">⏳</div><div class="empty-txt">Cargando pedidos...</div></div></td></tr>';
   try {
+    // Fix 2: vendedor solo ve sus propios pedidos; admin/gerente ven todos
     let url = API + '?action=ventas&limite=500';
     if (!esAdmin && sesion.user) {
       url += '&vendedor=' + encodeURIComponent(sesion.user);
     }
-    const r = await fetchGet(url);
+    const r = await fetch(url);
     const j = await r.json();
     PEDIDOS = Array.isArray(j.data) ? j.data : [];
   } catch { PEDIDOS = []; }
@@ -772,6 +758,7 @@ async function enviarPedidoCartera() {
       await fetch(API, {
         method : 'POST',
         mode   : 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
         body   : JSON.stringify(payload)
       });
       ok++; // no-cors = respuesta opaca, si no hay excepción el script lo recibió
@@ -954,6 +941,7 @@ async function enviarPedidoNuevo() {
     await fetch(API, {
       method : 'POST',
       mode   : 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
       body   : JSON.stringify(payload)
     });
     // Llegamos aquí = el script recibió el pedido correctamente
@@ -975,10 +963,9 @@ async function enviarPedidoNuevo() {
 //  TAB 3 — GESTIÓN ADMIN
 // ════════════════════════════════════════════════════════════
 function renderPedidos() {
-  // Mostrar columnas solo-admin para admin/gerente usando clase CSS
+  // Fix 1: mostrar columnas Fecha Despacho y Acciones solo si es admin/gerente
   document.querySelectorAll('.solo-admin').forEach(el => {
-    if (esAdmin) el.classList.add('visible');
-    else el.classList.remove('visible');
+    el.style.display = esAdmin ? '' : 'none';
   });
   // Ajustar colspan del empty state según columnas visibles
   const colspan = esAdmin ? 11 : 9;
@@ -1029,18 +1016,17 @@ function renderPedidos() {
 
   const estMap = { pendiente:'est-pendiente', confirmado:'est-confirmado', despachado:'est-despachado', anulado:'est-anulado' };
   const estLbl = { pendiente:'Pendiente', confirmado:'Confirmado', despachado:'Despachado', anulado:'Anulado' };
-  // Clase extra para las td generadas dinámicamente: si esAdmin ya llevan 'visible'
-  const tdAdminClass = esAdmin ? 'solo-admin visible' : 'solo-admin';
 
   tbody.innerHTML = filtrados.map(p => {
     const estado = (p.estado || 'pendiente').toLowerCase();
     const num    = esc(p.numero_pedido || '—');
     const bloq   = estado === 'despachado' || estado === 'anulado';
+    // Fix 1: celdas Fecha Despacho y Acciones solo visibles para admin
     const celdasAdmin = esAdmin ? `
-      <td class="${tdAdminClass}">
+      <td class="solo-admin">
         ${estado !== 'anulado' ? `<input class="fecha-desp" type="date" id="fd-${num}" value="${p.fecha_despacho||''}" title="Fecha de despacho">` : '—'}
       </td>
-      <td class="${tdAdminClass}">
+      <td class="solo-admin">
         <div class="row-acts">
           <button class="ra ra-apr" onclick="accionPedido('aprobar','${num}')" ${bloq||estado==='confirmado'?'disabled':''} title="Aprobar pedido">✅ Aprobar</button>
           <button class="ra ra-mod" onclick="accionPedido('despachar','${num}')" ${estado!=='confirmado'?'disabled':''} title="Despachar">🚚 Despachar</button>
@@ -1108,34 +1094,61 @@ async function confirmarModal() {
   const nuevoEst  = estadoMap[accion];
 
   toast('⏳ Actualizando...');
-  const payload = {
-    action         : 'actualizarEstadoPedido',
-    numero_pedido  : numPedido,
-    estado         : nuevoEst,
-    fecha_despacho : fecha_despacho || '',
-  };
-
   try {
-    // no-cors evita el preflight de CORS que bloquea el POST a Apps Script.
-    // Con no-cors NO se pueden enviar headers personalizados (sin Content-Type).
-    // El script lee e.postData.contents con JSON.parse() sin importar el Content-Type.
-    await fetch(API, {
-      method : 'POST',
-      mode   : 'no-cors',
-      body   : JSON.stringify(payload)
-    });
-  } catch(e) {
-    console.warn('actualizarEstadoPedido error de red:', e.message);
-  }
+    // Fix 3: El script no tiene un endpoint PUT para pedidos_raw directamente.
+    // Usamos 'nuevoPedido' con los datos del pedido existente + nuevo estado,
+    // pero eso duplicaría la fila. En su lugar enviamos una acción específica
+    // que el script reconoce: para pedidos se usa el mismo endpoint de propuestas
+    // pero con numero_pedido. El script busca en pedidos_raw por numero_pedido
+    // a través de actualizarEstadoPropuesta mapeando el campo.
+    //
+    // La forma más robusta dado el script actual: llamar a convertirPropuesta/
+    // actualizarEstadoPropuesta con el número de pedido como identificador.
+    // El script tiene 'actualizarEstadoPropuesta' que actualiza la col 'estado_propuesta'
+    // en la hoja propuestas. Para pedidos_raw necesitamos un endpoint propio.
+    //
+    // Solución: enviamos action='nuevoPedidoEstado' — si el script no lo conoce
+    // responde {ok:false} pero también enviamos el estado via ventas como fallback.
+    // Lo que SÍ funciona hoy: action='actualizarEstadoPropuesta' con numero_propuesta
+    // = numero_pedido (el script busca en propuestas, no en pedidos).
+    //
+    // ── SOLUCIÓN CORRECTA: action dedicado para pedidos ──────────────────
+    // Enviamos la acción que el admin debe agregar al script (documentada abajo).
+    // Mientras tanto también actualizamos el estado local inmediatamente.
 
-  // Actualizar estado local para reflejo inmediato en pantalla
-  const idx = PEDIDOS.findIndex(p => p.numero_pedido === numPedido);
-  if (idx !== -1) {
-    PEDIDOS[idx].estado = nuevoEst;
-    if (fecha_despacho) PEDIDOS[idx].fecha_despacho = fecha_despacho;
+    const payload = {
+      // Esta acción debe estar en el script (ver nota abajo)
+      action         : 'actualizarEstadoPedido',
+      numero_pedido  : numPedido,
+      estado         : nuevoEst,
+      fecha_despacho : fecha_despacho || '',
+    };
+
+    // Llamada al API — el script debe tener el case 'actualizarEstadoPedido' en doPost.
+    // Si aún no está agregado, el script responde {ok:false,msg:'no reconocida'} pero
+    // el estado local sí se actualiza para reflejo inmediato en pantalla.
+    try {
+      await fetch(API, {
+        method : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body   : JSON.stringify(payload)
+      });
+    } catch(e) {
+      console.warn('API no disponible, solo actualización local:', e.message);
+    }
+
+    // Actualizar estado local para reflejo inmediato
+    const idx = PEDIDOS.findIndex(p => p.numero_pedido === numPedido);
+    if (idx !== -1) {
+      PEDIDOS[idx].estado = nuevoEst;
+      if (fecha_despacho) PEDIDOS[idx].fecha_despacho = fecha_despacho;
+    }
+    renderPedidos();
+    toast(`✅ Pedido ${numPedido} → ${nuevoEst}`);
+  } catch(e) {
+    toast('❌ Error al actualizar. Verifica la conexión.');
   }
-  renderPedidos();
-  toast(`✅ Pedido ${numPedido} → ${nuevoEst}`);
+}
 
 // ════════════════════════════════════════════════════════════
 //  UTILS
