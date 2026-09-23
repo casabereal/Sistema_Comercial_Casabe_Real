@@ -557,10 +557,24 @@ function switchTab(tab) {
 
 // ════════════════════════════════════════════════════════════
 //  CARGA DE DATOS
+// Helper: fetch GET con timeout de 8s para evitar cuelgues
+async function fetchGet(url) {
+  const ctrl = new AbortController();
+  const id   = setTimeout(() => ctrl.abort(), 8000);
+  try {
+    const r = await fetch(url, { method:'GET', redirect:'follow', signal: ctrl.signal });
+    clearTimeout(id);
+    return r;
+  } catch(e) {
+    clearTimeout(id);
+    throw e;
+  }
+}
+
 // ════════════════════════════════════════════════════════════
 async function cargarProductos() {
   try {
-    const r = await fetch(API + '?action=getProductos');
+    const r = await fetchGet(API + '?action=getProductos');
     const j = await r.json();
     if (j.ok && Array.isArray(j.data) && j.data.length) {
       PRODUCTOS = j.data.map(p => ({
@@ -584,7 +598,7 @@ async function cargarClientes() {
   try {
     const filtro = (!esAdmin && sesion.user)
       ? '&vendedor=' + encodeURIComponent(sesion.user) : '';
-    const r = await fetch(API + '?action=clientes' + filtro);
+    const r = await fetchGet(API + '?action=clientes' + filtro);
     const j = await r.json();
     if (j.ok && Array.isArray(j.data)) CLIENTES = j.data;
     else CLIENTES = [];
@@ -595,12 +609,11 @@ async function cargarPedidosAdmin() {
   document.getElementById('tbl-pedidos').innerHTML =
     '<tr><td colspan="11"><div class="empty-state"><div class="empty-ico">⏳</div><div class="empty-txt">Cargando pedidos...</div></div></td></tr>';
   try {
-    // Fix 2: vendedor solo ve sus propios pedidos; admin/gerente ven todos
     let url = API + '?action=ventas&limite=500';
     if (!esAdmin && sesion.user) {
       url += '&vendedor=' + encodeURIComponent(sesion.user);
     }
-    const r = await fetch(url);
+    const r = await fetchGet(url);
     const j = await r.json();
     PEDIDOS = Array.isArray(j.data) ? j.data : [];
   } catch { PEDIDOS = []; }
