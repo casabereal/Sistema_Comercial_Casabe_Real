@@ -759,7 +759,6 @@ async function enviarPedidoCartera() {
       await fetch(API, {
         method : 'POST',
         mode   : 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
         body   : JSON.stringify(payload)
       });
       ok++; // no-cors = respuesta opaca, si no hay excepción el script lo recibió
@@ -942,7 +941,6 @@ async function enviarPedidoNuevo() {
     await fetch(API, {
       method : 'POST',
       mode   : 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
       body   : JSON.stringify(payload)
     });
     // Llegamos aquí = el script recibió el pedido correctamente
@@ -1097,58 +1095,34 @@ async function confirmarModal() {
   const nuevoEst  = estadoMap[accion];
 
   toast('⏳ Actualizando...');
+  const payload = {
+    action         : 'actualizarEstadoPedido',
+    numero_pedido  : numPedido,
+    estado         : nuevoEst,
+    fecha_despacho : fecha_despacho || '',
+  };
+
   try {
-    // Fix 3: El script no tiene un endpoint PUT para pedidos_raw directamente.
-    // Usamos 'nuevoPedido' con los datos del pedido existente + nuevo estado,
-    // pero eso duplicaría la fila. En su lugar enviamos una acción específica
-    // que el script reconoce: para pedidos se usa el mismo endpoint de propuestas
-    // pero con numero_pedido. El script busca en pedidos_raw por numero_pedido
-    // a través de actualizarEstadoPropuesta mapeando el campo.
-    //
-    // La forma más robusta dado el script actual: llamar a convertirPropuesta/
-    // actualizarEstadoPropuesta con el número de pedido como identificador.
-    // El script tiene 'actualizarEstadoPropuesta' que actualiza la col 'estado_propuesta'
-    // en la hoja propuestas. Para pedidos_raw necesitamos un endpoint propio.
-    //
-    // Solución: enviamos action='nuevoPedidoEstado' — si el script no lo conoce
-    // responde {ok:false} pero también enviamos el estado via ventas como fallback.
-    // Lo que SÍ funciona hoy: action='actualizarEstadoPropuesta' con numero_propuesta
-    // = numero_pedido (el script busca en propuestas, no en pedidos).
-    //
-    // ── SOLUCIÓN CORRECTA: action dedicado para pedidos ──────────────────
-    // Enviamos la acción que el admin debe agregar al script (documentada abajo).
-    // Mientras tanto también actualizamos el estado local inmediatamente.
-
-    const payload = {
-      action         : 'actualizarEstadoPedido',
-      numero_pedido  : numPedido,
-      estado         : nuevoEst,
-      fecha_despacho : fecha_despacho || '',
-    };
-
-    try {
-      await fetch(API, {
-        method : 'POST',
-        mode   : 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body   : JSON.stringify(payload)
-      });
-    } catch(e) {
-      console.warn('API no disponible, solo actualización local:', e.message);
-    }
-
-    // Actualizar estado local para reflejo inmediato
-    const idx = PEDIDOS.findIndex(p => p.numero_pedido === numPedido);
-    if (idx !== -1) {
-      PEDIDOS[idx].estado = nuevoEst;
-      if (fecha_despacho) PEDIDOS[idx].fecha_despacho = fecha_despacho;
-    }
-    renderPedidos();
-    toast(`✅ Pedido ${numPedido} → ${nuevoEst}`);
+    // no-cors evita el preflight de CORS que bloquea el POST a Apps Script.
+    // Con no-cors NO se pueden enviar headers personalizados (sin Content-Type).
+    // El script lee e.postData.contents con JSON.parse() sin importar el Content-Type.
+    await fetch(API, {
+      method : 'POST',
+      mode   : 'no-cors',
+      body   : JSON.stringify(payload)
+    });
   } catch(e) {
-    toast('❌ Error al actualizar. Verifica la conexión.');
+    console.warn('actualizarEstadoPedido error de red:', e.message);
   }
-}
+
+  // Actualizar estado local para reflejo inmediato en pantalla
+  const idx = PEDIDOS.findIndex(p => p.numero_pedido === numPedido);
+  if (idx !== -1) {
+    PEDIDOS[idx].estado = nuevoEst;
+    if (fecha_despacho) PEDIDOS[idx].fecha_despacho = fecha_despacho;
+  }
+  renderPedidos();
+  toast(`✅ Pedido ${numPedido} → ${nuevoEst}`);
 
 // ════════════════════════════════════════════════════════════
 //  UTILS
