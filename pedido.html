@@ -758,7 +758,6 @@ async function enviarPedidoCartera() {
       await fetch(API, {
         method : 'POST',
         mode   : 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
         body   : JSON.stringify(payload)
       });
       ok++; // no-cors = respuesta opaca, si no hay excepción el script lo recibió
@@ -941,7 +940,6 @@ async function enviarPedidoNuevo() {
     await fetch(API, {
       method : 'POST',
       mode   : 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
       body   : JSON.stringify(payload)
     });
     // Llegamos aquí = el script recibió el pedido correctamente
@@ -1027,13 +1025,18 @@ function renderPedidos() {
     const bloq   = estado === 'despachado' || estado === 'anulado';
     const celdasAdmin = esAdmin ? `
       <td class="${tdAdminClass}">
-        ${estado !== 'anulado' ? `<input class="fecha-desp" type="date" id="fd-${num}" value="${p.fecha_despacho||''}" title="Fecha de despacho">` : '—'}
+        ${estado === 'anulado' ? '—' :
+          estado === 'despachado'
+            ? `<input class="fecha-desp" type="date" value="${p.fecha_despacho||''}" disabled title="Fecha de despacho fijada">`
+            : `<input class="fecha-desp" type="date" id="fd-${num}" value="${p.fecha_despacho||''}"
+                 title="Selecciona fecha para despachar automáticamente"
+                 onchange="despacharConFecha('${num}', this)">`
+        }
       </td>
       <td class="${tdAdminClass}">
         <div class="row-acts">
-          <button class="ra ra-apr" onclick="accionPedido('aprobar','${num}')" ${bloq||estado==='confirmado'?'disabled':''} title="Aprobar pedido">✅ Aprobar</button>
-          <button class="ra ra-mod" onclick="accionPedido('despachar','${num}')" ${estado!=='confirmado'?'disabled':''} title="Despachar">🚚 Despachar</button>
-          <button class="ra ra-anul" onclick="accionPedido('anular','${num}')" ${bloq?'disabled':''} title="Anular pedido">🚫 Anular</button>
+          <button class="ra ra-apr"  onclick="accionPedido('aprobar','${num}')"   ${bloq||estado==='confirmado'?'disabled':''} title="Aprobar pedido">✅ Aprobar</button>
+          <button class="ra ra-anul" onclick="accionPedido('anular','${num}')"    ${bloq?'disabled':''} title="Anular pedido">🚫 Anular</button>
         </div>
       </td>` : '';
     return `<tr>
@@ -1063,19 +1066,12 @@ function accionPedido(accion, numPedido) {
   const btn = document.getElementById('modal-ok');
 
   if (accion === 'aprobar') {
-    tit.textContent  = 'Aprobar Pedido';
-    msg.innerHTML    = `¿Confirmar el pedido <strong>${numPedido}</strong>?<br>Quedará como <strong>Confirmado</strong> y listo para despachar.`;
-    btn.textContent  = 'Aprobar'; btn.className = 'modal-ok verde';
-  } else if (accion === 'despachar') {
-    const fd = document.getElementById('fd-' + numPedido)?.value || '';
-    _accionPedidoData.fecha_despacho = fd;
-    tit.textContent = 'Marcar como Despachado';
-    msg.innerHTML   = `¿Marcar el pedido <strong>${numPedido}</strong> como despachado?`
-      + (fd ? `<br>Fecha de despacho: <strong>${fd}</strong>` : '<br><em>⚠️ No has seleccionado fecha de despacho.</em>');
-    btn.textContent = 'Despachar'; btn.className = 'modal-ok azul';
+    tit.textContent = 'Aprobar Pedido';
+    msg.innerHTML   = `¿Confirmar el pedido <strong>${numPedido}</strong>?<br>Quedará como <strong>Confirmado</strong> y listo para despachar.`;
+    btn.textContent = 'Aprobar'; btn.className = 'modal-ok verde';
   } else if (accion === 'anular') {
     tit.textContent = 'Anular Pedido';
-    msg.innerHTML   = `¿Anular definitivamente el pedido <strong>${numPedido}</strong>?<br>Esta acción no se puede deshacer.`;
+    msg.innerHTML   = `¿Anular el pedido <strong>${numPedido}</strong>? Esta acción no se puede deshacer.`;
     btn.textContent = 'Anular'; btn.className = 'modal-ok';
   }
   document.getElementById('modal').classList.add('open');
@@ -1086,70 +1082,80 @@ function cerrarModal() {
   _accionPedidoData = null;
 }
 
+// Despacho automático al seleccionar fecha — Cambio 1, 2 y 3
+async function despacharConFecha(numPedido, inputEl) {
+  const fecha = inputEl.value;
+  if (!fecha) return;
+
+  // Confirmar antes de fijar
+  if (!confirm(`¿Despachar el pedido ${numPedido} con fecha ${fecha}?\n\nEsta acción cambiará el estado a DESPACHADO y fijará la fecha.`)) {
+    inputEl.value = '';
+    return;
+  }
+
+  // Fix 2: inhabilitar el input inmediatamente y mostrar como fijo
+  inputEl.disabled = true;
+  inputEl.title    = 'Fecha de despacho fijada';
+
+  // Actualizar estado local
+  const idx = PEDIDOS.findIndex(p => p.numero_pedido === numPedido);
+  if (idx !== -1) {
+    PEDIDOS[idx].estado         = 'despachado';
+    PEDIDOS[idx].fecha_despacho = fecha;
+  }
+  renderPedidos();
+  toast('⏳ Guardando despacho en SCCR...');
+
+  // Fix 3: POST sin Content-Type para evitar preflight CORS con Apps Script
+  try {
+    await fetch(API, {
+      method : 'POST',
+      mode   : 'no-cors',
+      body   : JSON.stringify({
+        action         : 'actualizarEstadoPedido',
+        numero_pedido  : numPedido,
+        estado         : 'despachado',
+        fecha_despacho : fecha,
+      })
+    });
+    toast(`✅ Pedido ${numPedido} despachado el ${fecha}`);
+  } catch(e) {
+    toast('❌ Error de conexión al guardar el despacho.');
+    console.warn('despacharConFecha error:', e.message);
+  }
+}
+
 async function confirmarModal() {
   if (!_accionPedidoData) return;
-  const { accion, numPedido, fecha_despacho } = _accionPedidoData;
+  const { accion, numPedido } = _accionPedidoData;
   cerrarModal();
 
-  // Fix 3: mapeo correcto de acciones a estados de pedidos_raw
-  // El script escribe 'confirmado' / 'cancelado' / 'despachado' en la col estado
-  const estadoMap = { aprobar:'confirmado', despachar:'despachado', anular:'cancelado' };
+  const estadoMap = { aprobar:'confirmado', anular:'cancelado' };
   const nuevoEst  = estadoMap[accion];
+  if (!nuevoEst) return;
 
   toast('⏳ Actualizando...');
+
+  // Actualizar estado local
+  const idx = PEDIDOS.findIndex(p => p.numero_pedido === numPedido);
+  if (idx !== -1) PEDIDOS[idx].estado = nuevoEst;
+  renderPedidos();
+
+  // POST sin Content-Type para evitar preflight CORS
   try {
-    // Fix 3: El script no tiene un endpoint PUT para pedidos_raw directamente.
-    // Usamos 'nuevoPedido' con los datos del pedido existente + nuevo estado,
-    // pero eso duplicaría la fila. En su lugar enviamos una acción específica
-    // que el script reconoce: para pedidos se usa el mismo endpoint de propuestas
-    // pero con numero_pedido. El script busca en pedidos_raw por numero_pedido
-    // a través de actualizarEstadoPropuesta mapeando el campo.
-    //
-    // La forma más robusta dado el script actual: llamar a convertirPropuesta/
-    // actualizarEstadoPropuesta con el número de pedido como identificador.
-    // El script tiene 'actualizarEstadoPropuesta' que actualiza la col 'estado_propuesta'
-    // en la hoja propuestas. Para pedidos_raw necesitamos un endpoint propio.
-    //
-    // Solución: enviamos action='nuevoPedidoEstado' — si el script no lo conoce
-    // responde {ok:false} pero también enviamos el estado via ventas como fallback.
-    // Lo que SÍ funciona hoy: action='actualizarEstadoPropuesta' con numero_propuesta
-    // = numero_pedido (el script busca en propuestas, no en pedidos).
-    //
-    // ── SOLUCIÓN CORRECTA: action dedicado para pedidos ──────────────────
-    // Enviamos la acción que el admin debe agregar al script (documentada abajo).
-    // Mientras tanto también actualizamos el estado local inmediatamente.
-
-    const payload = {
-      // Esta acción debe estar en el script (ver nota abajo)
-      action         : 'actualizarEstadoPedido',
-      numero_pedido  : numPedido,
-      estado         : nuevoEst,
-      fecha_despacho : fecha_despacho || '',
-    };
-
-    // Llamada al API — el script debe tener el case 'actualizarEstadoPedido' en doPost.
-    // Si aún no está agregado, el script responde {ok:false,msg:'no reconocida'} pero
-    // el estado local sí se actualiza para reflejo inmediato en pantalla.
-    try {
-      await fetch(API, {
-        method : 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body   : JSON.stringify(payload)
-      });
-    } catch(e) {
-      console.warn('API no disponible, solo actualización local:', e.message);
-    }
-
-    // Actualizar estado local para reflejo inmediato
-    const idx = PEDIDOS.findIndex(p => p.numero_pedido === numPedido);
-    if (idx !== -1) {
-      PEDIDOS[idx].estado = nuevoEst;
-      if (fecha_despacho) PEDIDOS[idx].fecha_despacho = fecha_despacho;
-    }
-    renderPedidos();
+    await fetch(API, {
+      method : 'POST',
+      mode   : 'no-cors',
+      body   : JSON.stringify({
+        action        : 'actualizarEstadoPedido',
+        numero_pedido : numPedido,
+        estado        : nuevoEst,
+      })
+    });
     toast(`✅ Pedido ${numPedido} → ${nuevoEst}`);
   } catch(e) {
-    toast('❌ Error al actualizar. Verifica la conexión.');
+    toast('❌ Error de conexión. El cambio se refleja localmente.');
+    console.warn('confirmarModal error:', e.message);
   }
 }
 
