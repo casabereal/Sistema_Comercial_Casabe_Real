@@ -257,11 +257,13 @@ const API='https://script.google.com/macros/s/AKfycbyludOrnVw1jSCYJUWELTjPjhuR7N
 let _vendedores=[],_productosMeta=[],_filasMeta=[];
 
 window.addEventListener('DOMContentLoaded',async()=>{
- const sesion=SCCR.initSCCR(['admin','gerente']); if(!sesion)return;
+ const sesion=SCCR.initSCCR(['admin']); if(!sesion)return;
  const rol=(sesion.rol||'').toLowerCase();
+ // Solo admin tiene acceso a cargas.html — gerente y vendedor son redirigidos
+ if(rol!=='admin'){window.location.href='inicio.html';return;}
  document.getElementById('user-name-display').textContent=sesion.nombre||'—';
- document.getElementById('user-role-display').textContent=rol==='admin'?'Administrador':rol==='gerente'?'Gerente de Ventas':'Asesor Comercial';
- if(rol==='admin'||rol==='gerente')document.querySelectorAll('.admin-only').forEach(e=>e.style.display='inline-block');
+ document.getElementById('user-role-display').textContent='Administrador';
+ document.querySelectorAll('.admin-only').forEach(e=>e.style.display='inline-block');
  cargarUsuarios(); await cargarVendedores();
  const hoy=new Date().toISOString().split('T')[0];document.getElementById('m-fecha-desde').value=hoy;document.getElementById('m-fecha-hasta').value=hoy;
 });
