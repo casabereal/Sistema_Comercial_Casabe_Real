@@ -612,23 +612,48 @@ function toast(msg,ms=2800){
 
 <script>
 document.addEventListener('DOMContentLoaded', function(){
-  if(typeof SCCR !== 'undefined'){
-    const sesion=SCCR.initSCCR();
-    if(sesion){
-      document.getElementById('user-name-display').textContent=sesion.nombre || '—';
-      const rol=(sesion.rol||'').toLowerCase();
-      document.getElementById('user-role-display').textContent =
-        rol==='admin' ? 'Administrador' :
-        rol==='gerente' ? 'Gerente de Ventas' : 'Asesor Comercial';
-        if (esAdmin) {
+    // 1. Sesión
+  let sess = null;
+  try { sess = JSON.parse(sessionStorage.getItem('sccr')); } catch(e) {}
+  if (!sess || !sess.rol) { window.location.href = 'index.html'; return; }
+
+  const rol         = sess.rol.toLowerCase();
+  const esAdmin     = rol === 'admin';
+  const esDirectivo = rol === 'admin' || rol === 'gerente';
+  const vendedorId  = sess.vendedor_id || sess.user || null;
+
+  // 2. Header
+  document.getElementById('user-name-display').textContent = sess.nombre || 'Usuario';
+  document.getElementById('user-role-display').textContent =
+    esAdmin ? 'Administrador' : rol === 'gerente' ? 'Gerente de Ventas' : 'Asesor Comercial';
+
+  // 3. Admin-only
+  if (esAdmin) {
     document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
     document.querySelectorAll('.dir-only').forEach(el => el.style.display = 'inline-block');
   } else if (rol === 'gerente') {
     document.querySelectorAll('.dir-only').forEach(el => el.style.display = 'inline-block');
-       }
-    }
   }
+
+  // 4. Subtítulo panel
+  document.getElementById('panel-subtitle').textContent =
+    esAdmin ? 'Gerencial / Admin' : rol === 'gerente' ? 'Gerencial / Consolidado' : 'Comercial';
+
+  // 5. Columna vendedor en tabla: solo directivos
+  if (esDirectivo) {
+    document.querySelectorAll('.col-vendedor').forEach(el => el.style.display = '');
+    document.getElementById('tabla-cartera-titulo').textContent = 'Cartera Consolidada — Todos los Vendedores';
+    document.getElementById('meta-por-vendedor').style.display = '';
+  }
+
+  // 6. Lanzar cargas en paralelo
+  await Promise.all([
+    cargarKpiVentas(esDirectivo, vendedorId),
+    cargarMetaVsVentas(esDirectivo, vendedorId),
+    cargarClientes(esDirectivo ? null : vendedorId),
+  ]);
 });
+
 function cerrarSesion(){ if(typeof SCCR!=='undefined') SCCR.cerrarSesion(); }
 </script>
 </body>
