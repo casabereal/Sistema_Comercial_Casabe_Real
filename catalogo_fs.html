@@ -602,6 +602,14 @@ window.addEventListener('DOMContentLoaded',()=>{
   }catch(e){}
 });
 
+// Admin-only
+  if (esAdmin) {
+    document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
+    document.querySelectorAll('.dir-only').forEach(el => el.style.display = 'inline-block');
+  } else if (rol === 'gerente') {
+    document.querySelectorAll('.dir-only').forEach(el => el.style.display = 'inline-block');
+  }
+
 function fmt(n){return Number(n||0).toLocaleString('es-VE');}
 function toast(msg,ms=2800){
   const t=document.getElementById('toast');
