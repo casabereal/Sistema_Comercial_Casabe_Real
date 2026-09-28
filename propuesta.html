@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SCCR — Propuesta Comercial</title>
+<script src="assets/sccr-auth.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=League+Spartan:wght@700&display=swap" rel="stylesheet">
@@ -38,7 +39,6 @@ header{background:var(--rojo);color:#fff;height:60px;display:flex;align-items:ce
 .menu-item:hover{background:var(--sidebar-hover);color:var(--rojo)}
 .menu-item.active{font-family:'League Spartan',sans-serif;font-weight:700;color:var(--rojo);border-bottom-color:var(--rojo)}
 .admin-only{display:none}
-.dir-only{display:none}
 .page-wrap{max-width:1120px;margin:0 auto;padding:24px 18px 60px}
 .tab-bar{display:flex;background:#fff;border:1.5px solid var(--borde);border-radius:var(--r);overflow:hidden;margin-bottom:24px;box-shadow:var(--sh)}
 .tab-btn{flex:1;padding:13px 8px;border:none;background:transparent;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--gris);cursor:pointer;transition:all .2s;border-right:1.5px solid var(--borde);display:flex;align-items:center;justify-content:center;gap:7px}
@@ -180,15 +180,15 @@ tbody td{padding:10px 11px;vertical-align:middle}
 </header>
 <nav class="nav-bar">
   <a href="inicio.html"      class="menu-item">INICIO</a>
+  <a href="clientes.html"    class="menu-item admin-only">CLIENTES</a>
   <a href="meta.html"        class="menu-item">META</a>
   <a href="catalogo_fs.html" class="menu-item">CATÁLOGO</a>
   <a href="propuesta.html"   class="menu-item active">PROPUESTA</a>
   <a href="pedido.html"      class="menu-item">PEDIDO</a>
   <a href="reporte.html"     class="menu-item">REPORTE</a>
-  <a href="clientes.html"    class="menu-item dir-only">CLIENTES</a>
-  <a href="dashboard.html"   class="menu-item dir-only">DASHBOARD</a>
-  <a href="historico.html"   class="menu-item dir-only">HISTÓRICO</a>
+  <a href="dashboard.html"   class="menu-item admin-only">DASHBOARD</a>
   <a href="cargas.html"      class="menu-item admin-only">CARGAS</a>
+  <a href="historico.html"   class="menu-item admin-only">HISTÓRICO</a>
   <a href="ccp.html"         class="menu-item admin-only">CCP</a>
 </nav>
 <div class="page-wrap">
@@ -924,20 +924,24 @@ function toast(msg,ms=2800){const t=document.getElementById('toast');t.innerHTML
 // ── INIT ──────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded',()=>{
   try{const r=sessionStorage.getItem('sccr');if(r)SES=JSON.parse(r);}catch(e){}
-  if(!SES||!SES.rol){window.location.href='index.html';return;}
-  document.getElementById('user-name-display').textContent=SES.nombre||SES.user||'—';
-  const rol=(SES.rol||'').toLowerCase();
-  document.getElementById('user-role-display').textContent=rol==='admin'?'Administrador':rol==='gerente'?'Gerente de Ventas':'Asesor Comercial';
-  if(rol==='admin'){
-    document.querySelectorAll('.admin-only').forEach(e=>e.style.display='inline-block');
-    document.querySelectorAll('.dir-only').forEach(e=>e.style.display='inline-block');
-  }else if(rol==='gerente'){
-    document.querySelectorAll('.dir-only').forEach(e=>e.style.display='inline-block');
+  if(typeof SCCR!=='undefined'){
+    const s=SCCR.initSCCR();
+    if(s){SES=s;
+      document.getElementById('user-name-display').textContent=s.nombre||'—';
+      const rol=(s.rol||'').toLowerCase();
+      document.getElementById('user-role-display').textContent=rol==='admin'?'Administrador':rol==='gerente'?'Gerente de Ventas':'Asesor Comercial';
+      if(rol==='admin'||rol==='gerente')document.querySelectorAll('.admin-only').forEach(e=>e.style.display='inline-block');
+    }
+  }else if(SES){
+    document.getElementById('user-name-display').textContent=SES.nombre||SES.user||'—';
+    const rol=(SES.rol||'').toLowerCase();
+    document.getElementById('user-role-display').textContent=rol==='admin'?'Administrador':rol==='gerente'?'Gerente de Ventas':'Asesor Comercial';
+    if(rol==='admin'||rol==='gerente')document.querySelectorAll('.admin-only').forEach(e=>e.style.display='inline-block');
   }
   // Sin localStorage — el badge se actualiza solo al cargar el listado
   actualizarBadge(0);
 });
-function cerrarSesion(){sessionStorage.removeItem('sccr');window.location.href='index.html';}
+function cerrarSesion(){if(typeof SCCR!=='undefined')SCCR.cerrarSesion();else{sessionStorage.removeItem('sccr');window.location.href='index.html';}}
 </script>
 </body>
 </html>
