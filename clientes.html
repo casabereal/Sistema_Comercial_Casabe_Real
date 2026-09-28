@@ -7,7 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-<script src="assets/sccr-auth.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
@@ -73,6 +72,7 @@ header{
 .menu-item:hover{background:var(--sidebar-hover);color:var(--rojo)}
 .menu-item.active{font-family:'League Spartan',sans-serif;font-weight:700;color:var(--rojo);border-bottom-color:var(--rojo)}
 .admin-only{display:none}
+.dir-only{display:none}
 
 /* ── MAIN ────────────────────────────────────────────────── */
 .main-container{flex:1;padding:22px 18px 32px;max-width:1400px;width:100%;margin:0 auto}
@@ -189,15 +189,15 @@ footer strong{color:var(--text-dark)}
 <!-- ── NAV ───────────────────────────────────────────────────── -->
 <nav class="nav-bar">
   <a href="inicio.html"      class="menu-item">INICIO</a>
-  <a href="clientes.html"    class="menu-item active">CLIENTES</a>
   <a href="meta.html"        class="menu-item">META</a>
   <a href="catalogo_fs.html" class="menu-item">CATALOGO_FS</a>
   <a href="propuesta.html"   class="menu-item">PROPUESTA</a>
   <a href="pedido.html"      class="menu-item">PEDIDO</a>
   <a href="reporte.html"     class="menu-item">REPORTE</a>
-  <a href="dashboard.html"   class="menu-item admin-only">DASHBOARD</a>
+  <a href="clientes.html"    class="menu-item dir-only active">CLIENTES</a>
+  <a href="dashboard.html"   class="menu-item dir-only">DASHBOARD</a>
+  <a href="historico.html"   class="menu-item dir-only">HISTÓRICO</a>
   <a href="cargas.html"      class="menu-item admin-only">CARGAS</a>
-  <a href="historico.html"   class="menu-item admin-only">HISTÓRICO</a>
   <a href="ccp.html"         class="menu-item admin-only">CCP</a>
 </nav>
 
@@ -332,9 +332,9 @@ let sesion          = null;
 let esDirectivo     = false;
 
 // ── INIT ──────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  sesion = SCCR.initSCCR(); // todos los roles pueden ver clientes
-  if (!sesion) return;
+document.addEventListener('DOMContentLoaded', async () => {
+  try { sesion = JSON.parse(sessionStorage.getItem('sccr')); } catch(e) {}
+  if (!sesion || !sesion.rol) { window.location.href = 'index.html'; return; }
 
   const rol = sesion.rol.toLowerCase();
   esDirectivo = (rol === 'admin' || rol === 'gerente');
@@ -345,9 +345,12 @@ document.addEventListener('DOMContentLoaded', () => {
     rol === 'admin' ? 'Administrador' :
     rol === 'gerente' ? 'Gerente de Ventas' : 'Asesor Comercial';
 
-  // Menú admin-only
-  if (esDirectivo) {
+  // Menú por rol
+  if (rol === 'admin') {
     document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
+    document.querySelectorAll('.dir-only').forEach(el => el.style.display = 'inline-block');
+  } else if (rol === 'gerente') {
+    document.querySelectorAll('.dir-only').forEach(el => el.style.display = 'inline-block');
   }
 
   // Subtítulo según rol
@@ -363,7 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
   cargarClientes();
 });
 
-function cerrarSesion() { SCCR.cerrarSesion(); }
+function cerrarSesion() { sessionStorage.removeItem('sccr'); window.location.href = 'index.html'; }
 
 // ── CARGA PRINCIPAL ───────────────────────────────────────────
 async function cargarClientes() {
