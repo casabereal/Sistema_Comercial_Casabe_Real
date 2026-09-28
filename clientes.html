@@ -73,6 +73,7 @@ header{
 .menu-item:hover{background:var(--sidebar-hover);color:var(--rojo)}
 .menu-item.active{font-family:'League Spartan',sans-serif;font-weight:700;color:var(--rojo);border-bottom-color:var(--rojo)}
 .admin-only{display:none}
+.dir-only{display:none}
 
 /* ── MAIN ────────────────────────────────────────────────── */
 .main-container{flex:1;padding:22px 18px 32px;max-width:1400px;width:100%;margin:0 auto}
@@ -189,15 +190,15 @@ footer strong{color:var(--text-dark)}
 <!-- ── NAV ───────────────────────────────────────────────────── -->
 <nav class="nav-bar">
   <a href="inicio.html"      class="menu-item">INICIO</a>
-  <a href="clientes.html"    class="menu-item active">CLIENTES</a>
   <a href="meta.html"        class="menu-item">META</a>
   <a href="catalogo_fs.html" class="menu-item">CATALOGO_FS</a>
   <a href="propuesta.html"   class="menu-item">PROPUESTA</a>
   <a href="pedido.html"      class="menu-item">PEDIDO</a>
   <a href="reporte.html"     class="menu-item">REPORTE</a>
-  <a href="dashboard.html"   class="menu-item admin-only">DASHBOARD</a>
+  <a href="clientes.html"    class="menu-item dir-only active">CLIENTES</a>
+  <a href="dashboard.html"   class="menu-item dir-only">DASHBOARD</a>
+  <a href="historico.html"   class="menu-item dir-only">HISTÓRICO</a>
   <a href="cargas.html"      class="menu-item admin-only">CARGAS</a>
-  <a href="historico.html"   class="menu-item admin-only">HISTÓRICO</a>
   <a href="ccp.html"         class="menu-item admin-only">CCP</a>
 </nav>
 
@@ -345,9 +346,12 @@ document.addEventListener('DOMContentLoaded', () => {
     rol === 'admin' ? 'Administrador' :
     rol === 'gerente' ? 'Gerente de Ventas' : 'Asesor Comercial';
 
-  // Menú admin-only
-  if (esDirectivo) {
+  // Menú por rol
+  if (rol === 'admin') {
     document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
+    document.querySelectorAll('.dir-only').forEach(el => el.style.display = 'inline-block');
+  } else if (rol === 'gerente') {
+    document.querySelectorAll('.dir-only').forEach(el => el.style.display = 'inline-block');
   }
 
   // Subtítulo según rol
