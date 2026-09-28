@@ -611,7 +611,7 @@ function toast(msg,ms=2800){
 </script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function(){
+document.addEventListener('DOMContentLoaded', async function(){
     // 1. Sesión
   let sess = null;
   try { sess = JSON.parse(sessionStorage.getItem('sccr')); } catch(e) {}
@@ -658,4 +658,3 @@ function cerrarSesion(){ if(typeof SCCR!=='undefined') SCCR.cerrarSesion(); }
 </script>
 </body>
 </html>
-
