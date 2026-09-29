@@ -482,37 +482,94 @@ async function guardarProp(){
   const d=leerFormulario();
   if(!d.razon||!d.establ){toast('⚠️ Completa Razón Social y Establecimiento');return;}
   if(!SES){toast('⚠️ Debes estar logueado para guardar');return;}
+
   const btn=document.getElementById('btn-gs'),sp=document.getElementById('gs-sp');
-  btn.disabled=true;sp.classList.add('on');
-  const cajas=parseFloat(d.cajas)||0,totalUSD=parseFloat(d.total)||0;
-  const productosArray=(cajas>0&&d.prod)?[{nombre:d.prod,cajas,precio:cajas>0?totalUSD/cajas:0,subtotal:totalUSD}]:[];
+  btn.disabled=true;
+  sp.classList.add('on');
+
+  const cajas=parseFloat(d.cajas)||0;
+  const totalUSD=parseFloat(d.total)||0;
+  const productosArray=(cajas>0&&d.prod)?[{
+    nombre:d.prod,
+    cajas:cajas,
+    precio:cajas>0?totalUSD/cajas:0,
+    subtotal:totalUSD
+  }]:[];
+
   const payload={
-    action:'nuevaPropuesta',fecha:new Date().toISOString(),dias_vigencia:7,
-    vendedor:SES.nombre||SES.user||'',userVendedor:SES.user||'',
-    razonSocial:d.razon,establecimiento:d.establ,contacto:d.contacto,
-    telefono:d.telf,tipoCliente:d.tipo||'potencial',
-    productos:productosArray,totalUSD,condicionPago:d.condicion,observaciones:d.obs,
+    action:'nuevaPropuesta',
+    fecha:new Date().toISOString(),
+    dias_vigencia:7,
+    vendedor:SES.nombre||SES.user||'',
+    userVendedor:SES.user||'',
+    razonSocial:d.razon,
+    establecimiento:d.establ,
+    contacto:d.contacto,
+    telefono:d.telf,
+    tipoCliente:d.tipo||'potencial',
+    productos:productosArray,
+    totalUSD:totalUSD,
+    condicionPago:d.condicion,
+    observaciones:d.obs
   };
+
   try{
-    // no-cors: respuesta opaca pero el script sí escribe en Sheets
-    await fetch(API,{method:'POST',mode:'no-cors',body:JSON.stringify(payload)});
-    // Limpiar formulario
+    // La Nueva Propuesta solo guarda en SCCR - Base de Datos.
+    // El Listado es una sección independiente y consulta la base de datos
+    // cuando se abre o cuando se pulsa Actualizar.
+    await fetch(API,{
+      method:'POST',
+      mode:'no-cors',
+      body:JSON.stringify(payload)
+    });
+
+    // Limpiar únicamente la Nueva Propuesta después de enviarla.
     ['f-razon','f-establ','f-contacto','f-telf','f-obs','f-total-usd'].forEach(id=>{
-      const el=document.getElementById(id); if(el) el.value='';
+      const el=document.getElementById(id);
+      if(el)el.value='';
     });
+
     ['f-tipo','f-prod','f-condicion'].forEach(id=>{
-      const el=document.getElementById(id); if(el) el.selectedIndex=0;
+      const el=document.getElementById(id);
+      if(el)el.selectedIndex=0;
     });
-    document.getElementById('f-cantidad').value='';
+
+    const cantidad=document.getElementById('f-cantidad');
+    if(cantidad)cantidad.value='';
+
+    // Reiniciar también los resultados del simulador, sin cambiar de sección.
+    ['sr-serv','sr-unidades','sr-paq','sr-cajas','sr-inv','sr-ing'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el)el.textContent='—';
+    });
+    const gan=document.getElementById('sr-gan');
+    if(gan)gan.textContent='$—';
+    const roi=document.getElementById('sr-roi');
+    if(roi)roi.textContent='ROI: —%';
+    ['chip-inv','chip-ing','chip-gan','chip-roi'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el)el.textContent='—';
+    });
+    const resumen=document.getElementById('sim-resumen');
+    if(resumen)resumen.style.display='none';
+    simData={};
+
     document.getElementById('ok-box').classList.add('show');
     toast('✅ Propuesta guardada en SCCR - Base de Datos');
-    // Esperar 2s para que GAS escriba en Sheets y luego recargar listado
+
+    // La confirmación desaparece sin consultar ni modificar el Listado.
     setTimeout(()=>{
-      document.getElementById('ok-box').classList.remove('show');
-      cargarListado();
-    }, 2000);
-  }catch(e){toast('❌ Error de conexión. Verifica tu red.');}
-  btn.disabled=false;sp.classList.remove('on');
+      const ok=document.getElementById('ok-box');
+      if(ok)ok.classList.remove('show');
+    },3000);
+
+  }catch(e){
+    console.error('guardarProp:',e);
+    toast('❌ Error de conexión. Verifica tu red.');
+  }finally{
+    btn.disabled=false;
+    sp.classList.remove('on');
+  }
 }
 
 // ── LEER FORMULARIO ───────────────────────────────────────────
@@ -534,44 +591,64 @@ function leerFormulario(){
 // ── CARGAR LISTADO DESDE SCCR BASE DE DATOS ──────────────────
 async function cargarListado(){
   const tbody=document.getElementById('tbl-body');
-  if(tbody)tbody.innerHTML='<tr><td colspan="13"><div class="empty-state"><div class="empty-ico">⏳</div><div class="empty-txt">Cargando desde SCCR - Base de Datos...</div></div></td></tr>';
+  if(tbody){
+    tbody.innerHTML='<tr><td colspan="13"><div class="empty-state"><div class="empty-ico">⏳</div><div class="empty-txt">Cargando desde SCCR - Base de Datos...</div><div class="empty-sub">Consultando las propuestas almacenadas.</div></div></td></tr>';
+  }
+
   try{
-    const rol=(SES?.rol||'').toLowerCase();
+    const rol=String(SES?.rol||'').trim().toLowerCase();
     const isAdmin=rol==='admin'||rol==='gerente';
-    const vendedor=isAdmin?'':(SES?.user||'');
+    const vendedor=isAdmin?'':String(SES?.user||'').trim();
+
+    // El Listado SIEMPRE consulta la base de datos.
+    // Vendedor: solo sus propuestas. Gerente/Admin: todas.
     const url=API+'?action=propuestas'+(vendedor?'&vendedor='+encodeURIComponent(vendedor):'');
-    // Google Apps Script hace un redirect 302 → script.googleusercontent.com
-    // Se necesita redirect:'follow' y el header correcto para que el browser
-    // siga el redirect y reciba el JSON correctamente
-    const resp=await fetch(url);
+    const resp=await fetch(url,{redirect:'follow'});
+
+    if(!resp.ok){
+      throw new Error('HTTP '+resp.status);
+    }
+
     const raw=await resp.json();
-    console.log('cargarListado raw:', JSON.stringify(raw).substring(0,300));
-    const lista=Array.isArray(raw?.data)?raw.data:(Array.isArray(raw)?raw:[]);
-    // Normalizar campos del script (snake_case) al esquema del frontend
+    console.log('cargarListado raw:',JSON.stringify(raw).substring(0,500));
+
+    if(raw && raw.ok===false){
+      throw new Error(raw.msg||'La base de datos devolvió un error.');
+    }
+
+    const lista=Array.isArray(raw?.data)
+      ? raw.data
+      : (Array.isArray(raw)?raw:[]);
+
+    // Normalizar los campos que vienen de la hoja propuestas.
     propuestas=lista.map(p=>({
-      id               :p.numero_propuesta||p.id||'',
-      numero_propuesta :p.numero_propuesta||'',
-      fecha            :p.fecha||'',
+      id:String(p.numero_propuesta||p.id||'').trim(),
+      numero_propuesta:String(p.numero_propuesta||'').trim(),
+      fecha:p.fecha||'',
       fecha_vencimiento:p.fecha_vencimiento||'',
-      vendedor         :p.vendedor||'',
-      user_vendedor    :p.user_vendedor||'',
-      razon_social     :p.razon_social||'',
-      establecimiento  :p.establecimiento||'',
-      contacto         :p.contacto||'',
-      telefono         :p.telefono||'',
-      tipo_cliente     :p.tipo_cliente||'',
-      productos_detalle:p.productos_detalle||'',
-      total_cajas      :p.total_cajas||0,
-      total_usd        :p.total_usd||0,
-      condicion_pago   :p.condicion_pago||'',
-      estado_propuesta :p.estado_propuesta||'pendiente',
-      observaciones    :p.observaciones||'',
+      vendedor:String(p.vendedor||'').trim(),
+      user_vendedor:String(p.user_vendedor||'').trim(),
+      razon_social:String(p.razon_social||'').trim(),
+      establecimiento:String(p.establecimiento||'').trim(),
+      contacto:String(p.contacto||'').trim(),
+      telefono:String(p.telefono||'').trim(),
+      tipo_cliente:String(p.tipo_cliente||'').trim(),
+      productos_detalle:String(p.productos_detalle||'').trim(),
+      total_cajas:Number(p.total_cajas||0),
+      total_usd:Number(p.total_usd||0),
+      condicion_pago:String(p.condicion_pago||'').trim(),
+      estado_propuesta:String(p.estado_propuesta||'pendiente').trim().toLowerCase(),
+      observaciones:String(p.observaciones||'').trim()
     }));
+
   }catch(e){
     console.warn('cargarListado:',e.message);
     propuestas=[];
-    if(tbody)tbody.innerHTML='<tr><td colspan="13"><div class="empty-state"><div class="empty-ico">⚠️</div><div class="empty-txt">Error al cargar. Verifica tu conexión.</div></div></td></tr>';
+    if(tbody){
+      tbody.innerHTML='<tr><td colspan="13"><div class="empty-state"><div class="empty-ico">⚠️</div><div class="empty-txt">Error al cargar las propuestas</div><div class="empty-sub">'+esc(e.message||'Verifica tu conexión.')+'</div></div></td></tr>';
+    }
   }
+
   renderListado();
 }
 
@@ -603,7 +680,7 @@ function renderListado(){
   const rol=(SES?.rol||'').toLowerCase();
   const isAdmin=rol==='admin'||rol==='gerente';
   let filtradas=propuestas.filter(p=>{
-    if(!isAdmin&&p.user_vendedor!==SES?.user)return false;
+    if(!isAdmin && String(p.user_vendedor||'').trim().toLowerCase() !== String(SES?.user||'').trim().toLowerCase())return false;
     if(vendFilt&&p.user_vendedor!==vendFilt)return false;
     const estado=estadoProp(p);
     if(estFilt&&estado!==estFilt)return false;
