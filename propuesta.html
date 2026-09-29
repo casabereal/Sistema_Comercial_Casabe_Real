@@ -495,10 +495,10 @@ async function guardarProp(){
   };
   try{
     // no-cors: respuesta opaca pero el script sí escribe en Sheets
-    await fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    await fetch(API,{method:'POST',mode:'no-cors',body:JSON.stringify(payload)});
     document.getElementById('ok-box').classList.add('show');
     toast('✅ Propuesta guardada en SCCR - Base de Datos');
-    actualizarBadge();
+    actualizarBadge(0);
   }catch(e){toast('❌ Error de conexión. Verifica tu red.');}
   btn.disabled=false;sp.classList.remove('on');
 }
@@ -532,7 +532,6 @@ async function cargarListado(){
     // Se necesita redirect:'follow' y el header correcto para que el browser
     // siga el redirect y reciba el JSON correctamente
     const resp=await fetch(url);
-    if(!resp.ok)throw new Error('HTTP '+resp.status);
     const raw=await resp.json();
     const lista=Array.isArray(raw?.data)?raw.data:(Array.isArray(raw)?raw:[]);
     // Normalizar campos del script (snake_case) al esquema del frontend
@@ -675,7 +674,7 @@ async function confirmarAccion(){
     // 2. El script convertirPropuesta: marca la propuesta como aprobada Y crea el pedido
     // El pedido llega como tipoCliente='nuevo' → estado='pendiente' en pedidos_raw
     try{
-      await fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
+      await fetch(API,{method:'POST',mode:'no-cors',
         body:JSON.stringify({action:'convertirPropuesta',numero_propuesta:id})});
       toast('✅ Propuesta convertida — Pedido creado como Pendiente en SCCR');
     }catch(e){toast('❌ Error de conexión al convertir.');}
@@ -697,7 +696,7 @@ async function confirmarAccion(){
 async function syncEstado(numeroPropuesta,estadoScript){
   // El script acepta: pendiente | aprobada | rechazada | vencida
   try{
-    await fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
+    await fetch(API,{method:'POST',mode:'no-cors',
       body:JSON.stringify({action:'actualizarEstadoPropuesta',numero_propuesta:numeroPropuesta,estado:estadoScript})});
   }catch(e){console.warn('syncEstado error:',e.message);}
 }
@@ -770,7 +769,7 @@ async function guardarEdicion(){
 
   try{
     // 1. Crear propuesta actualizada en Sheets
-    await fetch(API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payloadNueva)});
+    await fetch(API,{method:'POST',mode:'no-cors',body:JSON.stringify(payloadNueva)});
     // 2. Anular la propuesta anterior en Sheets (mantiene el registro marcado como rechazada)
     await syncEstado(numeroPropuesta,'rechazada');
     // 3. Actualizar localmente
