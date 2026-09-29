@@ -496,9 +496,21 @@ async function guardarProp(){
   try{
     // no-cors: respuesta opaca pero el script sí escribe en Sheets
     await fetch(API,{method:'POST',mode:'no-cors',body:JSON.stringify(payload)});
+    // Limpiar formulario
+    ['f-razon','f-establ','f-contacto','f-telf','f-obs','f-total-usd'].forEach(id=>{
+      const el=document.getElementById(id); if(el) el.value='';
+    });
+    ['f-tipo','f-prod','f-condicion'].forEach(id=>{
+      const el=document.getElementById(id); if(el) el.selectedIndex=0;
+    });
+    document.getElementById('f-cantidad').value='';
     document.getElementById('ok-box').classList.add('show');
     toast('✅ Propuesta guardada en SCCR - Base de Datos');
-    actualizarBadge(0);
+    // Esperar 2s para que GAS escriba en Sheets y luego recargar listado
+    setTimeout(()=>{
+      document.getElementById('ok-box').classList.remove('show');
+      cargarListado();
+    }, 2000);
   }catch(e){toast('❌ Error de conexión. Verifica tu red.');}
   btn.disabled=false;sp.classList.remove('on');
 }
@@ -533,6 +545,7 @@ async function cargarListado(){
     // siga el redirect y reciba el JSON correctamente
     const resp=await fetch(url);
     const raw=await resp.json();
+    console.log('cargarListado raw:', JSON.stringify(raw).substring(0,300));
     const lista=Array.isArray(raw?.data)?raw.data:(Array.isArray(raw)?raw:[]);
     // Normalizar campos del script (snake_case) al esquema del frontend
     propuestas=lista.map(p=>({
