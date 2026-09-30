@@ -44,7 +44,6 @@ header{background:#D30000;color:#fff;height:60px;display:flex;align-items:center
 .menu-item:hover{background:#F1F3F5;color:#D30000}
 .menu-item.active{font-family:'League Spartan',sans-serif;font-weight:700;color:#D30000;border-bottom-color:#D30000}
 .admin-only{display:none}
-.dir-only{display:none}
 
 /* LAYOUT */
 main{flex:1;padding:20px;max-width:1100px;width:100%;margin:0 auto}
@@ -248,15 +247,15 @@ footer{background:#fff;border-top:1px solid var(--borde);text-align:center;paddi
 
 <nav class="nav-bar">
   <a href="inicio.html"      class="menu-item">INICIO</a>
+  <a href="clientes.html"    class="menu-item admin-only">CLIENTES</a>
   <a href="meta.html"        class="menu-item">META</a>
   <a href="catalogo_fs.html" class="menu-item">CATÁLOGO</a>
   <a href="propuesta.html"   class="menu-item">PROPUESTA</a>
   <a href="pedido.html"      class="menu-item active">PEDIDO</a>
   <a href="reporte.html"     class="menu-item">REPORTE</a>
-  <a href="clientes.html"    class="menu-item dir-only">CLIENTES</a>
-  <a href="dashboard.html"   class="menu-item dir-only">DASHBOARD</a>
-  <a href="historico.html"   class="menu-item dir-only">HISTÓRICO</a>
+  <a href="dashboard.html"   class="menu-item admin-only">DASHBOARD</a>
   <a href="cargas.html"      class="menu-item admin-only">CARGAS</a>
+  <a href="historico.html"   class="menu-item admin-only">HISTÓRICO</a>
   <a href="ccp.html"         class="menu-item admin-only">CCP</a>
 </nav>
 
@@ -525,15 +524,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('user-role-display').textContent =
     rol === 'admin' ? 'Administrador' : rol === 'gerente' ? 'Gerente de Ventas' : 'Asesor Comercial';
 
-  // Menú por rol: .dir-only → admin + gerente | .admin-only → solo admin
-  if (rol === 'admin') {
-    document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'inline-block');
-    document.querySelectorAll('.dir-only').forEach(e => e.style.display = 'inline-block');
-  } else if (rol === 'gerente') {
-    document.querySelectorAll('.dir-only').forEach(e => e.style.display = 'inline-block');
-  }
-
   if (esAdmin) {
+    document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'inline-block');
     document.querySelectorAll('.solo-admin').forEach(e => e.classList.add('visible'));
   }
 
