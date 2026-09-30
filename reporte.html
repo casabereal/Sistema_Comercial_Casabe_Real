@@ -448,7 +448,7 @@ footer strong{color:var(--texto)}
               </tr>
             </thead>
             <tbody id="tbl-admin-body">
-              <tr><td colspan="10">
+              <tr><td colspan="8">
                 <div class="empty-state"><div class="empty-ico">📊</div><div class="empty-txt">Cargando reportes...</div></div>
               </td></tr>
             </tbody>
@@ -478,7 +478,8 @@ const API = 'https://script.google.com/macros/s/AKfycbyludOrnVw1jSCYJUWELTjPjhuR
 // ════════════════════════════════════════════════════════════
 let sesion       = null;
 let esAdmin      = false;
-let CLIENTES     = [];   // cartera del vendedor
+let CLIENTES     = [];   // clientes para autocomplete del Registro Libre
+let VISITAS_CLI  = [];   // clientes del Cuadro de Visitas (hoja 'metas')
 let META_PROD    = [];   // productos para mostrar metas
 let REPORTES_ADM = [];   // reportes cargados para admin
 
@@ -519,7 +520,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await cargarReportesAdmin();
   } else {
     document.getElementById('vista-vendedor').style.display = '';
-    await Promise.all([cargarClientes(), cargarProductos()]);
+    await Promise.all([cargarClientes(), cargarProductos(), cargarClientesMetas()]);
     renderTablaVisitas();
     iniciarAutocomplete();
   }
@@ -553,6 +554,44 @@ async function cargarClientes() {
   } catch { CLIENTES = []; }
 }
 
+// Cuadro de Gestión de Visitas: clientes asignados al vendedor en SCCR - Base de Datos (hoja 'metas')
+async function cargarClientesMetas() {
+  VISITAS_CLI = [];
+  try {
+    const hoy = new Date();
+    let url = API + '?action=metas&mes=' + (hoy.getMonth() + 1) + '&anio=' + hoy.getFullYear();
+    if (sesion.user) url += '&vendedor=' + encodeURIComponent(sesion.user);
+    const r = await fetch(url);
+    const j = await r.json();
+    const filas = (j.ok && Array.isArray(j.data)) ? j.data : [];
+
+    const norm = v => String(v || '').trim().toLowerCase();
+    const mios = [norm(sesion.user), norm(sesion.nombre)].filter(Boolean);
+    const vistos = new Set();
+
+    filas.forEach(m => {
+      // Cada vendedor ve solo lo suyo
+      const dueno = norm(m.user_vendedor || m.vendedor);
+      if (dueno && !mios.includes(dueno)) return;
+
+      const nombre = m.razon_social || m.cliente || m.nombre_cliente || m.nombre || '';
+      if (!nombre) return;
+      const clave = norm(nombre) + '|' + norm(m.establecimiento);
+      if (vistos.has(clave)) return;
+      vistos.add(clave);
+
+      VISITAS_CLI.push({
+        razon_social    : nombre,
+        establecimiento : m.establecimiento || '',
+        tipo_cliente_meta: m.tipo_cliente || m.tipo || '',
+        meta_cajas      : m.meta_cajas,
+        meta_monto_usd  : m.meta_monto_usd,
+        etapa_embudo    : m.etapa_embudo || m.etapa || '',
+      });
+    });
+  } catch { VISITAS_CLI = []; }
+}
+
 async function cargarProductos() {
   try {
     const r = await fetch(API + '?action=getProductos');
@@ -574,18 +613,22 @@ async function cargarProductos() {
 // ════════════════════════════════════════════════════════════
 function renderTablaVisitas() {
   const wrap = document.getElementById('tbl-visitas-wrap');
-  if (!CLIENTES.length) {
+  if (!VISITAS_CLI.length) {
     wrap.innerHTML = `<div class="empty-state"><div class="empty-ico">👥</div>
-      <div class="empty-txt">Sin clientes asignados</div>
-      <div class="empty-sub">Contacta al administrador para asignarte clientes.</div></div>`;
+      <div class="empty-txt">Sin clientes en tus metas</div>
+      <div class="empty-sub">Contacta al administrador para que te asigne metas y clientes.</div></div>`;
     return;
   }
 
-  let rows = CLIENTES.map((c, i) => {
+  let rows = VISITAS_CLI.map((c, i) => {
     const nombre = esc(c.razon_social || c.nombre || '—');
     const establ = esc(c.establecimiento || '');
-    // Meta chips: buscar en detalle_clientes si aplica (simplificado: mostrar etapa embudo)
-    const etapa  = c.etapa_embudo || c.etapa || '';
+    // Chip de meta: tipo de cliente y meta asignada (hoja 'metas')
+    const partes = [];
+    if (c.tipo_cliente_meta) partes.push(c.tipo_cliente_meta);
+    if (parseFloat(c.meta_cajas) > 0) partes.push(c.meta_cajas + ' cajas');
+    if (parseFloat(c.meta_monto_usd) > 0) partes.push('$' + c.meta_monto_usd);
+    const etapa  = partes.join(' · ');
     const hoy    = new Date().toISOString().slice(0,10);
 
     return `<tr id="row-${i}">
@@ -664,7 +707,7 @@ function toggleMotivoFila(i) {
 
 // Guardar una fila individual
 async function guardarFila(i) {
-  const c     = CLIENTES[i];
+  const c     = VISITAS_CLI[i];
   const fecha = document.getElementById('rv-fecha-' + i)?.value  || '';
   const ce    = document.getElementById('rv-ce-' + i)?.value     || '';
   const res   = document.getElementById('rv-res-' + i)?.value    || '';
@@ -720,7 +763,7 @@ async function guardarTodos() {
   btn.disabled = true; btn.textContent = '⏳ Guardando...';
 
   let ok = 0, skip = 0;
-  for (let i = 0; i < CLIENTES.length; i++) {
+  for (let i = 0; i < VISITAS_CLI.length; i++) {
     const fecha = document.getElementById('rv-fecha-' + i)?.value || '';
     const ce    = document.getElementById('rv-ce-' + i)?.value    || '';
     const res   = document.getElementById('rv-res-' + i)?.value   || '';
@@ -839,33 +882,29 @@ async function enviarReporteLibre(event) {
 // ════════════════════════════════════════════════════════════
 async function cargarReportesAdmin() {
   document.getElementById('tbl-admin-body').innerHTML =
-    '<tr><td colspan="10"><div class="empty-state"><div class="empty-ico">⏳</div><div class="empty-txt">Cargando reportes...</div></div></td></tr>';
+    '<tr><td colspan="8"><div class="empty-state"><div class="empty-ico">⏳</div><div class="empty-txt">Cargando reportes...</div></div></td></tr>';
   document.getElementById('resumen-vendedores').innerHTML =
     '<div class="empty-state"><div class="empty-ico">⏳</div><div class="empty-txt">Cargando...</div></div>';
 
+  // Fuente: SCCR - Base de Datos, hoja 'reportes'
+  REPORTES_ADM = [];
   try {
-    const r = await fetch(API + '?action=ventas&limite=2000');
+    const r = await fetch(API + '?action=reportes&limite=2000');
     const j = await r.json();
-    // El endpoint 'ventas' devuelve pedidos; necesitamos reportes.
-    // Usamos el endpoint histórico para obtener los reportes guardados.
-    // Como el script no tiene un endpoint GET de reportes, usamos el de ventas como proxy
-    // y complementamos con datos locales de la sesión.
-    // Intentar cargar desde acción específica (si el script la tiene)
-    REPORTES_ADM = [];
-    // Carga via historico que devuelve pedidos_raw — los reportes vienen de su hoja propia
-    // El script no expone un GET de reportes directamente, así que mostramos lo que hay
-  } catch(e) {}
-
-  // Intentar fetch de reportes directamente (el script los tiene en hoja 'reportes')
-  try {
-    const r2 = await fetch(API + '?action=historico&limite=500');
-    const j2 = await r2.json();
-    if (j2.ok && Array.isArray(j2.data)) {
-      REPORTES_ADM = j2.data;
-    }
+    if (j.ok && Array.isArray(j.data)) REPORTES_ADM = j.data;
   } catch(e) {}
 
   renderAdmin();
+}
+
+const _CIERRES = ['pedido 1era vez','pedido recurrente','cierre inmediato','realizó un pedido'];
+function esCierre(r) {
+  return _CIERRES.includes(String(r.estatus_cierre || '').toLowerCase()) ||
+         _CIERRES.includes(String(r.resultado_cita  || '').toLowerCase());
+}
+function esSinPedido(r) {
+  return String(r.estatus_cierre || '').toLowerCase() === 'sin pedido' ||
+         String(r.resultado_cita  || '').toLowerCase() === 'no interesado';
 }
 
 function renderAdmin() {
@@ -904,8 +943,8 @@ function renderAdmin() {
   // KPIs
   const total  = datos.length;
   const ce     = datos.filter(r => (r.contacto_efectivo||'').toLowerCase() === 'sí').length;
-  const cierres= datos.filter(r => ['Pedido 1era Vez','Pedido Recurrente','Cierre Inmediato'].includes(r.estatus_cierre||r.resultado_cita||'')).length;
-  const nv     = datos.filter(r => (r.estatus_cierre||'') === 'Sin Pedido' || (r.resultado_cita||'') === 'No Interesado').length;
+  const cierres= datos.filter(esCierre).length;
+  const nv     = datos.filter(esSinPedido).length;
   const tasa   = total > 0 ? Math.round((cierres/total)*100) : 0;
   const prop   = datos.filter(r => (r.propuesta_comercial||'') === 'Sí').length;
 
@@ -923,8 +962,8 @@ function renderAdmin() {
     if (!porVend[v]) porVend[v] = { visitas:0, ce:0, cierres:0, nv:0, prop:0 };
     porVend[v].visitas++;
     if ((r.contacto_efectivo||'').toLowerCase() === 'sí') porVend[v].ce++;
-    if (['Pedido 1era Vez','Pedido Recurrente','Cierre Inmediato'].includes(r.estatus_cierre||r.resultado_cita||'')) porVend[v].cierres++;
-    if ((r.estatus_cierre||'') === 'Sin Pedido' || (r.resultado_cita||'') === 'No Interesado') porVend[v].nv++;
+    if (esCierre(r))    porVend[v].cierres++;
+    if (esSinPedido(r)) porVend[v].nv++;
     if ((r.propuesta_comercial||'') === 'Sí') porVend[v].prop++;
   });
 
@@ -963,14 +1002,14 @@ function renderAdmin() {
   // Tabla detalle
   const tbody = document.getElementById('tbl-admin-body');
   if (!datos.length) {
-    tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state"><div class="empty-ico">📭</div><div class="empty-txt">Sin reportes</div><div class="empty-sub">Ajusta los filtros o espera a que los vendedores registren visitas.</div></div></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><div class="empty-ico">📭</div><div class="empty-txt">Sin reportes</div><div class="empty-sub">Ajusta los filtros o espera a que los vendedores registren visitas.</div></div></td></tr>';
     return;
   }
 
   tbody.innerHTML = datos.slice(0,200).map(r => {
     const ce     = (r.contacto_efectivo||'').toLowerCase()==='sí';
     const res    = r.resultado_cita || '—';
-    const resCol = res==='Cierre Inmediato'?'est-cierre':res==='Interesado'?'est-ok':res==='No Interesado'?'est-no':'est-pend';
+    const resCol = esCierre(r)?'est-cierre':esSinPedido(r)?'est-no':'est-pend';
     // Extraer próxima visita de observaciones si aplica
     const obs    = r.observaciones || '';
     const proxMatch = obs.match(/Próxima visita:\s*([\d\/-]+)/);
@@ -987,8 +1026,6 @@ function renderAdmin() {
         <span class="estado-badge ${ce?'est-ok':'est-no'}">${r.contacto_efectivo||'—'}</span>
       </td>
       <td><span class="estado-badge ${resCol}">${esc(res)}</span></td>
-      <td style="text-align:center">${esc(r.propuesta_comercial||'—')}</td>
-      <td>${esc(r.estatus_cierre||'—')}</td>
       <td style="color:var(--rojo);font-size:.71rem">${esc(r.motivo_no_venta||'—')}</td>
       <td style="white-space:nowrap;font-size:.71rem">${esc(proxVis)}</td>
       <td style="font-size:.71rem;max-width:200px;word-break:break-word">${esc((obs.split('|')[0]||obs).slice(0,120))}</td>
