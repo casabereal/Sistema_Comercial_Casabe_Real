@@ -2,1061 +2,4165 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>SCCR — Reporte de Gestión</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="assets/sccr-auth.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
 <style>
+*{box-sizing:border-box;margin:0;padding:0}
+
 :root{
-  --rojo:#D30000;--rojo-d:#A01015;--rojo-xs:#FEF2F2;
-  --verde:#059669;--verde-xs:#ECFDF5;
-  --naranja:#D97706;--naranja-xs:#FFFBEB;
-  --azul:#2563EB;--azul-xs:#EFF6FF;
-  --amarillo:#F59E0B;
-  --gris:#6B7280;--borde:#E5E7EB;--fondo:#F5F7FA;
-  --negro:#111827;--texto:#1F2937;--blanco:#fff;
-  --r:10px;--r-sm:7px;
-  --sh:0 1px 3px rgba(0,0,0,.07);--sh-md:0 4px 16px rgba(0,0,0,.10);
+  --rojo:#C8181E;
+  --rojo-xs:#FEF2F2;
+  --blanco:#FFFFFF;
+  --fondo:#F8F9FA;
+  --borde:#E0E0E0;
+  --texto:#333333;
+  --gris:#6B7280;
+  --verde:#059669;
+  --verde-xs:#ECFDF5;
+  --azul:#2563EB;
+  --azul-xs:#EFF6FF;
+  --amarillo:#D97706;
+  --amarillo-xs:#FFFBEB;
+  --r:8px;
+  --r-sm:6px;
+  --sh:0 2px 6px rgba(0,0,0,.06)
 }
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:'Inter',sans-serif;background:var(--fondo);color:var(--texto);display:flex;flex-direction:column;min-height:100vh;font-size:.78rem}
 
-/* ── HEADER ── */
-header{background:var(--rojo);color:#fff;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;box-shadow:0 2px 4px rgba(0,0,0,.1);position:sticky;top:0;z-index:1000}
-.header-left{display:flex;align-items:center;gap:11px}
-.header-left img{width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25));display:block}
-.header-title{font-family:'League Spartan',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
-.header-right{display:flex;align-items:center;gap:12px}
-.header-user-info{font-size:.7rem;text-align:right;line-height:1.3}
-.header-user-info .user-name{font-weight:600}
-.header-user-info .user-role{font-size:.65rem;opacity:.9}
-.btn-logout{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:5px 10px;cursor:pointer;color:rgba(255,255,255,.9);font-size:.7rem;font-family:'Inter',sans-serif;font-weight:600;transition:background .2s;white-space:nowrap}
-.btn-logout:hover{background:rgba(255,255,255,.22)}
+body{
+  font-family:'Open Sans',sans-serif;
+  background:var(--fondo);
+  color:var(--texto);
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+  font-size:.75rem
+}
 
-/* ── NAV ── */
-.nav-bar{background:#fff;border-bottom:1px solid var(--borde);padding:0 18px;display:flex;overflow-x:auto;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.05)}
-.nav-bar::-webkit-scrollbar{height:3px}
-.nav-bar::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px}
-.menu-item{display:inline-block;padding:12px 14px;font-size:.7rem;color:var(--texto);text-decoration:none;transition:all .2s;border-bottom:3px solid transparent}
-.menu-item:hover{background:#F1F3F5;color:var(--rojo)}
-.menu-item.active{font-family:'League Spartan',sans-serif;font-weight:700;color:var(--rojo);border-bottom-color:var(--rojo)}
-.admin-only{display:none}
-.dir-only{display:none}
+/* =========================================================
+   HEADER
+========================================================= */
 
-/* ── LAYOUT ── */
-.main-container{flex:1;padding:22px 18px 40px;max-width:1300px;width:100%;margin:0 auto}
-.page-hd{margin-bottom:20px}
-.breadcrumb{font-size:.66rem;color:var(--gris);margin-bottom:3px}
-.breadcrumb span{color:var(--rojo);font-weight:700}
-.page-hd h1{font-family:'League Spartan',sans-serif;font-size:1.45rem;font-weight:700;color:var(--texto);margin-bottom:3px}
-.page-hd h1 .hl{color:var(--rojo)}
-.page-sub{font-size:.7rem;color:var(--gris);font-weight:500}
+header{
+  background:var(--rojo);
+  color:#fff;
+  height:60px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 18px;
+  position:sticky;
+  top:0;
+  z-index:1000;
+  box-shadow:0 2px 4px rgba(0,0,0,.12)
+}
 
-/* ── CARD ── */
-.card{background:#fff;border-radius:var(--r);border:1px solid var(--borde);box-shadow:var(--sh);overflow:hidden;margin-bottom:16px}
-.card-hd{padding:12px 18px;border-bottom:1px solid var(--borde);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.card-hd-left{display:flex;align-items:center;gap:8px}
-.card-ic{width:26px;height:26px;border-radius:6px;background:var(--rojo-xs);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
-.card-title{font-size:.84rem;font-weight:700;color:var(--texto)}
-.card-bd{padding:16px 18px}
-.card-desc{font-size:.72rem;color:var(--gris);line-height:1.6;margin-bottom:18px;border-left:3px solid var(--rojo);padding-left:10px}
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:10px
+}
 
-/* ── TABS ── */
-.tab-bar{display:flex;background:#fff;border:1.5px solid var(--borde);border-radius:var(--r);overflow:hidden;margin-bottom:20px;box-shadow:var(--sh)}
-.tab-btn{flex:1;padding:12px 8px;border:none;background:transparent;font-family:'Inter',sans-serif;font-size:.78rem;font-weight:600;color:var(--gris);cursor:pointer;transition:all .2s;border-right:1.5px solid var(--borde);display:flex;align-items:center;justify-content:center;gap:6px}
-.tab-btn:last-child{border-right:none}
-.tab-btn.active{background:var(--rojo);color:#fff}
-.tab-btn:hover:not(.active){background:var(--fondo);color:var(--negro)}
-.panel{display:none}.panel.active{display:block}
+.header-left img{
+  width:42px;
+  height:42px;
+  object-fit:contain;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.2))
+}
 
-/* ── TABLA DE VISITAS (Vendedor) ── */
-.tbl-wrap{overflow-x:auto;border-radius:var(--r-sm);border:1px solid var(--borde)}
-table{width:100%;border-collapse:collapse;min-width:900px}
-thead tr{background:var(--negro)}
-thead th{padding:10px 12px;color:rgba(255,255,255,.85);font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;text-align:left;white-space:nowrap}
-tbody tr{border-bottom:1px solid var(--borde);transition:background .15s}
-tbody tr:last-child{border:none}
-tbody tr:hover{background:#FAFAFA}
-tbody td{padding:10px 12px;vertical-align:middle;font-size:.75rem}
-.td-cliente{font-weight:700;font-size:.78rem}
-.td-meta{font-size:.67rem;color:var(--gris)}
-.sel-inp,.date-inp,.txt-inp{border:1.5px solid var(--borde);border-radius:6px;font-size:.73rem;font-family:'Inter',sans-serif;color:var(--texto);background:#fff;outline:none;padding:5px 8px;transition:border .2s;width:100%}
-.sel-inp:focus,.date-inp:focus,.txt-inp:focus{border-color:var(--rojo);box-shadow:0 0 0 2px rgba(211,0,0,.10)}
-.sel-inp{-webkit-appearance:none;min-width:130px}
-.date-inp{min-width:130px;cursor:pointer}
-.txt-inp{min-width:150px}
-.estado-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.65rem;font-weight:700;white-space:nowrap}
-.est-ok{background:var(--verde-xs);color:#065F46}
-.est-no{background:var(--rojo-xs);color:var(--rojo)}
-.est-pend{background:var(--naranja-xs);color:#92400E}
-.est-cierre{background:var(--azul-xs);color:#1E40AF}
-.row-saved{background:#F0FDF4!important}
-.row-saved td{opacity:.8}
+.header-title{
+  font-family:'League Spartan',sans-serif;
+  font-size:.95rem;
+  font-weight:700;
+  letter-spacing:.5px;
+  text-transform:uppercase
+}
 
-/* ── META CHIPS ── */
-.meta-chip{display:inline-flex;gap:4px;align-items:center;background:var(--azul-xs);border:1px solid #BFDBFE;color:var(--azul);border-radius:20px;padding:2px 8px;font-size:.63rem;font-weight:700;margin-top:2px}
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:12px
+}
 
-/* ── RESUMEN ADMIN ── */
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:20px}
-.kpi-card{background:#fff;border:1.5px solid var(--borde);border-radius:var(--r);padding:12px 16px}
-.kpi-lbl{font-size:.63rem;font-weight:700;color:var(--gris);text-transform:uppercase;letter-spacing:.3px}
-.kpi-val{font-size:1.5rem;font-weight:800;color:var(--rojo);margin-top:3px;letter-spacing:-1px}
-.kpi-sub{font-size:.65rem;color:var(--gris);margin-top:2px}
-.kpi-card.verde .kpi-val{color:var(--verde)}
-.kpi-card.azul  .kpi-val{color:var(--azul)}
-.kpi-card.naranja .kpi-val{color:var(--naranja)}
+.header-user-info{
+  font-size:.7rem;
+  text-align:right;
+  line-height:1.4
+}
 
-/* Filtros */
-.filtro-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
-.f-sel,.f-inp{padding:7px 11px;border:1.5px solid var(--borde);border-radius:7px;font-size:.73rem;font-family:'Inter',sans-serif;color:var(--negro);background:#fff;outline:none;-webkit-appearance:none}
-.f-sel{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;padding-right:26px}
-.f-inp{min-width:160px}
-.f-sel:focus,.f-inp:focus{border-color:var(--rojo)}
-.btn-act{padding:7px 14px;background:var(--rojo);color:#fff;border:none;border-radius:7px;font-size:.73rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background .2s}
-.btn-act:hover{background:var(--rojo-d)}
+.header-user-info .user-name{
+  font-weight:700
+}
 
-/* Tabla admin */
-.res-tbl th{font-size:.63rem}
-.res-tbl td{font-size:.72rem}
+.header-user-info .user-role{
+  font-size:.65rem;
+  opacity:.85
+}
 
-/* Barra progreso */
-.prog-bar{height:6px;background:#E5E7EB;border-radius:3px;overflow:hidden;margin-top:4px}
-.prog-fill{height:100%;border-radius:3px;background:var(--rojo);transition:width .4s}
-.prog-fill.verde{background:var(--verde)}
-.prog-fill.naranja{background:var(--naranja)}
+.btn-logout{
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.25);
+  border-radius:6px;
+  padding:5px 10px;
+  color:#fff;
+  font-size:.68rem;
+  font-weight:600;
+  cursor:pointer;
+  font-family:'Open Sans',sans-serif
+}
 
-/* ── FORMULARIO ── */
-.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:18px}
-.form-group{display:flex;flex-direction:column;gap:5px}
-.form-group.full{grid-column:1/-1}
-.cf-label{font-size:.67rem;font-weight:700;color:var(--gris);text-transform:uppercase;letter-spacing:.3px}
-.cf-label .req{color:var(--rojo)}
-.cf-sel,.cf-inp,.cf-txt{padding:8px 11px;border:1.5px solid var(--borde);border-radius:var(--r-sm);font-family:'Inter',sans-serif;font-size:.78rem;background:#fff;color:var(--texto);width:100%;outline:none;transition:border .2s;-webkit-appearance:none}
-.cf-sel:focus,.cf-inp:focus,.cf-txt:focus{border-color:var(--rojo);box-shadow:0 0 0 3px rgba(211,0,0,.10)}
-.cf-sel{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:28px}
-.field-hint{font-size:.62rem;color:var(--gris);font-style:italic}
+.btn-logout:hover{
+  background:rgba(255,255,255,.22)
+}
 
-/* Autocomplete */
-.ac-wrap{position:relative}
-.ac-drop{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--borde);border-top:none;border-radius:0 0 var(--r-sm) var(--r-sm);max-height:180px;overflow-y:auto;z-index:200;display:none;box-shadow:0 4px 8px rgba(0,0,0,.08)}
-.ac-drop.open{display:block}
-.ac-item{padding:8px 11px;cursor:pointer;font-size:.73rem;border-bottom:1px solid #F0F0F0;transition:background .15s}
-.ac-item:hover{background:var(--fondo);color:var(--rojo)}
+/* =========================================================
+   NAV
+========================================================= */
 
-/* Checkboxes */
-.chk-group{display:flex;flex-wrap:wrap;gap:12px;padding:4px 0}
-.chk-lbl{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.75rem}
-.chk-lbl input[type=checkbox]{accent-color:var(--rojo);width:14px;height:14px}
+.nav-bar{
+  background:#fff;
+  border-bottom:1px solid var(--borde);
+  padding:0 18px;
+  display:flex;
+  overflow-x:auto;
+  white-space:nowrap;
+  box-shadow:0 1px 3px rgba(0,0,0,.04)
+}
 
-/* Btn submit */
-.btn-submit{background:var(--rojo);color:#fff;font-family:'League Spartan',sans-serif;font-weight:700;font-size:.85rem;padding:11px 28px;border:none;border-radius:var(--r-sm);cursor:pointer;text-transform:uppercase;transition:background .2s;display:inline-flex;align-items:center;gap:7px;margin-top:6px}
-.btn-submit:hover:not(:disabled){background:var(--rojo-d)}
-.btn-submit:disabled{opacity:.55;cursor:not-allowed}
+.nav-bar::-webkit-scrollbar{
+  height:3px
+}
 
-/* Btn guardar fila */
-.btn-row{background:var(--verde-xs);color:var(--verde);border:1.5px solid #A7F3D0;border-radius:6px;padding:5px 10px;font-size:.67rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;transition:all .2s}
-.btn-row:hover{background:#A7F3D0}
-.btn-row:disabled{opacity:.4;cursor:not-allowed}
+.nav-bar::-webkit-scrollbar-thumb{
+  background:#ccc;
+  border-radius:2px
+}
 
-/* Spinner / Toast */
-.sp{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .65s linear infinite;vertical-align:middle}
-@keyframes spin{to{transform:rotate(360deg)}}
-.toast{position:fixed;bottom:22px;right:22px;background:var(--negro);color:#fff;padding:11px 18px;border-radius:7px;font-size:.73rem;box-shadow:0 4px 14px rgba(0,0,0,.2);z-index:9999;opacity:0;transform:translateY(8px);transition:opacity .3s,transform .3s;pointer-events:none;max-width:320px}
-.toast.show{opacity:1;transform:translateY(0)}
-.toast.ok{background:var(--verde)}.toast.err{background:#E74C3C}
+.menu-item{
+  display:inline-block;
+  padding:12px 14px;
+  font-size:.7rem;
+  color:var(--texto);
+  text-decoration:none;
+  border-bottom:3px solid transparent;
+  transition:all .2s
+}
 
-/* Empty */
-.empty-state{text-align:center;padding:36px;color:var(--gris)}
-.empty-ico{font-size:38px;margin-bottom:10px}
-.empty-txt{font-size:.82rem;font-weight:600;color:var(--texto);margin-bottom:4px}
+.menu-item:hover{
+  background:var(--fondo);
+  color:var(--rojo)
+}
 
-footer{text-align:center;padding:14px;font-size:.65rem;color:var(--gris);border-top:1px solid var(--borde);background:#fff;margin-top:auto}
-footer strong{color:var(--texto)}
+.menu-item.active{
+  font-family:'League Spartan',sans-serif;
+  font-weight:700;
+  color:var(--rojo);
+  border-bottom-color:var(--rojo)
+}
+
+.admin-only,
+.dir-only{
+  display:none
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main-container{
+  width:100%;
+  max-width:1400px;
+  margin:0 auto;
+  padding:22px 18px 40px
+}
+
+.page-header{
+  margin-bottom:20px
+}
+
+.breadcrumb{
+  font-size:.63rem;
+  color:var(--gris);
+  margin-bottom:4px
+}
+
+.breadcrumb span{
+  color:var(--rojo);
+  font-weight:700
+}
+
+.page-header h1{
+  font-family:'League Spartan',sans-serif;
+  font-size:1.55rem;
+  font-weight:700
+}
+
+.highlight{
+  color:var(--rojo)
+}
+
+.page-header p{
+  font-size:.7rem;
+  color:var(--gris);
+  margin-top:5px
+}
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card{
+  background:#fff;
+  border:1px solid var(--borde);
+  border-radius:var(--r);
+  box-shadow:var(--sh);
+  margin-bottom:16px
+}
+
+.card-header{
+  padding:14px 16px;
+  border-bottom:1px solid var(--borde);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px
+}
+
+.card-header h2{
+  font-family:'League Spartan',sans-serif;
+  font-size:.95rem;
+  font-weight:700
+}
+
+.card-header p{
+  font-size:.63rem;
+  color:var(--gris);
+  margin-top:2px
+}
+
+.card-body{
+  padding:16px
+}
+
+/* =========================================================
+   VISTAS
+========================================================= */
+
+#vista-vendedor,
+#vista-admin{
+  display:none
+}
+
+/* =========================================================
+   KPI
+========================================================= */
+
+.kpi-row{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:16px
+}
+
+.kpi-box{
+  background:#fff;
+  border:1px solid var(--borde);
+  border-radius:var(--r);
+  padding:12px 16px;
+  min-width:145px;
+  flex:1;
+  box-shadow:var(--sh)
+}
+
+.kpi-lbl{
+  font-size:.62rem;
+  font-weight:700;
+  color:var(--gris);
+  text-transform:uppercase
+}
+
+.kpi-val{
+  font-family:'League Spartan',sans-serif;
+  font-size:1.3rem;
+  font-weight:700;
+  color:var(--rojo);
+  margin-top:3px
+}
+
+.kpi-sub{
+  font-size:.6rem;
+  color:var(--gris);
+  margin-top:1px
+}
+
+/* =========================================================
+   FILTROS
+========================================================= */
+
+.filtros-bar{
+  display:flex;
+  gap:10px;
+  align-items:flex-end;
+  flex-wrap:wrap;
+  margin-bottom:16px
+}
+
+.filtros-bar label{
+  font-size:.62rem;
+  font-weight:700;
+  color:var(--gris);
+  text-transform:uppercase;
+  display:block;
+  margin-bottom:3px
+}
+
+.filtros-bar select,
+.filtros-bar input{
+  padding:7px 10px;
+  border:1.5px solid var(--borde);
+  border-radius:var(--r-sm);
+  font-size:.73rem;
+  font-family:'Open Sans',sans-serif;
+  background:#fff;
+  color:var(--texto);
+  outline:none
+}
+
+.filtros-bar select:focus,
+.filtros-bar input:focus{
+  border-color:var(--rojo)
+}
+
+/* =========================================================
+   FORMULARIOS
+========================================================= */
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px
+}
+
+.form-group{
+  min-width:0
+}
+
+.form-group.full{
+  grid-column:1/-1
+}
+
+.form-group label{
+  display:block;
+  font-size:.63rem;
+  font-weight:700;
+  color:var(--gris);
+  text-transform:uppercase;
+  margin-bottom:4px
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+  width:100%;
+  padding:8px 10px;
+  border:1.5px solid var(--borde);
+  border-radius:var(--r-sm);
+  font-size:.72rem;
+  font-family:'Open Sans',sans-serif;
+  background:#fff;
+  color:var(--texto);
+  outline:none
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+  border-color:var(--rojo)
+}
+
+.form-group textarea{
+  min-height:70px;
+  resize:vertical
+}
+
+.required{
+  color:var(--rojo)
+}
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
+.btn{
+  border:none;
+  border-radius:6px;
+  padding:8px 14px;
+  font-family:'Open Sans',sans-serif;
+  font-size:.7rem;
+  font-weight:700;
+  cursor:pointer;
+  transition:.2s
+}
+
+.btn-primary{
+  background:var(--rojo);
+  color:#fff
+}
+
+.btn-primary:hover{
+  background:#a91419
+}
+
+.btn-secondary{
+  background:#fff;
+  color:var(--texto);
+  border:1px solid var(--borde)
+}
+
+.btn-secondary:hover{
+  background:var(--fondo)
+}
+
+.btn-success{
+  background:var(--verde);
+  color:#fff
+}
+
+.btn-success:hover{
+  background:#047857
+}
+
+.btn-small{
+  padding:6px 10px;
+  font-size:.65rem
+}
+
+.form-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:14px
+}
+
+/* =========================================================
+   TABLA DE VISITAS
+========================================================= */
+
+.tbl-wrap{
+  overflow-x:auto
+}
+
+table{
+  width:100%;
+  border-collapse:collapse
+}
+
+th{
+  background:var(--fondo);
+  font-size:.61rem;
+  color:var(--gris);
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.25px;
+  padding:9px 10px;
+  border-bottom:1px solid var(--borde);
+  white-space:nowrap;
+  text-align:left
+}
+
+td{
+  padding:9px 10px;
+  border-bottom:1px solid var(--borde);
+  font-size:.69rem;
+  vertical-align:top
+}
+
+td.center{
+  text-align:center
+}
+
+td.right{
+  text-align:right
+}
+
+tr:hover td{
+  background:#fafafa
+}
+
+.visit-row td{
+  vertical-align:middle
+}
+
+.client-name{
+  font-weight:700;
+  color:var(--texto)
+}
+
+.client-est{
+  display:block;
+  color:var(--gris);
+  font-size:.61rem;
+  margin-top:2px
+}
+
+.meta-line{
+  margin-top:4px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:4px
+}
+
+.meta-chip{
+  display:inline-block;
+  padding:3px 6px;
+  background:var(--azul-xs);
+  color:var(--azul);
+  border-radius:5px;
+  font-size:.59rem;
+  font-weight:700
+}
+
+/* =========================================================
+   INPUTS DENTRO DE TABLA
+========================================================= */
+
+.table-input{
+  width:100%;
+  min-width:100px;
+  padding:6px 7px;
+  border:1px solid var(--borde);
+  border-radius:5px;
+  font-size:.66rem;
+  font-family:'Open Sans',sans-serif;
+  background:#fff;
+  outline:none
+}
+
+.table-input:focus{
+  border-color:var(--rojo)
+}
+
+.table-select{
+  min-width:125px
+}
+
+.btn-row-save{
+  padding:6px 9px;
+  border:0;
+  border-radius:5px;
+  background:var(--rojo);
+  color:#fff;
+  font-size:.62rem;
+  font-weight:700;
+  cursor:pointer
+}
+
+.btn-row-save:hover{
+  background:#a91419
+}
+
+.btn-row-save:disabled{
+  opacity:.5;
+  cursor:not-allowed
+}
+
+/* =========================================================
+   BADGES
+========================================================= */
+
+.badge{
+  display:inline-block;
+  padding:2px 7px;
+  border-radius:20px;
+  font-size:.59rem;
+  font-weight:600
+}
+
+.badge-verde{
+  background:var(--verde-xs);
+  color:#15803D
+}
+
+.badge-azul{
+  background:var(--azul-xs);
+  color:var(--azul)
+}
+
+.badge-amarillo{
+  background:var(--amarillo-xs);
+  color:#B45309
+}
+
+.badge-rojo{
+  background:var(--rojo-xs);
+  color:#DC2626
+}
+
+.badge-gris{
+  background:#F3F4F6;
+  color:#6B7280
+}
+
+/* =========================================================
+   ADMIN
+========================================================= */
+
+.admin-summary{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:14px
+}
+
+.admin-summary .summary-item{
+  padding:7px 11px;
+  border-radius:6px;
+  background:var(--fondo);
+  border:1px solid var(--borde);
+  font-size:.66rem
+}
+
+.admin-summary strong{
+  font-weight:700
+}
+
+.admin-table td{
+  font-size:.65rem
+}
+
+.admin-table th{
+  font-size:.58rem
+}
+
+/* =========================================================
+   EMPTY / LOADING
+========================================================= */
+
+.empty{
+  text-align:center;
+  padding:38px 20px;
+  color:var(--gris)
+}
+
+.empty .icon{
+  font-size:2.2rem;
+  margin-bottom:8px
+}
+
+.empty p{
+  font-size:.75rem
+}
+
+.loading-row td{
+  text-align:center;
+  padding:28px;
+  color:var(--gris);
+  font-style:italic
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast{
+  position:fixed;
+  right:18px;
+  bottom:20px;
+  padding:10px 16px;
+  border-radius:8px;
+  font-size:.72rem;
+  font-weight:600;
+  color:#fff;
+  z-index:3000;
+  display:none;
+  max-width:360px;
+  box-shadow:0 4px 16px rgba(0,0,0,.2)
+}
+
+.toast.show{
+  display:block
+}
+
+.toast.ok{
+  background:#065F46
+}
+
+.toast.err{
+  background:#991B1B
+}
+
+.toast.info{
+  background:#1D4ED8
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer{
+  background:#fff;
+  border-top:1px solid var(--borde);
+  text-align:center;
+  padding:12px;
+  font-size:.65rem;
+  color:var(--gris);
+  margin-top:auto
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1000px){
+  .form-grid{
+    grid-template-columns:repeat(2,1fr)
+  }
+}
 
 @media(max-width:768px){
-  header{padding:0 10px;height:50px}.header-title{font-size:.7rem}
-  .main-container{padding:14px 10px}
-  .page-hd h1{font-size:1.1rem}
-  .form-grid{grid-template-columns:1fr}
-  .kpi-grid{grid-template-columns:1fr 1fr}
+  .header-user-info{
+    display:none
+  }
+
+  .main-container{
+    padding:14px 10px
+  }
+
+  .form-grid{
+    grid-template-columns:1fr
+  }
+
+  .form-group.full{
+    grid-column:auto
+  }
+
+  .kpi-box{
+    min-width:calc(50% - 5px)
+  }
+}
+
+@media(max-width:500px){
+  .kpi-box{
+    min-width:100%
+  }
 }
 </style>
 </head>
+
 <body>
 
-<!-- ── HEADER ── -->
+<!-- =======================================================
+     HEADER
+======================================================= -->
+
 <header>
   <div class="header-left">
-    <img src="assets/logo-casabe-real.png" alt="Casabe Real" onerror="this.style.display='none'">
-    <span class="header-title">Sistema Comercial Casabe Real</span>
+    <img src="assets/logo-casabe-real.png"
+         alt="Casabe Real"
+         onerror="this.style.display='none'">
+
+    <span class="header-title">
+      Sistema Comercial Casabe Real
+    </span>
   </div>
+
   <div class="header-right">
     <div class="header-user-info">
-      <div class="user-name" id="user-name-display">Cargando...</div>
-      <div class="user-role" id="user-role-display">Portal Comercial</div>
+      <div class="user-name" id="user-name-display">—</div>
+      <div class="user-role" id="user-role-display">—</div>
     </div>
-    <button class="btn-logout" onclick="cerrarSesion()">Salir</button>
+
+    <button class="btn-logout" onclick="cerrarSesion()">
+      Salir
+    </button>
   </div>
 </header>
 
-<!-- ── NAV ── -->
+<!-- =======================================================
+     NAV
+======================================================= -->
+
 <nav class="nav-bar">
-  <a href="inicio.html"      class="menu-item">INICIO</a>
-  <a href="meta.html"        class="menu-item">META</a>
-  <a href="catalogo_fs.html" class="menu-item">CATÁLOGO</a>
-  <a href="propuesta.html"   class="menu-item">PROPUESTA</a>
-  <a href="pedido.html"      class="menu-item">PEDIDO</a>
-  <a href="reporte.html"     class="menu-item active">REPORTE</a>
-  <a href="clientes.html"    class="menu-item dir-only">CLIENTES</a>
-  <a href="dashboard.html"   class="menu-item dir-only">DASHBOARD</a>
-  <a href="historico.html"   class="menu-item dir-only">HISTÓRICO</a>
-  <a href="cargas.html"      class="menu-item admin-only">CARGAS</a>
-  <a href="ccp.html"         class="menu-item admin-only">CCP</a>
+
+  <a href="inicio.html" class="menu-item">
+    INICIO
+  </a>
+
+  <a href="clientes.html" class="menu-item dir-only">
+    CLIENTES
+  </a>
+
+  <a href="meta.html" class="menu-item">
+    META
+  </a>
+
+  <a href="propuesta.html" class="menu-item">
+    PROPUESTA
+  </a>
+
+  <a href="pedido.html" class="menu-item">
+    PEDIDO
+  </a>
+
+  <a href="reporte.html" class="menu-item active">
+    REPORTE
+  </a>
+
+  <a href="embudo.html" class="menu-item">
+    EMBUDO
+  </a>
+
+  <a href="dashboard.html" class="menu-item dir-only">
+    DASHBOARD
+  </a>
+
+  <a href="bi-ia.html" class="menu-item">
+    BI+IA
+  </a>
+
+  <a href="cargas.html" class="menu-item admin-only">
+    CARGAS
+  </a>
+
+  <a href="historico.html" class="menu-item dir-only">
+    HISTORICO
+  </a>
+
+  <a href="ccp.html" class="menu-item admin-only">
+    CCP
+  </a>
+
 </nav>
+
+<!-- =======================================================
+     MAIN
+======================================================= -->
 
 <main class="main-container">
 
-  <div class="page-hd">
-    <div class="breadcrumb">Sistema / <span>Reporte de Gestión</span></div>
-    <h1>Módulo de <span class="hl">Reporte de Gestión</span></h1>
-    <p class="page-sub" id="page-sub">Cargando...</p>
+  <div class="page-header">
+
+    <div class="breadcrumb">
+      Sistema / <span>Reporte de Gestión</span>
+    </div>
+
+    <h1>
+      Gestión de <span class="highlight">Visitas</span>
+    </h1>
+
+    <p id="page-sub">
+      Registra tu gestión comercial.
+    </p>
+
   </div>
 
-  <!-- ══════════ VISTA VENDEDOR ══════════ -->
-  <div id="vista-vendedor" style="display:none">
+  <!-- =====================================================
+       VISTA VENDEDOR
+  ====================================================== -->
 
-    <!-- Tabs vendedor -->
-    <div class="tab-bar">
-      <button class="tab-btn active" id="tv-tab-tabla" onclick="switchTabVendedor('tabla')">
-        📋 Cuadro de Visitas
-      </button>
-      <button class="tab-btn" id="tv-tab-form" onclick="switchTabVendedor('form')">
-        ✏️ Registro Libre
-      </button>
-    </div>
+  <section id="vista-vendedor">
 
-    <!-- ── PANEL TABLA DE VISITAS ── -->
-    <div id="tv-panel-tabla" class="panel active">
-      <div class="card">
-        <div class="card-hd">
-          <div class="card-hd-left">
-            <div class="card-ic">📋</div>
-            <span class="card-title">Cuadro de Gestión de Visitas</span>
-          </div>
-          <button class="btn-act" onclick="guardarTodos()" id="btn-guardar-todos">
-            💾 Guardar Todo
+    <!-- ================================================
+         GESTIÓN DE VISITAS
+    ================================================= -->
+
+    <div class="card">
+
+      <div class="card-header">
+
+        <div>
+          <h2>
+            Gestión de Visitas
+          </h2>
+
+          <p>
+            Clientes asignados mediante metas comerciales.
+          </p>
+        </div>
+
+        <div>
+          <span class="badge badge-azul" id="badge-visitas">
+            0 clientes
+          </span>
+
+          <button
+            class="btn btn-secondary btn-small"
+            onclick="cargarClientesMetas()"
+            style="margin-left:5px">
+            ↻ Actualizar
           </button>
         </div>
-        <div class="card-bd">
-          <p class="card-desc">
-            Registra la gestión de cada cliente de tu cartera. Completa las columnas de visita y haz clic en
-            <strong>Guardar</strong> por fila o en <strong>Guardar Todo</strong> para enviar todos a la vez.
-          </p>
-          <div id="tbl-visitas-wrap">
-            <div class="empty-state"><div class="empty-ico">⏳</div><div class="empty-txt">Cargando clientes...</div></div>
-          </div>
-        </div>
+
       </div>
+
+      <div class="card-body" style="padding:0">
+
+        <div class="tbl-wrap">
+
+          <table id="tabla-visitas">
+
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Meta</th>
+                <th>Fecha</th>
+                <th>Contacto efectivo</th>
+                <th>Resultado</th>
+                <th>Motivo no venta</th>
+                <th>Próxima visita</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+
+            <tbody id="tbody-visitas">
+
+              <tr class="loading-row">
+                <td colspan="8">
+                  Cargando clientes con meta…
+                </td>
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
     </div>
 
-    <!-- ── PANEL FORMULARIO LIBRE ── -->
-    <div id="tv-panel-form" class="panel">
-      <div class="card">
-        <div class="card-hd">
-          <div class="card-hd-left">
-            <div class="card-ic">✏️</div>
-            <span class="card-title">Registro de Gestión — Prospecto o Visita Libre</span>
-          </div>
-        </div>
-        <div class="card-bd">
-          <p class="card-desc">
-            Usa este formulario para registrar visitas a prospectos o clientes que no están en tu cartera asignada.
+
+    <!-- ================================================
+         REGISTRO LIBRE
+    ================================================= -->
+
+    <div class="card">
+
+      <div class="card-header">
+
+        <div>
+          <h2>
+            Registro Libre
+          </h2>
+
+          <p>
+            Registra una gestión para cualquier cliente.
           </p>
-          <form id="reporteForm" onsubmit="enviarReporteLibre(event)" autocomplete="off">
-            <div class="form-grid">
+        </div>
 
-              <div class="form-group">
-                <label class="cf-label">Tipo de Cliente <span class="req">*</span></label>
-                <select class="cf-sel" id="tipoCliente" required>
-                  <option value="">Seleccione...</option>
-                  <option value="Prospecto / Oportunidad">Prospecto / Oportunidad (Nuevo)</option>
-                  <option value="Cliente Recurrente">Cliente Recurrente</option>
-                </select>
-              </div>
+      </div>
 
-              <div class="form-group">
-                <label class="cf-label">Cliente / Razón Social <span class="req">*</span></label>
-                <div class="ac-wrap">
-                  <input class="cf-inp" type="text" id="razonSocial"
-                    placeholder="Escriba para buscar o ingrese texto libre" required autocomplete="off">
-                  <div class="ac-drop" id="autocompleteList"></div>
-                </div>
-              </div>
+      <div class="card-body">
 
-              <div class="form-group">
-                <label class="cf-label">Fecha de Visita <span class="req">*</span></label>
-                <input class="cf-inp" type="date" id="fechaVisita" required>
-              </div>
+        <form id="form-registro-libre"
+              onsubmit="enviarReporteLibre(event)">
 
-              <div class="form-group">
-                <label class="cf-label">Contacto Efectivo <span class="req">*</span></label>
-                <select class="cf-sel" id="contactoEfectivo" required>
-                  <option value="">Seleccione...</option>
-                  <option value="Sí">Sí — Atendido por decisor</option>
-                  <option value="No">No — Cerrado, ausente o dirección errónea</option>
-                </select>
-              </div>
+          <div class="form-grid">
 
-              <div class="form-group">
-                <label class="cf-label">Gestión de Cita <span class="req">*</span></label>
-                <select class="cf-sel" id="gestionCita" required>
-                  <option value="">Seleccione...</option>
-                  <option value="Cita Hoy">Cita Hoy (Realizada)</option>
-                  <option value="Cita Futura">Cita Futura (Fecha Agendada)</option>
-                  <option value="Sin Cita">Sin Cita (Visita en frío)</option>
-                </select>
-              </div>
+            <div class="form-group">
 
-              <div class="form-group">
-                <label class="cf-label">Resultado de la Cita <span class="req">*</span></label>
-                <select class="cf-sel" id="resultadoCita" required>
-                  <option value="">Seleccione...</option>
-                  <option value="Realizó un pedido">Realizó un pedido</option>
-                  <option value="Solicitó una propuesta">Solicitó una propuesta</option>
-                  <option value="Se presentó una propuesta">Se presentó una propuesta</option>
-                  <option value="No interesado">No interesado</option>
-                  <option value="Reprogramada">Reprogramada</option>
-                </select>
-              </div>
+              <label>
+                Fecha <span class="required">*</span>
+              </label>
 
-              <div class="form-group">
-                <label class="cf-label">
-                  Motivo de No Venta <span class="req" id="motivoReqMark" style="display:none">*</span>
-                </label>
-                <select class="cf-sel" id="motivoNoVenta">
-                  <option value="">Seleccione...</option>
-                  <option value="Precio">Precio</option>
-                  <option value="Tiene Inventario">Tiene Inventario</option>
-                  <option value="Condiciones de pago">Condiciones de pago</option>
-                  <option value="Compra otra marca">Compra otra marca</option>
-                  <option value="Encargado Ausente">Encargado Ausente</option>
-                  <option value="Fuera de hora">Fuera de hora</option>
-                </select>
-                <span class="field-hint" id="motivoHint">Obligatorio cuando no hay pedido</span>
-              </div>
-
-              <div class="form-group">
-                <label class="cf-label">Próxima Fecha de Visita</label>
-                <input class="cf-inp" type="date" id="proximaVisita">
-              </div>
-
-              <div class="form-group full">
-                <label class="cf-label">Datos Capturados en Visita</label>
-                <div class="chk-group">
-                  <label class="chk-lbl"><input type="checkbox" name="datosCapturados" value="Nombre Decisor"> Nombre Decisor</label>
-                  <label class="chk-lbl"><input type="checkbox" name="datosCapturados" value="Teléfono/WhatsApp"> Teléfono / WhatsApp</label>
-                  <label class="chk-lbl"><input type="checkbox" name="datosCapturados" value="Correo"> Correo</label>
-                  <label class="chk-lbl"><input type="checkbox" name="datosCapturados" value="Dirección Despacho"> Dirección Despacho</label>
-                </div>
-              </div>
-
-              <div class="form-group full">
-                <label class="cf-label">Observaciones / Minuta</label>
-                <textarea class="cf-txt" id="observaciones" rows="3"
-                  placeholder="Acuerdos, objeciones o compromisos. Se registra en la Bitácora del cliente."></textarea>
-              </div>
+              <input
+                type="date"
+                id="fechaLibre"
+                required>
 
             </div>
 
-            <button type="submit" class="btn-submit" id="btnSubmit">
-              Enviar Reporte
+
+            <div class="form-group">
+
+              <label>
+                Cliente <span class="required">*</span>
+              </label>
+
+              <input
+                type="text"
+                id="clienteLibre"
+                list="clientes-list"
+                placeholder="Seleccione o escriba el cliente"
+                autocomplete="off"
+                required>
+
+              <datalist id="clientes-list"></datalist>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label>
+                Contacto efectivo <span class="required">*</span>
+              </label>
+
+              <select id="contactoEfectivoLibre" required>
+                <option value="">Seleccione…</option>
+                <option value="Sí">Sí</option>
+                <option value="No">No</option>
+              </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label>
+                Gestión / cita
+              </label>
+
+              <select id="gestionCitaLibre">
+
+                <option value="Cita Hoy">
+                  Cita Hoy
+                </option>
+
+                <option value="Visita">
+                  Visita
+                </option>
+
+                <option value="Llamada">
+                  Llamada
+                </option>
+
+                <option value="WhatsApp">
+                  WhatsApp
+                </option>
+
+                <option value="Correo">
+                  Correo
+                </option>
+
+                <option value="Otro">
+                  Otro
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label>
+                Resultado
+              </label>
+
+              <select id="resultadoCitaLibre">
+
+                <option value="">
+                  Seleccione…
+                </option>
+
+                <option value="Cierre Inmediato">
+                  Cierre Inmediato
+                </option>
+
+                <option value="Interesado">
+                  Interesado
+                </option>
+
+                <option value="Seguimiento">
+                  Seguimiento
+                </option>
+
+                <option value="No interesado">
+                  No interesado
+                </option>
+
+                <option value="Sin contacto">
+                  Sin contacto
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label>
+                Propuesta comercial
+              </label>
+
+              <select id="propuestaComercial">
+
+                <option value="No">
+                  No
+                </option>
+
+                <option value="Sí">
+                  Sí
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label>
+                Estatus de cierre
+              </label>
+
+              <select id="estatusCierre">
+
+                <option value="Sin Pedido">
+                  Sin Pedido
+                </option>
+
+                <option value="Pedido 1era Vez">
+                  Pedido 1era Vez
+                </option>
+
+                <option value="Pedido Recurrente">
+                  Pedido Recurrente
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <div class="form-group"
+                 id="wrap-motivo-libre">
+
+              <label>
+                Motivo no venta
+              </label>
+
+              <select id="motivoNoVenta">
+
+                <option value="">
+                  Seleccione…
+                </option>
+
+                <option value="Precio">
+                  Precio
+                </option>
+
+                <option value="No necesita actualmente">
+                  No necesita actualmente
+                </option>
+
+                <option value="Ya tiene proveedor">
+                  Ya tiene proveedor
+                </option>
+
+                <option value="Sin presupuesto">
+                  Sin presupuesto
+                </option>
+
+                <option value="No interesado">
+                  No interesado
+                </option>
+
+                <option value="Otro">
+                  Otro
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <div class="form-group full">
+
+              <label>
+                Datos capturados / observaciones
+              </label>
+
+              <textarea
+                id="datosCapturadosLibre"
+                placeholder="Información obtenida durante la gestión…"></textarea>
+
+            </div>
+
+
+            <div class="form-group full">
+
+              <label>
+                Observaciones / próxima acción
+              </label>
+
+              <textarea
+                id="observacionesLibre"
+                placeholder="Próxima acción, fecha estimada, información adicional…"></textarea>
+
+            </div>
+
+          </div>
+
+
+          <div class="form-actions">
+
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="limpiarRegistroLibre()">
+              Limpiar
             </button>
-          </form>
-        </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary"
+              id="btn-enviar-libre">
+              Guardar Registro
+            </button>
+
+          </div>
+
+        </form>
+
       </div>
+
     </div>
 
-  </div><!-- /vista-vendedor -->
+  </section>
 
-  <!-- ══════════ VISTA ADMINISTRADOR ══════════ -->
-  <div id="vista-admin" style="display:none">
+
+  <!-- =====================================================
+       VISTA GERENTE / ADMINISTRADOR
+  ====================================================== -->
+
+  <section id="vista-admin">
+
+    <!-- KPIs -->
+
+    <div class="kpi-row"
+         id="kpis-admin">
+
+      <div class="kpi-box">
+
+        <div class="kpi-lbl">
+          Gestiones
+        </div>
+
+        <div class="kpi-val"
+             id="kpi-total">
+          0
+        </div>
+
+        <div class="kpi-sub">
+          registros
+        </div>
+
+      </div>
+
+
+      <div class="kpi-box">
+
+        <div class="kpi-lbl">
+          Contactos efectivos
+        </div>
+
+        <div class="kpi-val"
+             id="kpi-contactos">
+          0
+        </div>
+
+        <div class="kpi-sub">
+          gestiones
+        </div>
+
+      </div>
+
+
+      <div class="kpi-box">
+
+        <div class="kpi-lbl">
+          Pedidos
+        </div>
+
+        <div class="kpi-val"
+             id="kpi-pedidos">
+          0
+        </div>
+
+        <div class="kpi-sub">
+          cierres
+        </div>
+
+      </div>
+
+
+      <div class="kpi-box">
+
+        <div class="kpi-lbl">
+          Propuestas
+        </div>
+
+        <div class="kpi-val"
+             id="kpi-propuestas">
+          0
+        </div>
+
+        <div class="kpi-sub">
+          emitidas
+        </div>
+
+      </div>
+
+
+      <div class="kpi-box">
+
+        <div class="kpi-lbl">
+          Vendedores
+        </div>
+
+        <div class="kpi-val"
+             id="kpi-vendedores">
+          0
+        </div>
+
+        <div class="kpi-sub">
+          con actividad
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- FILTROS -->
 
     <div class="card">
-      <div class="card-hd">
-        <div class="card-hd-left">
-          <div class="card-ic">📊</div>
-          <span class="card-title">Resumen de Gestión de Visitas</span>
+
+      <div class="card-body">
+
+        <div class="filtros-bar">
+
+          <div>
+
+            <label>
+              Desde
+            </label>
+
+            <input
+              type="date"
+              id="filtro-desde">
+
+          </div>
+
+
+          <div>
+
+            <label>
+              Hasta
+            </label>
+
+            <input
+              type="date"
+              id="filtro-hasta">
+
+          </div>
+
+
+          <div>
+
+            <label>
+              Vendedor
+            </label>
+
+            <select id="filtro-vendedor-admin">
+
+              <option value="">
+                Todos los vendedores
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div>
+
+            <label style="visibility:hidden">
+              .
+            </label>
+
+            <button
+              class="btn btn-primary"
+              onclick="aplicarFiltrosAdmin()">
+              Filtrar
+            </button>
+
+          </div>
+
+
+          <div>
+
+            <label style="visibility:hidden">
+              .
+            </label>
+
+            <button
+              class="btn btn-secondary"
+              onclick="limpiarFiltrosAdmin()">
+              Limpiar
+            </button>
+
+          </div>
+
+
+          <div>
+
+            <label style="visibility:hidden">
+              .
+            </label>
+
+            <button
+              class="btn btn-secondary"
+              onclick="cargarReportesAdmin()">
+              ↻ Actualizar
+            </button>
+
+          </div>
+
         </div>
-        <button class="btn-act" onclick="cargarReportesAdmin()">↺ Actualizar</button>
+
       </div>
-      <div class="card-bd">
 
-        <!-- KPIs -->
-        <div class="kpi-grid" id="kpi-grid">
-          <div class="kpi-card"><div class="kpi-lbl">Total Visitas</div><div class="kpi-val" id="k-total">—</div><div class="kpi-sub">registros</div></div>
-          <div class="kpi-card verde"><div class="kpi-lbl">Contacto Efectivo</div><div class="kpi-val" id="k-ce">—</div><div class="kpi-sub">con decisor</div></div>
-          <div class="kpi-card azul"><div class="kpi-lbl">Cierres / Pedidos</div><div class="kpi-val" id="k-cierre">—</div><div class="kpi-sub">convertidos</div></div>
-          <div class="kpi-card naranja"><div class="kpi-lbl">Sin Pedido</div><div class="kpi-val" id="k-nv">—</div><div class="kpi-sub">sin venta</div></div>
-          <div class="kpi-card"><div class="kpi-lbl">Tasa Cierre</div><div class="kpi-val" id="k-tasa">—</div><div class="kpi-sub">% de visitas</div></div>
-          <div class="kpi-card"><div class="kpi-lbl">Propuestas</div><div class="kpi-val" id="k-prop">—</div><div class="kpi-sub">entregadas</div></div>
-        </div>
+    </div>
 
-        <!-- Filtros -->
-        <div class="filtro-bar">
-          <input class="f-inp" type="date" id="f-desde" title="Desde">
-          <input class="f-inp" type="date" id="f-hasta" title="Hasta">
-          <select class="f-sel" id="f-vendedor" onchange="renderAdmin()">
-            <option value="">Todos los vendedores</option>
-          </select>
-          <select class="f-sel" id="f-resultado" onchange="renderAdmin()">
-            <option value="">Todos los resultados</option>
-            <option value="Realizó un pedido">Realizó un pedido</option>
-            <option value="Solicitó una propuesta">Solicitó una propuesta</option>
-            <option value="Se presentó una propuesta">Se presentó una propuesta</option>
-            <option value="No interesado">No interesado</option>
-            <option value="Reprogramada">Reprogramada</option>            
-          </select>
-          <button class="btn-act" onclick="renderAdmin()">Filtrar</button>
+
+    <!-- RESUMEN VENDEDORES -->
+
+    <div class="card">
+
+      <div class="card-header">
+
+        <div>
+          <h2>
+            Actividad por vendedor
+          </h2>
+
+          <p>
+            Resumen de gestiones registradas en REPORTES.
+          </p>
         </div>
 
-        <!-- Resumen por vendedor -->
-        <div style="font-size:.72rem;font-weight:700;color:var(--gris);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">
-          Desempeño por Vendedor
-        </div>
-        <div id="resumen-vendedores" style="margin-bottom:20px">
-          <div class="empty-state"><div class="empty-ico">⏳</div><div class="empty-txt">Cargando...</div></div>
+      </div>
+
+      <div class="card-body">
+
+        <div id="resumen-vendedores"
+             class="admin-summary">
         </div>
 
-        <!-- Tabla detalle -->
-        <div style="font-size:.72rem;font-weight:700;color:var(--gris);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">
-          Detalle de Reportes
+      </div>
+
+    </div>
+
+
+    <!-- DETALLE -->
+
+    <div class="card">
+
+      <div class="card-header">
+
+        <div>
+          <h2>
+            Detalle de gestiones
+          </h2>
+
+          <p>
+            Información almacenada en SCCR - Base de Datos / REPORTES.
+          </p>
         </div>
+
+        <span
+          class="badge badge-azul"
+          id="badge-reportes">
+          0 registros
+        </span>
+
+      </div>
+
+      <div class="card-body"
+           style="padding:0">
+
         <div class="tbl-wrap">
-          <table class="res-tbl">
+
+          <table class="admin-table">
+
             <thead>
+
               <tr>
+
                 <th>Fecha</th>
                 <th>Vendedor</th>
                 <th>Cliente</th>
-                <th>Contacto Efectivo</th>
+                <th>Tipo</th>
+                <th>Contacto</th>
+                <th>Gestión</th>
                 <th>Resultado</th>
-                <th>Motivo No Venta</th>
-                <th>Próx. Visita</th>
+                <th>Propuesta</th>
+                <th>Cierre</th>
+                <th>Motivo</th>
                 <th>Observaciones</th>
+
               </tr>
+
             </thead>
-            <tbody id="tbl-admin-body">
-              <tr><td colspan="8">
-                <div class="empty-state"><div class="empty-ico">📊</div><div class="empty-txt">Cargando reportes...</div></div>
-              </td></tr>
+
+            <tbody id="tbody-admin">
+
+              <tr class="loading-row">
+
+                <td colspan="11">
+                  Cargando reportes…
+                </td>
+
+              </tr>
+
             </tbody>
+
           </table>
+
         </div>
 
       </div>
+
     </div>
 
-  </div><!-- /vista-admin -->
+  </section>
 
 </main>
 
+
 <footer>
-  &copy; 2026 <strong>Sistema Comercial Casabe Real (SCCR)</strong> · Todos los derechos reservados · v2.5.1 · 0412.290.58.33
+  &copy; 2026
+  <strong>Sistema Comercial Casabe Real (SCCR)</strong>
+  · v2.5.1
 </footer>
-<div class="toast" id="toast"></div>
+
+
+<div class="toast"
+     id="toast">
+</div>
+
 
 <script>
-// ════════════════════════════════════════════════════════════
-//  CONFIG
-// ════════════════════════════════════════════════════════════
-const API = 'https://script.google.com/macros/s/AKfycbyludOrnVw1jSCYJUWELTjPjhuR7N1uXdBO6mjR7XVE-SqmkP-pe3qieg5SX-8wRh2Dsg/exec';
 
-// ════════════════════════════════════════════════════════════
-//  ESTADO
-// ════════════════════════════════════════════════════════════
+/* =========================================================
+   CONFIGURACIÓN
+========================================================= */
+
+const API =
+  'https://script.google.com/macros/s/AKfcybyludOrnVw1jSCYJUWELTjPjhuR7N1uXdBO6mjR7XVE-SqmkP-pe3qieg5SX-8wRh2Dsg/exec';
+
+
+/* =========================================================
+   ESTADO
+========================================================= */
+
 let sesion       = null;
 let esAdmin      = false;
-let CLIENTES     = [];   // clientes para autocomplete del Registro Libre
-let VISITAS_CLI  = [];   // clientes del Cuadro de Visitas (hoja 'metas')
-let META_PROD    = [];   // productos para mostrar metas
-let REPORTES_ADM = [];   // reportes cargados para admin
 
-// ════════════════════════════════════════════════════════════
-//  INIT
-// ════════════════════════════════════════════════════════════
+let CLIENTES     = [];
+let VISITAS_CLI  = [];
+let META_PROD    = [];
+
+let REPORTES_ADM = [];
+
+
+/* =========================================================
+   INIT
+========================================================= */
+
 document.addEventListener('DOMContentLoaded', async () => {
-  sesion = (typeof SCCR !== 'undefined') ? SCCR.initSCCR() || SCCR.getSesion() : null;
+
+  sesion =
+    (typeof SCCR !== 'undefined')
+      ? (SCCR.initSCCR() || SCCR.getSesion())
+      : null;
+
   if (!sesion) {
-    try { sesion = JSON.parse(sessionStorage.getItem('sccr')); } catch(e){}
+
+    try {
+      sesion = JSON.parse(
+        sessionStorage.getItem('sccr')
+      );
+    } catch(e) {}
+
   }
-  if (!sesion) { window.location.href = 'index.html'; return; }
 
-  const rol = (sesion.rol || '').toLowerCase();
-  esAdmin   = rol === 'admin' || rol === 'gerente';
+  if (!sesion) {
 
-  document.getElementById('user-name-display').textContent = sesion.nombre || '—';
-  document.getElementById('user-role-display').textContent =
-    rol === 'admin' ? 'Administrador' : rol === 'gerente' ? 'Gerente de Ventas' : 'Asesor Comercial';
-  document.getElementById('page-sub').textContent =
-    esAdmin ? 'Vista de administración — Gestión de visitas del equipo comercial'
-            : 'Registra tu gestión de campo — ' + (sesion.nombre || sesion.user);
+    window.location.href = 'index.html';
+    return;
 
-  // Menú por rol: .dir-only → admin + gerente | .admin-only → solo admin
+  }
+
+
+  const rol =
+    String(sesion.rol || '').toLowerCase();
+
+
+  esAdmin =
+    rol === 'admin' ||
+    rol === 'gerente';
+
+
+  document.getElementById(
+    'user-name-display'
+  ).textContent =
+    sesion.nombre || '—';
+
+
+  document.getElementById(
+    'user-role-display'
+  ).textContent =
+    rol === 'admin'
+      ? 'Administrador'
+      : rol === 'gerente'
+        ? 'Gerente de Ventas'
+        : 'Asesor Comercial';
+
+
+  document.getElementById(
+    'page-sub'
+  ).textContent =
+    esAdmin
+      ? 'Vista de administración — Gestión de visitas del equipo comercial'
+      : 'Registra tu gestión de campo — ' +
+        (sesion.nombre || sesion.user || '');
+
+
+  /* Menú por rol */
+
   if (rol === 'admin') {
-    document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'inline-block');
-    document.querySelectorAll('.dir-only').forEach(e => e.style.display = 'inline-block');
+
+    document
+      .querySelectorAll('.admin-only')
+      .forEach(el =>
+        el.style.display = 'inline-block'
+      );
+
+    document
+      .querySelectorAll('.dir-only')
+      .forEach(el =>
+        el.style.display = 'inline-block'
+      );
+
   } else if (rol === 'gerente') {
-    document.querySelectorAll('.dir-only').forEach(e => e.style.display = 'inline-block');
+
+    document
+      .querySelectorAll('.dir-only')
+      .forEach(el =>
+        el.style.display = 'inline-block'
+      );
+
   }
 
-  // Fecha de hoy como default
-  const hoy = new Date().toISOString().slice(0,10);
-  ['fechaVisita'].forEach(id => { const el = document.getElementById(id); if(el) el.value = hoy; });
+
+  /* Fecha actual */
+
+  const hoy =
+    new Date().toISOString().slice(0,10);
+
+
+  const fechaVisita =
+    document.getElementById('fechaLibre');
+
+  if (fechaVisita) {
+    fechaVisita.value = hoy;
+  }
+
+
+  /* Vista correspondiente */
 
   if (esAdmin) {
-    document.getElementById('vista-admin').style.display = '';
+
+    document.getElementById(
+      'vista-admin'
+    ).style.display = 'block';
+
     await cargarReportesAdmin();
+
   } else {
-    document.getElementById('vista-vendedor').style.display = '';
-    await Promise.all([cargarClientes(), cargarProductos(), cargarClientesMetas()]);
+
+    document.getElementById(
+      'vista-vendedor'
+    ).style.display = 'block';
+
+    await Promise.all([
+      cargarClientes(),
+      cargarProductos(),
+      cargarClientesMetas()
+    ]);
+
     renderTablaVisitas();
     iniciarAutocomplete();
+
   }
+
 });
 
+
+/* =========================================================
+   SESIÓN
+========================================================= */
+
 function cerrarSesion() {
-  if (typeof SCCR !== 'undefined' && SCCR.cerrarSesion) SCCR.cerrarSesion();
-  else { sessionStorage.removeItem('sccr'); window.location.href = 'index.html'; }
+
+  sessionStorage.removeItem('sccr');
+
+  window.location.href =
+    'index.html';
+
 }
 
-// ════════════════════════════════════════════════════════════
-//  TABS VENDEDOR
-// ════════════════════════════════════════════════════════════
-function switchTabVendedor(tab) {
-  ['tabla','form'].forEach(t => {
-    document.getElementById('tv-tab-' + t).classList.toggle('active', t === tab);
-    document.getElementById('tv-panel-' + t).classList.toggle('active', t === tab);
-  });
-}
 
-// ════════════════════════════════════════════════════════════
-//  CARGA DE DATOS
-// ════════════════════════════════════════════════════════════
+/* =========================================================
+   CLIENTES — REGISTRO LIBRE
+   Se mantiene separado de METAS.
+========================================================= */
+
 async function cargarClientes() {
+
+  CLIENTES = [];
+
   try {
-    const filtro = sesion.user ? '&vendedor=' + encodeURIComponent(sesion.user) : '';
-    const r = await fetch(API + '?action=clientes' + filtro);
-    const j = await r.json();
-    if (j.ok && Array.isArray(j.data)) CLIENTES = j.data;
-    else CLIENTES = [];
-  } catch { CLIENTES = []; }
+
+    let url =
+      API + '?action=clientes';
+
+    if (sesion.user) {
+
+      url +=
+        '&vendedor=' +
+        encodeURIComponent(
+          sesion.user
+        );
+
+    }
+
+    const r =
+      await fetch(url);
+
+    const j =
+      await r.json();
+
+    if (
+      j.ok &&
+      Array.isArray(j.data)
+    ) {
+
+      CLIENTES =
+        j.data;
+
+    }
+
+  } catch(e) {
+
+    console.warn(
+      'cargarClientes:',
+      e
+    );
+
+  }
+
 }
 
-// Cuadro de Gestión de Visitas: clientes asignados al vendedor en SCCR - Base de Datos (hoja 'metas')
-async function cargarClientesMetas() {
-  VISITAS_CLI = [];
-  try {
-    const hoy = new Date();
-    let url = API + '?action=metas&mes=' + (hoy.getMonth() + 1) + '&anio=' + hoy.getFullYear();
-    if (sesion.user) url += '&vendedor=' + encodeURIComponent(sesion.user);
-    const r = await fetch(url);
-    const j = await r.json();
-    const filas = (j.ok && Array.isArray(j.data)) ? j.data : [];
 
-    const norm = v => String(v || '').trim().toLowerCase();
-    const mios = [norm(sesion.user), norm(sesion.nombre)].filter(Boolean);
-    const vistos = new Set();
-
-    filas.forEach(m => {
-      // Cada vendedor ve solo lo suyo
-      const dueno = norm(m.user_vendedor || m.vendedor);
-      if (dueno && !mios.includes(dueno)) return;
-
-      const nombre = m.razon_social || m.cliente || m.nombre_cliente || m.nombre || '';
-      if (!nombre) return;
-      const clave = norm(nombre) + '|' + norm(m.establecimiento);
-      if (vistos.has(clave)) return;
-      vistos.add(clave);
-
-      VISITAS_CLI.push({
-        razon_social    : nombre,
-        establecimiento : m.establecimiento || '',
-        tipo_cliente_meta: m.tipo_cliente || m.tipo || '',
-        meta_cajas      : m.meta_cajas,
-        meta_monto_usd  : m.meta_monto_usd,
-        etapa_embudo    : m.etapa_embudo || m.etapa || '',
-      });
-    });
-  } catch { VISITAS_CLI = []; }
-}
+/* =========================================================
+   PRODUCTOS
+========================================================= */
 
 async function cargarProductos() {
+
+  META_PROD = [];
+
   try {
-    const r = await fetch(API + '?action=getProductos');
-    const j = await r.json();
-    if (j.ok && Array.isArray(j.data)) META_PROD = j.data;
-  } catch {
-    META_PROD = [
-      { id_producto:'restaurante', nombre:'Tipo Restaurante', precio_usd:312 },
-      { id_producto:'pasapalo',    nombre:'Tipo Pasapalo',    precio_usd:264 },
-      { id_producto:'torta',       nombre:'Tipo Torta',       precio_usd:240 },
-    ];
+
+    const r =
+      await fetch(
+        API + '?action=getProductos'
+      );
+
+    const j =
+      await r.json();
+
+    if (
+      j.ok &&
+      Array.isArray(j.data)
+    ) {
+
+      META_PROD =
+        j.data;
+
+    }
+
+  } catch(e) {
+
+    console.warn(
+      'cargarProductos:',
+      e
+    );
+
   }
+
 }
 
-// ════════════════════════════════════════════════════════════
-//  TABLA DE VISITAS — VENDEDOR
-//  Columnas: Cliente | Meta | Fecha Visita | Contacto Efectivo |
-//            Resultado | Motivo No Venta | Próx. Visita | Guardar
-// ════════════════════════════════════════════════════════════
+
+/* =========================================================
+   AUTOCOMPLETE
+========================================================= */
+
+function iniciarAutocomplete() {
+
+  const list =
+    document.getElementById(
+      'clientes-list'
+    );
+
+  if (!list) return;
+
+
+  list.innerHTML =
+    CLIENTES
+      .map(c => {
+
+        const nombre =
+          c.razon_social ||
+          c.cliente ||
+          c.nombre ||
+          '';
+
+        return nombre
+          ? `<option value="${esc(nombre)}"></option>`
+          : '';
+
+      })
+      .join('');
+
+}
+
+
+/* =========================================================
+   =========================================================
+   METAS → CLIENTES INDIVIDUALES
+   =========================================================
+   =========================================================
+
+   IMPORTANTE:
+
+   META.HTML demuestra que:
+   - action=metas devuelve las metas maestras.
+   - detalle_clientes contiene JSON.
+   - ese JSON contiene los clientes individuales.
+   - cada cliente tiene productos[].
+   - productos[] contiene cajas, precio_usd y subtotal.
+
+   REPORTE.HTML ahora utiliza exactamente esa estructura.
+========================================================= */
+
+async function cargarClientesMetas() {
+
+  VISITAS_CLI = [];
+
+  try {
+
+    /*
+     Obtener las metas del vendedor.
+
+     Se utiliza vendedor_id porque es el identificador
+     utilizado por META.HTML.
+    */
+
+    let url =
+      API + '?action=metas';
+
+
+    if (sesion.vendedor_id) {
+
+      url +=
+        '&vendedor=' +
+        encodeURIComponent(
+          sesion.vendedor_id
+        );
+
+    } else if (sesion.user) {
+
+      /*
+       Fallback por compatibilidad.
+       */
+
+      url +=
+        '&vendedor=' +
+        encodeURIComponent(
+          sesion.user
+        );
+
+    }
+
+
+    const r =
+      await fetch(
+        url,
+        { redirect:'follow' }
+      );
+
+
+    const raw =
+      await r.text();
+
+
+    const j =
+      JSON.parse(raw);
+
+
+    if (!j.ok) {
+
+      throw new Error(
+        j.msg ||
+        'No se pudieron cargar las metas.'
+      );
+
+    }
+
+
+    const metas =
+      Array.isArray(j.data)
+        ? j.data
+        : [];
+
+
+    /*
+     ========================================================
+     FILTRO DE SEGURIDAD DEL VENDEDOR
+     ========================================================
+
+     Igual que META.HTML:
+     el vendedor solo puede trabajar con su propia meta.
+    */
+
+    const vendedorSesion =
+      String(
+        sesion.vendedor_id ||
+        sesion.user ||
+        ''
+      )
+      .trim()
+      .toLowerCase();
+
+
+    const metasMias =
+      esAdmin
+        ? metas
+        : metas.filter(meta => {
+
+            const vendedorMeta =
+              String(
+                meta.vendedor ||
+                ''
+              )
+              .trim()
+              .toLowerCase();
+
+            return (
+              !vendedorSesion ||
+              vendedorMeta === vendedorSesion
+            );
+
+          });
+
+
+    /*
+     ========================================================
+     DESGLOSAR detalle_clientes
+     ========================================================
+    */
+
+    metasMias.forEach(meta => {
+
+      let clientesMeta = [];
+
+
+      try {
+
+        const detalle =
+          meta.detalle_clientes;
+
+
+        if (
+          Array.isArray(detalle)
+        ) {
+
+          clientesMeta =
+            detalle;
+
+        } else if (
+          detalle &&
+          String(detalle)
+            .trim()
+            .startsWith('[')
+        ) {
+
+          clientesMeta =
+            JSON.parse(
+              detalle
+            );
+
+        }
+
+      } catch(e) {
+
+        console.warn(
+          'detalle_clientes inválido:',
+          e
+        );
+
+        clientesMeta = [];
+
+      }
+
+
+      if (!Array.isArray(clientesMeta)) {
+        return;
+      }
+
+
+      /*
+       Cada objeto aquí es un cliente individual
+       dentro de la meta.
+      */
+
+      clientesMeta.forEach(cliente => {
+
+        if (!cliente) return;
+
+
+        const razonSocial =
+          cliente.cliente ||
+          cliente.razon_social ||
+          cliente.nombre ||
+          cliente.nombre_cliente ||
+          '';
+
+
+        if (!razonSocial) {
+          return;
+        }
+
+
+        /*
+         ====================================================
+         PRODUCTOS DE LA META
+         ====================================================
+        */
+
+        const productos =
+          Array.isArray(
+            cliente.productos
+          )
+            ? cliente.productos
+            : [];
+
+
+        const totalCajas =
+          Number(
+            cliente.total_cajas
+          ) ||
+          productos.reduce(
+            (s,p) =>
+              s +
+              (Number(p.cajas) || 0),
+            0
+          );
+
+
+        const totalUSD =
+          Number(
+            cliente.total_usd
+          ) ||
+          productos.reduce(
+            (s,p) =>
+              s +
+              (Number(p.subtotal) || 0),
+            0
+          );
+
+
+        /*
+         ====================================================
+         META INDIVIDUAL
+         ====================================================
+        */
+
+        VISITAS_CLI.push({
+
+          /* Cliente */
+
+          razon_social:
+            razonSocial,
+
+          cliente:
+            razonSocial,
+
+          establecimiento:
+            cliente.establecimiento ||
+            '',
+
+          contacto:
+            cliente.contacto ||
+            '',
+
+          telefono:
+            cliente.telefono ||
+            '',
+
+          tipo:
+            cliente.tipo ||
+            '',
+
+          tipo_cliente:
+            cliente.tipo_cliente ||
+            cliente.tipo ||
+            '',
+
+
+          /* Meta */
+
+          vendedor:
+            meta.vendedor ||
+            '',
+
+          periodo:
+            meta.periodo ||
+            (
+              meta.mes +
+              '/' +
+              meta.anio
+            ),
+
+          mes:
+            meta.mes ||
+            '',
+
+          anio:
+            meta.anio ||
+            '',
+
+          meta_id:
+            meta.id_meta ||
+            '',
+
+          meta_cajas:
+            totalCajas,
+
+          meta_monto_usd:
+            totalUSD,
+
+          productos:
+            productos,
+
+
+          /* Embudo */
+
+          etapa_embudo:
+            cliente.etapa_embudo ||
+            cliente.etapa ||
+            '',
+
+
+          /* Estado */
+
+          _estado:
+            cliente._estado ||
+            'activo',
+
+          _razon:
+            cliente._razon ||
+            '',
+
+          _pedido:
+            cliente._pedido ||
+            ''
+
+        });
+
+      });
+
+    });
+
+
+    /*
+     ========================================================
+     EVITAR DUPLICADOS
+     ========================================================
+
+     Un cliente puede aparecer en más de una meta.
+     La clave incluye vendedor + cliente + establecimiento
+     + período para no eliminar metas legítimas de períodos
+     diferentes.
+    */
+
+    const unicos = [];
+    const vistos = new Set();
+
+
+    VISITAS_CLI.forEach(c => {
+
+      const clave =
+        String(
+          c.vendedor || ''
+        )
+        .trim()
+        .toLowerCase()
+        + '|'
+        +
+        String(
+          c.razon_social || ''
+        )
+        .trim()
+        .toLowerCase()
+        + '|'
+        +
+        String(
+          c.establecimiento || ''
+        )
+        .trim()
+        .toLowerCase()
+        + '|'
+        +
+        String(
+          c.periodo || ''
+        )
+        .trim()
+        .toLowerCase();
+
+
+      if (!vistos.has(clave)) {
+
+        vistos.add(clave);
+        unicos.push(c);
+
+      }
+
+    });
+
+
+    VISITAS_CLI =
+      unicos;
+
+
+    const badge =
+      document.getElementById(
+        'badge-visitas'
+      );
+
+    if (badge) {
+
+      badge.textContent =
+        VISITAS_CLI.length +
+        ' cliente' +
+        (
+          VISITAS_CLI.length !== 1
+            ? 's'
+            : ''
+        );
+
+    }
+
+  } catch(err) {
+
+    console.error(
+      'cargarClientesMetas:',
+      err
+    );
+
+    VISITAS_CLI = [];
+
+    toast(
+      'No se pudieron cargar los clientes con meta: ' +
+      err.message,
+      'err'
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   RENDER TABLA DE VISITAS
+========================================================= */
+
 function renderTablaVisitas() {
-  const wrap = document.getElementById('tbl-visitas-wrap');
+
+  const tbody =
+    document.getElementById(
+      'tbody-visitas'
+    );
+
+
+  if (!tbody) return;
+
+
   if (!VISITAS_CLI.length) {
-    wrap.innerHTML = `<div class="empty-state"><div class="empty-ico">👥</div>
-      <div class="empty-txt">Sin clientes en tus metas</div>
-      <div class="empty-sub">Contacta al administrador para que te asigne metas y clientes.</div></div>`;
+
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="8">
+
+          <div class="empty">
+
+            <div class="icon">
+              📋
+            </div>
+
+            <p>
+              No hay clientes con meta asignada
+              para este vendedor.
+            </p>
+
+          </div>
+
+        </td>
+      </tr>
+    `;
+
     return;
+
   }
 
-  let rows = VISITAS_CLI.map((c, i) => {
-    const nombre = esc(c.razon_social || c.nombre || '—');
-    const establ = esc(c.establecimiento || '');
-    // Chip de meta: tipo de cliente y meta asignada (hoja 'metas')
-    const partes = [];
-    if (c.tipo_cliente_meta) partes.push(c.tipo_cliente_meta);
-    if (parseFloat(c.meta_cajas) > 0) partes.push(c.meta_cajas + ' cajas');
-    if (parseFloat(c.meta_monto_usd) > 0) partes.push('$' + c.meta_monto_usd);
-    const etapa  = partes.join(' · ');
-    const hoy    = new Date().toISOString().slice(0,10);
 
-    return `<tr id="row-${i}">
+  tbody.innerHTML =
+    VISITAS_CLI
+      .map(
+        (cliente,index) =>
+          renderFilaVisita(
+            cliente,
+            index
+          )
+      )
+      .join('');
+
+}
+
+
+/* =========================================================
+   FILA INDIVIDUAL
+========================================================= */
+
+function renderFilaVisita(
+  cliente,
+  index
+) {
+
+  const productos =
+    Array.isArray(
+      cliente.productos
+    )
+      ? cliente.productos
+      : [];
+
+
+  const metaProductos =
+    productos.length
+      ? productos
+          .map(p => {
+
+            const cajas =
+              Number(
+                p.cajas
+              ) || 0;
+
+            const subtotal =
+              Number(
+                p.subtotal
+              ) || 0;
+
+            return `
+              <span class="meta-chip">
+                ${esc(
+                  p.nombre ||
+                  p.id_producto ||
+                  'Producto'
+                )}
+                · ${cajas} cajas
+                · $${subtotal.toFixed(2)}
+              </span>
+            `;
+
+          })
+          .join('')
+      : `
+          <span class="badge badge-gris">
+            Sin detalle de producto
+          </span>
+        `;
+
+
+  return `
+    <tr
+      class="visit-row"
+      data-index="${index}">
+
+      <!-- CLIENTE -->
+
       <td>
-        <div class="td-cliente">${nombre}</div>
-        <div class="td-meta">${establ}</div>
-        ${etapa ? `<div class="meta-chip">📍 ${esc(etapa)}</div>` : ''}
+
+        <div class="client-name">
+          ${esc(
+            cliente.razon_social ||
+            cliente.cliente ||
+            '—'
+          )}
+        </div>
+
+        ${
+          cliente.establecimiento
+            ? `
+              <span class="client-est">
+                ${esc(
+                  cliente.establecimiento
+                )}
+              </span>
+            `
+            : ''
+        }
+
+        ${
+          cliente.contacto
+            ? `
+              <span class="client-est">
+                Contacto:
+                ${esc(cliente.contacto)}
+              </span>
+            `
+            : ''
+        }
+
       </td>
+
+
+      <!-- META -->
+
       <td>
-        <input class="date-inp" type="date" id="rv-fecha-${i}" value="${hoy}">
+
+        <div class="meta-line">
+
+          ${metaProductos}
+
+        </div>
+
+        <div style="margin-top:5px">
+
+          <span class="badge badge-azul">
+            ${Number(
+              cliente.meta_cajas
+            ) || 0}
+            cajas
+          </span>
+
+          <span class="badge badge-verde">
+            $
+            ${(
+              Number(
+                cliente.meta_monto_usd
+              ) || 0
+            ).toFixed(2)}
+          </span>
+
+        </div>
+
+        ${
+          cliente.periodo
+            ? `
+              <div
+                style="
+                  margin-top:4px;
+                  font-size:.59rem;
+                  color:var(--gris)
+                ">
+                Período:
+                ${esc(cliente.periodo)}
+              </div>
+            `
+            : ''
+        }
+
       </td>
+
+
+      <!-- FECHA -->
+
       <td>
-        <select class="sel-inp" id="rv-ce-${i}" onchange="toggleMotivoFila(${i})">
-          <option value="">—</option>
-          <option value="Sí">Sí</option>
-          <option value="No">No</option>
+
+        <input
+          type="date"
+          class="table-input"
+          id="fechaVisita_${index}"
+          value="${new Date()
+            .toISOString()
+            .slice(0,10)}">
+
+      </td>
+
+
+      <!-- CONTACTO -->
+
+      <td>
+
+        <select
+          class="table-input table-select"
+          id="contacto_${index}">
+
+          <option value="">
+            Seleccione…
+          </option>
+
+          <option value="Sí">
+            Sí
+          </option>
+
+          <option value="No">
+            No
+          </option>
+
         </select>
+
       </td>
+
+
+      <!-- RESULTADO -->
+
       <td>
-        <select class="sel-inp" id="rv-res-${i}" onchange="toggleMotivoFila(${i})">
-          <option value="">—</option>
-          <option value="Realizó un pedido">Realizó un pedido</option>
-          <option value="Solicitó una propuesta">Solicitó una propuesta</option>
-          <option value="Se presentó una propuesta">Se presentó una propuesta</option>
-          <option value="No interesado">No interesado</option>
-          <option value="Reprogramada">Reprogramada</option>
-       </select>
-      </td>
-      <td>
-        <select class="sel-inp" id="rv-motivo-${i}">
-          <option value="">—</option>
-          <option value="Precio">Precio</option>
-          <option value="Tiene Inventario">Tiene Inventario</option>
-          <option value="Condiciones de pago">Condiciones de pago</option>
-          <option value="Compra otra marca">Compra otra marca</option>
-          <option value="Encargado Ausente">Encargado Ausente</option>
-          <option value="Fuera de hora">Fuera de hora</option>
+
+        <select
+          class="table-input table-select"
+          id="resultado_${index}"
+          onchange="
+            toggleMotivoFila(${index})
+          ">
+
+          <option value="">
+            Seleccione…
+          </option>
+
+          <option value="Cierre Inmediato">
+            Cierre Inmediato
+          </option>
+
+          <option value="Interesado">
+            Interesado
+          </option>
+
+          <option value="Seguimiento">
+            Seguimiento
+          </option>
+
+          <option value="No interesado">
+            No interesado
+          </option>
+
+          <option value="Sin contacto">
+            Sin contacto
+          </option>
+
         </select>
+
       </td>
+
+
+      <!-- MOTIVO -->
+
       <td>
-        <input class="date-inp" type="date" id="rv-prox-${i}" placeholder="dd/mm/aaaa">
+
+        <select
+          class="table-input"
+          id="motivo_${index}">
+
+          <option value="">
+            —
+          </option>
+
+          <option value="Precio">
+            Precio
+          </option>
+
+          <option value="No necesita actualmente">
+            No necesita actualmente
+          </option>
+
+          <option value="Ya tiene proveedor">
+            Ya tiene proveedor
+          </option>
+
+          <option value="Sin presupuesto">
+            Sin presupuesto
+          </option>
+
+          <option value="No interesado">
+            No interesado
+          </option>
+
+          <option value="Otro">
+            Otro
+          </option>
+
+        </select>
+
       </td>
+
+
+      <!-- PRÓXIMA VISITA -->
+
       <td>
-        <button class="btn-row" id="rv-btn-${i}" onclick="guardarFila(${i})">
-          💾 Guardar
+
+        <input
+          type="date"
+          class="table-input"
+          id="proxima_${index}">
+
+      </td>
+
+
+      <!-- ACCIÓN -->
+
+      <td class="center">
+
+        <button
+          type="button"
+          class="btn-row-save"
+          id="btn-fila-${index}"
+          onclick="guardarFila(${index})">
+
+          Guardar
+
         </button>
+
       </td>
-    </tr>`;
-  }).join('');
 
-  wrap.innerHTML = `<div class="tbl-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Cliente / Cartera</th>
-          <th>Fecha Visita</th>
-          <th>Contacto Efectivo</th>
-          <th>Resultado de la Cita</th>
-          <th>Motivo de No Venta</th>
-          <th>Próxima Visita</th>
-          <th>Acción</th>
-        </tr>
-      </thead>
-      <tbody>${rows}</tbody>
-    </table>
-  </div>`;
+    </tr>
+  `;
+
 }
 
-function toggleMotivoFila(i) {
-  const res    = document.getElementById('rv-res-' + i)?.value || '';
-  const motivo = document.getElementById('rv-motivo-' + i);
-  if (!motivo) return;
-  const requiere = res === 'No Interesado';
-  motivo.style.borderColor = requiere ? 'var(--rojo)' : '';
+
+/* =========================================================
+   MOTIVO POR FILA
+========================================================= */
+
+function toggleMotivoFila(index) {
+
+  const resultado =
+    document.getElementById(
+      'resultado_' + index
+    );
+
+  const motivo =
+    document.getElementById(
+      'motivo_' + index
+    );
+
+  if (!resultado || !motivo) return;
+
+
+  const requiere =
+    resultado.value ===
+      'No interesado' ||
+    resultado.value ===
+      'Sin contacto';
+
+
+  motivo.style.borderColor =
+    requiere
+      ? 'var(--rojo)'
+      : '';
+
+
+  if (!requiere) {
+
+    /*
+     No borramos automáticamente
+     lo que el vendedor haya seleccionado.
+    */
+
+  }
+
 }
 
-// Guardar una fila individual
-async function guardarFila(i) {
-  const c     = VISITAS_CLI[i];
-  const fecha = document.getElementById('rv-fecha-' + i)?.value  || '';
-  const ce    = document.getElementById('rv-ce-' + i)?.value     || '';
-  const res   = document.getElementById('rv-res-' + i)?.value    || '';
-  const mot   = document.getElementById('rv-motivo-' + i)?.value || '';
-  const prox  = document.getElementById('rv-prox-' + i)?.value   || '';
 
-  if (!fecha) { showToast('Selecciona la fecha de visita para ' + (c.razon_social||''), 'err'); return; }
-  if (!ce)    { showToast('Indica si hubo contacto efectivo con ' + (c.razon_social||''), 'err'); return; }
-  if (!res)   { showToast('Indica el resultado de la cita con ' + (c.razon_social||''), 'err'); return; }
+/* =========================================================
+   GUARDAR FILA
+========================================================= */
 
-  const btn = document.getElementById('rv-btn-' + i);
-  btn.disabled = true; btn.textContent = '⏳';
+async function guardarFila(index) {
+
+  const c =
+    VISITAS_CLI[index];
+
+
+  if (!c) {
+
+    toast(
+      'Cliente no encontrado.',
+      'err'
+    );
+
+    return;
+
+  }
+
+
+  const fecha =
+    document.getElementById(
+      'fechaVisita_' + index
+    ).value;
+
+
+  const contacto =
+    document.getElementById(
+      'contacto_' + index
+    ).value;
+
+
+  const resultado =
+    document.getElementById(
+      'resultado_' + index
+    ).value;
+
+
+  const motivo =
+    document.getElementById(
+      'motivo_' + index
+    ).value;
+
+
+  const proxima =
+    document.getElementById(
+      'proxima_' + index
+    ).value;
+
+
+  if (!fecha) {
+
+    toast(
+      'Debe indicar la fecha de la visita.',
+      'err'
+    );
+
+    return;
+
+  }
+
+
+  if (!contacto) {
+
+    toast(
+      'Debe indicar si hubo contacto efectivo.',
+      'err'
+    );
+
+    return;
+
+  }
+
+
+  if (!resultado) {
+
+    toast(
+      'Debe indicar el resultado de la gestión.',
+      'err'
+    );
+
+    return;
+
+  }
+
+
+  if (
+    (
+      resultado === 'No interesado' ||
+      resultado === 'Sin contacto'
+    ) &&
+    !motivo
+  ) {
+
+    toast(
+      'Debe indicar el motivo de no venta.',
+      'err'
+    );
+
+    return;
+
+  }
+
+
+  const btn =
+    document.getElementById(
+      'btn-fila-' + index
+    );
+
+
+  btn.disabled = true;
+  btn.textContent = 'Guardando…';
+
+
+  /*
+   ========================================================
+   PAYLOAD
+   ========================================================
+
+   Se mantiene la estructura utilizada por
+   actionRegistroReporte().
+  */
 
   const payload = {
-    action              : 'registroReporte',
-    fecha               : new Date(fecha + 'T12:00:00').toISOString(),
-    vendedor            : sesion.nombre || sesion.user || '',
-    user_vendedor       : sesion.user   || '',
-    tipo_cliente        : c.etapa_embudo === 'Prospección' ? 'Prospecto / Oportunidad' : 'Cliente Recurrente',
-    razon_social        : c.razon_social || c.nombre || '',
-    contacto_efectivo   : ce,
-    datos_capturados    : '',
-    gestion_cita        : 'Cita Hoy',
-    resultado_cita      : res,
-    propuesta_comercial : 'No',
-    estatus_cierre      : res === 'Cierre Inmediato' ? 'Pedido 1era Vez' : 'Sin Pedido',
-    motivo_no_venta     : mot,
-    observaciones       : prox ? 'Próxima visita: ' + prox : '',
+
+    action:
+      'registroReporte',
+
+    fecha:
+      new Date(
+        fecha + 'T12:00:00'
+      ).toISOString(),
+
+    vendedor:
+      sesion.nombre ||
+      sesion.user ||
+      '',
+
+    user_vendedor:
+      sesion.user ||
+      '',
+
+    tipo_cliente:
+      c.etapa_embudo ===
+        'Prospección'
+        ? 'Prospecto / Oportunidad'
+        : 'Cliente Recurrente',
+
+    razon_social:
+      c.razon_social ||
+      c.cliente ||
+      '',
+
+    contacto_efectivo:
+      contacto,
+
+    datos_capturados:
+      'Meta asignada: ' +
+      (c.meta_cajas || 0) +
+      ' cajas · $' +
+      (
+        Number(
+          c.meta_monto_usd
+        ) || 0
+      ).toFixed(2),
+
+    gestion_cita:
+      'Cita Hoy',
+
+    resultado_cita:
+      resultado,
+
+    propuesta_comercial:
+      resultado ===
+        'Cierre Inmediato'
+        ? 'Sí'
+        : 'No',
+
+    estatus_cierre:
+      resultado ===
+        'Cierre Inmediato'
+        ? 'Pedido 1era Vez'
+        : 'Sin Pedido',
+
+    motivo_no_venta:
+      motivo,
+
+    observaciones:
+      proxima
+        ? 'Próxima visita: ' +
+          proxima
+        : ''
+
   };
 
+
   try {
-    await fetch(API, {
-      method  : 'POST',
-      mode    : 'no-cors',
-      headers : { 'Content-Type': 'application/json' },
-      body    : JSON.stringify(payload),
-    });
-    // Marcar fila como guardada
-    const row = document.getElementById('row-' + i);
-    if (row) row.classList.add('row-saved');
-    btn.textContent  = '✅ Guardado';
-    btn.style.background = '#DCFCE7';
-    showToast('✅ Visita de ' + (c.razon_social || '') + ' registrada.', 'ok');
-  } catch(e) {
-    btn.disabled = false; btn.textContent = '💾 Guardar';
-    showToast('❌ Error al guardar. Intenta de nuevo.', 'err');
+
+    const r =
+      await fetch(
+        API,
+        {
+          method:'POST',
+          body:JSON.stringify(payload),
+          redirect:'follow'
+        }
+      );
+
+
+    const raw =
+      await r.text();
+
+
+    const d =
+      JSON.parse(raw);
+
+
+    if (!d.ok) {
+
+      throw new Error(
+        d.msg ||
+        'No se pudo guardar el reporte.'
+      );
+
+    }
+
+
+    /*
+     El registro fue guardado en REPORTES.
+    */
+
+    btn.textContent = '✓ Guardado';
+
+    btn.style.background =
+      'var(--verde)';
+
+
+    toast(
+      'Gestión registrada correctamente en REPORTES.',
+      'ok'
+    );
+
+
+    /*
+     Desactivar la fila para evitar
+     registros duplicados accidentales.
+    */
+
+    document
+      .querySelectorAll(
+        `[data-index="${index}"] input,
+         [data-index="${index}"] select`
+      )
+      .forEach(el =>
+        el.disabled = true
+      );
+
+
+  } catch(err) {
+
+    console.error(
+      'guardarFila:',
+      err
+    );
+
+    btn.disabled = false;
+    btn.textContent = 'Guardar';
+
+    toast(
+      'Error al guardar: ' +
+      err.message,
+      'err'
+    );
+
   }
+
 }
 
-// Guardar todas las filas que tengan datos
+
+/* =========================================================
+   GUARDAR TODAS
+   Función disponible para compatibilidad.
+========================================================= */
+
 async function guardarTodos() {
-  const btn = document.getElementById('btn-guardar-todos');
-  btn.disabled = true; btn.textContent = '⏳ Guardando...';
 
-  let ok = 0, skip = 0;
-  for (let i = 0; i < VISITAS_CLI.length; i++) {
-    const fecha = document.getElementById('rv-fecha-' + i)?.value || '';
-    const ce    = document.getElementById('rv-ce-' + i)?.value    || '';
-    const res   = document.getElementById('rv-res-' + i)?.value   || '';
-    // Solo guardar filas que tienen al menos contacto efectivo y resultado
-    if (!fecha || !ce || !res) { skip++; continue; }
-    await guardarFila(i);
-    ok++;
+  for (
+    let i = 0;
+    i < VISITAS_CLI.length;
+    i++
+  ) {
+
+    const btn =
+      document.getElementById(
+        'btn-fila-' + i
+      );
+
+    if (
+      btn &&
+      !btn.disabled
+    ) {
+
+      await guardarFila(i);
+
+    }
+
   }
 
-  btn.disabled = false; btn.textContent = '💾 Guardar Todo';
-  if (ok > 0) showToast(`✅ ${ok} visita(s) guardadas correctamente.`, 'ok');
-  else showToast(`ℹ️ Completa al menos Contacto Efectivo y Resultado para guardar.`, '');
 }
 
-// ════════════════════════════════════════════════════════════
-//  FORMULARIO LIBRE — VENDEDOR
-// ════════════════════════════════════════════════════════════
-function toggleMotivo() {
-  const estatus = document.getElementById('estatusCierre').value;
-  const req     = document.getElementById('motivoReqMark');
-  const hint    = document.getElementById('motivoHint');
-  const motivo  = document.getElementById('motivoNoVenta');
-  const sinPed  = ['Sin Pedido','Rechazado'].includes(estatus);
-  if (req)  req.style.display   = sinPed ? 'inline' : 'none';
-  if (hint) hint.style.color    = sinPed ? '#E74C3C' : 'var(--gris)';
-  if (motivo) motivo.required   = sinPed;
-}
 
-// Autocomplete para formulario libre
-function iniciarAutocomplete() {
-  const input = document.getElementById('razonSocial');
-  const lista = document.getElementById('autocompleteList');
-  if (!input || !lista) return;
-
-  input.addEventListener('input', () => {
-    const q = input.value.toLowerCase().trim();
-    lista.innerHTML = '';
-    if (q.length < 2 || !CLIENTES.length) { lista.classList.remove('open'); return; }
-    const filtrados = CLIENTES.filter(c =>
-      (c.razon_social || '').toLowerCase().includes(q) ||
-      (c.establecimiento || '').toLowerCase().includes(q)
-    ).slice(0, 10);
-    if (!filtrados.length) { lista.classList.remove('open'); return; }
-    filtrados.forEach(c => {
-      const item = document.createElement('div');
-      item.className   = 'ac-item';
-      item.textContent = (c.razon_social || '') + (c.establecimiento ? ' — ' + c.establecimiento : '');
-      item.addEventListener('mousedown', e => {
-        e.preventDefault();
-        input.value = c.razon_social || '';
-        lista.classList.remove('open');
-        const tc = document.getElementById('tipoCliente');
-        if (tc) tc.value = (c.estado === 'activo') ? 'Cliente Recurrente' : 'Prospecto / Oportunidad';
-      });
-      lista.appendChild(item);
-    });
-    lista.classList.add('open');
-  });
-
-  input.addEventListener('blur', () => setTimeout(() => lista.classList.remove('open'), 200));
-}
+/* =========================================================
+   REGISTRO LIBRE
+========================================================= */
 
 async function enviarReporteLibre(event) {
-  event.preventDefault();
-  const estatus = document.getElementById('estatusCierre').value;
-  const motivo  = document.getElementById('motivoNoVenta').value;
-  if (['Sin Pedido','Rechazado'].includes(estatus) && !motivo) {
-    showToast('Selecciona el Motivo de No Venta antes de enviar.', 'err'); return;
-  }
-  const btn = document.getElementById('btnSubmit');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="sp"></span> Enviando...';
 
-  const datos = [];
-  document.querySelectorAll('input[name="datosCapturados"]:checked').forEach(cb => datos.push(cb.value));
+  event.preventDefault();
+
+
+  const fecha =
+    document.getElementById(
+      'fechaLibre'
+    ).value;
+
+
+  const cliente =
+    document.getElementById(
+      'clienteLibre'
+    ).value.trim();
+
+
+  const contacto =
+    document.getElementById(
+      'contactoEfectivoLibre'
+    ).value;
+
+
+  const gestion =
+    document.getElementById(
+      'gestionCitaLibre'
+    ).value;
+
+
+  const resultado =
+    document.getElementById(
+      'resultadoCitaLibre'
+    ).value;
+
+
+  const propuesta =
+    document.getElementById(
+      'propuestaComercial'
+    ).value;
+
+
+  const estatus =
+    document.getElementById(
+      'estatusCierre'
+    ).value;
+
+
+  const motivo =
+    document.getElementById(
+      'motivoNoVenta'
+    ).value;
+
+
+  const datos =
+    document.getElementById(
+      'datosCapturadosLibre'
+    ).value.trim();
+
+
+  const observaciones =
+    document.getElementById(
+      'observacionesLibre'
+    ).value.trim();
+
+
+  if (!fecha) {
+
+    toast(
+      'Debe indicar la fecha.',
+      'err'
+    );
+
+    return;
+
+  }
+
+
+  if (!cliente) {
+
+    toast(
+      'Debe indicar el cliente.',
+      'err'
+    );
+
+    return;
+
+  }
+
+
+  if (!contacto) {
+
+    toast(
+      'Debe indicar si hubo contacto efectivo.',
+      'err'
+    );
+
+    return;
+
+  }
+
+
+  const btn =
+    document.getElementById(
+      'btn-enviar-libre'
+    );
+
+
+  btn.disabled = true;
+  btn.textContent = 'Guardando…';
+
 
   const payload = {
-    action              : 'registroReporte',
-    fecha               : new Date().toISOString(),
-    vendedor            : sesion.nombre || sesion.user || '',
-    user_vendedor       : sesion.user   || '',
-    tipo_cliente        : document.getElementById('tipoCliente').value,
-    razon_social        : document.getElementById('razonSocial').value.trim(),
-    contacto_efectivo   : document.getElementById('contactoEfectivo').value,
-    datos_capturados    : datos.join(', '),
-    gestion_cita        : document.getElementById('gestionCita').value,
-    resultado_cita      : document.getElementById('resultadoCita').value,
-    propuesta_comercial : document.getElementById('propuestaComercial').value,
-    estatus_cierre      : estatus,
-    motivo_no_venta     : motivo,
-    observaciones       : document.getElementById('observaciones').value.trim()
-                          + (document.getElementById('proximaVisita').value
-                            ? ' | Próxima visita: ' + document.getElementById('proximaVisita').value : ''),
+
+    action:
+      'registroReporte',
+
+    fecha:
+      new Date(
+        fecha + 'T12:00:00'
+      ).toISOString(),
+
+    vendedor:
+      sesion.nombre ||
+      sesion.user ||
+      '',
+
+    user_vendedor:
+      sesion.user ||
+      '',
+
+    tipo_cliente:
+      'Registro Libre',
+
+    razon_social:
+      cliente,
+
+    contacto_efectivo:
+      contacto,
+
+    datos_capturados:
+      datos,
+
+    gestion_cita:
+      gestion,
+
+    resultado_cita:
+      resultado,
+
+    propuesta_comercial:
+      propuesta,
+
+    estatus_cierre:
+      estatus,
+
+    motivo_no_venta:
+      motivo,
+
+    observaciones:
+      observaciones
+
   };
 
+
   try {
-    await fetch(API, {
-      method  : 'POST',
-      mode    : 'no-cors',
-      headers : { 'Content-Type': 'application/json' },
-      body    : JSON.stringify(payload),
-    });
-    showToast('✅ Reporte enviado y registrado correctamente.', 'ok');
-    document.getElementById('reporteForm').reset();
-    const hoy = new Date().toISOString().slice(0,10);
-    const fv  = document.getElementById('fechaVisita'); if(fv) fv.value = hoy;
-  } catch(e) {
-    showToast('❌ Error al enviar. Verifica tu conexión.', 'err');
-  }
-  btn.disabled = false;
-  btn.innerHTML = 'Enviar Reporte';
-}
 
-// ════════════════════════════════════════════════════════════
-//  VISTA ADMIN — RESUMEN DE GESTIÓN
-// ════════════════════════════════════════════════════════════
-async function cargarReportesAdmin() {
-  document.getElementById('tbl-admin-body').innerHTML =
-    '<tr><td colspan="8"><div class="empty-state"><div class="empty-ico">⏳</div><div class="empty-txt">Cargando reportes...</div></div></td></tr>';
-  document.getElementById('resumen-vendedores').innerHTML =
-    '<div class="empty-state"><div class="empty-ico">⏳</div><div class="empty-txt">Cargando...</div></div>';
+    const r =
+      await fetch(
+        API,
+        {
+          method:'POST',
+          body:JSON.stringify(payload),
+          redirect:'follow'
+        }
+      );
 
-  // Fuente: SCCR - Base de Datos, hoja 'reportes'
-  REPORTES_ADM = [];
-  try {
-    const r = await fetch(API + '?action=reportes&limite=2000');
-    const j = await r.json();
-    if (j.ok && Array.isArray(j.data)) REPORTES_ADM = j.data;
-  } catch(e) {}
 
-  renderAdmin();
-}
+    const raw =
+      await r.text();
 
-const _CIERRES = ['pedido 1era vez','pedido recurrente','cierre inmediato','realizó un pedido'];
-function esCierre(r) {
-  return _CIERRES.includes(String(r.estatus_cierre || '').toLowerCase()) ||
-         _CIERRES.includes(String(r.resultado_cita  || '').toLowerCase());
-}
-function esSinPedido(r) {
-  return String(r.estatus_cierre || '').toLowerCase() === 'sin pedido' ||
-         String(r.resultado_cita  || '').toLowerCase() === 'no interesado';
-}
 
-function renderAdmin() {
-  const desde    = document.getElementById('f-desde')?.value    || '';
-  const hasta    = document.getElementById('f-hasta')?.value    || '';
-  const vendFilt = document.getElementById('f-vendedor')?.value || '';
-  const resFilt  = document.getElementById('f-resultado')?.value|| '';
+    const d =
+      JSON.parse(raw);
 
-  let datos = REPORTES_ADM.filter(r => {
-    if (vendFilt && (r.vendedor || r.user_vendedor || '') !== vendFilt) return false;
-    if (resFilt  && (r.resultado_cita || '') !== resFilt) return false;
-    if (desde) {
-      const fd = parseFecha(r.fecha || r.fecha_formateada);
-      if (fd && fd < new Date(desde + 'T00:00:00')) return false;
+
+    if (!d.ok) {
+
+      throw new Error(
+        d.msg ||
+        'No se pudo guardar el registro.'
+      );
+
     }
-    if (hasta) {
-      const fd = parseFecha(r.fecha || r.fecha_formateada);
-      if (fd && fd > new Date(hasta + 'T23:59:59')) return false;
-    }
-    return true;
-  });
 
-  // Poblar select vendedores
-  const vends = [...new Set(REPORTES_ADM.map(r => r.vendedor || r.user_vendedor || '').filter(Boolean))];
-  const selV  = document.getElementById('f-vendedor');
-  if (selV) {
-    const curr = selV.value;
-    selV.innerHTML = '<option value="">Todos los vendedores</option>';
-    vends.forEach(v => {
-      const op = document.createElement('option');
-      op.value = v; op.textContent = v; if(v===curr) op.selected = true;
-      selV.appendChild(op);
-    });
+
+    toast(
+      'Registro libre guardado correctamente en REPORTES.',
+      'ok'
+    );
+
+
+    limpiarRegistroLibre();
+
+
+  } catch(err) {
+
+    console.error(
+      'enviarReporteLibre:',
+      err
+    );
+
+    toast(
+      'Error al guardar: ' +
+      err.message,
+      'err'
+    );
+
+  } finally {
+
+    btn.disabled = false;
+    btn.textContent =
+      'Guardar Registro';
+
   }
 
-  // KPIs
-  const total  = datos.length;
-  const ce     = datos.filter(r => (r.contacto_efectivo||'').toLowerCase() === 'sí').length;
-  const cierres= datos.filter(esCierre).length;
-  const nv     = datos.filter(esSinPedido).length;
-  const tasa   = total > 0 ? Math.round((cierres/total)*100) : 0;
-  const prop   = datos.filter(r => (r.propuesta_comercial||'') === 'Sí').length;
+}
 
-  document.getElementById('k-total').textContent  = total;
-  document.getElementById('k-ce').textContent     = ce;
-  document.getElementById('k-cierre').textContent = cierres;
-  document.getElementById('k-nv').textContent     = nv;
-  document.getElementById('k-tasa').textContent   = tasa + '%';
-  document.getElementById('k-prop').textContent   = prop;
 
-  // Resumen por vendedor
-  const porVend = {};
-  datos.forEach(r => {
-    const v = r.vendedor || r.user_vendedor || 'Sin asignar';
-    if (!porVend[v]) porVend[v] = { visitas:0, ce:0, cierres:0, nv:0, prop:0 };
-    porVend[v].visitas++;
-    if ((r.contacto_efectivo||'').toLowerCase() === 'sí') porVend[v].ce++;
-    if (esCierre(r))    porVend[v].cierres++;
-    if (esSinPedido(r)) porVend[v].nv++;
-    if ((r.propuesta_comercial||'') === 'Sí') porVend[v].prop++;
-  });
+/* =========================================================
+   LIMPIAR REGISTRO LIBRE
+========================================================= */
 
-  const resWrap = document.getElementById('resumen-vendedores');
-  if (!Object.keys(porVend).length) {
-    resWrap.innerHTML = '<div class="empty-state"><div class="empty-ico">📭</div><div class="empty-txt">Sin reportes en el período</div></div>';
-  } else {
-    resWrap.innerHTML = `<div class="tbl-wrap"><table class="res-tbl">
-      <thead><tr>
-        <th>Vendedor</th><th>Visitas</th><th>Contacto Efectivo</th>
-        <th>Cierres</th><th>Sin Pedido</th><th>Propuestas</th><th>Tasa Cierre</th>
-      </tr></thead>
-      <tbody>
-        ${Object.entries(porVend).sort((a,b)=>b[1].visitas-a[1].visitas).map(([v,d])=>{
-          const t  = d.visitas || 1;
-          const tc = Math.round((d.cierres/t)*100);
-          const color = tc>=60?'verde':tc>=30?'naranja':'';
-          return `<tr>
-            <td class="td-cliente">${esc(v)}</td>
-            <td style="text-align:center;font-weight:700">${d.visitas}</td>
-            <td style="text-align:center">
-              ${d.ce} <div class="prog-bar"><div class="prog-fill" style="width:${Math.round((d.ce/t)*100)}%"></div></div>
-            </td>
-            <td style="text-align:center;font-weight:700;color:var(--verde)">${d.cierres}</td>
-            <td style="text-align:center;color:var(--rojo)">${d.nv}</td>
-            <td style="text-align:center">${d.prop}</td>
-            <td style="text-align:center">
-              <span class="estado-badge ${color==='verde'?'est-ok':color==='naranja'?'est-pend':''}">${tc}%</span>
-            </td>
-          </tr>`;
-        }).join('')}
-      </tbody>
-    </table></div>`;
+function limpiarRegistroLibre() {
+
+  const form =
+    document.getElementById(
+      'form-registro-libre'
+    );
+
+
+  if (form) {
+
+    form.reset();
+
   }
 
-  // Tabla detalle
-  const tbody = document.getElementById('tbl-admin-body');
-  if (!datos.length) {
-    tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><div class="empty-ico">📭</div><div class="empty-txt">Sin reportes</div><div class="empty-sub">Ajusta los filtros o espera a que los vendedores registren visitas.</div></div></td></tr>';
+
+  const hoy =
+    new Date()
+      .toISOString()
+      .slice(0,10);
+
+
+  const fecha =
+    document.getElementById(
+      'fechaLibre'
+    );
+
+
+  if (fecha) {
+
+    fecha.value = hoy;
+
+  }
+
+}
+
+
+/* =========================================================
+   COMPATIBILIDAD CON toggleMotivo()
+========================================================= */
+
+function toggleMotivo() {
+
+  const resultado =
+    document.getElementById(
+      'resultadoCitaLibre'
+    );
+
+  const motivo =
+    document.getElementById(
+      'motivoNoVenta'
+    );
+
+
+  if (!resultado || !motivo) {
     return;
   }
 
-  tbody.innerHTML = datos.slice(0,200).map(r => {
-    const ce     = (r.contacto_efectivo||'').toLowerCase()==='sí';
-    const res    = r.resultado_cita || '—';
-    const resCol = esCierre(r)?'est-cierre':esSinPedido(r)?'est-no':'est-pend';
-    // Extraer próxima visita de observaciones si aplica
-    const obs    = r.observaciones || '';
-    const proxMatch = obs.match(/Próxima visita:\s*([\d\/-]+)/);
-    const proxVis   = proxMatch ? proxMatch[1] : (r.proxima_visita || '—');
 
-    return `<tr>
-      <td style="white-space:nowrap">${fFecha(r.fecha||r.fecha_formateada)}</td>
-      <td style="font-weight:600">${esc(r.vendedor||r.user_vendedor||'—')}</td>
-      <td>
-        <div style="font-weight:600;font-size:.75rem">${esc(r.razon_social||'—')}</div>
-        <div style="font-size:.65rem;color:var(--gris)">${esc(r.tipo_cliente||'')}</div>
-      </td>
-      <td style="text-align:center">
-        <span class="estado-badge ${ce?'est-ok':'est-no'}">${r.contacto_efectivo||'—'}</span>
-      </td>
-      <td><span class="estado-badge ${resCol}">${esc(res)}</span></td>
-      <td style="color:var(--rojo);font-size:.71rem">${esc(r.motivo_no_venta||'—')}</td>
-      <td style="white-space:nowrap;font-size:.71rem">${esc(proxVis)}</td>
-      <td style="font-size:.71rem;max-width:200px;word-break:break-word">${esc((obs.split('|')[0]||obs).slice(0,120))}</td>
-    </tr>`;
-  }).join('');
+  const requiere =
+    resultado.value ===
+      'No interesado' ||
+    resultado.value ===
+      'Sin contacto';
+
+
+  motivo.required =
+    requiere;
+
 }
 
-// ════════════════════════════════════════════════════════════
-//  UTILS
-// ════════════════════════════════════════════════════════════
-function esc(s)   { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function parseFecha(v) {
-  if (!v) return null;
-  if (v instanceof Date) return v;
-  const s = String(v);
-  const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-  if (m) return new Date(+m[3], +m[2]-1, +m[1]);
-  const d = new Date(s); return isNaN(d.getTime()) ? null : d;
+
+/* =========================================================
+   EVENTO MOTIVO REGISTRO LIBRE
+========================================================= */
+
+document.addEventListener(
+  'change',
+  function(e) {
+
+    if (
+      e.target &&
+      e.target.id ===
+        'resultadoCitaLibre'
+    ) {
+
+      toggleMotivo();
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   =========================================================
+   REPORTES — GERENTE / ADMINISTRADOR
+   =========================================================
+========================================================= */
+
+async function cargarReportesAdmin(
+  params = {}
+) {
+
+  const tbody =
+    document.getElementById(
+      'tbody-admin'
+    );
+
+
+  if (tbody) {
+
+    tbody.innerHTML = `
+      <tr class="loading-row">
+        <td colspan="11">
+          Cargando reportes…
+        </td>
+      </tr>
+    `;
+
+  }
+
+
+  try {
+
+    let url =
+      API +
+      '?action=reportes&limite=2000';
+
+
+    if (params.vendedor) {
+
+      url +=
+        '&vendedor=' +
+        encodeURIComponent(
+          params.vendedor
+        );
+
+    }
+
+
+    if (params.desde) {
+
+      url +=
+        '&desde=' +
+        encodeURIComponent(
+          params.desde
+        );
+
+    }
+
+
+    if (params.hasta) {
+
+      url +=
+        '&hasta=' +
+        encodeURIComponent(
+          params.hasta
+        );
+
+    }
+
+
+    const r =
+      await fetch(
+        url,
+        { redirect:'follow' }
+      );
+
+
+    const raw =
+      await r.text();
+
+
+    const j =
+      JSON.parse(raw);
+
+
+    if (!j.ok) {
+
+      throw new Error(
+        j.msg ||
+        'No se pudieron cargar los reportes.'
+      );
+
+    }
+
+
+    REPORTES_ADM =
+      Array.isArray(j.data)
+        ? j.data
+        : [];
+
+
+    renderAdmin();
+
+  } catch(err) {
+
+    console.error(
+      'cargarReportesAdmin:',
+      err
+    );
+
+
+    if (tbody) {
+
+      tbody.innerHTML = `
+        <tr class="loading-row">
+          <td colspan="11"
+              style="color:#DC2626">
+            ⚠️ ${esc(err.message)}
+          </td>
+        </tr>
+      `;
+
+    }
+
+    toast(
+      'Error cargando REPORTES: ' +
+      err.message,
+      'err'
+    );
+
+  }
+
 }
-function fFecha(v) {
-  const d = parseFecha(v);
-  if (!d) return String(v||'—').slice(0,10);
-  return d.toLocaleDateString('es-VE',{day:'2-digit',month:'2-digit',year:'numeric'});
+
+
+/* =========================================================
+   FILTROS ADMIN
+========================================================= */
+
+function aplicarFiltrosAdmin() {
+
+  const desde =
+    document.getElementById(
+      'filtro-desde'
+    ).value;
+
+
+  const hasta =
+    document.getElementById(
+      'filtro-hasta'
+    ).value;
+
+
+  const vendedor =
+    document.getElementById(
+      'filtro-vendedor-admin'
+    ).value;
+
+
+  cargarReportesAdmin({
+
+    desde,
+    hasta,
+    vendedor
+
+  });
+
 }
-function showToast(msg, type) {
-  const t   = document.getElementById('toast');
-  t.textContent = msg;
-  t.className   = 'toast ' + (type||'') + ' show';
-  clearTimeout(t._t);
-  t._t = setTimeout(() => { t.className = 'toast'; }, 4000);
+
+
+function limpiarFiltrosAdmin() {
+
+  document.getElementById(
+    'filtro-desde'
+  ).value = '';
+
+
+  document.getElementById(
+    'filtro-hasta'
+  ).value = '';
+
+
+  document.getElementById(
+    'filtro-vendedor-admin'
+  ).value = '';
+
+
+  cargarReportesAdmin();
+
 }
+
+
+/* =========================================================
+   RENDER ADMIN
+========================================================= */
+
+function renderAdmin() {
+
+  const datos =
+    Array.isArray(
+      REPORTES_ADM
+    )
+      ? REPORTES_ADM
+      : [];
+
+
+  /* KPIs */
+
+  const total =
+    datos.length;
+
+
+  const contactos =
+    datos.filter(r =>
+      String(
+        r.contacto_efectivo || ''
+      )
+      .trim()
+      .toLowerCase() === 'sí'
+    ).length;
+
+
+  const pedidos =
+    datos.filter(r =>
+      String(
+        r.estatus_cierre || ''
+      )
+      .toLowerCase()
+      .includes('pedido')
+    ).length;
+
+
+  const propuestas =
+    datos.filter(r =>
+      String(
+        r.propuesta_comercial || ''
+      )
+      .trim()
+      .toLowerCase() === 'sí'
+    ).length;
+
+
+  const vendedores =
+    new Set(
+      datos
+        .map(r =>
+          r.user_vendedor ||
+          r.vendedor ||
+          ''
+        )
+        .filter(Boolean)
+    ).size;
+
+
+  document.getElementById(
+    'kpi-total'
+  ).textContent =
+    total;
+
+
+  document.getElementById(
+    'kpi-contactos'
+  ).textContent =
+    contactos;
+
+
+  document.getElementById(
+    'kpi-pedidos'
+  ).textContent =
+    pedidos;
+
+
+  document.getElementById(
+    'kpi-propuestas'
+  ).textContent =
+    propuestas;
+
+
+  document.getElementById(
+    'kpi-vendedores'
+  ).textContent =
+    vendedores;
+
+
+  document.getElementById(
+    'badge-reportes'
+  ).textContent =
+    total +
+    ' registro' +
+    (total !== 1 ? 's' : '');
+
+
+  /* Vendedores */
+
+  poblarVendedoresAdmin(
+    datos
+  );
+
+
+  /* Resumen */
+
+  renderResumenVendedores(
+    datos
+  );
+
+
+  /* Tabla */
+
+  renderTablaAdmin(
+    datos
+  );
+
+}
+
+
+/* =========================================================
+   VENDEDORES ADMIN
+========================================================= */
+
+function poblarVendedoresAdmin(
+  datos
+) {
+
+  const select =
+    document.getElementById(
+      'filtro-vendedor-admin'
+    );
+
+
+  if (!select) return;
+
+
+  const actual =
+    select.value;
+
+
+  const mapa =
+    new Map();
+
+
+  datos.forEach(r => {
+
+    const user =
+      String(
+        r.user_vendedor || ''
+      ).trim();
+
+
+    const nombre =
+      String(
+        r.vendedor || ''
+      ).trim();
+
+
+    const clave =
+      user || nombre;
+
+
+    if (!clave) return;
+
+
+    if (!mapa.has(clave)) {
+
+      mapa.set(
+        clave,
+        nombre || user
+      );
+
+    }
+
+  });
+
+
+  const opciones =
+    [...mapa.entries()]
+      .sort(
+        (a,b) =>
+          String(a[1])
+            .localeCompare(
+              String(b[1])
+            )
+      );
+
+
+  select.innerHTML =
+    '<option value="">Todos los vendedores</option>' +
+    opciones
+      .map(([id,nombre]) =>
+        `<option value="${esc(id)}">
+          ${esc(nombre)}
+        </option>`
+      )
+      .join('');
+
+
+  if (
+    actual &&
+    mapa.has(actual)
+  ) {
+
+    select.value =
+      actual;
+
+  }
+
+}
+
+
+/* =========================================================
+   RESUMEN VENDEDORES
+========================================================= */
+
+function renderResumenVendedores(
+  datos
+) {
+
+  const cont =
+    document.getElementById(
+      'resumen-vendedores'
+    );
+
+
+  if (!cont) return;
+
+
+  const mapa = {};
+
+
+  datos.forEach(r => {
+
+    const key =
+      r.user_vendedor ||
+      r.vendedor ||
+      'Sin vendedor';
+
+
+    if (!mapa[key]) {
+
+      mapa[key] = {
+
+        nombre:
+          r.vendedor ||
+          r.user_vendedor ||
+          'Sin vendedor',
+
+        gestiones:0,
+        contactos:0,
+        pedidos:0,
+        propuestas:0
+
+      };
+
+    }
+
+
+    mapa[key].gestiones++;
+
+
+    if (
+      String(
+        r.contacto_efectivo || ''
+      )
+      .trim()
+      .toLowerCase() === 'sí'
+    ) {
+
+      mapa[key].contactos++;
+
+    }
+
+
+    if (
+      String(
+        r.estatus_cierre || ''
+      )
+      .toLowerCase()
+      .includes('pedido')
+    ) {
+
+      mapa[key].pedidos++;
+
+    }
+
+
+    if (
+      String(
+        r.propuesta_comercial || ''
+      )
+      .trim()
+      .toLowerCase() === 'sí'
+    ) {
+
+      mapa[key].propuestas++;
+
+    }
+
+  });
+
+
+  const filas =
+    Object.values(
+      mapa
+    );
+
+
+  if (!filas.length) {
+
+    cont.innerHTML =
+      '<span class="badge badge-gris">Sin actividad</span>';
+
+    return;
+
+  }
+
+
+  cont.innerHTML =
+    filas
+      .sort(
+        (a,b) =>
+          b.gestiones -
+          a.gestiones
+      )
+      .map(v => `
+
+        <div class="summary-item">
+
+          <strong>
+            ${esc(v.nombre)}
+          </strong>
+
+          · ${v.gestiones} gestiones
+
+          · ${v.contactos} contactos
+
+          · ${v.pedidos} pedidos
+
+          · ${v.propuestas} propuestas
+
+        </div>
+
+      `)
+      .join('');
+
+}
+
+
+/* =========================================================
+   TABLA ADMIN
+========================================================= */
+
+function renderTablaAdmin(
+  datos
+) {
+
+  const tbody =
+    document.getElementById(
+      'tbody-admin'
+    );
+
+
+  if (!tbody) return;
+
+
+  if (!datos.length) {
+
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="11">
+
+          <div class="empty">
+
+            <div class="icon">
+              📊
+            </div>
+
+            <p>
+              No hay gestiones para los filtros seleccionados.
+            </p>
+
+          </div>
+
+        </td>
+      </tr>
+    `;
+
+    return;
+
+  }
+
+
+  tbody.innerHTML =
+    datos
+      .map(r => {
+
+        const fecha =
+          formatearFecha(
+            r.fecha_formateada ||
+            r.fecha
+          );
+
+
+        const contacto =
+          String(
+            r.contacto_efectivo ||
+            ''
+          )
+          .trim()
+          .toLowerCase();
+
+
+        const contactoBadge =
+          contacto === 'sí'
+            ? '<span class="badge badge-verde">Sí</span>'
+            : '<span class="badge badge-gris">No</span>';
+
+
+        const propuesta =
+          String(
+            r.propuesta_comercial ||
+            ''
+          )
+          .trim()
+          .toLowerCase();
+
+
+        const propuestaBadge =
+          propuesta === 'sí'
+            ? '<span class="badge badge-azul">Sí</span>'
+            : '<span class="badge badge-gris">No</span>';
+
+
+        return `
+
+          <tr>
+
+            <td>
+              ${esc(fecha)}
+            </td>
+
+            <td>
+              <strong>
+                ${esc(
+                  r.vendedor ||
+                  r.user_vendedor ||
+                  '—'
+                )}
+              </strong>
+            </td>
+
+            <td>
+              <strong>
+                ${esc(
+                  r.razon_social ||
+                  '—'
+                )}
+              </strong>
+            </td>
+
+            <td>
+              ${esc(
+                r.tipo_cliente ||
+                '—'
+              )}
+            </td>
+
+            <td>
+              ${contactoBadge}
+            </td>
+
+            <td>
+              ${esc(
+                r.gestion_cita ||
+                '—'
+              )}
+            </td>
+
+            <td>
+              ${esc(
+                r.resultado_cita ||
+                '—'
+              )}
+            </td>
+
+            <td>
+              ${propuestaBadge}
+            </td>
+
+            <td>
+              ${esc(
+                r.estatus_cierre ||
+                '—'
+              )}
+            </td>
+
+            <td>
+              ${esc(
+                r.motivo_no_venta ||
+                '—'
+              )}
+            </td>
+
+            <td>
+              ${esc(
+                r.observaciones ||
+                r.datos_capturados ||
+                '—'
+              )}
+            </td>
+
+          </tr>
+
+        `;
+
+      })
+      .join('');
+
+}
+
+
+/* =========================================================
+   FECHAS
+========================================================= */
+
+function formatearFecha(
+  valor
+) {
+
+  if (!valor) {
+    return '—';
+  }
+
+
+  const d =
+    new Date(valor);
+
+
+  if (
+    isNaN(
+      d.getTime()
+    )
+  ) {
+
+    return String(valor);
+
+  }
+
+
+  return d.toLocaleString(
+    'es-VE',
+    {
+      day:'2-digit',
+      month:'2-digit',
+      year:'numeric',
+      hour:'2-digit',
+      minute:'2-digit'
+    }
+  );
+
+}
+
+
+/* =========================================================
+   UTILIDADES
+========================================================= */
+
+function esc(v) {
+
+  return String(
+    v ?? ''
+  ).replace(
+    /[&<>"']/g,
+    m =>
+      ({
+        '&':'&amp;',
+        '<':'&lt;',
+        '>':'&gt;',
+        '"':'&quot;',
+        "'":'&#039;'
+      }[m])
+  );
+
+}
+
+
+function toast(
+  msg,
+  tipo
+) {
+
+  const t =
+    document.getElementById(
+      'toast'
+    );
+
+
+  if (!t) return;
+
+
+  t.textContent =
+    msg;
+
+
+  t.className =
+    'toast show ' +
+    (
+      tipo ||
+      'info'
+    );
+
+
+  clearTimeout(
+    window._toastT
+  );
+
+
+  window._toastT =
+    setTimeout(
+      () =>
+        t.className =
+          'toast',
+      5000
+    );
+
+}
+
 </script>
+
 </body>
 </html>
