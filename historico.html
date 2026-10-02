@@ -25,7 +25,7 @@ header{background:var(--rojo);color:#fff;height:60px;display:flex;align-items:ce
 .header-right{display:flex;align-items:center;gap:12px}.header-user-info{font-size:.7rem;text-align:right;line-height:1.3}.header-user-info .user-name{font-weight:600}.header-user-info .user-role{font-size:.65rem;opacity:.9}
 .btn-logout{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:5px 10px;cursor:pointer;color:rgba(255,255,255,.9);font-size:.7rem;transition:background .2s;white-space:nowrap;font-family:'Open Sans',sans-serif;font-weight:600}.btn-logout:hover{background:rgba(255,255,255,.22)}
 .nav-bar{background:#fff;border-bottom:1px solid var(--border-color);padding:0 18px;display:flex;overflow-x:auto;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.05)}.nav-bar::-webkit-scrollbar{height:3px}.nav-bar::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px}
-.menu-item{display:inline-block;padding:12px 14px;font-size:.7rem;color:var(--text-dark);text-decoration:none;transition:all .2s;border-bottom:3px solid transparent}.menu-item:hover{background:var(--sidebar-hover);color:var(--rojo)}.menu-item.active{font-family:'League Spartan',sans-serif;font-weight:700;color:var(--rojo);border-bottom-color:var(--rojo)}.admin-only{display:none}
+.menu-item{display:inline-block;padding:12px 14px;font-size:.7rem;color:var(--text-dark);text-decoration:none;transition:all .2s;border-bottom:3px solid transparent}.menu-item:hover{background:var(--sidebar-hover);color:var(--rojo)}.menu-item.active{font-family:'League Spartan',sans-serif;font-weight:700;color:var(--rojo);border-bottom-color:var(--rojo)}.admin-only{display:none}.dir-only{display:none}
 .main-container{flex:1;padding:22px 18px 32px;max-width:1500px;width:100%;margin:0 auto}.section-header{margin-bottom:18px}.breadcrumb{font-size:.68rem;color:var(--gris);margin-bottom:4px}.breadcrumb span{color:var(--rojo);font-weight:600}
 .section-header h1{font-family:'League Spartan',sans-serif;font-size:1.5rem;font-weight:700;color:var(--text-dark);margin-bottom:4px}.section-header .highlight{color:var(--rojo)}.section-sub{font-size:.7rem;color:var(--gris);font-weight:600}
 .filters-card,.card{background:#fff;border:1px solid var(--border-color);border-radius:var(--r);box-shadow:var(--sh)}
@@ -63,15 +63,15 @@ footer{text-align:center;padding:14px 18px;font-size:.65rem;color:var(--gris);bo
 
 <nav class="nav-bar">
   <a href="inicio.html" class="menu-item">INICIO</a>
-  <a href="clientes.html" class="menu-item admin-only">CLIENTES</a>
+  <a href="clientes.html" class="menu-item dir-only">CLIENTES</a>
   <a href="meta.html" class="menu-item">META</a>
   <a href="catalogo_fs.html" class="menu-item">CATALOGO_FS</a>
   <a href="propuesta.html" class="menu-item">PROPUESTA</a>
   <a href="pedido.html" class="menu-item">PEDIDO</a>
   <a href="reporte.html" class="menu-item">REPORTE</a>
-  <a href="dashboard.html" class="menu-item admin-only">DASHBOARD</a>
+  <a href="dashboard.html" class="menu-item dir-only">DASHBOARD</a>
   <a href="cargas.html" class="menu-item admin-only">CARGAS</a>
-  <a href="historico.html" class="menu-item active admin-only">HISTÓRICO</a>
+  <a href="historico.html" class="menu-item active dir-only">HISTÓRICO</a>
   <a href="ccp.html" class="menu-item admin-only">CCP</a>
 </nav>
 
@@ -188,7 +188,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     esDirectivo=rol==='admin'||rol==='gerente';
     document.getElementById('user-name-display').textContent=sesion.nombre||'—';
     document.getElementById('user-role-display').textContent=rol==='admin'?'Administrador':'Gerente de Ventas';
-    document.querySelectorAll('.admin-only').forEach(el=>el.style.display='inline-block');
+    if(rol==='gerente'||rol==='admin')document.querySelectorAll('.dir-only').forEach(el=>el.style.display='inline-block');
+    if(rol==='admin')document.querySelectorAll('.admin-only').forEach(el=>el.style.display='inline-block');
     document.getElementById('section-sub').textContent=esDirectivo?'Vista consolidada — todos los vendedores.':'Vista histórica de tu cartera asignada.';
     setDefaultDates();
     cargarVentas();
