@@ -43,6 +43,7 @@ header{background:var(--rojo);color:#fff;height:60px;display:flex;align-items:ce
 .menu-item:hover{background:#F1F3F5;color:var(--rojo)}
 .menu-item.active{font-family:'League Spartan',sans-serif;font-weight:700;color:var(--rojo);border-bottom-color:var(--rojo)}
 .admin-only{display:none}
+.dir-only{display:none}
 
 /* ── LAYOUT ── */
 .main-container{flex:1;padding:22px 18px 40px;max-width:1300px;width:100%;margin:0 auto}
@@ -521,7 +522,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     esAdmin ? 'Vista de administración — Gestión de visitas del equipo comercial'
             : 'Registra tu gestión de campo — ' + (sesion.nombre || sesion.user);
 
-  if (esAdmin) document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'inline-block');
+  if (rol === 'gerente' || rol === 'admin') {
+    document.querySelectorAll('.dir-only').forEach(e => e.style.display = 'inline-block');
+  }
+  if (rol === 'admin') {
+    document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'inline-block');
+  }
 
   // Fecha de hoy como default
   const hoy = new Date().toISOString().slice(0,10);
