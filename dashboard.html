@@ -68,6 +68,7 @@ header{
 .menu-item:hover{background:var(--sidebar-hover);color:var(--rojo)}
 .menu-item.active{font-family:'League Spartan',sans-serif;font-weight:700;color:var(--rojo);border-bottom-color:var(--rojo)}
 .admin-only{display:none}
+.dir-only{display:none}
 
 /* ── MAIN ────────────────────────────────────────────────────── */
 .main-container{flex:1;padding:22px 18px 32px;max-width:1400px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:20px}
@@ -221,15 +222,15 @@ footer strong{color:var(--text-dark)}
 <!-- ── NAV ───────────────────────────────────────────────────── -->
 <nav class="nav-bar">
   <a href="inicio.html"      class="menu-item">INICIO</a>
-  <a href="clientes.html"    class="menu-item admin-only">CLIENTES</a>
+  <a href="clientes.html"    class="menu-item dir-only">CLIENTES</a>
   <a href="meta.html"        class="menu-item">META</a>
   <a href="catalogo_fs.html" class="menu-item">CATALOGO_FS</a>
   <a href="propuesta.html"   class="menu-item">PROPUESTA</a>
   <a href="pedido.html"      class="menu-item">PEDIDO</a>
   <a href="reporte.html"     class="menu-item">REPORTE</a>
-  <a href="dashboard.html"   class="menu-item active">DASHBOARD</a>
+  <a href="dashboard.html"   class="menu-item dir-only active">DASHBOARD</a>
   <a href="cargas.html"      class="menu-item admin-only">CARGAS</a>
-  <a href="historico.html"   class="menu-item admin-only">HISTÓRICO</a>
+  <a href="historico.html"   class="menu-item dir-only">HISTÓRICO</a>
   <a href="ccp.html"         class="menu-item admin-only">CCP</a>
 </nav>
 
@@ -462,7 +463,11 @@ document.addEventListener('DOMContentLoaded', () => {
     ? 'Vista consolidada — todos los vendedores'
     : `Resumen de tu actividad comercial — ${sesion.nombre}`;
 
-  if (esDirectivo) {
+  if (rol === 'gerente' || rol === 'admin') {
+    document.querySelectorAll('.dir-only').forEach(el => el.style.display = 'inline-block');
+  }
+
+  if (rol === 'admin') {
     document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
   }
 
