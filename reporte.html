@@ -98,35 +98,65 @@ tbody td{padding:10px 12px;vertical-align:middle;font-size:.75rem}
 /* ── META CHIPS ── */
 .meta-chip{display:inline-flex;gap:4px;align-items:center;background:var(--azul-xs);border:1px solid #BFDBFE;color:var(--azul);border-radius:20px;padding:2px 8px;font-size:.63rem;font-weight:700;margin-top:2px}
 
-/* ── RESUMEN ADMIN ── */
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:20px}
-.kpi-card{background:#fff;border:1.5px solid var(--borde);border-radius:var(--r);padding:12px 16px}
-.kpi-lbl{font-size:.63rem;font-weight:700;color:var(--gris);text-transform:uppercase;letter-spacing:.3px}
-.kpi-val{font-size:1.5rem;font-weight:800;color:var(--rojo);margin-top:3px;letter-spacing:-1px}
-.kpi-sub{font-size:.65rem;color:var(--gris);margin-top:2px}
-.kpi-card.verde .kpi-val{color:var(--verde)}
-.kpi-card.azul  .kpi-val{color:var(--azul)}
-.kpi-card.naranja .kpi-val{color:var(--naranja)}
+/* ── VISTA GERENTE / ADMINISTRADOR ───────────────────────── */
+.admin-dashboard{display:flex;flex-direction:column;gap:16px}
+.admin-filter-card{background:#fff;border:1px solid var(--borde);border-radius:var(--r);box-shadow:var(--sh);padding:14px 16px}
+.admin-filter-title{font-size:.72rem;font-weight:800;color:var(--texto);text-transform:uppercase;letter-spacing:.35px;margin-bottom:10px}
+.admin-filter-row{display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap}
+.admin-filter-field{display:flex;flex-direction:column;gap:5px;min-width:165px}
+.admin-filter-field label{font-size:.63rem;font-weight:700;color:var(--gris);text-transform:uppercase;letter-spacing:.25px}
+.admin-filter-field input{padding:8px 10px;border:1.5px solid var(--borde);border-radius:7px;font-family:'Inter',sans-serif;font-size:.74rem;color:var(--texto);background:#fff;outline:none}
+.admin-filter-field input:focus{border-color:var(--rojo);box-shadow:0 0 0 2px rgba(211,0,0,.08)}
+.admin-filter-actions{display:flex;gap:7px;align-items:center}
+.btn-secondary{padding:8px 13px;background:#fff;color:var(--texto);border:1.5px solid var(--borde);border-radius:7px;font-size:.72rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif}
+.btn-secondary:hover{border-color:#BFC4CB;background:#F9FAFB}
 
-/* Filtros */
-.filtro-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
-.f-sel,.f-inp{padding:7px 11px;border:1.5px solid var(--borde);border-radius:7px;font-size:.73rem;font-family:'Inter',sans-serif;color:var(--negro);background:#fff;outline:none;-webkit-appearance:none}
-.f-sel{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;padding-right:26px}
-.f-inp{min-width:160px}
-.f-sel:focus,.f-inp:focus{border-color:var(--rojo)}
-.btn-act{padding:7px 14px;background:var(--rojo);color:#fff;border:none;border-radius:7px;font-size:.73rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background .2s}
-.btn-act:hover{background:var(--rojo-d)}
+.admin-kpi-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.admin-kpi{background:#fff;border:1px solid var(--borde);border-radius:var(--r);box-shadow:var(--sh);padding:14px 14px 12px;min-width:0;position:relative;overflow:hidden}
+.admin-kpi:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--rojo)}
+.admin-kpi.k-green:before{background:var(--verde)}
+.admin-kpi.k-blue:before{background:var(--azul)}
+.admin-kpi.k-orange:before{background:var(--naranja)}
+.admin-kpi.k-purple:before{background:#7C3AED}
+.admin-kpi-label{font-size:.61rem;color:var(--gris);font-weight:800;text-transform:uppercase;letter-spacing:.35px;line-height:1.25}
+.admin-kpi-value{font-size:1.55rem;font-weight:800;color:var(--texto);margin-top:7px;letter-spacing:-.7px;line-height:1}
+.admin-kpi.k-red .admin-kpi-value{color:var(--rojo)}
+.admin-kpi.k-green .admin-kpi-value{color:var(--verde)}
+.admin-kpi.k-blue .admin-kpi-value{color:var(--azul)}
+.admin-kpi.k-orange .admin-kpi-value{color:var(--naranja)}
+.admin-kpi.k-purple .admin-kpi-value{color:#7C3AED}
+.admin-kpi-note{font-size:.61rem;color:var(--gris);margin-top:6px;line-height:1.3}
 
-/* Tabla admin */
-.res-tbl th{font-size:.63rem}
-.res-tbl td{font-size:.72rem}
+.admin-section{background:#fff;border:1px solid var(--borde);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
+.admin-section-head{padding:12px 16px;border-bottom:1px solid var(--borde);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.admin-section-title{font-size:.8rem;font-weight:800;color:var(--texto)}
+.admin-section-sub{font-size:.63rem;color:var(--gris);margin-top:2px}
+.admin-section-body{padding:14px 16px}
+.admin-table-wrap{overflow-x:auto;border:1px solid var(--borde);border-radius:7px}
+.admin-table{width:100%;border-collapse:collapse;min-width:760px}
+.admin-table thead tr{background:var(--negro)}
+.admin-table th{padding:9px 10px;color:rgba(255,255,255,.9);font-size:.61rem;font-weight:800;text-transform:uppercase;letter-spacing:.35px;text-align:left;white-space:nowrap}
+.admin-table td{padding:9px 10px;border-bottom:1px solid var(--borde);font-size:.7rem;vertical-align:middle}
+.admin-table tbody tr:last-child td{border-bottom:none}
+.admin-table tbody tr:hover{background:#FAFAFA}
+.admin-table .num{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+.admin-table .center{text-align:center}
+.admin-name{font-weight:750;color:var(--texto)}
+.admin-muted{font-size:.62rem;color:var(--gris);margin-top:2px}
+.admin-rate{font-weight:800}
+.admin-rate.good{color:var(--verde)}
+.admin-rate.mid{color:var(--naranja)}
+.admin-rate.low{color:var(--rojo)}
+.admin-empty{padding:30px;text-align:center;color:var(--gris);font-size:.72rem}
+.admin-empty .ico{font-size:28px;margin-bottom:7px}
+.admin-loading{opacity:.65}
+.admin-two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.admin-period{font-size:.64rem;color:var(--gris);font-weight:600}
+.admin-refresh{padding:6px 10px;background:#fff;border:1px solid var(--borde);border-radius:6px;font-size:.68rem;font-weight:700;color:var(--gris);cursor:pointer}
+.admin-refresh:hover{color:var(--rojo);border-color:#F0B5B5}
 
-/* Barra progreso */
-.prog-bar{height:6px;background:#E5E7EB;border-radius:3px;overflow:hidden;margin-top:4px}
-.prog-fill{height:100%;border-radius:3px;background:var(--rojo);transition:width .4s}
-.prog-fill.verde{background:var(--verde)}
-.prog-fill.naranja{background:var(--naranja)}
-
+@media(max-width:1100px){.admin-kpi-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.admin-kpi-grid{grid-template-columns:repeat(2,1fr)}.admin-two-col{grid-template-columns:1fr}.admin-filter-field{min-width:145px}}
 /* ── FORMULARIO ── */
 .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:18px}
 .form-group{display:flex;flex-direction:column;gap:5px}
@@ -204,12 +234,12 @@ footer strong{color:var(--texto)}
 <!-- ── NAV ── -->
 <nav class="nav-bar" id="nav-menu">
   <a href="inicio.html"      class="menu-item" id="nav-inicio">INICIO</a>
+  <a href="clientes.html"    class="menu-item dir-only">CLIENTES</a>
   <a href="meta.html"        class="menu-item">META</a>
   <a href="catalogo_fs.html" class="menu-item">CATÁLOGO</a>
   <a href="propuesta.html"   class="menu-item">PROPUESTA</a>
   <a href="pedido.html"      class="menu-item">PEDIDO</a>
-  <a href="reporte.html"     class="menu-item active">REPORTE</a>
-  <a href="clientes.html"    class="menu-item dir-only">CLIENTES</a>
+  <a href="reporte.html"     class="menu-item">REPORTE</a>
   <a href="dashboard.html"   class="menu-item dir-only">DASHBOARD</a>
   <a href="historico.html"   class="menu-item dir-only">HISTÓRICO</a>
   <a href="cargas.html"      class="menu-item admin-only">CARGAS</a>
@@ -399,85 +429,81 @@ footer strong{color:var(--texto)}
 
   </div><!-- /vista-vendedor -->
 
-  <!-- ══════════ VISTA ADMINISTRADOR ══════════ -->
+  <!-- ══════════ VISTA GERENTE / ADMINISTRADOR ══════════ -->
   <div id="vista-admin" style="display:none">
+    <div class="admin-dashboard">
 
-    <div class="card">
-      <div class="card-hd">
-        <div class="card-hd-left">
-          <div class="card-ic">📊</div>
-          <span class="card-title">Resumen de Gestión de Visitas</span>
+      <!-- FILTRO DE PERÍODO -->
+      <div class="admin-filter-card">
+        <div class="admin-filter-title">Período de análisis</div>
+        <div class="admin-filter-row">
+          <div class="admin-filter-field">
+            <label for="adm-desde">Desde</label>
+            <input type="date" id="adm-desde">
+          </div>
+          <div class="admin-filter-field">
+            <label for="adm-hasta">Hasta</label>
+            <input type="date" id="adm-hasta">
+          </div>
+          <div class="admin-filter-actions">
+            <button class="btn-act" id="btn-aplicar-reporte" onclick="cargarReporteGestion()">Aplicar</button>
+            <button class="btn-secondary" onclick="establecerPeriodoMesActual()">Mes actual</button>
+          </div>
         </div>
-        <button class="btn-act" onclick="cargarReportesAdmin()">↺ Actualizar</button>
       </div>
-      <div class="card-bd">
 
-        <!-- KPIs -->
-        <div class="kpi-grid" id="kpi-grid">
-          <div class="kpi-card"><div class="kpi-lbl">Total Visitas</div><div class="kpi-val" id="k-total">—</div><div class="kpi-sub">registros</div></div>
-          <div class="kpi-card verde"><div class="kpi-lbl">Contacto Efectivo</div><div class="kpi-val" id="k-ce">—</div><div class="kpi-sub">con decisor</div></div>
-          <div class="kpi-card azul"><div class="kpi-lbl">Cierres / Pedidos</div><div class="kpi-val" id="k-cierre">—</div><div class="kpi-sub">convertidos</div></div>
-          <div class="kpi-card naranja"><div class="kpi-lbl">Sin Pedido</div><div class="kpi-val" id="k-nv">—</div><div class="kpi-sub">sin venta</div></div>
-          <div class="kpi-card"><div class="kpi-lbl">Tasa Cierre</div><div class="kpi-val" id="k-tasa">—</div><div class="kpi-sub">% de visitas</div></div>
-          <div class="kpi-card"><div class="kpi-lbl">Propuestas</div><div class="kpi-val" id="k-prop">—</div><div class="kpi-sub">entregadas</div></div>
-        </div>
-
-        <!-- Filtros -->
-        <div class="filtro-bar">
-          <input class="f-inp" type="date" id="f-desde" title="Desde">
-          <input class="f-inp" type="date" id="f-hasta" title="Hasta">
-          <select class="f-sel" id="f-vendedor" onchange="renderAdmin()">
-            <option value="">Todos los vendedores</option>
-          </select>
-          <select class="f-sel" id="f-resultado" onchange="renderAdmin()">
-            <option value="">Todos los resultados</option>
-            <option value="Interesado">Interesado</option>
-            <option value="Cierre Inmediato">Cierre Inmediato</option>
-            <option value="Reprogramada">Reprogramada</option>
-            <option value="No Interesado">No Interesado</option>
-          </select>
-          <button class="btn-act" onclick="renderAdmin()">Filtrar</button>
-        </div>
-
-        <!-- Resumen por vendedor -->
-        <div style="font-size:.72rem;font-weight:700;color:var(--gris);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">
-          Desempeño por Vendedor
-        </div>
-        <div id="resumen-vendedores" style="margin-bottom:20px">
-          <div class="empty-state"><div class="empty-ico">⏳</div><div class="empty-txt">Cargando...</div></div>
-        </div>
-
-        <!-- Tabla detalle -->
-        <div style="font-size:.72rem;font-weight:700;color:var(--gris);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">
-          Detalle de Reportes
-        </div>
-        <div class="tbl-wrap">
-          <table class="res-tbl">
-            <thead>
-              <tr>
-                <th>Fecha</th>
-                <th>Vendedor</th>
-                <th>Cliente</th>
-                <th>Contacto Efectivo</th>
-                <th>Resultado</th>
-                <th>Propuesta</th>
-                <th>Estatus Cierre</th>
-                <th>Motivo No Venta</th>
-                <th>Próx. Visita</th>
-                <th>Observaciones</th>
-              </tr>
-            </thead>
-            <tbody id="tbl-admin-body">
-              <tr><td colspan="10">
-                <div class="empty-state"><div class="empty-ico">📊</div><div class="empty-txt">Cargando reportes...</div></div>
-              </td></tr>
-            </tbody>
-          </table>
-        </div>
-
+      <!-- KPIs -->
+      <div class="admin-kpi-grid" id="admin-kpis">
+        <div class="admin-kpi k-red"><div class="admin-kpi-label">Meta de visitas</div><div class="admin-kpi-value" id="adm-k-meta">—</div><div class="admin-kpi-note">visitas planificadas</div></div>
+        <div class="admin-kpi k-blue"><div class="admin-kpi-label">Visitas reportadas</div><div class="admin-kpi-value" id="adm-k-visitas">—</div><div class="admin-kpi-note">registros de gestión</div></div>
+        <div class="admin-kpi k-green"><div class="admin-kpi-label">Contactos efectivos</div><div class="admin-kpi-value" id="adm-k-contactos">—</div><div class="admin-kpi-note">contacto efectivo</div></div>
+        <div class="admin-kpi k-purple"><div class="admin-kpi-label">Propuestas</div><div class="admin-kpi-value" id="adm-k-propuestas">—</div><div class="admin-kpi-note">propuestas emitidas</div></div>
+        <div class="admin-kpi k-orange"><div class="admin-kpi-label">Pedidos</div><div class="admin-kpi-value" id="adm-k-pedidos">—</div><div class="admin-kpi-note">pedidos registrados</div></div>
+        <div class="admin-kpi k-red"><div class="admin-kpi-label">Tasa de cierre</div><div class="admin-kpi-value" id="adm-k-tasa">—</div><div class="admin-kpi-note">pedidos ÷ visitas reportadas</div></div>
       </div>
+
+      <!-- SEMANAL -->
+      <section class="admin-section">
+        <div class="admin-section-head">
+          <div>
+            <div class="admin-section-title">Detalle semanal</div>
+            <div class="admin-section-sub">Evolución de la gestión dentro del período seleccionado</div>
+          </div>
+          <button class="admin-refresh" onclick="cargarReporteGestion()">↻ Actualizar</button>
+        </div>
+        <div class="admin-section-body" id="admin-semanal">
+          <div class="admin-empty"><div class="ico">⏳</div>Cargando información...</div>
+        </div>
+      </section>
+
+      <!-- VENDEDOR + CLIENTE -->
+      <div class="admin-two-col">
+        <section class="admin-section">
+          <div class="admin-section-head">
+            <div>
+              <div class="admin-section-title">Detalle por vendedor</div>
+              <div class="admin-section-sub">Visitas, contactos, propuestas, pedidos y cierre</div>
+            </div>
+          </div>
+          <div class="admin-section-body" id="admin-vendedores">
+            <div class="admin-empty"><div class="ico">⏳</div>Cargando información...</div>
+          </div>
+        </section>
+
+        <section class="admin-section">
+          <div class="admin-section-head">
+            <div>
+              <div class="admin-section-title">Detalle por cliente</div>
+              <div class="admin-section-sub">Gestión y conversión acumulada por cliente</div>
+            </div>
+          </div>
+          <div class="admin-section-body" id="admin-clientes">
+            <div class="admin-empty"><div class="ico">⏳</div>Cargando información...</div>
+          </div>
+        </section>
+      </div>
+
     </div>
-
   </div><!-- /vista-admin -->
 
 </main>
@@ -500,7 +526,6 @@ let sesion       = null;
 let esAdmin      = false;
 let CLIENTES     = [];   // cartera del vendedor
 let META_PROD    = [];   // productos para mostrar metas
-let REPORTES_ADM = [];   // reportes cargados para admin
 
 // ════════════════════════════════════════════════════════════
 //  INIT
@@ -535,7 +560,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (esAdmin) {
     document.getElementById('vista-admin').style.display = '';
-    await cargarReportesAdmin();
+    establecerPeriodoInicial();
+    await cargarReporteGestion();
   } else {
     document.getElementById('vista-vendedor').style.display = '';
     await Promise.all([cargarClientes(), cargarProductos()]);
@@ -852,166 +878,162 @@ async function enviarReporteLibre(event) {
 }
 
 // ════════════════════════════════════════════════════════════
-//  VISTA ADMIN — RESUMEN DE GESTIÓN
+//  VISTA GERENTE / ADMINISTRADOR — REPORTE DE GESTIÓN
+//  Fuente única: action=reporteGestion
 // ════════════════════════════════════════════════════════════
-async function cargarReportesAdmin() {
-  document.getElementById('tbl-admin-body').innerHTML =
-    '<tr><td colspan="10"><div class="empty-state"><div class="empty-ico">⏳</div><div class="empty-txt">Cargando reportes...</div></div></td></tr>';
-  document.getElementById('resumen-vendedores').innerHTML =
-    '<div class="empty-state"><div class="empty-ico">⏳</div><div class="empty-txt">Cargando...</div></div>';
+let REPORTE_GESTION = null;
 
-  try {
-    const r = await fetch(API + '?action=ventas&limite=2000');
-    const j = await r.json();
-    // El endpoint 'ventas' devuelve pedidos; necesitamos reportes.
-    // Usamos el endpoint histórico para obtener los reportes guardados.
-    // Como el script no tiene un endpoint GET de reportes, usamos el de ventas como proxy
-    // y complementamos con datos locales de la sesión.
-    // Intentar cargar desde acción específica (si el script la tiene)
-    REPORTES_ADM = [];
-    // Carga via historico que devuelve pedidos_raw — los reportes vienen de su hoja propia
-    // El script no expone un GET de reportes directamente, así que mostramos lo que hay
-  } catch(e) {}
-
-  // Intentar fetch de reportes directamente (el script los tiene en hoja 'reportes')
-  try {
-    const r2 = await fetch(API + '?action=historico&limite=500');
-    const j2 = await r2.json();
-    if (j2.ok && Array.isArray(j2.data)) {
-      REPORTES_ADM = j2.data;
-    }
-  } catch(e) {}
-
-  renderAdmin();
+function establecerPeriodoMesActual() {
+  const hoy = new Date();
+  const yyyy = hoy.getFullYear();
+  const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+  const ultimo = new Date(yyyy, hoy.getMonth() + 1, 0).getDate();
+  document.getElementById('adm-desde').value = `${yyyy}-${mm}-01`;
+  document.getElementById('adm-hasta').value = `${yyyy}-${mm}-${String(ultimo).padStart(2,'0')}`;
 }
 
-function renderAdmin() {
-  const desde    = document.getElementById('f-desde')?.value    || '';
-  const hasta    = document.getElementById('f-hasta')?.value    || '';
-  const vendFilt = document.getElementById('f-vendedor')?.value || '';
-  const resFilt  = document.getElementById('f-resultado')?.value|| '';
+function establecerPeriodoInicial() {
+  const desde = document.getElementById('adm-desde');
+  const hasta = document.getElementById('adm-hasta');
+  if (!desde.value || !hasta.value) establecerPeriodoMesActual();
+}
 
-  let datos = REPORTES_ADM.filter(r => {
-    if (vendFilt && (r.vendedor || r.user_vendedor || '') !== vendFilt) return false;
-    if (resFilt  && (r.resultado_cita || '') !== resFilt) return false;
-    if (desde) {
-      const fd = parseFecha(r.fecha || r.fecha_formateada);
-      if (fd && fd < new Date(desde + 'T00:00:00')) return false;
-    }
-    if (hasta) {
-      const fd = parseFecha(r.fecha || r.fecha_formateada);
-      if (fd && fd > new Date(hasta + 'T23:59:59')) return false;
-    }
-    return true;
-  });
+async function cargarReporteGestion() {
+  establecerPeriodoInicial();
+  const desde = document.getElementById('adm-desde').value;
+  const hasta = document.getElementById('adm-hasta').value;
+  const btn = document.getElementById('btn-aplicar-reporte');
 
-  // Poblar select vendedores
-  const vends = [...new Set(REPORTES_ADM.map(r => r.vendedor || r.user_vendedor || '').filter(Boolean))];
-  const selV  = document.getElementById('f-vendedor');
-  if (selV) {
-    const curr = selV.value;
-    selV.innerHTML = '<option value="">Todos los vendedores</option>';
-    vends.forEach(v => {
-      const op = document.createElement('option');
-      op.value = v; op.textContent = v; if(v===curr) op.selected = true;
-      selV.appendChild(op);
-    });
+  if (!desde || !hasta) {
+    showToast('Selecciona las fechas Desde y Hasta.', 'err');
+    return;
   }
-
-  // KPIs
-  const total  = datos.length;
-  const ce     = datos.filter(r => (r.contacto_efectivo||'').toLowerCase() === 'sí').length;
-  const cierres= datos.filter(r => ['Pedido 1era Vez','Pedido Recurrente','Cierre Inmediato'].includes(r.estatus_cierre||r.resultado_cita||'')).length;
-  const nv     = datos.filter(r => (r.estatus_cierre||'') === 'Sin Pedido' || (r.resultado_cita||'') === 'No Interesado').length;
-  const tasa   = total > 0 ? Math.round((cierres/total)*100) : 0;
-  const prop   = datos.filter(r => (r.propuesta_comercial||'') === 'Sí').length;
-
-  document.getElementById('k-total').textContent  = total;
-  document.getElementById('k-ce').textContent     = ce;
-  document.getElementById('k-cierre').textContent = cierres;
-  document.getElementById('k-nv').textContent     = nv;
-  document.getElementById('k-tasa').textContent   = tasa + '%';
-  document.getElementById('k-prop').textContent   = prop;
-
-  // Resumen por vendedor
-  const porVend = {};
-  datos.forEach(r => {
-    const v = r.vendedor || r.user_vendedor || 'Sin asignar';
-    if (!porVend[v]) porVend[v] = { visitas:0, ce:0, cierres:0, nv:0, prop:0 };
-    porVend[v].visitas++;
-    if ((r.contacto_efectivo||'').toLowerCase() === 'sí') porVend[v].ce++;
-    if (['Pedido 1era Vez','Pedido Recurrente','Cierre Inmediato'].includes(r.estatus_cierre||r.resultado_cita||'')) porVend[v].cierres++;
-    if ((r.estatus_cierre||'') === 'Sin Pedido' || (r.resultado_cita||'') === 'No Interesado') porVend[v].nv++;
-    if ((r.propuesta_comercial||'') === 'Sí') porVend[v].prop++;
-  });
-
-  const resWrap = document.getElementById('resumen-vendedores');
-  if (!Object.keys(porVend).length) {
-    resWrap.innerHTML = '<div class="empty-state"><div class="empty-ico">📭</div><div class="empty-txt">Sin reportes en el período</div></div>';
-  } else {
-    resWrap.innerHTML = `<div class="tbl-wrap"><table class="res-tbl">
-      <thead><tr>
-        <th>Vendedor</th><th>Visitas</th><th>Contacto Efectivo</th>
-        <th>Cierres</th><th>Sin Pedido</th><th>Propuestas</th><th>Tasa Cierre</th>
-      </tr></thead>
-      <tbody>
-        ${Object.entries(porVend).sort((a,b)=>b[1].visitas-a[1].visitas).map(([v,d])=>{
-          const t  = d.visitas || 1;
-          const tc = Math.round((d.cierres/t)*100);
-          const color = tc>=60?'verde':tc>=30?'naranja':'';
-          return `<tr>
-            <td class="td-cliente">${esc(v)}</td>
-            <td style="text-align:center;font-weight:700">${d.visitas}</td>
-            <td style="text-align:center">
-              ${d.ce} <div class="prog-bar"><div class="prog-fill" style="width:${Math.round((d.ce/t)*100)}%"></div></div>
-            </td>
-            <td style="text-align:center;font-weight:700;color:var(--verde)">${d.cierres}</td>
-            <td style="text-align:center;color:var(--rojo)">${d.nv}</td>
-            <td style="text-align:center">${d.prop}</td>
-            <td style="text-align:center">
-              <span class="estado-badge ${color==='verde'?'est-ok':color==='naranja'?'est-pend':''}">${tc}%</span>
-            </td>
-          </tr>`;
-        }).join('')}
-      </tbody>
-    </table></div>`;
-  }
-
-  // Tabla detalle
-  const tbody = document.getElementById('tbl-admin-body');
-  if (!datos.length) {
-    tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state"><div class="empty-ico">📭</div><div class="empty-txt">Sin reportes</div><div class="empty-sub">Ajusta los filtros o espera a que los vendedores registren visitas.</div></div></td></tr>';
+  if (desde > hasta) {
+    showToast('La fecha Desde no puede ser posterior a Hasta.', 'err');
     return;
   }
 
-  tbody.innerHTML = datos.slice(0,200).map(r => {
-    const ce     = (r.contacto_efectivo||'').toLowerCase()==='sí';
-    const res    = r.resultado_cita || '—';
-    const resCol = res==='Cierre Inmediato'?'est-cierre':res==='Interesado'?'est-ok':res==='No Interesado'?'est-no':'est-pend';
-    // Extraer próxima visita de observaciones si aplica
-    const obs    = r.observaciones || '';
-    const proxMatch = obs.match(/Próxima visita:\s*([\d\/-]+)/);
-    const proxVis   = proxMatch ? proxMatch[1] : (r.proxima_visita || '—');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="sp"></span> Cargando...'; }
+  mostrarCargaAdmin();
 
-    return `<tr>
-      <td style="white-space:nowrap">${fFecha(r.fecha||r.fecha_formateada)}</td>
-      <td style="font-weight:600">${esc(r.vendedor||r.user_vendedor||'—')}</td>
-      <td>
-        <div style="font-weight:600;font-size:.75rem">${esc(r.razon_social||'—')}</div>
-        <div style="font-size:.65rem;color:var(--gris)">${esc(r.tipo_cliente||'')}</div>
-      </td>
-      <td style="text-align:center">
-        <span class="estado-badge ${ce?'est-ok':'est-no'}">${r.contacto_efectivo||'—'}</span>
-      </td>
-      <td><span class="estado-badge ${resCol}">${esc(res)}</span></td>
-      <td style="text-align:center">${esc(r.propuesta_comercial||'—')}</td>
-      <td>${esc(r.estatus_cierre||'—')}</td>
-      <td style="color:var(--rojo);font-size:.71rem">${esc(r.motivo_no_venta||'—')}</td>
-      <td style="white-space:nowrap;font-size:.71rem">${esc(proxVis)}</td>
-      <td style="font-size:.71rem;max-width:200px;word-break:break-word">${esc((obs.split('|')[0]||obs).slice(0,120))}</td>
-    </tr>`;
-  }).join('');
+  try {
+    const url = API + '?action=reporteGestion&desde=' + encodeURIComponent(desde) + '&hasta=' + encodeURIComponent(hasta);
+    const r = await fetch(url, { cache:'no-store' });
+    const j = await r.json();
+    if (!j || j.ok === false) throw new Error((j && j.msg) || 'El servidor no pudo generar el reporte.');
+
+    REPORTE_GESTION = j;
+    renderReporteGestion(j);
+  } catch (e) {
+    REPORTE_GESTION = null;
+    mostrarErrorAdmin(e && e.message ? e.message : 'No fue posible cargar el reporte.');
+    showToast('❌ No fue posible cargar el reporte.', 'err');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Aplicar'; }
+  }
 }
+
+function mostrarCargaAdmin() {
+  ['adm-k-meta','adm-k-visitas','adm-k-contactos','adm-k-propuestas','adm-k-pedidos','adm-k-tasa'].forEach(id => {
+    const el=document.getElementById(id); if(el) el.textContent='…';
+  });
+  ['admin-semanal','admin-vendedores','admin-clientes'].forEach(id => {
+    const el=document.getElementById(id);
+    if(el) el.innerHTML='<div class="admin-empty admin-loading"><div class="ico">⏳</div>Cargando información...</div>';
+  });
+}
+
+function mostrarErrorAdmin(msg) {
+  ['adm-k-meta','adm-k-visitas','adm-k-contactos','adm-k-propuestas','adm-k-pedidos','adm-k-tasa'].forEach(id => {
+    const el=document.getElementById(id); if(el) el.textContent='—';
+  });
+  ['admin-semanal','admin-vendedores','admin-clientes'].forEach(id => {
+    const el=document.getElementById(id);
+    if(el) el.innerHTML='<div class="admin-empty"><div class="ico">⚠️</div>'+esc(msg)+'</div>';
+  });
+}
+
+function renderReporteGestion(data) {
+  const t = data.totales || {};
+  setText('adm-k-meta', num(t.meta_visitas));
+  setText('adm-k-visitas', num(t.visitas_reportadas));
+  setText('adm-k-contactos', num(t.contactos_efectivos));
+  setText('adm-k-propuestas', num(t.propuestas));
+  setText('adm-k-pedidos', num(t.pedidos));
+  setText('adm-k-tasa', pct(t.tasa_cierre));
+
+  renderTablaSemanal(Array.isArray(data.semanal) ? data.semanal : []);
+  renderTablaVendedores(Array.isArray(data.vendedores) ? data.vendedores : []);
+  renderTablaClientes(Array.isArray(data.clientes) ? data.clientes : []);
+}
+
+function renderTablaSemanal(rows) {
+  const el=document.getElementById('admin-semanal');
+  if(!rows.length){ el.innerHTML=emptyAdmin('📭','No hay datos para el período seleccionado.'); return; }
+  el.innerHTML=`<div class="admin-table-wrap"><table class="admin-table">
+    <thead><tr>
+      <th>Semana</th><th>Desde</th><th>Hasta</th><th>Meta visitas</th>
+      <th>Visitas reportadas</th><th>Contactos efectivos</th><th>Propuestas</th><th>Pedidos</th><th>Tasa cierre</th>
+    </tr></thead><tbody>
+    ${rows.map(r=>`<tr>
+      <td class="admin-name">${esc(r.semana || r.periodo || '—')}</td>
+      <td>${fFecha(r.desde)}</td><td>${fFecha(r.hasta)}</td>
+      <td class="num">${num(r.meta_visitas)}</td>
+      <td class="num">${num(r.visitas_reportadas)}</td>
+      <td class="num">${num(r.contactos_efectivos)}</td>
+      <td class="num">${num(r.propuestas)}</td>
+      <td class="num">${num(r.pedidos)}</td>
+      <td class="num">${rateHtml(r.tasa_cierre)}</td>
+    </tr>`).join('')}
+    </tbody></table></div>`;
+}
+
+function renderTablaVendedores(rows) {
+  const el=document.getElementById('admin-vendedores');
+  if(!rows.length){ el.innerHTML=emptyAdmin('👤','No hay vendedores con actividad en el período.'); return; }
+  el.innerHTML=`<div class="admin-table-wrap"><table class="admin-table" style="min-width:720px">
+    <thead><tr>
+      <th>Vendedor</th><th>Meta</th><th>Visitas</th><th>Contactos</th><th>Propuestas</th><th>Pedidos</th><th>Tasa cierre</th>
+    </tr></thead><tbody>
+    ${rows.map(r=>`<tr>
+      <td><div class="admin-name">${esc(r.vendedor || r.nombre || 'Sin asignar')}</div>${r.user_vendedor?`<div class="admin-muted">${esc(r.user_vendedor)}</div>`:''}</td>
+      <td class="num">${num(r.meta_visitas)}</td>
+      <td class="num">${num(r.visitas_reportadas)}</td>
+      <td class="num">${num(r.contactos_efectivos)}</td>
+      <td class="num">${num(r.propuestas)}</td>
+      <td class="num">${num(r.pedidos)}</td>
+      <td class="num">${rateHtml(r.tasa_cierre)}</td>
+    </tr>`).join('')}
+    </tbody></table></div>`;
+}
+
+function renderTablaClientes(rows) {
+  const el=document.getElementById('admin-clientes');
+  if(!rows.length){ el.innerHTML=emptyAdmin('🏢','No hay clientes con actividad en el período.'); return; }
+  el.innerHTML=`<div class="admin-table-wrap"><table class="admin-table" style="min-width:720px">
+    <thead><tr>
+      <th>Cliente</th><th>Visitas</th><th>Contactos</th><th>Propuestas</th><th>Pedidos</th><th>Tasa cierre</th>
+    </tr></thead><tbody>
+    ${rows.map(r=>`<tr>
+      <td><div class="admin-name">${esc(r.razon_social || r.cliente || 'Sin cliente')}</div>${r.establecimiento?`<div class="admin-muted">${esc(r.establecimiento)}</div>`:''}</td>
+      <td class="num">${num(r.visitas_reportadas)}</td>
+      <td class="num">${num(r.contactos_efectivos)}</td>
+      <td class="num">${num(r.propuestas)}</td>
+      <td class="num">${num(r.pedidos)}</td>
+      <td class="num">${rateHtml(r.tasa_cierre)}</td>
+    </tr>`).join('')}
+    </tbody></table></div>`;
+}
+
+function rateHtml(v) {
+  const n=parseFloat(v)||0;
+  const c=n>=50?'good':n>=25?'mid':'low';
+  return `<span class="admin-rate ${c}">${pct(n)}</span>`;
+}
+function emptyAdmin(icon,msg){ return `<div class="admin-empty"><div class="ico">${icon}</div>${esc(msg)}</div>`; }
+function setText(id,v){const e=document.getElementById(id);if(e)e.textContent=v;}
+function num(v){const n=parseFloat(v);return isFinite(n)?Math.round(n).toLocaleString('es-VE'): '0';}
+function pct(v){const n=parseFloat(v);return (isFinite(n)?n:0).toLocaleString('es-VE',{minimumFractionDigits:0,maximumFractionDigits:1})+'%';}
 
 // ════════════════════════════════════════════════════════════
 //  UTILS
