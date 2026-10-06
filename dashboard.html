@@ -99,12 +99,6 @@ header{
 .up{color:var(--verde);font-weight:700}
 .dn{color:var(--alerta);font-weight:700}
 
-/* barra de progreso en KPI cumplimiento */
-.prog-bg{width:100%;background:var(--light-bg);height:5px;border-radius:3px;margin-top:4px;overflow:hidden}
-.prog-fill{height:100%;border-radius:3px;background:var(--verde);transition:width .6s ease}
-.prog-fill.warn{background:var(--naranja)}
-.prog-fill.danger{background:var(--alerta)}
-
 /* ── CARD BOX ────────────────────────────────────────────────── */
 .card-box{
   background:var(--white);border-radius:var(--r);padding:18px;
@@ -134,15 +128,6 @@ tr:hover td{background:var(--sidebar-hover)}
 .badge.rojo{background:var(--rojo-xs);color:#DC2626}
 .badge.azul{background:var(--azul-xs);color:var(--azul)}
 .badge.gris{background:var(--light-bg);color:var(--gris)}
-
-/* ── PRONÓSTICO ──────────────────────────────────────────────── */
-.pron-block{
-  background:var(--light-bg);padding:10px 14px;border-radius:var(--r);
-  border-left:3px solid var(--rojo);
-}
-.pron-label{font-size:0.63rem;color:var(--gris);text-transform:uppercase;font-weight:600;margin-bottom:3px}
-.pron-val{font-family:'League Spartan',sans-serif;font-size:1.15rem;font-weight:700;color:var(--text-dark)}
-.pron-sub{font-size:0.65rem;font-weight:600}
 
 /* ── BLOQUE IA ───────────────────────────────────────────────── */
 .fila-ia{
@@ -277,19 +262,11 @@ footer strong{color:var(--text-dark)}
       <div class="kpi-foot"><span id="kpi-pedidos-sub">Órdenes confirmadas</span></div>
     </div>
 
-    <div class="kpi-card naranja-accent">
-      <div class="kpi-label">% Cumplimiento Meta</div>
-      <div class="kpi-value" id="kpi-cumpl">—</div>
-      <div class="prog-bg">
-        <div class="prog-fill" id="prog-cumpl" style="width:0%"></div>
-      </div>
-      <div class="kpi-foot"><span id="kpi-cumpl-sub">vs meta del mes</span></div>
-    </div>
 
   </section>
 
-  <!-- ── FILA 2: Evolución + Vendedores ───────────────────── -->
-  <section class="grid-2col">
+  <!-- ── FILA 2: Evolución de Ventas ───────────────────────── -->
+  <section>
 
     <div class="card-box">
       <div class="card-title">
@@ -301,15 +278,7 @@ footer strong{color:var(--text-dark)}
       </div>
     </div>
 
-    <div class="card-box">
-      <div class="card-title">
-        Ventas por Vendedor
-        <span>Mes en curso</span>
-      </div>
-      <div style="height:240px;position:relative">
-        <canvas id="chartVendedores"></canvas>
-      </div>
-    </div>
+
 
   </section>
 
@@ -320,7 +289,7 @@ footer strong{color:var(--text-dark)}
     <div class="card-box">
       <div class="card-title">
         Ranking de Asesores Comerciales
-        <span>Facturación vs. meta — mes actual</span>
+        <span>Facturación — mes actual</span>
       </div>
       <div class="tbl-wrap">
         <table>
@@ -330,11 +299,11 @@ footer strong{color:var(--text-dark)}
               <th>Asesor</th>
               <th>Facturado</th>
               <th>Cajas</th>
-              <th>% Meta</th>
+              
             </tr>
           </thead>
           <tbody id="tbodyVendedores">
-            <tr><td colspan="5" style="text-align:center;padding:18px;color:var(--gris)">Cargando...</td></tr>
+            <tr><td colspan="4" style="text-align:center;padding:18px;color:var(--gris)">Cargando...</td></tr>
           </tbody>
         </table>
       </div>
@@ -358,53 +327,9 @@ footer strong{color:var(--text-dark)}
             </tr>
           </thead>
           <tbody id="tbodyClientes">
-            <tr><td colspan="5" style="text-align:center;padding:18px;color:var(--gris)">Cargando...</td></tr>
+            <tr><td colspan="4" style="text-align:center;padding:18px;color:var(--gris)">Cargando...</td></tr>
           </tbody>
         </table>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- ── FILA 4: Embudo + Pronóstico ──────────────────────── -->
-  <section class="grid-even">
-
-    <div class="card-box">
-      <div class="card-title">
-        Embudo Comercial — 5 Etapas
-        <span>Clientes por etapa activa</span>
-      </div>
-      <div style="height:220px;position:relative">
-        <canvas id="chartEmbudo"></canvas>
-      </div>
-    </div>
-
-    <div class="card-box">
-      <div class="card-title">
-        Pronóstico de Ventas
-        <span>Run-Rate y GAP del mes</span>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:10px;justify-content:center;flex:1">
-
-        <div class="pron-block" style="border-left-color:var(--rojo)">
-          <div class="pron-label">Proyección cierre (Run-Rate)</div>
-          <div class="pron-val" id="pron-runrate">—</div>
-          <div class="pron-sub" id="pron-runrate-sub" style="color:var(--gris)"></div>
-        </div>
-
-        <div class="pron-block" style="border-left-color:var(--naranja)">
-          <div class="pron-label">Ritmo diario requerido</div>
-          <div class="pron-val" id="pron-ritmo">—</div>
-          <div class="pron-sub" style="color:var(--naranja)">Para cumplir la meta</div>
-        </div>
-
-        <div class="pron-block" style="border-left-color:var(--alerta)">
-          <div class="pron-label">Brecha comercial (GAP)</div>
-          <div class="pron-val" id="pron-gap">—</div>
-          <div class="pron-sub" id="pron-gap-sub" style="color:var(--alerta)">Faltante al cierre</div>
-        </div>
-
-        <div class="last-update" id="last-update"></div>
       </div>
     </div>
 
@@ -441,8 +366,6 @@ const API = 'https://script.google.com/macros/s/AKfycbyludOrnVw1jSCYJUWELTjPjhuR
 let sesion      = null;
 let esDirectivo = false;
 let chartEv     = null;
-let chartVend   = null;
-let chartEmb    = null;
 
 // ════════════════════════════════════════════════════════════
 //  INIT
@@ -483,133 +406,63 @@ async function cargarTodo() {
   // Correr todas las cargas en paralelo para mayor velocidad
   await Promise.allSettled([
     cargarDashboard(),
-    cargarEmbudo(),
     cargarRankings(),
   ]);
 }
 
 // ════════════════════════════════════════════════════════════
-//  1. DASHBOARD PRINCIPAL — action=dashboard
-//     Devuelve: ventasHoy, ventasSemana, ventasMes, cajasHoy,
-//     cajasSemana, cajasMes, pedidosHoy, pedidosMes,
-//     ticketPromedio, pronosticoMes, metaMes, cumplimientoPct,
-//     porVendedor{}, tendencia[]
+//  1. DASHBOARD PRINCIPAL — datos desde PEDIDOS_RAW vía action=ventas
 // ════════════════════════════════════════════════════════════
 async function cargarDashboard() {
   try {
-    let url = API + '?action=dashboard';
-    // Vendedor ve solo su propia actividad
-    if (!esDirectivo && sesion.vendedor_id) {
-      url += '&vendedor=' + encodeURIComponent(sesion.vendedor_id);
-    }
-
+    let url = API + '?action=ventas&limite=5000';
+    if (!esDirectivo && sesion.vendedor_id) url += '&vendedor=' + encodeURIComponent(sesion.vendedor_id);
     const r = await fetch(url, { redirect: 'follow' });
     const d = await r.json();
-    if (!d.ok) throw new Error(d.msg);
+    if (!d.ok || !Array.isArray(d.data)) throw new Error(d.msg || 'No se recibieron pedidos');
 
-    const D = d.data;
+    // Toda la información del Dashboard se calcula exclusivamente desde PEDIDOS_RAW.
+    const pedidos = d.data;
+    const ahora = new Date();
+    const hoy = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
+    const inicioMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1);
+    const inicioSemana = new Date(hoy);
+    const diaSemana = inicioSemana.getDay();
+    inicioSemana.setDate(inicioSemana.getDate() - (diaSemana === 0 ? 6 : diaSemana - 1));
+    inicioSemana.setHours(0,0,0,0);
+    const parseFecha = valor => {
+      const txt = String(valor || '').trim(); if (!txt) return null;
+      if (/^\d{4}-\d{2}-\d{2}/.test(txt)) { const [y,m,dd] = txt.slice(0,10).split('-').map(Number); return new Date(y,m-1,dd); }
+      const p = txt.split(/[\/-]/).map(Number);
+      if (p.length === 3 && p[2] > 1000) return new Date(p[2],p[1]-1,p[0]);
+      const f = new Date(txt); return isNaN(f) ? null : f;
+    };
+    const num = v => Number(String(v ?? 0).replace(/[^0-9.-]/g,'')) || 0;
+    const registros = pedidos.map(p => ({...p,_fecha:parseFecha(p.fecha)})).filter(p => p._fecha);
+    const delDia = registros.filter(p => p._fecha >= hoy && p._fecha < new Date(hoy.getTime()+86400000));
+    const semana = registros.filter(p => p._fecha >= inicioSemana && p._fecha <= ahora);
+    const mes = registros.filter(p => p._fecha >= inicioMes && p._fecha <= ahora);
+    const total = arr => arr.reduce((a,p) => a + num(p.total_usd), 0);
+    const cajas = arr => arr.reduce((a,p) => a + num(p.total_cajas), 0);
+    const ventasMes = total(mes), cajasMes = cajas(mes), pedidosMes = mes.length;
+    const ticket = pedidosMes ? ventasMes / pedidosMes : 0;
 
-    // ── KPIs ───────────────────────────────────────────────
-    set('kpi-hoy',    '$' + fmt(D.ventasHoy));
-    set('kpi-hoy-sub', D.pedidosHoy + ' pedido' + (D.pedidosHoy !== 1 ? 's' : '') + ' hoy');
+    set('kpi-hoy','$'+fmt(total(delDia))); set('kpi-hoy-sub',delDia.length+' pedido'+(delDia.length!==1?'s':'')+' hoy');
+    set('kpi-sem','$'+fmt(total(semana))); set('kpi-sem-sub',fmt(cajas(semana))+' cajas esta semana');
+    set('kpi-mes','$'+fmt(ventasMes)); set('kpi-mes-sub','Ticket prom. $'+fmt(ticket));
+    set('kpi-cajas',fmt(cajasMes)); set('kpi-cajas-sub',cajasMes===1?'caja despachada':'cajas despachadas');
+    set('kpi-pedidos',pedidosMes); set('kpi-pedidos-sub',pedidosMes===1?'orden confirmada':'órdenes confirmadas');
 
-    set('kpi-sem',    '$' + fmt(D.ventasSemana));
-    set('kpi-sem-sub', fmt(D.cajasSemana) + ' cajas esta semana');
-
-    set('kpi-mes',    '$' + fmt(D.ventasMes));
-    set('kpi-mes-sub', 'Ticket prom. $' + fmt(D.ticketPromedio));
-
-    set('kpi-cajas',    fmt(D.cajasMes));
-    set('kpi-cajas-sub', D.cajasMes === 1 ? 'caja despachada' : 'cajas despachadas');
-
-    set('kpi-pedidos',    D.pedidosMes);
-    set('kpi-pedidos-sub', D.pedidosMes === 1 ? 'orden confirmada' : 'órdenes confirmadas');
-
-    // Cumplimiento
-    const pct    = D.cumplimientoPct !== null ? D.cumplimientoPct : 0;
-    const hayMeta = D.metaMes > 0;
-    set('kpi-cumpl',    hayMeta ? pct + '%' : 'Sin meta');
-    set('kpi-cumpl-sub', hayMeta ? `$${fmt(D.ventasMes)} / $${fmt(D.metaMes)}` : 'Configura tu meta en módulo META');
-    const fill = document.getElementById('prog-cumpl');
-    fill.style.width = Math.min(pct, 100) + '%';
-    fill.className   = 'prog-fill' + (pct >= 90 ? '' : pct >= 70 ? ' warn' : ' danger');
-
-    // ── GRÁFICO EVOLUCIÓN (tendencia 4 semanas) ────────────
-    const tend = Array.isArray(D.tendencia) ? D.tendencia : [];
-    const lbls = tend.map(s => s.semana + '\n' + s.desde + '-' + s.hasta);
-    const vals = tend.map(s => s.ventas || 0);
-    renderChartEvolucion(lbls, vals);
-
-    // ── GRÁFICO VENDEDORES (porVendedor) ───────────────────
-    const pv    = D.porVendedor || {};
-    const vends = Object.keys(pv).sort((a,b) => pv[b] - pv[a]).slice(0, 8);
-    renderChartVendedores(vends, vends.map(v => pv[v]));
-
-    // ── PRONÓSTICO ─────────────────────────────────────────
-    const runRate = D.pronosticoMes || 0;
-    const meta    = D.metaMes       || 0;
-    const gap     = Math.max(0, meta - D.ventasMes);
-    const hoy     = new Date();
-    const diasMes = new Date(hoy.getFullYear(), hoy.getMonth()+1, 0).getDate();
-    const diasRest= diasMes - hoy.getDate();
-    const ritmo   = diasRest > 0 && meta > 0 ? (gap / diasRest) : 0;
-
-    set('pron-runrate', '$' + fmt(runRate));
-    const pctRun = meta > 0 ? Math.round((runRate/meta)*100) : 0;
-    const subEl  = document.getElementById('pron-runrate-sub');
-    subEl.textContent  = meta > 0 ? pctRun + '% de la meta' : 'Sin meta configurada';
-    subEl.style.color  = pctRun >= 100 ? 'var(--verde)' : pctRun >= 80 ? 'var(--naranja)' : 'var(--alerta)';
-
-    set('pron-ritmo', ritmo > 0 ? '$' + fmt(Math.round(ritmo)) + ' / día' : '—');
-    set('pron-gap',   gap > 0 ? '$' + fmt(gap) : '✓ Meta superada');
-    document.getElementById('pron-gap-sub').textContent =
-      gap > 0 ? `Faltan ${diasRest} días hábiles` : '¡Felicitaciones!';
-    document.getElementById('pron-gap-sub').style.color =
-      gap > 0 ? 'var(--alerta)' : 'var(--verde)';
-
-    // ── ÚLTIMA ACTUALIZACIÓN ───────────────────────────────
-    const ua = D.ultimaActualizacion ? new Date(D.ultimaActualizacion) : new Date();
-    document.getElementById('last-update').textContent =
-      'Actualizado: ' + ua.toLocaleDateString('es-VE') + ' ' + ua.toLocaleTimeString('es-VE', {hour:'2-digit',minute:'2-digit'});
-
-    // ── BLOQUE IA ──────────────────────────────────────────
-    renderBloqueIA(D);
-
-  } catch(e) {
-    console.error('Dashboard error:', e);
-    showToast('Error al cargar el dashboard. Revisa la conexión.', 'err');
-  }
+    const semanas=[]; const lunesActual=new Date(inicioSemana);
+    for(let i=3;i>=0;i--){ const desde=new Date(lunesActual); desde.setDate(desde.getDate()-i*7); const hasta=new Date(desde); hasta.setDate(hasta.getDate()+7); const arr=registros.filter(p=>p._fecha>=desde&&p._fecha<hasta); const fin=new Date(hasta); fin.setDate(fin.getDate()-1); semanas.push({semana:'Sem. '+(4-i),desde:String(desde.getDate()).padStart(2,'0')+'/'+String(desde.getMonth()+1).padStart(2,'0'),hasta:String(fin.getDate()).padStart(2,'0')+'/'+String(fin.getMonth()+1).padStart(2,'0'),ventas:total(arr)}); }
+    renderChartEvolucion(semanas.map(x=>x.semana+'\n'+x.desde+'-'+x.hasta),semanas.map(x=>x.ventas));
+    renderBloqueIA({ventasHoy:total(delDia),ventasSemana:total(semana),ventasMes,cajasSemana:cajas(semana),pedidosHoy:delDia.length,pedidosMes,ticketPromedio:ticket});
+  } catch(e) { console.error('Dashboard error:',e); showToast('Error al cargar el dashboard. Revisa la conexión.','err'); }
 }
 
 // ════════════════════════════════════════════════════════════
-//  2. EMBUDO — action=embudo
-//     Devuelve: data[], etapas[]
-// ════════════════════════════════════════════════════════════
-async function cargarEmbudo() {
-  try {
-    let url = API + '?action=embudo';
-    if (!esDirectivo && sesion.vendedor_id) {
-      url += '&vendedor=' + encodeURIComponent(sesion.vendedor_id);
-    }
-    const r = await fetch(url, { redirect: 'follow' });
-    const d = await r.json();
-    if (!d.ok) return;
-
-    const etapas = d.etapas || ['Prospección','Contacto','Presentación','Activación','Fidelización'];
-    const data   = d.data   || [];
-
-    const conteo = etapas.map(e => data.filter(o => o.etapa === e).length);
-    renderChartEmbudo(etapas, conteo);
-
-  } catch(e) {
-    console.error('Embudo error:', e);
-  }
-}
-
-// ════════════════════════════════════════════════════════════
-//  3. RANKINGS — action=ventas (mes actual)
-//     Para clientes: agrupa pedidos por razon_social
-//     Para vendedores: usa action=metas + porVendedor del dashboard
+//  3. RANKINGS — action=ventas (PEDIDOS_RAW, mes actual)
+//     Para clientes y vendedores se agrupan los pedidos recibidos
 // ════════════════════════════════════════════════════════════
 async function cargarRankings() {
   try {
@@ -645,7 +498,7 @@ async function cargarRankings() {
 
     const tbody = document.getElementById('tbodyClientes');
     if (!topClientes.length) {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:18px;color:var(--gris)">Sin pedidos este mes.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:18px;color:var(--gris)">Sin pedidos este mes.</td></tr>';
     } else {
       tbody.innerHTML = topClientes.map(([nombre, v], i) => {
         const sem   = semaforo(v.ultima);
@@ -670,39 +523,17 @@ async function cargarRankings() {
       mapaVend[k].usd   += parseFloat(p.total_usd || 0);
     });
 
-    // Intentar traer metas para calcular % cumplimiento
-    let metasMap = {};
-    try {
-      const rm = await fetch(`${API}?action=metas&mes=${hoy.getMonth()+1}&anio=${hoy.getFullYear()}`, { redirect:'follow' });
-      const dm = await rm.json();
-      if (dm.ok && Array.isArray(dm.data)) {
-        dm.data.forEach(m => {
-          metasMap[m.vendedor] = parseFloat(m.meta_monto_usd || 0);
-        });
-      }
-    } catch(e) { /* metas no disponibles */ }
-
     const topVend = Object.entries(mapaVend)
       .sort((a,b) => b[1].usd - a[1].usd)
       .slice(0, 8);
 
     const tbodyV = document.getElementById('tbodyVendedores');
     if (!topVend.length) {
-      tbodyV.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:18px;color:var(--gris)">Sin ventas registradas este mes.</td></tr>';
+      tbodyV.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:18px;color:var(--gris)">Sin ventas registradas este mes.</td></tr>';
     } else {
-      tbodyV.innerHTML = topVend.map(([nombre, v], i) => {
-        const meta  = metasMap[nombre] || 0;
-        const pct   = meta > 0 ? Math.round((v.usd / meta) * 100) : null;
-        const bdgCls = pct === null ? 'gris' : pct >= 90 ? 'verde' : pct >= 70 ? 'amarillo' : 'rojo';
-        const bdgTxt = pct !== null ? pct + '%' : 'Sin meta';
-        return `<tr>
-          <td style="color:var(--gris);font-weight:700">${i+1}</td>
-          <td style="font-weight:700">${nombre}</td>
-          <td>$${fmt(Math.round(v.usd))}</td>
-          <td>${fmt(v.cajas)}</td>
-          <td><span class="badge ${bdgCls}">${bdgTxt}</span></td>
-        </tr>`;
-      }).join('');
+      tbodyV.innerHTML = topVend.map(([nombre, v], i) => `
+        <tr><td style="color:var(--gris);font-weight:700">${i+1}</td><td style="font-weight:700">${nombre}</td><td>$${fmt(Math.round(v.usd))}</td><td>${fmt(v.cajas)}</td></tr>
+      `).join('');
     }
 
   } catch(e) {
@@ -746,111 +577,19 @@ function renderChartEvolucion(labels, data) {
   });
 }
 
-function renderChartVendedores(labels, data) {
-  if (chartVend) chartVend.destroy();
-  const ctx = document.getElementById('chartVendedores').getContext('2d');
-  const colores = labels.map((_, i) =>
-    ['#D30000','#333333','#6B7280','#AAAAAA','#C8181E','#555','#999','#CCC'][i] || '#D30000'
-  );
-  chartVend = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels,
-      datasets: [{
-        label: 'Facturado USD',
-        data,
-        backgroundColor: colores,
-        borderRadius: 4,
-      }]
-    },
-    options: { ...CHART_OPTS }
-  });
-}
-
-function renderChartEmbudo(labels, data) {
-  if (chartEmb) chartEmb.destroy();
-  const ctx = document.getElementById('chartEmbudo').getContext('2d');
-  chartEmb = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels,
-      datasets: [{
-        label: 'Clientes en etapa',
-        data,
-        backgroundColor: '#D30000',
-        borderRadius: 4,
-      }]
-    },
-    options: {
-      ...CHART_OPTS,
-      indexAxis: 'y',
-      scales: {
-        x: { grid:{ color:'#E0E0E0' }, ticks:{ font:{ family:'Open Sans', size:10 } } },
-        y: { grid:{ display:false }, ticks:{ font:{ family:'Open Sans', size:10 } } },
-      }
-    }
-  });
-}
-
 // ════════════════════════════════════════════════════════════
 //  BLOQUE IA — análisis generado desde datos reales
 //  (sin llamada externa — lógica de negocio local)
 // ════════════════════════════════════════════════════════════
 function renderBloqueIA(D) {
-  const pct      = D.cumplimientoPct || 0;
-  const hayMeta  = D.metaMes > 0;
-  const hoy      = new Date();
-  const diasMes  = new Date(hoy.getFullYear(), hoy.getMonth()+1, 0).getDate();
-  const diasRest = diasMes - hoy.getDate();
-  const gap      = Math.max(0, (D.metaMes||0) - (D.ventasMes||0));
-
-  // Resumen ejecutivo
-  const resumen = hayMeta
-    ? `Cumplimiento del ${pct}% con $${fmt(D.ventasMes)} facturado este mes. ${
-        pct >= 100 ? 'Meta superada. Excelente desempeño.' :
-        pct >= 80  ? 'En buen ritmo para cerrar el mes.' :
-                    'Se requiere acelerar la gestión de cierre.'}`
-    : `$${fmt(D.ventasMes)} facturado este mes con ${D.pedidosMes} pedidos. Configura la meta mensual para activar el pronóstico.`;
-
-  // Alertas
-  const alertas = diasRest <= 5 && gap > 0
-    ? `Quedan ${diasRest} días para cerrar el mes con un GAP de $${fmt(gap)}. Priorizar clientes en etapa Activación y Presentación.`
-    : gap > 0
-    ? `Brecha de $${fmt(gap)} respecto a la meta. Ritmo requerido: $${fmt(Math.round(gap / Math.max(diasRest,1)))} / día.`
-    : '✓ Sin alertas críticas de cumplimiento este mes.';
-
-  // Recomendaciones
-  const recom = `Ticket promedio del mes: $${fmt(D.ticketPromedio)}. ${
-    D.ticketPromedio < 500
-      ? 'Impulsar venta cruzada con línea Torta para elevar el ticket en clientes de Activación.'
-      : 'Buen ticket promedio. Mantener cadencia de visitas y propuestas para fidelizar.'}`;
-
-  // Oportunidades (basado en pedidos de hoy vs semana)
-  const ratio = D.ventasSemana > 0 ? (D.ventasHoy / (D.ventasSemana / 7)) : 0;
-  const oport = ratio > 1.2
-    ? `Hoy está por encima del promedio semanal (${Math.round(ratio*100)}%). Buen momento para prospección en frío.`
-    : `Aprovecha los ${diasRest} días restantes. Con ${D.pedidosHoy} pedido${D.pedidosHoy!==1?'s':''} hoy, mantén el ritmo de visitas.`;
-
-  // Riesgos
-  const riesgo = `Semana actual: $${fmt(D.ventasSemana)} en ${D.cajasSemana} cajas. ${
-    D.ventasSemana < D.ventasMes / 4
-      ? 'Ritmo semanal por debajo del promedio mensual. Revisar cobertura de ruta.'
-      : 'Ritmo semanal dentro del rango esperado.'}`;
-
-  const bloques = [
-    { titulo: '📊 Resumen Ejecutivo',    texto: resumen  },
-    { titulo: '⚠️ Alertas',             texto: alertas  },
-    { titulo: '💡 Recomendaciones',      texto: recom    },
-    { titulo: '🤝 Oportunidades',        texto: oport    },
-    { titulo: '🛡️ Riesgos',             texto: riesgo   },
+  const bloques=[
+    {titulo:'📊 Resumen Ejecutivo',texto:`$${fmt(D.ventasMes)} facturado este mes con ${D.pedidosMes} pedido${D.pedidosMes!==1?'s':''}.`},
+    {titulo:'⚠️ Actividad',texto:D.ventasSemana>0?'El ritmo semanal actual es de $'+fmt(D.ventasSemana)+'.':'Aún no hay ventas registradas esta semana.'},
+    {titulo:'💡 Recomendaciones',texto:`Ticket promedio del mes: $${fmt(D.ticketPromedio)}. Mantener la cadencia comercial y priorizar oportunidades de mayor volumen.`},
+    {titulo:'🤝 Oportunidades',texto:D.pedidosHoy>0?`Hoy se registraron ${D.pedidosHoy} pedido${D.pedidosHoy!==1?'s':''} por $${fmt(D.ventasHoy)}.`:'No hay pedidos registrados hoy. Conviene reforzar la gestión comercial.'},
+    {titulo:'🛡️ Seguimiento',texto:D.ventasSemana>0?`Semana actual: $${fmt(D.ventasSemana)} en ${fmt(D.cajasSemana)} cajas.`:'Sin actividad registrada esta semana.'}
   ];
-
-  document.getElementById('iaGrid').innerHTML = bloques.map(b => `
-    <div class="ia-block">
-      <h4>${b.titulo}</h4>
-      <p>${b.texto}</p>
-    </div>
-  `).join('');
+  document.getElementById('iaGrid').innerHTML=bloques.map(b=>`<div class="ia-block"><h4>${b.titulo}</h4><p>${b.texto}</p></div>`).join('');
 }
 
 // ════════════════════════════════════════════════════════════
