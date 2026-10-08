@@ -285,17 +285,17 @@ header{background:#D30000;color:#fff;height:60px;display:flex;align-items:center
 
 <div class="card" id="sec-descuentos">
   <h2 class="card-title">Escalas de Descuento</h2>
-  <p class="hint" style="margin-bottom:18px">Configuración central de descuentos por días de crédito y volumen. El Descuento Total se calcula automáticamente: descuento por crédito + descuento por volumen.</p>
+  <p class="hint" style="margin-bottom:18px">Configura escalas independientes por canal comercial: una variable para días de crédito y otra para volumen. Crea cada escala por separado.</p>
   <div class="form-grid">
-    <div class="f"><label>Canal Comercial <span class="req">*</span></label><select id="d-canal"><option value="">— Seleccionar —</option><option value="FOOD SERVICE">FOOD SERVICE</option><option value="RETAIL">RETAIL</option><option value="AMBOS">AMBOS</option></select></div>
-    <div class="f"><label>Tipo de Cliente <span class="req">*</span></label><select id="d-tipo"><option value="">— Seleccionar —</option><option value="RESTAURANTE">RESTAURANTE</option><option value="SUPERMERCADO">SUPERMERCADO</option><option value="BODEGÓN">BODEGÓN</option><option value="PANADERÍA">PANADERÍA</option><option value="DISTRIBUIDOR">DISTRIBUIDOR</option><option value="OTROS">OTROS</option><option value="TODOS">TODOS</option></select></div>
-    <div class="f"><label>Producto <span class="req">*</span></label><select id="d-producto"><option value="TODOS">TODOS</option></select></div>
-    <div class="f"><label>Días de Crédito <span class="req">*</span></label><input type="number" id="d-dias" min="0" step="1" placeholder="Ej: 30"></div>
-    <div class="f"><label>Descuento por Días (%)</label><input type="number" id="d-desc-credito" min="0" step="0.01" value="0" oninput="calcularDescuentoTotal()"></div>
-    <div class="f"><label>Desde Volumen (cajas)</label><input type="number" id="d-vol-desde" min="0" step="1" value="0"></div>
-    <div class="f"><label>Hasta Volumen (cajas)</label><input type="number" id="d-vol-hasta" min="0" step="1" placeholder="Sin límite"></div>
-    <div class="f"><label>Descuento por Volumen (%)</label><input type="number" id="d-desc-volumen" min="0" step="0.01" value="0" oninput="calcularDescuentoTotal()"></div>
-    <div class="f"><label>Descuento TOTAL (%)</label><input type="number" id="d-desc-total" value="0.00" readonly style="font-weight:800;background:#F3F4F6"></div>
+    <div class="f"><label>Canal Comercial <span class="req">*</span></label><select id="d-canal" onchange="cargarProductosDescuento()"><option value="">— Seleccionar —</option><option value="FOOD SERVICE">FOOD SERVICE</option><option value="RETAIL">RETAIL</option></select></div>
+    <div class="f"><label>Variable de la Escala <span class="req">*</span></label><select id="d-variable" onchange="cambiarVariableDescuento()"><option value="DIAS">Días de crédito</option><option value="VOLUMEN">Volumen</option></select></div>
+    <div class="f"><label>Producto <span class="req">*</span></label><select id="d-producto"><option value="TODOS">TODOS</option></select><span class="hint">Solo se mostrarán productos del canal seleccionado.</span></div>
+    <div class="f" id="campo-dias"><label>Días de Crédito <span class="req">*</span></label><input type="number" id="d-dias" min="0" step="1" placeholder="Ej: 30"></div>
+    <div class="f" id="campo-desc-credito"><label>Descuento por Días (%) <span class="req">*</span></label><input type="number" id="d-desc-credito" min="0" step="0.01" value="0" oninput="calcularDescuentoTotal()"></div>
+    <div class="f" id="campo-vol-desde" style="display:none"><label>Desde Volumen (cajas) <span class="req">*</span></label><input type="number" id="d-vol-desde" min="0" step="1" value="0"></div>
+    <div class="f" id="campo-vol-hasta" style="display:none"><label>Hasta Volumen (cajas)</label><input type="number" id="d-vol-hasta" min="0" step="1" placeholder="Sin límite"></div>
+    <div class="f" id="campo-desc-volumen" style="display:none"><label>Descuento por Volumen (%) <span class="req">*</span></label><input type="number" id="d-desc-volumen" min="0" step="0.01" value="0" oninput="calcularDescuentoTotal()"></div>
+    <div class="f"><label>Descuento de esta escala (%)</label><input type="number" id="d-desc-total" value="0.00" readonly style="font-weight:800;background:#F3F4F6"></div>
     <div class="f"><label>Estado</label><select id="d-estado"><option value="activo">Activo</option><option value="inactivo">Inactivo</option></select></div>
     <div class="f"><label>Fecha Inicio</label><input type="date" id="d-fecha-inicio"></div>
     <div class="f"><label>Fecha Fin</label><input type="date" id="d-fecha-fin"><span class="hint">Déjala vacía si no tiene fecha de vencimiento.</span></div>
@@ -303,8 +303,8 @@ header{background:#D30000;color:#fff;height:60px;display:flex;align-items:center
   <button class="btn-primary" id="btn-descuento" onclick="guardarEscalaDescuento()"><span id="txt-descuento">Guardar Escala</span><div class="sp" id="sp-descuento"></div></button>
   <div class="alert ok" id="ok-descuento"></div><div class="alert err" id="err-descuento"></div>
   <hr class="divider">
-  <h3 style="font-size:.85rem;margin-bottom:12px">Escalas registradas</h3>
-  <div class="table-wrap"><table><thead><tr><th>Canal</th><th>Tipo</th><th>Producto</th><th>Días</th><th>Desc. Crédito</th><th>Rango Volumen</th><th>Desc. Volumen</th><th>Total</th><th>Estado</th><th>Vigencia</th></tr></thead><tbody id="tabla-descuentos"><tr><td colspan="10" style="text-align:center;padding:25px">Cargando escalas…</td></tr></tbody></table></div>
+  <h3 style="font-size:.85rem;margin-bottom:12px">Escalas registradas por canal y variable</h3>
+  <div class="table-wrap"><table><thead><tr><th>Canal</th><th>Variable</th><th>Producto</th><th>Días</th><th>Desc. Crédito</th><th>Rango Volumen</th><th>Desc. Volumen</th><th>Descuento escala</th><th>Estado</th><th>Vigencia</th></tr></thead><tbody id="tabla-descuentos"><tr><td colspan="10" style="text-align:center;padding:25px">Cargando escalas…</td></tr></tbody></table></div>
 </div>
 </main>
 <footer>&copy; 2026 Sistema Comercial Casabe Real (SCCR v2.5.0)</footer>
@@ -323,7 +323,7 @@ window.addEventListener('DOMContentLoaded',async()=>{
  if(rol==='gerente' || rol==='admin'){ document.querySelectorAll('.dir-only').forEach(e=>e.style.display='inline-block'); }
  if(rol==='admin'){ document.querySelectorAll('.admin-only').forEach(e=>e.style.display='inline-block'); }
  cargarUsuarios(); await cargarVendedores(); cargarProductosDescuento(); cargarEscalasDescuento();
- const hoy=new Date().toISOString().split('T')[0];document.getElementById('m-fecha-desde').value=hoy;document.getElementById('m-fecha-hasta').value=hoy;document.getElementById('d-fecha-inicio').value=hoy;actualizarTiposCliente();calcularDescuentoTotal();
+ const hoy=new Date().toISOString().split('T')[0];document.getElementById('m-fecha-desde').value=hoy;document.getElementById('m-fecha-hasta').value=hoy;document.getElementById('d-fecha-inicio').value=hoy;actualizarTiposCliente();cambiarVariableDescuento();calcularDescuentoTotal();
 });
 function cerrarSesion(){SCCR.cerrarSesion()}
 const SECCIONES=['usuarios','clientes','reg-productos','metas','descuentos'];
@@ -588,19 +588,21 @@ async function guardarRegistroProducto(){
 }
 
 function onVendedorChange(){_filasMeta=[];_productosMeta=[];document.getElementById('thead-metas-clientes').innerHTML='<tr><th>Cliente</th><th>Tipo</th><th>Productos / cajas</th><th>Total Cajas</th><th>Total USD</th></tr>';document.getElementById('tbody-metas-clientes').innerHTML='<tr><td colspan="5" style="text-align:center;padding:30px">Haz clic en Cargar Clientes.</td></tr>';actualizarTotales()}
-function normalizarProducto(p,i){return{id_producto:String(p.id_producto??p.id??`PROD-${i+1}`),nombre:String(p.nombre??p.producto??p.descripcion??`Producto ${i+1}`),precio_usd:Number(p.precio_usd??p.precio??0)||0,unidades_por_caja:p.unidades_por_caja??p.unidades??'',lleva_etiqueta:p.lleva_etiqueta??'',tipo_caja:p.tipo_caja??'',canal:String(p.canal||p.canal_comercial||'').toUpperCase(),estado:String(p.estado??'activo').toLowerCase()}}
-function normalizarCliente(c,i){return{id_cliente:String(c.id_cliente??c.id??`CLI-${i+1}`),nombre:String(c.razon_social??c.nombre??c.cliente??c.establecimiento??'—'),vendedor_asignado:String(c.vendedor_asignado??c.vendedor_id??c.vendedor??'').trim()}}
+function normalizarProducto(p,i){return{id_producto:String(p.id_producto??p.id??`PROD-${i+1}`),nombre:String(p.nombre??p.producto??p.descripcion??`Producto ${i+1}`),precio_usd:Number(p.precio_usd??p.precio??0)||0,unidades_por_caja:p.unidades_por_caja??p.unidades??'',lleva_etiqueta:p.lleva_etiqueta??'',tipo_caja:p.tipo_caja??'',canal:String(p.canal||p.canal_comercial||'').toUpperCase().replace('HORECA','FOOD SERVICE'),estado:String(p.estado??'activo').toLowerCase()}}
+function normalizarCliente(c,i){return{id_cliente:String(c.id_cliente??c.id??`CLI-${i+1}`),nombre:String(c.razon_social??c.nombre??c.cliente??c.establecimiento??'—'),vendedor_asignado:String(c.vendedor_asignado??c.vendedor_id??c.vendedor??'').trim(),sucursal:String(c.sucursal??c.zona??'').trim(),canal_comercial:String(c.canal_comercial??c.canal??'').trim().toUpperCase(),tipo:String(c.tipo??c.tipos_cliente??'').trim()}}
 async function cargarClientesMeta(){
- const vendedor=document.getElementById('m-vendedor').value;if(!vendedor)return showAlert('meta','err','Selecciona un vendedor primero.');
+ const vendedor=document.getElementById('m-vendedor').value,sucursal=document.getElementById('m-sucursal').value.trim(),canal=document.getElementById('m-canal').value;
+ if(!vendedor||!sucursal||!canal)return showAlert('meta','err','Selecciona Vendedor, Sucursal y Canal Comercial antes de cargar clientes.');
  const tb=document.getElementById('tbody-metas-clientes');setLoading('cargar-clientes-meta',true);tb.innerHTML='<tr><td colspan="5" style="text-align:center;padding:30px">Cargando clientes y productos…</td></tr>';_filasMeta=[];_productosMeta=[];
  try{
   const [rc,rp]=await Promise.all([fetch(API+'?action=clientes',{redirect:'follow'}),fetch(API+'?action=getProductos',{redirect:'follow'})]),dc=await rc.json(),dp=await rp.json();
   const clientes=Array.isArray(dc.data)?dc.data:Array.isArray(dc.clientes)?dc.clientes:[],productos=Array.isArray(dp.data)?dp.data:Array.isArray(dp.productos)?dp.productos:[];
-  const vn=vendedor.trim().toLowerCase();
-  _filasMeta=clientes.map(normalizarCliente).filter(c=>c.nombre!=='—'&&c.vendedor_asignado.trim().toLowerCase()===vn);
-  _productosMeta=productos.map(normalizarProducto).filter(p=>p.estado!=='inactivo'&&p.nombre!=='—'&&(!document.getElementById('m-canal').value||document.getElementById('m-canal').value==='AMBOS'||p.canal===document.getElementById('m-canal').value));
-  if(!_productosMeta.length)return tb.innerHTML='<tr><td colspan="5" style="text-align:center;padding:30px">No hay productos activos registrados en PRODUCTOS.</td></tr>';
-  if(!_filasMeta.length)return tb.innerHTML='<tr><td colspan="5" style="text-align:center;padding:30px">No hay clientes asignados a este vendedor en CLIENTES.</td></tr>';
+  const vn=vendedor.trim().toLowerCase(),sn=sucursal.toLowerCase(),cn=canal.toUpperCase();
+  const canalCoincide=v=>{const cv=String(v||'').toUpperCase().trim();return cv===cn||cv==='AMBOS'||(cn==='AMBOS'&&(cv==='FOOD SERVICE'||cv==='RETAIL'));};
+  _filasMeta=clientes.map(normalizarCliente).filter(c=>c.nombre!=='—'&&c.vendedor_asignado.trim().toLowerCase()===vn&&c.sucursal.toLowerCase()===sn&&canalCoincide(c.canal_comercial));
+  _productosMeta=productos.map(normalizarProducto).filter(p=>p.estado!=='inactivo'&&p.nombre!=='—'&&(cn==='AMBOS'||p.canal===cn));
+  if(!_productosMeta.length)return tb.innerHTML='<tr><td colspan="5" style="text-align:center;padding:30px">No hay productos activos para el canal comercial seleccionado.</td></tr>';
+  if(!_filasMeta.length)return tb.innerHTML='<tr><td colspan="5" style="text-align:center;padding:30px">No hay clientes asignados a este vendedor, sucursal y canal comercial.</td></tr>';
   renderTablaClientes();
  }catch(e){console.error(e);tb.innerHTML=`<tr><td colspan="5" style="text-align:center;color:var(--rojo);padding:30px">${esc(e.message||'Error al cargar datos.')}</td></tr>`}finally{setLoading('cargar-clientes-meta',false)}
 }
@@ -980,47 +982,62 @@ function actualizarTiposCliente(){
 }
 
 async function cargarProductosDescuento(){
-  const sel=document.getElementById('d-producto');
-  if(!sel)return;
+  const sel=document.getElementById('d-producto');if(!sel)return;
+  const canal=(document.getElementById('d-canal')?.value||'').toUpperCase();
+  const seleccionado=sel.value||'TODOS';
+  sel.innerHTML='<option value="TODOS">TODOS</option>';
+  if(!canal)return;
   try{
     const r=await fetch(API+'?action=getProductos',{redirect:'follow'}),d=await r.json();
     const productos=Array.isArray(d.data)?d.data:Array.isArray(d.productos)?d.productos:[];
-    sel.innerHTML='<option value="TODOS">TODOS</option>'+productos.filter(p=>String(p.estado||'activo').toLowerCase()!=='inactivo').map(p=>`<option value="${esc(p.id_producto||p.id||p.nombre)}">${esc(p.nombre||p.producto||p.id_producto)}</option>`).join('');
+    const normalizados=productos.map(normalizarProducto).filter(p=>p.estado!=='inactivo'&&p.canal===canal);
+    sel.innerHTML='<option value="TODOS">TODOS</option>'+normalizados.map(p=>`<option value="${esc(p.id_producto)}">${esc(p.nombre)}</option>`).join('');
+    if(Array.from(sel.options).some(o=>o.value===seleccionado))sel.value=seleccionado;
   }catch(e){console.warn('No se pudieron cargar productos para descuentos:',e)}
 }
-
-function calcularDescuentoTotal(){
-  const credito=Number(document.getElementById('d-desc-credito')?.value)||0;
-  const volumen=Number(document.getElementById('d-desc-volumen')?.value)||0;
-  const total=document.getElementById('d-desc-total');
-  if(total)total.value=(credito+volumen).toFixed(2);
+function cambiarVariableDescuento(){
+  const variable=document.getElementById('d-variable').value;
+  const porDias=variable==='DIAS';
+  ['campo-dias','campo-desc-credito'].forEach(id=>document.getElementById(id).style.display=porDias?'':'none');
+  ['campo-vol-desde','campo-vol-hasta','campo-desc-volumen'].forEach(id=>document.getElementById(id).style.display=porDias?'none':'');
+  document.getElementById('d-desc-total').value=(Number(porDias?document.getElementById('d-desc-credito').value:document.getElementById('d-desc-volumen').value)||0).toFixed(2);
+  document.getElementById('txt-descuento').textContent=porDias?'Guardar Escala por Días':'Guardar Escala por Volumen';
 }
-
+function calcularDescuentoTotal(){
+  const variable=document.getElementById('d-variable')?.value||'DIAS';
+  const valor=Number(variable==='DIAS'?document.getElementById('d-desc-credito')?.value:document.getElementById('d-desc-volumen')?.value)||0;
+  const total=document.getElementById('d-desc-total');if(total)total.value=valor.toFixed(2);
+}
 async function cargarEscalasDescuento(){
-  const tb=document.getElementById('tabla-descuentos');
-  if(!tb)return;
+  const tb=document.getElementById('tabla-descuentos');if(!tb)return;
   try{
     const r=await fetch(API+'?action=getEscalasDescuento',{redirect:'follow'}),d=await r.json();
-    if(!d.ok){tb.innerHTML='<tr><td colspan="10" style="text-align:center;padding:25px;color:var(--gris)">Las escalas quedarán disponibles al activar su estructura en el Script.</td></tr>';return;}
+    if(!d.ok){tb.innerHTML='<tr><td colspan="10" style="text-align:center;padding:25px;color:var(--gris)">No se pudieron cargar las escalas.</td></tr>';return;}
     const a=Array.isArray(d.data)?d.data:[];
-    tb.innerHTML=a.length?a.map(x=>`<tr><td>${esc(x.canal||'')}</td><td>${esc(x.tipo_cliente||'')}</td><td>${esc(x.producto_nombre||x.producto||'TODOS')}</td><td>${esc(x.dias_credito||0)}</td><td>${Number(x.descuento_credito||0).toFixed(2)}%</td><td>${esc(x.volumen_desde||0)} – ${x.volumen_hasta?esc(x.volumen_hasta):'∞'}</td><td>${Number(x.descuento_volumen||0).toFixed(2)}%</td><td style="font-weight:800">${Number(x.descuento_total||0).toFixed(2)}%</td><td>${esc(x.estado||'')}</td><td>${esc(x.fecha_inicio||'')} ${x.fecha_fin?'→ '+esc(x.fecha_fin):''}</td></tr>`).join(''):'<tr><td colspan="10" style="text-align:center;padding:25px">No hay escalas registradas.</td></tr>';
-  }catch(e){tb.innerHTML='<tr><td colspan="10" style="text-align:center;padding:25px;color:var(--gris)">Las escalas quedarán disponibles al activar su estructura en el Script.</td></tr>'}
+    tb.innerHTML=a.length?a.map(x=>{const dias=Number(x.dias_credito||0),dc=Number(x.descuento_credito??x.descuento_dias_pct??0),dv=Number(x.descuento_volumen??x.descuento_volumen_pct??0),esDias=(dias>0||dc>0)&&!(dv>0||Number(x.volumen_desde||x.desde_volumen||0)>0||x.volumen_hasta||x.hasta_volumen);return `<tr><td>${esc(x.canal||'')}</td><td>${esDias?'Días de crédito':'Volumen'}</td><td>${esc(x.producto_nombre||x.producto||'TODOS')}</td><td>${dias}</td><td>${dc.toFixed(2)}%</td><td>${esc(x.volumen_desde??x.desde_volumen??0)} – ${(x.volumen_hasta??x.hasta_volumen)?esc(x.volumen_hasta??x.hasta_volumen):'∞'}</td><td>${dv.toFixed(2)}%</td><td style="font-weight:800">${(esDias?dc:dv).toFixed(2)}%</td><td>${esc(x.estado||'')}</td><td>${esc(x.fecha_inicio||'')} ${x.fecha_fin?'→ '+esc(x.fecha_fin):''}</td></tr>`}).join(''):'<tr><td colspan="10" style="text-align:center;padding:25px">No hay escalas registradas.</td></tr>';
+  }catch(e){tb.innerHTML='<tr><td colspan="10" style="text-align:center;padding:25px;color:var(--gris)">No se pudieron cargar las escalas.</td></tr>'}
 }
-
 async function guardarEscalaDescuento(){
-  const canal=document.getElementById('d-canal').value,tipo_cliente=document.getElementById('d-tipo').value,producto=document.getElementById('d-producto').value,dias_credito=Number(document.getElementById('d-dias').value),descuento_credito=Number(document.getElementById('d-desc-credito').value)||0,volumen_desde=Number(document.getElementById('d-vol-desde').value)||0,volumen_hasta=document.getElementById('d-vol-hasta').value,descuento_volumen=Number(document.getElementById('d-desc-volumen').value)||0,descuento_total=descuento_credito+descuento_volumen,estado=document.getElementById('d-estado').value,fecha_inicio=document.getElementById('d-fecha-inicio').value,fecha_fin=document.getElementById('d-fecha-fin').value;
-  if(!canal||!tipo_cliente||!producto||Number.isNaN(dias_credito))return showAlert('descuento','err','Completa Canal, Tipo de Cliente, Producto y Días de Crédito.');
+  const canal=document.getElementById('d-canal').value,variable=document.getElementById('d-variable').value,producto=document.getElementById('d-producto').value,estado=document.getElementById('d-estado').value,fecha_inicio=document.getElementById('d-fecha-inicio').value,fecha_fin=document.getElementById('d-fecha-fin').value;
+  const dias_credito=variable==='DIAS'?Number(document.getElementById('d-dias').value):0;
+  const descuento_credito=variable==='DIAS'?(Number(document.getElementById('d-desc-credito').value)||0):0;
+  const volumen_desde=variable==='VOLUMEN'?(Number(document.getElementById('d-vol-desde').value)||0):0;
+  const volumen_hasta=variable==='VOLUMEN'?document.getElementById('d-vol-hasta').value:'';
+  const descuento_volumen=variable==='VOLUMEN'?(Number(document.getElementById('d-desc-volumen').value)||0):0;
+  const descuento_total=variable==='DIAS'?descuento_credito:descuento_volumen;
+  if(!canal||!producto)return showAlert('descuento','err','Selecciona Canal Comercial y Producto.');
+  if(variable==='DIAS'&&(!document.getElementById('d-dias').value||dias_credito<0))return showAlert('descuento','err','Indica los días de crédito de la escala.');
+  if(variable==='VOLUMEN'&&(!document.getElementById('d-vol-desde').value||volumen_desde<0))return showAlert('descuento','err','Indica el volumen mínimo de la escala.');
   if(volumen_hasta!==''&&Number(volumen_hasta)<volumen_desde)return showAlert('descuento','err','El volumen hasta debe ser igual o mayor al volumen desde.');
   setLoading('descuento',true);
   try{
-    const payload={action:'crearEscalaDescuento',canal,tipo_cliente,producto,dias_credito,descuento_credito,volumen_desde,volumen_hasta:volumen_hasta===''?null:Number(volumen_hasta),descuento_volumen,descuento_total,estado,fecha_inicio,fecha_fin};
+    const payload={action:'crearEscalaDescuento',canal,tipo_cliente:'TODOS',producto,dias_credito,descuento_credito,volumen_desde,volumen_hasta:volumen_hasta===''?null:Number(volumen_hasta),descuento_volumen,descuento_total,estado,fecha_inicio,fecha_fin,variable};
     const r=await fetch(API,{method:'POST',body:JSON.stringify(payload),redirect:'follow'}),d=JSON.parse(await r.text());
-    if(d.ok){showAlert('descuento','ok','✓ Escala de descuento guardada correctamente.');['d-canal','d-tipo','d-dias','d-desc-credito','d-vol-desde','d-vol-hasta','d-desc-volumen','d-fecha-inicio','d-fecha-fin'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});document.getElementById('d-producto').value='TODOS';document.getElementById('d-estado').value='activo';calcularDescuentoTotal();await cargarEscalasDescuento();}
-    else showAlert('descuento','err',d.msg||'El Script todavía no reconoce la acción de escalas de descuento.');
-  }catch(e){showAlert('descuento','err','El Script todavía no tiene habilitado el guardado de escalas de descuento.');}
+    if(d.ok){showAlert('descuento','ok',`✓ Escala por ${variable==='DIAS'?'días de crédito':'volumen'} guardada correctamente.`);['d-dias','d-desc-credito','d-vol-desde','d-vol-hasta','d-desc-volumen','d-fecha-fin'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});document.getElementById('d-desc-credito').value='0';document.getElementById('d-vol-desde').value='0';document.getElementById('d-desc-volumen').value='0';document.getElementById('d-producto').value='TODOS';document.getElementById('d-estado').value='activo';calcularDescuentoTotal();await cargarEscalasDescuento();}
+    else showAlert('descuento','err',d.msg||'El Script no pudo guardar la escala.');
+  }catch(e){showAlert('descuento','err','Error al guardar la escala. Verifica la conexión con el Script.');}
   finally{setLoading('descuento',false)}
 }
-
 async function guardarMeta(){
  const vendedor_id=document.getElementById('m-vendedor').value,fecha_desde=document.getElementById('m-fecha-desde').value,fecha_hasta=document.getElementById('m-fecha-hasta').value,sucursal=document.getElementById('m-sucursal').value.trim(),canal_comercial=document.getElementById('m-canal').value;
  if(!vendedor_id||!fecha_desde||!fecha_hasta||!sucursal||!canal_comercial)return showAlert('meta','err','Completa Sucursal, Canal Comercial, vendedor y fechas.');if(fecha_hasta<fecha_desde)return showAlert('meta','err','La fecha hasta debe ser igual o posterior a la fecha desde.');if(!_filasMeta.length||!_productosMeta.length)return showAlert('meta','err','Carga primero los clientes y productos.');
