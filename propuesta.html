@@ -193,13 +193,14 @@ tbody td{padding:10px 11px;vertical-align:middle}
 </nav>
 <div class="page-wrap">
   <div class="tab-bar">
-    <button class="tab-btn active" id="tab-nueva" onclick="switchTab('nueva')">➕ Nueva Propuesta</button>
+    <button class="tab-btn active" id="tab-food-service" onclick="switchTab('food-service')">➕ Nueva Propuesta FOOD SERVICE</button>
+    <button class="tab-btn" id="tab-retail" onclick="switchTab('retail')">🛒 Nueva Propuesta RETAIL</button>
     <button class="tab-btn" id="tab-listado" onclick="switchTab('listado')">📋 Listado de Propuestas <span class="badge-count" id="badge-count">0</span></button>
   </div>
 
   <!-- PANEL NUEVA -->
   <div class="panel active" id="panel-nueva">
-    <div class="sim-dark">
+    <div class="sim-dark" id="simulator-wrap">
       <div class="sec-tag">Paso 1 — Simulador de Rentabilidad</div>
       <h2 class="sec-h">Calcule la ganancia en tiempo real</h2>
       <p class="sec-sub">Ingrese los datos operativos del cliente. Los resultados se incluirán automáticamente en el PDF.</p>
@@ -208,9 +209,7 @@ tbody td{padding:10px 11px;vertical-align:middle}
           <h3>Datos de la Operación</h3>
           <label class="sim-lbl">Producto Casabe Real - Condición de pago 30 días</label>
           <select class="sim-sel" id="sim-prod" onchange="calcSim()">
-            <option value="restaurante">Tipo Restaurante ($312/caja · 1.200 uds)</option>
-            <option value="pasapalo">Tipo Pasapalo ($264/caja · 3.150 uds)</option>
-            <option value="torta">Tipo Torta ($240/caja · 320 uds)</option>
+            <option value="">Cargando productos FOOD SERVICE...</option>
           </select>
           <label class="sim-lbl">Total tiendas / locales del establecimiento</label>
           <input class="sim-inp" type="number" id="sim-tiendas" placeholder="Ej: 1" min="1" inputmode="numeric" oninput="calcSim()">
@@ -227,7 +226,7 @@ tbody td{padding:10px 11px;vertical-align:middle}
           <div class="sim-res-ttl">Proyección Mensual</div>
           <div class="sr"><span class="sr-k">Servicios / mes</span><span class="sr-v" id="sr-serv">—</span></div>
           <div class="sr"><span class="sr-k">Unidades requeridas / mes</span><span class="sr-v" id="sr-unidades">—</span></div>
-          <div class="sr"><span class="sr-k">Paquetes requeridos / mes</span><span class="sr-v" id="sr-paq">—</span></div>
+          <div class="sr"><span class="sr-k">Unidades por caja</span><span class="sr-v" id="sr-paq">—</span></div>
           <div class="sr"><span class="sr-k">Cajas requeridas / mes</span><span class="sr-v" id="sr-cajas">—</span></div>
           <div class="sr"><span class="sr-k">Inversión mensual</span><span class="sr-v" id="sr-inv">—</span></div>
           <div class="sr"><span class="sr-k">Ingresos por casabe</span><span class="sr-v" id="sr-ing">—</span></div>
@@ -269,21 +268,14 @@ tbody td{padding:10px 11px;vertical-align:middle}
       <div class="sec-lbl">📦 Detalle del Pedido</div>
       <div class="ff"><label>Producto de Interés</label>
         <select id="f-prod" onchange="calcularSubtotal()">
-          <option value="Tipo Restaurante ($312/caja)">Tipo Restaurante — $312/caja</option>
-          <option value="Tipo Pasapalo ($264/caja)">Tipo Pasapalo — $264/caja</option>
-          <option value="Tipo Torta ($240/caja)">Tipo Torta — $240/caja</option>
-          <option value="Combinación de productos">Combinación de productos</option>
+          <option value="">Cargando productos del canal...</option>
         </select>
       </div>
       <div class="form-row">
         <div class="ff"><label>Cantidad de Cajas <span class="req">*</span></label><input type="number" id="f-cantidad" placeholder="1" min="1" step="1" required oninput="calcularSubtotal()"></div>
         <div class="ff"><label>Condición de Pago <span class="req">*</span></label>
           <select id="f-condicion" required onchange="calcularSubtotal()">
-            <option value="">Seleccione...</option>
-            <option value="Crédito 30 días">Crédito 30 días</option>
-            <option value="Crédito 15 días">Crédito 15 días (-4%)</option>
-            <option value="Crédito 5 días">Crédito 5 días (-17%)</option>
-            <option value="Contado">Contado (−20%)</option>
+            <option value="">Cargando condiciones de pago...</option>
           </select>
         </div>
       </div>
@@ -310,6 +302,7 @@ tbody td{padding:10px 11px;vertical-align:middle}
           <span class="badge-count" id="badge-count2">0</span>
         </div>
         <div class="filtro-bar">
+          <select class="filtro-sel admin-only" id="filtro-sucursal" onchange="renderListado()"><option value="">Todas las sucursales</option></select>
           <input class="filtro-inp" type="text" id="filtro-buscar" placeholder="🔍 Buscar cliente o ID..." oninput="renderListado()">
           <select class="filtro-sel" id="filtro-estado" onchange="renderListado()">
             <option value="">Todos los estados</option>
@@ -373,19 +366,13 @@ tbody td{padding:10px 11px;vertical-align:middle}
       <div class="mef"><label>Teléfono</label><input type="tel" id="e-telf"></div>
       <div class="mef"><label>Producto</label>
         <select id="e-prod" onchange="calcEditSubtotal()">
-          <option value="Tipo Restaurante ($312/caja)">Tipo Restaurante — $312/caja</option>
-          <option value="Tipo Pasapalo ($264/caja)">Tipo Pasapalo — $264/caja</option>
-          <option value="Tipo Torta ($240/caja)">Tipo Torta — $240/caja</option>
-          <option value="Combinación de productos">Combinación de productos</option>
+          <option value="">Cargando productos...</option>
         </select>
       </div>
       <div class="mef"><label>Cajas</label><input type="number" id="e-cajas" min="1" oninput="calcEditSubtotal()"></div>
       <div class="mef"><label>Condición de Pago</label>
         <select id="e-condicion" onchange="calcEditSubtotal()">
-          <option value="Crédito 30 días">Crédito 30 días</option>
-          <option value="Crédito 15 días">Crédito 15 días (-4%)</option>
-          <option value="Crédito 5 días">Crédito 5 días (-17%)</option>
-          <option value="Contado">Contado (−20%)</option>
+          <option value="">Cargando condiciones...</option>
         </select>
       </div>
       <div class="mef"><label>Total USD</label><input type="number" id="e-total" readonly></div>
@@ -405,23 +392,148 @@ tbody td{padding:10px 11px;vertical-align:middle}
 const API='https://script.google.com/macros/s/AKfycbyludOrnVw1jSCYJUWELTjPjhuR7N1uXdBO6mjR7XVE-SqmkP-pe3qieg5SX-8wRh2Dsg/exec';
 let SES=null, simData={}, propuestas=[], accionPendiente=null, propEditando=null;
 
-// ── TABS ──────────────────────────────────────────────────────
+// ── TABS Y CATÁLOGOS COMERCIALES ───────────────────────────────
+let canalActivo='FOOD SERVICE', catalogoProductos=[], escalasDescuento=[];
+function rolNormalizado(){return String(SES?.rol||'').trim().toLowerCase();}
+function esAdmin(){return ['admin','administrador','superadmin','super administrador'].includes(rolNormalizado());}
+function esGerente(){return ['gerente','gerente de sucursal','gerente_sucursal','gerente-sucursal'].includes(rolNormalizado());}
+function normalizarCanal(v){
+  const x=String(v||'').trim().toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[\s_-]+/g,' ');
+  if(['FOOD SERVICE','FOODSERVICE','HORECA','FS'].includes(x))return 'FOOD SERVICE';
+  if(x==='RETAIL')return 'RETAIL';
+  if(x==='AMBOS'||x==='BOTH')return 'AMBOS';
+  return x;
+}
 function switchTab(tab){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('tab-'+tab).classList.add('active');
-  document.getElementById('panel-'+tab).classList.add('active');
-  if(tab==='listado') cargarListado();
+  if(tab==='food-service'||tab==='retail'){
+    canalActivo=tab==='retail'?'RETAIL':'FOOD SERVICE';
+    if(canalActivo==='RETAIL'){
+      simData={};
+      const resumen=document.getElementById('sim-resumen');if(resumen)resumen.style.display='none';
+    }
+    document.getElementById('tab-'+tab).classList.add('active');
+    document.getElementById('panel-nueva').classList.add('active');
+    document.getElementById('simulator-wrap').style.display=canalActivo==='FOOD SERVICE'?'':'none';
+    const title=document.querySelector('#panel-nueva .card-title');
+    if(title)title.textContent='📄 Datos de la Propuesta — '+canalActivo;
+    cargarCatalogoCanal();
+  }else{
+    document.getElementById('tab-listado').classList.add('active');
+    document.getElementById('panel-listado').classList.add('active');
+    cargarListado();
+  }
+}
+async function cargarCatalogosBase(){
+  try{
+    const [rp,rd]=await Promise.all([
+      fetch(API+'?action=getProductos',{redirect:'follow'}),
+      fetch(API+'?action=getEscalasDescuento',{redirect:'follow'})
+    ]);
+    const jp=await rp.json(), jd=await rd.json();
+    catalogoProductos=Array.isArray(jp?.data)?jp.data:(Array.isArray(jp)?jp:[]);
+    escalasDescuento=Array.isArray(jd?.data)?jd.data:(Array.isArray(jd)?jd:[]);
+    cargarCatalogoCanal();
+  }catch(e){
+    console.error('cargarCatalogosBase:',e);
+    toast('⚠️ No se pudieron cargar productos o escalas de descuento.');
+  }
+}
+function productosCanal(){
+  return catalogoProductos.filter(p=>{
+    const c=normalizarCanal(p.canal||p.canal_comercial);
+    return c===canalActivo||c==='AMBOS';
+  });
+}
+function precioProducto(p){
+  return Number(p?.precio_usd??p?.precio??p?.precio_caja??0)||0;
+}
+function unidadesPorCaja(p){
+  return Number(p?.unidades_por_caja??p?.unidadesCaja??0)||0;
+}
+function claveProducto(p){
+  return String(p?.id_producto||p?.nombre||'').trim();
+}
+function nombreProducto(p){
+  return String(p?.nombre||p?.nombre_producto||p?.id_producto||'Producto').trim();
+}
+function cargarSelectProductos(id, canal, selected){
+  const el=document.getElementById(id);if(!el)return;
+  const anteriores=selected||el.value;
+  const ps=catalogoProductos.filter(p=>{
+    const c=normalizarCanal(p.canal||p.canal_comercial);
+    return c===canal||c==='AMBOS';
+  });
+  el.innerHTML='<option value="">Seleccione un producto...</option>'+ps.map(p=>{
+    const key=claveProducto(p), label=nombreProducto(p)+' — $'+fmtN(precioProducto(p))+'/caja';
+    return '<option value="'+esc(key)+'">'+esc(label)+'</option>';
+  }).join('');
+  if(anteriores&&ps.some(p=>claveProducto(p)===anteriores))el.value=anteriores;
+}
+function cargarCondicionesPago(canal, selected){
+  const selects=['f-condicion','e-condicion'];
+  const escalas=escalasDescuento.filter(x=>
+    normalizarCanal(x.canal)===canal &&
+    String(x.estado||'activo').trim().toLowerCase()!=='inactivo'
+  );
+  const dias=[...new Set(escalas.map(x=>Number(x.dias_credito||0)).filter(n=>Number.isFinite(n)&&n>=0))].sort((a,b)=>b-a);
+  const options=dias.map(d=>{
+    const rows=escalas.filter(x=>Number(x.dias_credito||0)===d);
+    const descuento=Math.max(0,...rows.map(x=>Number(x.descuento_dias_pct??x.descuento_credito??0)||0));
+    const label=d===0?'Contado':('Crédito '+d+' días');
+    return {value:String(d),label:label+(descuento>0?' (descuento '+fmtN(descuento)+'%)':'')};
+  });
+  if(!options.length)options.push({value:'30',label:'Crédito 30 días'});
+  selects.forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    const prior=selected||el.value;
+    el.innerHTML='<option value="">Seleccione...</option>'+options.map(o=>'<option value="'+esc(o.value)+'">'+esc(o.label)+'</option>').join('');
+    if(prior&&options.some(o=>o.value===String(prior)))el.value=String(prior);
+  });
+}
+function cargarCatalogoCanal(){
+  cargarSelectProductos('f-prod',canalActivo);
+  cargarSelectProductos('e-prod',canalActivo);
+  cargarSelectProductos('sim-prod','FOOD SERVICE');
+  cargarCondicionesPago(canalActivo);
+  calcularSubtotal();
+  calcSim();
+}
+function switchCanalInterno(canal){canalActivo=normalizarCanal(canal)==='RETAIL'?'RETAIL':'FOOD SERVICE';cargarCatalogoCanal();}
+function etiquetaCondicion(dias){
+  const d=Number(dias||0);
+  return d===0?'Contado':('Crédito '+d+' días');
+}
+function productoSeleccionado(id){
+  const key=document.getElementById(id)?.value||'';
+  return catalogoProductos.find(p=>claveProducto(p)===key)||null;
+}
+function descuentoAplicable(producto, dias, cajas, canal){
+  const prodKey=String(producto?.id_producto||producto?.nombre||'').trim().toUpperCase();
+  const rows=escalasDescuento.filter(x=>{
+    const xc=normalizarCanal(x.canal);
+    if(xc!==canal)return false;
+    if(String(x.estado||'activo').trim().toLowerCase()==='inactivo')return false;
+    const xp=String(x.producto||'TODOS').trim().toUpperCase();
+    return xp==='TODOS'||xp===prodKey||xp===String(producto?.nombre||'').trim().toUpperCase();
+  });
+  const diasRows=rows.filter(x=>Number(x.dias_credito||0)===Number(dias||0));
+  const dCredito=Math.max(0,...diasRows.map(x=>Number(x.descuento_dias_pct??x.descuento_credito??0)||0));
+  const volRows=rows.filter(x=>{
+    const desde=Number(x.desde_volumen??x.volumen_desde??0)||0;
+    const hasta=(x.hasta_volumen===''||x.hasta_volumen==null)?Infinity:Number(x.hasta_volumen??x.volumen_hasta);
+    return Number(cajas||0)>=desde&&Number(cajas||0)<=hasta&&
+      (Number(x.descuento_volumen_pct??x.descuento_volumen??0)||0)>0;
+  });
+  const dVol=Math.max(0,...volRows.map(x=>Number(x.descuento_volumen_pct??x.descuento_volumen??0)||0));
+  return {credito:dCredito,volumen:dVol,total:dCredito+dVol};
 }
 
-// ── SIMULADOR ─────────────────────────────────────────────────
-const PROD_SIM={
-  restaurante:{uds_paq:30,paq_caja:40,precio_caja:312,nombre:'Casabe Real tipo Restaurante'},
-  pasapalo:   {uds_paq:35,paq_caja:90,precio_caja:264,nombre:'Casabe Real tipo Pasapalo'},
-  torta:      {uds_paq:8, paq_caja:40,precio_caja:240,nombre:'Casabe Real tipo Torta'},
-};
+// ── SIMULADOR FOOD SERVICE: PRECIOS Y UNIDADES DESDE PRODUCTOS ──
 function calcSim(){
-  const prod=document.getElementById('sim-prod').value;
+  const prodKey=document.getElementById('sim-prod')?.value||'';
+  const cfg=catalogoProductos.find(p=>claveProducto(p)===prodKey);
   const tiendas=parseInt(document.getElementById('sim-tiendas').value)||0;
   const servicios=parseInt(document.getElementById('sim-servicios').value)||0;
   const uds_serv=parseInt(document.getElementById('sim-unidades').value)||0;
@@ -431,52 +543,50 @@ function calcSim(){
     ['sr-serv','sr-unidades','sr-paq','sr-cajas','sr-inv','sr-ing'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='—';});
     const g=document.getElementById('sr-gan');if(g)g.textContent='$—';
     const r=document.getElementById('sr-roi');if(r)r.textContent='ROI: —%';
-    document.getElementById('sim-resumen').style.display='none';simData={};
+    const resumen=document.getElementById('sim-resumen');if(resumen)resumen.style.display='none';
+    simData={};
   };
-  if(!servicios||!uds_serv||!dias||!precio){limpiar();return;}
-  const cfg=PROD_SIM[prod];if(!cfg){limpiar();return;}
-  const tiendasEfectivas=(tiendas>0)?tiendas:1;
+  if(!cfg||!servicios||!uds_serv||!dias||!precio){limpiar();return;}
+  const tiendasEfectivas=tiendas>0?tiendas:1;
   const serviciosMes=tiendasEfectivas*servicios*dias;
   const unidadesTot=serviciosMes*uds_serv;
-  const paquetesMes=Math.ceil(unidadesTot/cfg.uds_paq);
-  const cajasExactas=paquetesMes/cfg.paq_caja;
+  const udsCaja=unidadesPorCaja(cfg);
+  if(!udsCaja){limpiar();return;}
+  const cajasExactas=unidadesTot/udsCaja;
   const cajasComprar=Math.ceil(cajasExactas);
-  const inversion=cajasComprar*cfg.precio_caja;
+  const inversion=cajasComprar*precioProducto(cfg);
   const ingresos=serviciosMes*precio;
   const ganancia=ingresos-inversion;
-  const roi=inversion>0?Math.round((ganancia/inversion)*100):0;
-  simData={serviciosMes,unidadesTot,paquetesMes,cajasExactas,cajasComprar,inversion,ingresos,ganancia,roi,prod,
-           nombreProd:cfg.nombre,precioCaja:cfg.precio_caja,paqCaja:cfg.paq_caja,udsPaq:cfg.uds_paq,
-           serviciosDia:servicios,udsServicio:uds_serv,diasMes:dias,precioServicio:precio,
-           totalTiendas:tiendasEfectivas};
+  const roi=inversion>0?Math.round(ganancia/inversion*100):0;
+  simData={serviciosMes,unidadesTot,paquetesMes:0,cajasExactas,cajasComprar,inversion,ingresos,ganancia,roi,prod:prodKey,
+    nombreProd:nombreProducto(cfg),precioCaja:precioProducto(cfg),paqCaja:udsCaja,udsPaq:1,
+    serviciosDia:servicios,udsServicio:uds_serv,diasMes:dias,precioServicio:precio,totalTiendas:tiendasEfectivas};
   document.getElementById('sr-serv').textContent=fmt(serviciosMes)+' servicios';
-  const elU=document.getElementById('sr-unidades');if(elU)elU.textContent=fmt(unidadesTot)+' unidades';
-  document.getElementById('sr-paq').textContent=fmt(paquetesMes)+' paquetes';
+  document.getElementById('sr-unidades').textContent=fmt(unidadesTot)+' unidades';
+  document.getElementById('sr-paq').textContent=fmt(udsCaja)+' unidades/caja';
   const cajaTxt=cajasExactas%1===0?cajasExactas+(cajasExactas===1?' caja':' cajas'):cajasExactas.toFixed(2)+' cajas (compra '+cajasComprar+')';
   document.getElementById('sr-cajas').textContent=cajaTxt;
-  document.getElementById('sr-inv').textContent='$'+fmt(inversion);
-  document.getElementById('sr-ing').textContent='$'+fmt(ingresos);
-  document.getElementById('sr-gan').textContent='$'+fmt(ganancia);
+  document.getElementById('sr-inv').textContent='$'+fmtN(inversion);
+  document.getElementById('sr-ing').textContent='$'+fmtN(ingresos);
+  document.getElementById('sr-gan').textContent='$'+fmtN(ganancia);
   document.getElementById('sr-roi').textContent='ROI: '+roi+'%';
-  document.getElementById('chip-inv').textContent='$'+fmt(inversion);
-  document.getElementById('chip-ing').textContent='$'+fmt(ingresos);
-  document.getElementById('chip-gan').textContent='$'+fmt(ganancia);
+  document.getElementById('chip-inv').textContent='$'+fmtN(inversion);
+  document.getElementById('chip-ing').textContent='$'+fmtN(ingresos);
+  document.getElementById('chip-gan').textContent='$'+fmtN(ganancia);
   document.getElementById('chip-roi').textContent=roi+'%';
   document.getElementById('sim-resumen').style.display='';
 }
 
-// ── SUBTOTAL ──────────────────────────────────────────────────
+// ── SUBTOTAL SEGÚN CANAL, PRODUCTO, CRÉDITO Y VOLUMEN ───────────
 function calcularSubtotal(){
-  const prod=document.getElementById('f-prod').value;
+  const p=productoSeleccionado('f-prod');
   const cajas=parseFloat(document.getElementById('f-cantidad').value)||0;
-  const cond=document.getElementById('f-condicion').value;
-  const precios={'Tipo Restaurante ($312/caja)':312,'Tipo Pasapalo ($264/caja)':264,'Tipo Torta ($240/caja)':240,'Combinación de productos':0};
-  const pb=precios[prod]??0;
-  if(!pb||!cajas){document.getElementById('f-total-usd').value='';return;}
-  const f=cond==='Crédito 30 días'?1.00:cond==='Crédito 15 días'?0.96:cond==='Crédito 5 días'?0.83:cond==='Contado'?0.80:1.00;
-  document.getElementById('f-total-usd').value=(cajas*pb*f).toFixed(2);
+  const dias=Number(document.getElementById('f-condicion').value||0);
+  const totalEl=document.getElementById('f-total-usd');
+  if(!p||!cajas){totalEl.value='';return;}
+  const desc=descuentoAplicable(p,dias,cajas,canalActivo);
+  totalEl.value=(cajas*precioProducto(p)*(1-desc.total/100)).toFixed(2);
 }
-
 // ── GUARDAR (sin localStorage — directo a Sheets) ─────────────
 async function guardarProp(){
   const d=leerFormulario();
@@ -489,10 +599,13 @@ async function guardarProp(){
 
   const cajas=parseFloat(d.cajas)||0;
   const totalUSD=parseFloat(d.total)||0;
-  const productosArray=(cajas>0&&d.prod)?[{
-    nombre:d.prod,
+  const prodObj=productoSeleccionado('f-prod');
+  const productosArray=(cajas>0&&prodObj)?[{
+    id_producto:prodObj.id_producto||'',
+    nombre:nombreProducto(prodObj),
     cajas:cajas,
-    precio:cajas>0?totalUSD/cajas:0,
+    precio:precioProducto(prodObj),
+    descuento_pct:descuentoAplicable(prodObj,Number(d.condicion||0),cajas,canalActivo).total,
     subtotal:totalUSD
   }]:[];
 
@@ -502,6 +615,8 @@ async function guardarProp(){
     dias_vigencia:7,
     vendedor:SES.nombre||SES.user||'',
     userVendedor:SES.user||'',
+    sucursal:SES.sucursal||SES.branch||'',
+    canalComercial:canalActivo,
     razonSocial:d.razon,
     establecimiento:d.establ,
     contacto:d.contacto,
@@ -509,7 +624,7 @@ async function guardarProp(){
     tipoCliente:d.tipo||'potencial',
     productos:productosArray,
     totalUSD:totalUSD,
-    condicionPago:d.condicion,
+    condicionPago:etiquetaCondicion(d.condicion),
     observaciones:d.obs
   };
 
@@ -581,9 +696,12 @@ function leerFormulario(){
     telf:(document.getElementById('f-telf')?.value||'').trim(),
     tipo:document.getElementById('f-tipo')?.value||'',
     prod:document.getElementById('f-prod')?.value||'',
+    prodNombre:nombreProducto(productoSeleccionado('f-prod')||{}),
+    canal:canalActivo,
     cajas:document.getElementById('f-cantidad')?.value||'',
     total:document.getElementById('f-total-usd')?.value||'',
     condicion:document.getElementById('f-condicion')?.value||'',
+
     obs:(document.getElementById('f-obs')?.value||'').trim()
   };
 }
@@ -596,13 +714,16 @@ async function cargarListado(){
   }
 
   try{
-    const rol=String(SES?.rol||'').trim().toLowerCase();
-    const isAdmin=rol==='admin'||rol==='gerente';
-    const vendedor=isAdmin?'':String(SES?.user||'').trim();
+    const rol=rolNormalizado();
+    const vendedor=(!esAdmin()&&!esGerente())?String(SES?.user||'').trim():'';
 
-    // El Listado SIEMPRE consulta la base de datos.
-    // Vendedor: solo sus propuestas. Gerente/Admin: todas.
-    const url=API+'?action=propuestas'+(vendedor?'&vendedor='+encodeURIComponent(vendedor):'');
+    // Admin consulta todas; gerente consulta y discrimina su sucursal; vendedor consulta lo suyo.
+    const params=new URLSearchParams({action:'propuestas'});
+    if(vendedor)params.set('vendedor',vendedor);
+    if(SES?.sucursal||SES?.branch)params.set('sucursal',String(SES.sucursal||SES.branch));
+    if(SES?.user)params.set('usuario',String(SES.user));
+    if(SES?.rol)params.set('rol',String(SES.rol));
+    const url=API+'?'+params.toString();
     const resp=await fetch(url,{redirect:'follow'});
 
     if(!resp.ok){
@@ -633,6 +754,8 @@ async function cargarListado(){
       contacto:String(p.contacto||'').trim(),
       telefono:String(p.telefono||'').trim(),
       tipo_cliente:String(p.tipo_cliente||'').trim(),
+      sucursal:String(p.sucursal||'').trim(),
+      canal_comercial:normalizarCanal(p.canal_comercial||p.canal||''),
       productos_detalle:String(p.productos_detalle||'').trim(),
       total_cajas:Number(p.total_cajas||0),
       total_usd:Number(p.total_usd||0),
@@ -677,17 +800,24 @@ function renderListado(){
   const buscar=(document.getElementById('filtro-buscar')?.value||'').toLowerCase();
   const estFilt=document.getElementById('filtro-estado')?.value||'';
   const vendFilt=document.getElementById('filtro-vendedor')?.value||'';
-  const rol=(SES?.rol||'').toLowerCase();
-  const isAdmin=rol==='admin'||rol==='gerente';
+  const isAdminRole=esAdmin();
+  const manager=esGerente();
+  const miSucursal=String(SES?.sucursal||SES?.branch||'').trim().toLowerCase();
   let filtradas=propuestas.filter(p=>{
-    if(!isAdmin && String(p.user_vendedor||'').trim().toLowerCase() !== String(SES?.user||'').trim().toLowerCase())return false;
+    if(!isAdminRole&&!manager&&String(p.user_vendedor||'').trim().toLowerCase()!==String(SES?.user||'').trim().toLowerCase())return false;
+    if(manager&&String(p.sucursal||'').trim().toLowerCase()!==miSucursal)return false;
     if(vendFilt&&p.user_vendedor!==vendFilt)return false;
+    const sucFilt=(document.getElementById('filtro-sucursal')?.value||'').trim().toLowerCase();
+    if(isAdminRole&&sucFilt&&String(p.sucursal||'').trim().toLowerCase()!==sucFilt)return false;
     const estado=estadoProp(p);
     if(estFilt&&estado!==estFilt)return false;
     if(buscar){const h=((p.establecimiento||'')+(p.razon_social||'')+(p.id||'')).toLowerCase();if(!h.includes(buscar))return false;}
     return true;
   });
-  if(isAdmin){
+  if(isAdminRole){
+    const sucursales=[...new Set(propuestas.map(p=>p.sucursal).filter(Boolean))].sort();
+    const ss=document.getElementById('filtro-sucursal');
+    if(ss){const curr=ss.value;ss.innerHTML='<option value="">Todas las sucursales</option>'+sucursales.map(s=>'<option value="'+esc(s)+'">'+esc(s)+'</option>').join('');if(sucursales.includes(curr))ss.value=curr;}
     const vendedores=[...new Set(propuestas.map(p=>p.user_vendedor).filter(Boolean))];
     const sel=document.getElementById('filtro-vendedor');
     if(sel){const curr=sel.value;sel.innerHTML='<option value="">Todos los vendedores</option>';vendedores.forEach(v=>{const op=document.createElement('option');op.value=v;op.textContent=v;if(v===curr)op.selected=true;sel.appendChild(op);});}
@@ -794,6 +924,8 @@ async function syncEstado(numeroPropuesta,estadoScript){
 // ── MODAL EDICIÓN INLINE ──────────────────────────────────────
 function abrirModalEdit(p){
   propEditando=p;
+  canalActivo=normalizarCanal(p.canal_comercial)==='RETAIL'?'RETAIL':'FOOD SERVICE';
+  cargarCatalogoCanal();
   document.getElementById('edit-num').textContent='#'+(p.numero_propuesta||p.id||'');
   const set=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v||'';};
   set('e-razon',   p.razon_social);
@@ -810,14 +942,12 @@ function abrirModalEdit(p){
 function cerrarModalEdit(){document.getElementById('modal-edit').classList.remove('show');propEditando=null;accionPendiente=null;}
 
 function calcEditSubtotal(){
-  const prod=document.getElementById('e-prod').value;
+  const p=productoSeleccionado('e-prod');
   const cajas=parseFloat(document.getElementById('e-cajas').value)||0;
-  const cond=document.getElementById('e-condicion').value;
-  const precios={'Tipo Restaurante ($312/caja)':312,'Tipo Pasapalo ($264/caja)':264,'Tipo Torta ($240/caja)':240,'Combinación de productos':0};
-  const pb=precios[prod]??0;
-  if(!pb||!cajas){document.getElementById('e-total').value='';return;}
-  const f=cond==='Crédito 30 días'?1.00:cond==='Crédito 15 días'?0.96:cond==='Crédito 5 días'?0.83:cond==='Contado'?0.80:1.00;
-  document.getElementById('e-total').value=(cajas*pb*f).toFixed(2);
+  const dias=Number(document.getElementById('e-condicion').value||0);
+  if(!p||!cajas){document.getElementById('e-total').value='';return;}
+  const desc=descuentoAplicable(p,dias,cajas,canalActivo);
+  document.getElementById('e-total').value=(cajas*precioProducto(p)*(1-desc.total/100)).toFixed(2);
 }
 
 async function guardarEdicion(){
@@ -837,7 +967,8 @@ async function guardarEdicion(){
   const telf     =(document.getElementById('e-telf').value||'').trim();
   const obs      =(document.getElementById('e-obs').value||'').trim();
 
-  const productosArray=(cajas>0&&prod)?[{nombre:prod,cajas,precio:cajas>0?totalUSD/cajas:0,subtotal:totalUSD}]:[];
+  const prodEdit=productoSeleccionado('e-prod');
+  const productosArray=(cajas>0&&prodEdit)?[{id_producto:prodEdit.id_producto||'',nombre:nombreProducto(prodEdit),cajas,precio:precioProducto(prodEdit),subtotal:totalUSD}]:[];
 
   // Payload para actualizarEstadoPropuesta no sirve para modificar campos.
   // Usamos una nueva propuesta con la misma data actualizada (el script no tiene
@@ -850,10 +981,12 @@ async function guardarEdicion(){
     action:'nuevaPropuesta',fecha:new Date().toISOString(),dias_vigencia:7,
     vendedor:propEditando.vendedor||SES.nombre||SES.user||'',
     userVendedor:propEditando.user_vendedor||SES.user||'',
+    sucursal:propEditando.sucursal||SES.sucursal||SES.branch||'',
+    canalComercial:propEditando.canal_comercial||canalActivo,
     razonSocial:razon,establecimiento:establ,
     contacto,telefono:telf,
     tipoCliente:propEditando.tipo_cliente||'potencial',
-    productos:productosArray,totalUSD,condicionPago:cond,
+    productos:productosArray,totalUSD,condicionPago:etiquetaCondicion(cond),
     observaciones:obs,
   };
 
@@ -930,7 +1063,7 @@ function generarPDF(datosOverride){
     y+=7;
     const halfw=(IW-1)/2;const x1=ML,x2=ML+halfw+1;const RH=6.8;
     const izq=[[simData.totalTiendas?'Total tiendas que posee el establecimiento':null,simData.totalTiendas?String(simData.totalTiendas):null],['Servicios estimados por día',String(simData.serviciosDia)],['Unidades de casabe por servicio',String(simData.udsServicio)],['Dias de mayor trabajo al mes',String(simData.diasMes)],['Precio del servicio al comensal (USD)','$'+simData.precioServicio.toFixed(2)]].filter(r=>r[0]);
-    const der=[['Servicios / mes:',fmt(simData.serviciosMes)],['Paquetes requeridos / mes:',fmt(simData.paquetesMes)],['Cajas requeridas / mes:',simData.cajasExactas.toFixed(1)],['venta sugerida / cajas',String(simData.cajasComprar)],['Inversión mensual:','$'+fmtN(simData.inversion)],['Ingresos por casabe:','$'+fmtN(simData.ingresos)]];
+    const der=[['Servicios / mes:',fmt(simData.serviciosMes)],['Unidades por caja:',fmt(simData.paquetesMes)],['Cajas requeridas / mes:',simData.cajasExactas.toFixed(1)],['venta sugerida / cajas',String(simData.cajasComprar)],['Inversión mensual:','$'+fmtN(simData.inversion)],['Ingresos por casabe:','$'+fmtN(simData.ingresos)]];
     const rows=Math.max(izq.length,der.length);
     doc.setFontSize(8.2);
     for(let i=0;i<rows;i++){
@@ -956,22 +1089,25 @@ function generarPDF(datosOverride){
     columnStyles:{0:{cellWidth:IW*0.26},1:{cellWidth:IW*0.26},2:{cellWidth:IW*0.24},3:{cellWidth:IW*0.24}},
     margin:{left:ML,right:MR},theme:'grid',tableWidth:IW});
   y=doc.lastAutoTable.finalY+3;
-  const preciosProd={'Tipo Restaurante ($312/caja)':312,'Tipo Pasapalo ($264/caja)':264,'Tipo Torta ($240/caja)':240,'Combinación de productos':0};
-  const fProd=document.getElementById('f-prod')?.value||'';
+  const prodPDF=productoSeleccionado('f-prod');
   const fCajas=parseFloat(document.getElementById('f-cantidad')?.value)||0;
-  const pb30=(preciosProd[fProd]||0)*fCajas;
+  const pb30=(prodPDF?precioProducto(prodPDF):0)*fCajas;
   y=hdr('CONDICIONES DE PAGO',y);
-  doc.autoTable({startY:y,head:[['CREDITO 30 DIAS','CREDITO 15 DIAS (DESCUENTO)','CREDITO 5 DIAS (DESCUENTO)','CONTADO (DESCUENTO)']],
-    body:[['--','4%','17%','20%'],[pb30>0?'$'+fmtN(pb30):'—',pb30>0?'$'+fmtN(pb30*0.96):'—',pb30>0?'$'+fmtN(pb30*0.83):'—',pb30>0?'$'+fmtN(pb30*0.80):'—']],
+  const condicionesPDF=[...new Set(escalasDescuento.filter(x=>normalizarCanal(x.canal)===canalActivo).map(x=>Number(x.dias_credito||0)))].sort((a,b)=>b-a);
+  const condPDF=condicionesPDF.length?condicionesPDF:[30,15,5,0];
+  const labelsPDF=condPDF.map(d=>d===0?'CONTADO':('CRÉDITO '+d+' DÍAS'));
+  const valoresPDF=condPDF.map(d=>{const de=prodPDF?descuentoAplicable(prodPDF,d,fCajas,canalActivo).total:0;return pb30>0?'$'+fmtN(pb30*(1-de/100)):'—';});
+  doc.autoTable({startY:y,head:[labelsPDF],
+    body:[condPDF.map(d=>{const de=prodPDF?descuentoAplicable(prodPDF,d,fCajas,canalActivo).total:0;return de>0?fmtN(de)+'%':'—';}),valoresPDF],
     styles:{fontSize:8.5,cellPadding:3,halign:'center',textColor:NEGRO},
     headStyles:{fillColor:ROJO,textColor:BLANCO,fontStyle:'bold',fontSize:7.8,halign:'center'},
-    columnStyles:{0:{cellWidth:IW/4},1:{cellWidth:IW/4},2:{cellWidth:IW/4},3:{cellWidth:IW/4}},
+    columnStyles:Object.fromEntries(condPDF.map((d,i)=>[i,{cellWidth:IW/condPDF.length}])),
     margin:{left:ML,right:MR},theme:'grid',tableWidth:IW});
   y=doc.lastAutoTable.finalY+3;
-  const fProdVal=document.getElementById('f-prod')?.value||'—';
+  const fProdVal=nombreProducto(productoSeleccionado('f-prod')||{})||'—';
   const fCajasVal=document.getElementById('f-cantidad')?.value||'—';
   const fTotalVal=parseFloat(document.getElementById('f-total-usd')?.value)||0;
-  const fCondVal=(document.getElementById('f-condicion')?.value||'—').toUpperCase();
+  const fCondVal=etiquetaCondicion(document.getElementById('f-condicion')?.value||'—').toUpperCase();
   y=hdr('RESUMEN DE LA PROPUESTA',y);
   doc.autoTable({startY:y,head:[['PRODUCTO','CAJAS','TOTAL','CONDICION DE PAGO']],
     body:[[fProdVal,fCajasVal,fTotalVal>0?'$'+fmtN(fTotalVal):'—',fCondVal]],
@@ -1011,16 +1147,16 @@ window.addEventListener('DOMContentLoaded',()=>{
   try{const r=sessionStorage.getItem('sccr');if(r)SES=JSON.parse(r);}catch(e){}
   if(!SES||!SES.rol){window.location.href='index.html';return;}
   document.getElementById('user-name-display').textContent=SES.nombre||SES.user||'—';
-  const rol=(SES.rol||'').toLowerCase();
-  document.getElementById('user-role-display').textContent=rol==='admin'?'Administrador':rol==='gerente'?'Gerente de Ventas':'Asesor Comercial';
-  if(rol==='admin'){
+  const rol=rolNormalizado();
+  document.getElementById('user-role-display').textContent=esAdmin()?'Administrador':esGerente()?'Gerente de Sucursal':'Asesor Comercial';
+  if(esAdmin()){
     document.querySelectorAll('.admin-only').forEach(e=>e.style.display='inline-block');
     document.querySelectorAll('.dir-only').forEach(e=>e.style.display='inline-block');
-  }else if(rol==='gerente'){
+  }else if(esGerente()){
     document.querySelectorAll('.dir-only').forEach(e=>e.style.display='inline-block');
   }
-  // Sin localStorage — el badge se actualiza solo al cargar el listado
   actualizarBadge(0);
+  cargarCatalogosBase();
   cargarListado();
 });
 function cerrarSesion(){sessionStorage.removeItem('sccr');window.location.href='index.html';}
