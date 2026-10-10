@@ -158,6 +158,11 @@ tbody td{padding:10px 11px;vertical-align:middle}
 .mef select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:28px}
 .mef textarea{resize:vertical;min-height:60px}
 .mef.full{grid-column:1/-1}
+.retail-prod-row{display:grid;grid-template-columns:minmax(180px,2fr) minmax(90px,.7fr) minmax(145px,1fr) minmax(110px,.8fr) auto;gap:8px;align-items:end;padding:10px 0;border-bottom:1px solid var(--borde)}
+.retail-prod-row label{display:block;font-size:10px;font-weight:700;color:var(--gris);margin-bottom:4px}
+.retail-prod-row select,.retail-prod-row input{width:100%;padding:9px;border:1.5px solid var(--borde);border-radius:7px;font:12px Inter,sans-serif;background:#fff;min-width:0}
+.retail-prod-row .retail-quitar{border:0;border-radius:7px;background:#FEE2E2;color:#991B1B;padding:9px 10px;cursor:pointer;font-weight:700}
+@media(max-width:700px){.retail-prod-row{grid-template-columns:1fr 1fr}.retail-prod-row .retail-product-field{grid-column:1/-1}.retail-prod-row .retail-total-field{grid-column:1/-1}.retail-prod-row .retail-quitar{justify-self:start}}
 .footer{background:var(--negro);padding:22px;text-align:center}
 .footer img{width:40px;margin:0 auto 8px}
 .footer p{color:rgba(255,255,255,.35);font-size:11.5px}
@@ -280,6 +285,11 @@ tbody td{padding:10px 11px;vertical-align:middle}
         </div>
       </div>
       <div class="ff"><label>Total USD (calculado automáticamente)</label><input type="number" id="f-total-usd" placeholder="0.00" readonly></div>
+      <div id="retail-productos-extra" style="display:none;margin:14px 0;padding:14px;border:1px solid var(--borde);border-radius:10px;background:#FAFAFA">
+        <div style="font-size:12px;font-weight:800;color:var(--rojo);margin-bottom:10px">PRODUCTOS ADICIONALES</div>
+        <div id="retail-productos-lista"></div>
+        <button type="button" class="btn-save" style="margin-top:10px;background:#fff;color:var(--rojo);border:1.5px solid var(--rojo)" onclick="agregarProductoRetail()">＋ Agregar otro producto</button>
+      </div>
       <div class="ff"><label>Observaciones</label><textarea id="f-obs" placeholder="Notas adicionales..."></textarea></div>
       <button class="btn-pdf" onclick="generarPDF()">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
@@ -393,7 +403,7 @@ const API='https://script.google.com/macros/s/AKfycbyludOrnVw1jSCYJUWELTjPjhuR7N
 let SES=null, simData={}, propuestas=[], accionPendiente=null, propEditando=null;
 
 // ── TABS Y CATÁLOGOS COMERCIALES ───────────────────────────────
-let canalActivo='FOOD SERVICE', catalogoProductos=[], escalasDescuento=[];
+let canalActivo='FOOD SERVICE', catalogoProductos=[], escalasDescuento=[], retailProductoSeq=0;
 function rolNormalizado(){return String(SES?.rol||'').trim().toLowerCase();}
 function esAdmin(){return ['admin','administrador','superadmin','super administrador'].includes(rolNormalizado());}
 function esGerente(){return ['gerente','gerente de sucursal','gerente_sucursal','gerente-sucursal'].includes(rolNormalizado());}
@@ -416,6 +426,8 @@ function switchTab(tab){
     document.getElementById('tab-'+tab).classList.add('active');
     document.getElementById('panel-nueva').classList.add('active');
     document.getElementById('simulator-wrap').style.display=canalActivo==='FOOD SERVICE'?'':'none';
+    const extraRetail=document.getElementById('retail-productos-extra');
+    if(extraRetail)extraRetail.style.display=canalActivo==='RETAIL'?'':'none';
     const title=document.querySelector('#panel-nueva .card-title');
     if(title)title.textContent='📄 Datos de la Propuesta — '+canalActivo;
     cargarCatalogoCanal();
@@ -578,14 +590,63 @@ function calcSim(){
 }
 
 // ── SUBTOTAL SEGÚN CANAL, PRODUCTO, CRÉDITO Y VOLUMEN ───────────
+function subtotalProducto(p,cajas,dias){
+  if(!p||!(cajas>0))return 0;
+  const desc=descuentoAplicable(p,Number(dias||0),cajas,canalActivo);
+  return cajas*precioProducto(p)*(1-desc.total/100);
+}
 function calcularSubtotal(){
   const p=productoSeleccionado('f-prod');
   const cajas=parseFloat(document.getElementById('f-cantidad').value)||0;
   const dias=Number(document.getElementById('f-condicion').value||0);
   const totalEl=document.getElementById('f-total-usd');
-  if(!p||!cajas){totalEl.value='';return;}
-  const desc=descuentoAplicable(p,dias,cajas,canalActivo);
-  totalEl.value=(cajas*precioProducto(p)*(1-desc.total/100)).toFixed(2);
+  let total=subtotalProducto(p,cajas,dias);
+  if(canalActivo==='RETAIL'){
+    document.querySelectorAll('.retail-prod-row').forEach(row=>{
+      const id=row.dataset.rowId;
+      const rp=productoSeleccionado('retail-prod-'+id);
+      const rc=Number(document.getElementById('retail-cajas-'+id)?.value||0);
+      const rd=Number(document.getElementById('retail-cond-'+id)?.value||0);
+      const subtotal=subtotalProducto(rp,rc,rd);
+      const el=document.getElementById('retail-total-'+id);
+      if(el)el.value=subtotal?subtotal.toFixed(2):'';
+      total+=subtotal;
+    });
+  }
+  totalEl.value=total?total.toFixed(2):'';
+}
+function agregarProductoRetail(){
+  if(canalActivo!=='RETAIL')return;
+  const id=++retailProductoSeq, lista=document.getElementById('retail-productos-lista');
+  if(!lista)return;
+  const row=document.createElement('div');row.className='retail-prod-row';row.dataset.rowId=String(id);
+  row.innerHTML=`<div class="retail-product-field"><label>Producto adicional</label><select id="retail-prod-${id}" onchange="calcularSubtotal()"><option value="">Seleccione un producto...</option></select></div>
+    <div><label>Cajas</label><input type="number" id="retail-cajas-${id}" min="1" step="1" placeholder="1" oninput="calcularSubtotal()"></div>
+    <div><label>Condición de pago</label><select id="retail-cond-${id}" onchange="calcularSubtotal()"><option value="">Seleccione...</option></select></div>
+    <div class="retail-total-field"><label>Subtotal USD</label><input type="number" id="retail-total-${id}" readonly placeholder="0.00"></div>
+    <button type="button" class="retail-quitar" title="Quitar producto" onclick="quitarProductoRetail(${id})">✕</button>`;
+  lista.appendChild(row);
+  cargarSelectProductos('retail-prod-'+id,'RETAIL');
+  const dias=[...new Set(escalasDescuento.filter(x=>normalizarCanal(x.canal)==='RETAIL'&&String(x.estado||'activo').trim().toLowerCase()!=='inactivo').map(x=>Number(x.dias_credito||0)).filter(n=>Number.isFinite(n)&&n>=0))].sort((a,b)=>b-a);
+  const sel=document.getElementById('retail-cond-'+id);
+  sel.innerHTML='<option value="">Seleccione...</option>'+ (dias.length?dias:[30]).map(d=>`<option value="${d}">${d===0?'Contado':'Crédito '+d+' días'}</option>`).join('');
+}
+function quitarProductoRetail(id){
+  const row=document.querySelector('.retail-prod-row[data-row-id="'+id+'"]');
+  if(row)row.remove();
+  calcularSubtotal();
+}
+function obtenerProductosFormulario(){
+  const items=[];
+  const add=(prodId,cajasId,condId,totalId)=>{
+    const p=productoSeleccionado(prodId), cajas=Number(document.getElementById(cajasId)?.value||0), dias=Number(document.getElementById(condId)?.value||0);
+    if(!p||!(cajas>0))return;
+    const subtotal=subtotalProducto(p,cajas,dias);
+    items.push({id_producto:p.id_producto||'',nombre:nombreProducto(p),cajas,precio:precioProducto(p),descuento_pct:descuentoAplicable(p,dias,cajas,canalActivo).total,subtotal,condicion_pago:etiquetaCondicion(dias)});
+  };
+  add('f-prod','f-cantidad','f-condicion','f-total-usd');
+  if(canalActivo==='RETAIL')document.querySelectorAll('.retail-prod-row').forEach(row=>{const id=row.dataset.rowId;add('retail-prod-'+id,'retail-cajas-'+id,'retail-cond-'+id,'retail-total-'+id);});
+  return items;
 }
 // ── GUARDAR (sin localStorage — directo a Sheets) ─────────────
 async function guardarProp(){
@@ -597,17 +658,9 @@ async function guardarProp(){
   btn.disabled=true;
   sp.classList.add('on');
 
-  const cajas=parseFloat(d.cajas)||0;
-  const totalUSD=parseFloat(d.total)||0;
-  const prodObj=productoSeleccionado('f-prod');
-  const productosArray=(cajas>0&&prodObj)?[{
-    id_producto:prodObj.id_producto||'',
-    nombre:nombreProducto(prodObj),
-    cajas:cajas,
-    precio:precioProducto(prodObj),
-    descuento_pct:descuentoAplicable(prodObj,Number(d.condicion||0),cajas,canalActivo).total,
-    subtotal:totalUSD
-  }]:[];
+  const productosArray=obtenerProductosFormulario();
+  const totalUSD=productosArray.reduce((sum,p)=>sum+Number(p.subtotal||0),0);
+  const totalCajas=productosArray.reduce((sum,p)=>sum+Number(p.cajas||0),0);
 
   const payload={
     action:'nuevaPropuesta',
@@ -624,7 +677,8 @@ async function guardarProp(){
     tipoCliente:d.tipo||'potencial',
     productos:productosArray,
     totalUSD:totalUSD,
-    condicionPago:etiquetaCondicion(d.condicion),
+    totalCajas:totalCajas,
+    condicionPago:[...new Set(productosArray.map(p=>p.condicion_pago).filter(Boolean))].join(' / ')||etiquetaCondicion(d.condicion),
     observaciones:d.obs
   };
 
@@ -651,6 +705,7 @@ async function guardarProp(){
 
     const cantidad=document.getElementById('f-cantidad');
     if(cantidad)cantidad.value='';
+    const retailLista=document.getElementById('retail-productos-lista');if(retailLista)retailLista.innerHTML='';
 
     // Reiniciar también los resultados del simulador, sin cambiar de sección.
     ['sr-serv','sr-unidades','sr-paq','sr-cajas','sr-inv','sr-ing'].forEach(id=>{
@@ -1104,13 +1159,13 @@ function generarPDF(datosOverride){
     columnStyles:Object.fromEntries(condPDF.map((d,i)=>[i,{cellWidth:IW/condPDF.length}])),
     margin:{left:ML,right:MR},theme:'grid',tableWidth:IW});
   y=doc.lastAutoTable.finalY+3;
-  const fProdVal=nombreProducto(productoSeleccionado('f-prod')||{})||'—';
-  const fCajasVal=document.getElementById('f-cantidad')?.value||'—';
-  const fTotalVal=parseFloat(document.getElementById('f-total-usd')?.value)||0;
-  const fCondVal=etiquetaCondicion(document.getElementById('f-condicion')?.value||'—').toUpperCase();
+  const productosPDF=obtenerProductosFormulario();
+  const productosPDFRows=productosPDF.length?productosPDF.map(p=>[p.nombre,String(p.cajas),'$'+fmtN(p.subtotal),String(p.condicion_pago||'—').toUpperCase()]):[['—','—','—','—']];
+  const totalPDF=productosPDF.reduce((sum,p)=>sum+Number(p.subtotal||0),0);
+  if(productosPDF.length>1)productosPDFRows.push(['TOTAL PROPUESTA',String(productosPDF.reduce((sum,p)=>sum+Number(p.cajas||0),0)),'$'+fmtN(totalPDF),'']);
   y=hdr('RESUMEN DE LA PROPUESTA',y);
   doc.autoTable({startY:y,head:[['PRODUCTO','CAJAS','TOTAL','CONDICION DE PAGO']],
-    body:[[fProdVal,fCajasVal,fTotalVal>0?'$'+fmtN(fTotalVal):'—',fCondVal]],
+    body:productosPDFRows,
     styles:{fontSize:8.8,cellPadding:3,halign:'center',textColor:NEGRO},
     headStyles:{fillColor:ROJO,textColor:BLANCO,fontStyle:'bold',fontSize:8,halign:'center'},
     bodyStyles:{fontStyle:'bold'},
