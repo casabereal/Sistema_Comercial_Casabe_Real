@@ -92,7 +92,7 @@ main{flex:1;padding:20px;max-width:1100px;width:100%;margin:0 auto}
 .empty-sub{font-size:.72rem}
 
 /* ── NUEVO PEDIDO: SELECTOR CLIENTE ACTUAL / NUEVO ── */
-.tipo-selector{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:18px}
+.tipo-selector{display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap}
 .tipo-opt{flex:1;min-width:140px;padding:16px;border:2px solid var(--borde);border-radius:var(--r);background:#fff;cursor:pointer;text-align:center;transition:all .2s;font-family:'Inter',sans-serif}
 .tipo-opt:hover{border-color:var(--rojo);background:var(--rojo-xs)}
 .tipo-opt.sel{border-color:var(--rojo);background:var(--rojo-xs)}
@@ -194,7 +194,7 @@ tbody td{padding:10px 12px;vertical-align:middle}
 .fecha-desp{padding:4px 6px;border:1.5px solid var(--borde);border-radius:6px;font-size:.72rem;font-family:'Inter',sans-serif;color:var(--texto);outline:none;cursor:pointer}
 .fecha-desp:focus{border-color:var(--rojo)}
 /* Columnas visibles solo para admin/gerente */
-.solo-admin{display:none !important}.gestion-only{display:none}
+.solo-admin{display:none !important}
 .solo-admin.visible{display:table-cell !important}
 .kpi-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
 .kpi{background:#fff;border:1.5px solid var(--borde);border-radius:var(--r-sm);padding:10px 16px;min-width:110px;flex:1}
@@ -227,7 +227,7 @@ tbody td{padding:10px 12px;vertical-align:middle}
 .ok-sub{font-size:.78rem;color:var(--sub);margin-bottom:22px}
 
 footer{background:#fff;border-top:1px solid var(--borde);text-align:center;padding:11px;font-size:.63rem;color:var(--sub)}
-@media(max-width:640px){main{padding:14px 12px}.tipo-selector{grid-template-columns:1fr}.tipo-opt{padding:12px}}
+@media(max-width:640px){main{padding:14px 12px}.tipo-opt{padding:12px}}
 </style>
 </head>
 <body>
@@ -267,7 +267,7 @@ footer{background:#fff;border-top:1px solid var(--borde);text-align:center;paddi
     <button class="tab-btn active" id="tab-nuevo" onclick="switchTab('nuevo')">
       ➕ Nuevo Pedido
     </button>
-    <button class="tab-btn gestion-only" id="tab-admin" onclick="switchTab('admin')" style="display:none">
+    <button class="tab-btn admin-only" id="tab-admin" onclick="switchTab('admin')">
       🗂️ Gestión de Pedidos <span class="badge-n" id="badge-admin">0</span>
     </button>
   </div>
@@ -275,7 +275,7 @@ footer{background:#fff;border-top:1px solid var(--borde);text-align:center;paddi
   <!-- ══════════ TAB 1: NUEVO PEDIDO ══════════ -->
   <div class="panel active" id="panel-nuevo">
 
-    <!-- Selector Cliente Actual / Cliente Nuevo por Canal -->
+    <!-- Selector Cliente Actual / Nuevo -->
     <div class="card">
       <div class="card-hd"><div class="card-ic">🏪</div>Tipo de Pedido</div>
       <div class="card-bd">
@@ -285,15 +285,10 @@ footer{background:#fff;border-top:1px solid var(--borde);text-align:center;paddi
             <div class="tit">Cliente Actual</div>
             <div class="sub">De tu cartera asignada</div>
           </div>
-          <div class="tipo-opt" id="opt-fs" onclick="setModo('food_service')">
-            <div class="ico">🍽️</div>
-            <div class="tit">Pedido Cliente Nuevo Food Service</div>
-            <div class="sub">Nuevo cliente del canal Food Service</div>
-          </div>
-          <div class="tipo-opt" id="opt-retail" onclick="setModo('retail')">
-            <div class="ico">🛒</div>
-            <div class="tit">Pedido Cliente Nuevo Retail</div>
-            <div class="sub">Nuevo cliente del canal Retail</div>
+          <div class="tipo-opt" id="opt-nuevo" onclick="setModo('nuevo')">
+            <div class="ico">🆕</div>
+            <div class="tit">Cliente Nuevo</div>
+            <div class="sub">Fuera de la meta asignada</div>
           </div>
         </div>
       </div>
@@ -444,9 +439,6 @@ footer{background:#fff;border-top:1px solid var(--borde);text-align:center;paddi
             <option value="despachado">Despachado</option>
             <option value="anulado">Anulado</option>
           </select>
-          <select class="filtro-sel solo-admin" id="f-sucursal" onchange="renderPedidos()">
-            <option value="">Todas las sucursales</option>
-          </select>
           <select class="filtro-sel" id="f-vendedor" onchange="renderPedidos()">
             <option value="">Todos los vendedores</option>
           </select>
@@ -507,15 +499,11 @@ const API = 'https://script.google.com/macros/s/AKfycbyludOrnVw1jSCYJUWELTjPjhuR
 //  ESTADO GLOBAL
 // ════════════════════════════════════════════════════════════
 let sesion       = null;
-let rolSesion   = '';
 let esAdmin      = false;
-let esGerente    = false;
-let USUARIOS     = [];
 let PRODUCTOS    = [];
 let CLIENTES     = [];
 let PEDIDOS      = [];
 let modoNuevo    = 'actual';
-let canalNuevo   = '';
 let rifFile      = null;
 let cntNuevo     = 0;
 let modalAccion  = null;
@@ -531,9 +519,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!sesion) { window.location.href = 'index.html'; return; }
 
   const rol = (sesion.rol || '').toLowerCase();
-  rolSesion = rol;
-  esAdmin   = rol === 'admin';
-  esGerente = rol === 'gerente';
+  esAdmin   = rol === 'admin' || rol === 'gerente';
 
   document.getElementById('user-name-display').textContent = sesion.nombre || '—';
   document.getElementById('user-role-display').textContent =
@@ -543,17 +529,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (rol === 'admin') {
     document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'inline-block');
     document.querySelectorAll('.dir-only').forEach(e => e.style.display = 'inline-block');
-    document.querySelectorAll('.gestion-only').forEach(e => e.style.display = 'inline-block');
   } else if (rol === 'gerente') {
     document.querySelectorAll('.dir-only').forEach(e => e.style.display = 'inline-block');
-    document.querySelectorAll('.gestion-only').forEach(e => e.style.display = 'inline-block');
   }
 
   if (esAdmin) {
     document.querySelectorAll('.solo-admin').forEach(e => e.classList.add('visible'));
   }
 
-  await Promise.all([cargarProductos(), cargarClientes(), cargarUsuarios()]);
+  await Promise.all([cargarProductos(), cargarClientes()]);
 
   // Tabla de cartera de clientes actuales
   renderTablaCartera();
@@ -575,55 +559,12 @@ function switchTab(tab) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.getElementById('tab-' + tab).classList.add('active');
   document.getElementById('panel-' + tab).classList.add('active');
-  if (tab === 'admin' && (esAdmin || esGerente)) cargarPedidosAdmin();
+  if (tab === 'admin') cargarPedidosAdmin();
 }
 
 // ════════════════════════════════════════════════════════════
 //  CARGA DE DATOS
 // ════════════════════════════════════════════════════════════
-function normalizarCanal(v) {
-  const x = String(v || '').trim().toUpperCase().replace(/[_-]+/g,' ').replace(/\s+/g,' ');
-  if (x === 'HORECA' || x === 'FOOD SERVICE' || x === 'FOODSERVICE') return 'FOOD SERVICE';
-  if (x === 'RETAIL') return 'RETAIL';
-  if (x === 'AMBOS' || x === 'FOOD SERVICE Y RETAIL' || x === 'RETAIL Y HORECA') return 'AMBOS';
-  return x;
-}
-
-function productoCompatibleCliente(cliente, producto) {
-  const cc = normalizarCanal(cliente?.canal_comercial || cliente?.canal || '');
-  const pc = normalizarCanal(producto?.canal || producto?.canal_comercial || '');
-  if (!cc || cc === 'AMBOS') return true;
-  return pc === cc || pc === 'AMBOS';
-}
-
-function productosParaCanal(canal) {
-  const c = normalizarCanal(canal);
-  if (!c) return PRODUCTOS;
-  return PRODUCTOS.filter(p => normalizarCanal(p.canal || p.canal_comercial) === c || normalizarCanal(p.canal || p.canal_comercial) === 'AMBOS');
-}
-
-async function cargarUsuarios() {
-  try {
-    const r = await fetch(API + '?action=getUsuarios');
-    const j = await r.json();
-    USUARIOS = j.ok && Array.isArray(j.data) ? j.data : [];
-  } catch { USUARIOS = []; }
-}
-
-function sucursalUsuario(usuario) {
-  const u = String(usuario || '').trim().toLowerCase();
-  const obj = USUARIOS.find(x =>
-    String(x.user || x.usuario || '').trim().toLowerCase() === u ||
-    String(x.vendedor_id || '').trim().toLowerCase() === u ||
-    String(x.nombre || '').trim().toLowerCase() === u
-  );
-  return obj ? String(obj.sucursal || '').trim() : '';
-}
-
-function sucursalPedido(p) {
-  return String(p.sucursal || sucursalUsuario(p.user_vendedor || p.vendedor) || '').trim();
-}
-
 async function cargarProductos() {
   try {
     const r = await fetch(API + '?action=getProductos');
@@ -634,15 +575,14 @@ async function cargarProductos() {
         n     : p.nombre,
         d     : p.descripcion || '',
         p     : parseFloat(p.precio_usd || p.precio) || 0,
-        udsCaja: parseInt(p.unidades_por_caja || 0),
-        canal: normalizarCanal(p.canal_comercial || p.canal || '')
+        udsCaja: parseInt(p.unidades_por_caja || 0)
       }));
     } else throw new Error('sin datos');
   } catch {
     PRODUCTOS = [
-      { id:'restaurante', n:'Casabe Real tipo Restaurante', d:'40 paq/caja · 30 uds/paq', p:312, udsCaja:1200, canal:'FOOD SERVICE' },
-      { id:'pasapalo',    n:'Casabe Real tipo Pasapalo',    d:'90 paq/caja · 35 uds/paq', p:264, udsCaja:3150, canal:'FOOD SERVICE' },
-      { id:'torta',       n:'Casabe Real tipo Torta',       d:'40 paq/caja · 8 uds/paq',  p:240, udsCaja:320, canal:'RETAIL' },
+      { id:'restaurante', n:'Casabe Real tipo Restaurante', d:'40 paq/caja · 30 uds/paq', p:312, udsCaja:1200 },
+      { id:'pasapalo',    n:'Casabe Real tipo Pasapalo',    d:'90 paq/caja · 35 uds/paq', p:264, udsCaja:3150 },
+      { id:'torta',       n:'Casabe Real tipo Torta',       d:'40 paq/caja · 8 uds/paq',  p:240, udsCaja:320  },
     ];
   }
 }
@@ -662,10 +602,9 @@ async function cargarPedidosAdmin() {
   document.getElementById('tbl-pedidos').innerHTML =
     '<tr><td colspan="11"><div class="empty-state"><div class="empty-ico">⏳</div><div class="empty-txt">Cargando pedidos...</div></div></td></tr>';
   try {
-    // Administrador y gerente cargan todos para aplicar el alcance por sucursal.
-    // El vendedor solo recibe sus propios pedidos.
+    // Fix 2: vendedor solo ve sus propios pedidos; admin/gerente ven todos
     let url = API + '?action=ventas&limite=500';
-    if (!esAdmin && !esGerente && sesion.user) {
+    if (!esAdmin && sesion.user) {
       url += '&vendedor=' + encodeURIComponent(sesion.user);
     }
     const r = await fetch(url);
@@ -680,13 +619,11 @@ async function cargarPedidosAdmin() {
 // ════════════════════════════════════════════════════════════
 function setModo(modo) {
   modoNuevo = modo;
-  canalNuevo = modo === 'food_service' ? 'FOOD SERVICE' : modo === 'retail' ? 'RETAIL' : '';
   document.getElementById('opt-actual').classList.toggle('sel', modo === 'actual');
-  document.getElementById('opt-fs').classList.toggle('sel', modo === 'food_service');
-  document.getElementById('opt-retail').classList.toggle('sel', modo === 'retail');
+  document.getElementById('opt-nuevo').classList.toggle('sel',  modo === 'nuevo');
   document.getElementById('pnl-actual').style.display = modo === 'actual' ? '' : 'none';
-  document.getElementById('pnl-nuevo').style.display  = modo === 'actual' ? 'none' : '';
-  if (modo !== 'actual') { resetNuevoForm(); addProdNuevo(); }
+  document.getElementById('pnl-nuevo').style.display  = modo === 'nuevo'  ? '' : 'none';
+  if (modo === 'nuevo') { resetNuevoForm(); addProdNuevo(); }
 }
 
 // ── CLIENTE ACTUAL: tabla igual a cargas.html Asignación de Metas ──────────
@@ -723,12 +660,10 @@ function renderTablaCartera() {
       <td class="td-bold">${esc(c.razon_social || c.nombre || '—')}</td>
       <td style="font-size:.72rem;color:var(--sub)">${esc(c.establecimiento || '—')}</td>`;
     PRODUCTOS.forEach((p, j) => {
-      const permitido = productoCompatibleCliente(c, p);
       tbody += `<td style="text-align:center">
         <input class="qty-inp-tbl" type="number" id="ca-${i}-${j}"
                min="0" step="1" placeholder="0"
                data-cli="${i}" data-prod="${j}"
-               ${permitido ? '' : 'disabled title="Producto no disponible para el canal comercial de este cliente"'}
                oninput="recalcFilaCartera(${i})">
       </td>`;
     });
@@ -819,8 +754,6 @@ async function enviarPedidoCartera() {
       telefono       : ped.cliente.telefono || '',
       // Fix 4/5: clientes de cartera = activos → llegan como 'confirmado'
       tipoCliente    : 'activo',
-      canalComercial: ped.cliente.canal_comercial || ped.cliente.canal || '',
-      sucursal      : ped.cliente.sucursal || sesion.sucursal || '',
       estado         : 'confirmado',
       clienteId      : ped.cliente.id_cliente || ped.cliente.id || null,
       productos      : ped.productos,
@@ -873,12 +806,6 @@ function addProdNuevo() {
   const n = cntNuevo;
   const d = document.createElement('div');
   d.className = 'prod-row'; d.id = 'prn' + n;
-  const productos = productosParaCanal(canalNuevo);
-  if (!productos.length) {
-    d.innerHTML = `<div class="empty-state"><div class="empty-ico">📦</div><div class="empty-txt">No hay productos configurados para ${esc(canalNuevo || 'este canal')}.</div></div>`;
-    document.getElementById('prod-list-nuevo').appendChild(d);
-    return;
-  }
   d.innerHTML = `
     <div class="prod-top">
       <span class="prod-num">Producto ${n}</span>
@@ -887,7 +814,7 @@ function addProdNuevo() {
     <div class="cf" style="margin-bottom:8px">
       <label style="font-size:.63rem;font-weight:700;color:var(--sub);text-transform:uppercase;display:block;margin-bottom:4px">Producto <span class="req">*</span></label>
       <select id="nseln${n}" onchange="updNuevo(${n})">
-        ${productosParaCanal(canalNuevo).map(p => `<option value="${p.id}">${p.n} · $${p.p.toLocaleString('es-VE')}/caja</option>`).join('')}
+        ${PRODUCTOS.map(p => `<option value="${p.id}">${p.n} · $${p.p.toLocaleString('es-VE')}/caja</option>`).join('')}
       </select>
     </div>
     <div class="prod-grid">
@@ -1005,7 +932,6 @@ async function enviarPedidoNuevo() {
     contacto        : document.getElementById('n-contacto').value.trim(),
     telefono        : telf,
     tipoCliente     : 'nuevo',    // señal principal para el script
-    canalComercial  : canalNuevo,
     estado          : 'pendiente',// señal de respaldo
     productos       : prods,
     totalUSD        : tot,
@@ -1053,10 +979,9 @@ function renderPedidos() {
   const buscar  = (document.getElementById('f-buscar')?.value || '').toLowerCase();
   const estFilt = document.getElementById('f-estado')?.value   || '';
   const vendFilt= document.getElementById('f-vendedor')?.value || '';
-  const sucFilt = document.getElementById('f-sucursal')?.value || '';
 
-  // Poblar selectores de administración. El gerente queda limitado a su sucursal.
-  if (esAdmin || esGerente) {
+  // Poblar select vendedores (solo admin ve este filtro)
+  if (esAdmin) {
     const vendedores = [...new Set(PEDIDOS.map(p => p.user_vendedor || p.vendedor).filter(Boolean))];
     const selV = document.getElementById('f-vendedor');
     if (selV) {
@@ -1068,34 +993,9 @@ function renderPedidos() {
         selV.appendChild(op);
       });
     }
-    if (esAdmin) {
-      const sucursales = [...new Set([...USUARIOS.map(u => u.sucursal), ...PEDIDOS.map(sucursalPedido)].map(x => String(x || '').trim()).filter(Boolean))].sort();
-      const selS = document.getElementById('f-sucursal');
-      if (selS) {
-        const currS = selS.value;
-        selS.innerHTML = '<option value="">Todas las sucursales</option>';
-        sucursales.forEach(v => {
-          const op = document.createElement('option');
-          op.value = v; op.textContent = v; if (v === currS) op.selected = true;
-          selS.appendChild(op);
-        });
-      }
-    }
   }
 
   let filtrados = PEDIDOS.filter(p => {
-    // Alcance por rol: vendedor = sus pedidos; gerente = su sucursal; admin = todas.
-    if (!esAdmin && !esGerente) {
-      const u = String(p.user_vendedor || p.vendedor || '').trim().toLowerCase();
-      const miU = String(sesion.user || '').trim().toLowerCase();
-      if (u !== miU) return false;
-    }
-    if (esGerente) {
-      const miSucursal = String(sesion.sucursal || '').trim().toLowerCase();
-      const sp = sucursalPedido(p).toLowerCase();
-      if (miSucursal && sp !== miSucursal) return false;
-    }
-    if (esAdmin && sucFilt && sucursalPedido(p) !== sucFilt) return false;
     const estado = (p.estado || '').toLowerCase();
     if (estFilt && estado !== estFilt) return false;
     if (vendFilt && (p.user_vendedor || p.vendedor) !== vendFilt) return false;
