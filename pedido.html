@@ -686,7 +686,17 @@ function sucursalUsuario(usuario) {
 }
 
 function sucursalPedido(p) {
-  return String(p.sucursal || sucursalUsuario(p.user_vendedor || p.vendedor) || '').trim();
+  // PEDIDOS_RAW no tiene columna SUCURSAL como fuente de seguridad.
+  // La sucursal real del pedido se determina SIEMPRE por el vendedor
+  // registrado en USUARIOS -> columna SUCURSAL.
+  const vendedor = String(p.user_vendedor || p.vendedor || '').trim();
+  return sucursalUsuario(vendedor);
+}
+
+function sucursalSesion() {
+  // Para Gerente/Vendedor, la sucursal se obtiene de USUARIOS usando
+  // el usuario de sesión, no de PEDIDOS_RAW ni del cliente.
+  return sucursalUsuario(sesion?.user || sesion?.vendedor_id || sesion?.nombre || '');
 }
 
 async function cargarProductos() {
@@ -1130,7 +1140,10 @@ function renderPedidos() {
       });
     }
     if (esAdmin) {
-      const sucursales = [...new Set([...USUARIOS.map(u => u.sucursal), ...PEDIDOS.map(sucursalPedido)].map(x => String(x || '').trim()).filter(Boolean))].sort();
+      const sucursales = [...new Set([
+        ...USUARIOS.map(u => u.sucursal),
+        ...PEDIDOS.map(p => sucursalPedido(p))
+      ].map(x => String(x || '').trim()).filter(Boolean))].sort();
       const selS = document.getElementById('f-sucursal');
       if (selS) {
         const currS = selS.value;
@@ -1152,11 +1165,13 @@ function renderPedidos() {
       if (u !== miU) return false;
     }
     if (esGerente) {
-      const miSucursal = String(sesion.sucursal || '').trim().toLowerCase();
+      const miSucursal = sucursalSesion().toLowerCase();
       const sp = sucursalPedido(p).toLowerCase();
-      if (miSucursal && sp !== miSucursal) return false;
+      // Si el gerente no tiene sucursal configurada en USUARIOS, no se
+      // muestran pedidos: evita exponer pedidos de otra sucursal.
+      if (!miSucursal || sp !== miSucursal) return false;
     }
-    if (esAdmin && sucFilt && sucursalPedido(p) !== sucFilt) return false;
+    if (esAdmin && sucFilt && sucursalPedido(p).toLowerCase() !== String(sucFilt).trim().toLowerCase()) return false;
     const estado = (p.estado || '').toLowerCase();
     if (estFilt && estado !== estFilt) return false;
     if (vendFilt && (p.user_vendedor || p.vendedor) !== vendFilt) return false;
