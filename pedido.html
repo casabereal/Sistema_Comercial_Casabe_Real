@@ -1182,13 +1182,30 @@ function renderPedidos() {
     return true;
   });
 
-  // KPIs
-  document.getElementById('kpi-pend').textContent = PEDIDOS.filter(p => (p.estado||'') === 'pendiente').length;
-  document.getElementById('kpi-conf').textContent = PEDIDOS.filter(p => (p.estado||'') === 'confirmado').length;
-  document.getElementById('kpi-desp').textContent = PEDIDOS.filter(p => (p.estado||'') === 'despachado').length;
-  const totUSD = PEDIDOS.reduce((s, p) => s + (parseFloat(p.total_usd) || 0), 0);
+  // KPIs — respetan exactamente el mismo alcance por rol que la gestión:
+  // vendedor = sus pedidos; gerente = pedidos de su sucursal; admin = todos.
+  // Los filtros de estado/búsqueda/vendedor/sucursal se mantienen independientes
+  // de los KPIs para que estos siempre representen el universo autorizado del usuario.
+  const pedidosKPI = PEDIDOS.filter(p => {
+    if (!esAdmin && !esGerente) {
+      const u = String(p.user_vendedor || p.vendedor || '').trim().toLowerCase();
+      const miU = String(sesion.user || '').trim().toLowerCase();
+      if (u !== miU) return false;
+    }
+    if (esGerente) {
+      const miSucursal = String(sesion.sucursal || sucursalUsuario(sesion.user) || '').trim().toLowerCase();
+      const sp = sucursalPedido(p).toLowerCase();
+      if (!miSucursal || sp !== miSucursal) return false;
+    }
+    return true;
+  });
+
+  document.getElementById('kpi-pend').textContent = pedidosKPI.filter(p => String(p.estado||'').trim().toLowerCase() === 'pendiente').length;
+  document.getElementById('kpi-conf').textContent = pedidosKPI.filter(p => String(p.estado||'').trim().toLowerCase() === 'confirmado').length;
+  document.getElementById('kpi-desp').textContent = pedidosKPI.filter(p => String(p.estado||'').trim().toLowerCase() === 'despachado').length;
+  const totUSD = pedidosKPI.reduce((s, p) => s + (parseFloat(p.total_usd) || 0), 0);
   document.getElementById('kpi-usd').textContent = '$' + fmtN(totUSD);
-  document.getElementById('badge-admin').textContent = PEDIDOS.filter(p => (p.estado||'') === 'pendiente').length;
+  document.getElementById('badge-admin').textContent = pedidosKPI.filter(p => String(p.estado||'').trim().toLowerCase() === 'pendiente').length;
 
   const tbody = document.getElementById('tbl-pedidos');
   if (!filtrados.length) {
