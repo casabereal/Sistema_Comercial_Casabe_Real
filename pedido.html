@@ -885,8 +885,8 @@ async function enviarPedidoCartera() {
       // Fix 4/5: clientes de cartera = activos → llegan como 'confirmado'
       tipoCliente    : 'activo',
       canalComercial: ped.cliente.canal_comercial || ped.cliente.canal || '',
-      sucursal      : ped.cliente.sucursal || sesion.sucursal || '',
-      estado         : 'confirmado',
+      sucursal      : sesion.sucursal || '',
+      estado         : 'pendiente',
       clienteId      : ped.cliente.id_cliente || ped.cliente.id || null,
       productos      : ped.productos,
       totalUSD       : ped.totalUSD,
@@ -1066,6 +1066,7 @@ async function enviarPedidoNuevo() {
     telefono        : telf,
     tipoCliente     : 'nuevo',    // señal principal para el script
     canalComercial  : canalNuevo,
+    sucursal        : sesion.sucursal || '',
     estado          : 'pendiente',// señal de respaldo
     productos       : prods,
     totalUSD        : tot,
