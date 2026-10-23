@@ -691,31 +691,89 @@ function fechaISO(v) {
 function renderResumenSemanalVendedor() {
   const el = document.getElementById('vendor-weekly-body');
   if (!el) return;
+
   const hoy = new Date();
+  hoy.setHours(0,0,0,0);
   const dia = hoy.getDay() || 7;
-  const lunes = new Date(hoy); lunes.setHours(0,0,0,0); lunes.setDate(hoy.getDate() - dia + 1);
-  const domingo = new Date(lunes); domingo.setDate(lunes.getDate()+6);
-  const porDia = {};
-  for (let i=0;i<7;i++) {
-    const d = new Date(lunes); d.setDate(lunes.getDate()+i);
-    porDia[`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`] = { fecha:d, clientes:new Set() };
-  }
+  const lunes = new Date(hoy);
+  lunes.setDate(hoy.getDate() - dia + 1);
+  lunes.setHours(0,0,0,0);
+  const viernes = new Date(lunes);
+  viernes.setDate(lunes.getDate() + 4);
+  viernes.setHours(23,59,59,999);
+
+  const nombresDias = ['lunes','martes','miércoles','jueves','viernes'];
+  const filas = [];
+
   REPORTES_VENDEDOR.forEach(r => {
     const d = parseFecha(r.fecha || r.fecha_formateada);
     if (!d) return;
-    const iso = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-    if (porDia[iso]) porDia[iso].clientes.add(normalizarCliente(r.razon_social || ''));
+    d.setHours(0,0,0,0);
+
+    // El resumen semanal solo muestra lunes a viernes de la semana actual.
+    if (d < lunes || d > viernes) return;
+
+    const indiceDia = Math.round((d - lunes) / 86400000);
+    if (indiceDia < 0 || indiceDia > 4) return;
+
+    const nombreCliente = String(r.razon_social || '').trim();
+    if (!nombreCliente) return;
+
+    const contacto = String(r.contacto_efectivo || '').trim();
+    const resultado = String(r.resultado_cita || '').trim();
+    const motivo = String(r.motivo_no_venta || '').trim();
+    const obs = String(r.observaciones || '').trim();
+    const proxMatch = obs.match(/Próxima visita:\s*([0-9]{4}-[0-9]{2}-[0-9]{2}|[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4})/i);
+    const proxima = proxMatch ? fFecha(fechaISO(proxMatch[1])) : '';
+
+    filas.push({
+      fecha: d,
+      dia: nombresDias[indiceDia],
+      cliente: nombreCliente,
+      contacto,
+      resultado,
+      motivo,
+      proxima
+    });
   });
-  const total = Object.values(porDia).reduce((s,x)=>s+x.clientes.size,0);
-  const filas = Object.values(porDia).map(x => {
-    const label = x.fecha.toLocaleDateString('es-VE',{weekday:'long',day:'2-digit',month:'2-digit'});
-    return `<tr><td style="text-transform:capitalize">${label}</td><td class="num">${x.clientes.size}</td></tr>`;
-  }).join('');
+
+  filas.sort((a,b) => a.fecha - b.fecha || a.cliente.localeCompare(b.cliente, 'es'));
+
   const desde = lunes.toLocaleDateString('es-VE',{day:'2-digit',month:'2-digit'});
-  const hasta = domingo.toLocaleDateString('es-VE',{day:'2-digit',month:'2-digit'});
+  const hasta = viernes.toLocaleDateString('es-VE',{day:'2-digit',month:'2-digit'});
   const lab = document.getElementById('vendor-week-label');
   if (lab) lab.textContent = `${desde} — ${hasta}`;
-  el.innerHTML = `<div class="tbl-wrap"><table><thead><tr><th>Día</th><th style="text-align:center">Clientes visitados</th></tr></thead><tbody>${filas}<tr><td style="font-weight:800">Total semanal</td><td class="num" style="color:var(--rojo)">${total}</td></tr></tbody></table></div>`;
+
+  if (!filas.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-ico">📋</div><div class="empty-txt">No hay visitas cargadas de lunes a viernes en la semana actual.</div></div>`;
+    return;
+  }
+
+  const rows = filas.map(x => `
+    <tr>
+      <td><strong style="text-transform:capitalize">${esc(x.dia)}</strong><div class="td-meta">${fFecha(x.fecha)}</div></td>
+      <td><div class="td-cliente">${esc(x.cliente)}</div></td>
+      <td>${esc(x.contacto || '—')}</td>
+      <td>${esc(x.resultado || '—')}</td>
+      <td>${esc(x.motivo || '—')}</td>
+      <td>${esc(x.proxima || '—')}</td>
+    </tr>`).join('');
+
+  el.innerHTML = `<div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha de carga</th>
+          <th>Clientes visitados</th>
+          <th>Contacto efectivo</th>
+          <th>Resultado de la cita</th>
+          <th>Motivo de no venta</th>
+          <th>Próxima visita</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </div>`;
 }
 
 function renderTablaVisitas() {
